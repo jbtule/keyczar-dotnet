@@ -1,0 +1,1 @@
+Using these classes will not interoperate with java/python/c++ versions of keyczar.

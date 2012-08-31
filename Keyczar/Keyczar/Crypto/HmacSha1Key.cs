@@ -1,0 +1,93 @@
+/*  Copyright 2012 James Tuley (jay+code@tuley.name)
+ * 
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ * 
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ */
+
+using System;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Linq;
+using Keyczar.Crypto.Streams;
+using Keyczar.Util;
+using Newtonsoft.Json;
+
+namespace Keyczar.Crypto
+{
+    /// <summary>
+    /// The Hmac 256 Sha1 key
+    /// </summary>
+    public class HmacSha1Key:Key,ISignerKey,IVerifierkey
+    {
+        /// <summary>
+        /// The hash size is 160 bits
+        /// </summary>
+        [JsonIgnore]
+        public readonly int HashLength = 20;
+
+        /// <summary>
+        /// Gets or sets the hmac key bytes.
+        /// </summary>
+        /// <value>The hmac key bytes.</value>
+        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [JsonProperty("HmacKeyString")]
+        public byte[] HmacKeyBytes { get; set; }
+
+
+        /// <summary>
+        /// Gets the key hash.
+        /// </summary>
+        /// <returns></returns>
+        public override byte[] GetKeyHash()
+        {
+            return Utility.HashKey(Keyczar.KEY_HASH_LENGTH, HmacKeyBytes);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public override void Dispose()
+        {
+            Secure.Clear(HmacKeyBytes);
+            HmacKeyBytes = null;
+        }
+
+        /// <summary>
+        /// Gets the signing stream.
+        /// </summary>
+        /// <returns></returns>
+        public HashingStream GetSigningStream()
+        {
+            return GetVerifyingStream();
+        }
+
+        /// <summary>
+        /// Gets the verifying stream.
+        /// </summary>
+        /// <returns></returns>
+        public VerifyingStream GetVerifyingStream()
+        {
+            return new HmacStream(new HMACSHA1(HmacKeyBytes));
+        }
+
+        /// <summary>
+        /// Generates the key.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        protected override void GenerateKey(int size)
+        {
+            HmacKeyBytes = new byte[size / 8];
+            Random.NextBytes(HmacKeyBytes);
+        }
+
+    }
+}
