@@ -7,7 +7,7 @@ Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard featu
 
 ## Dependancies
 
- - .net 4.0
+ - .net 4.0 or mono v2.10
 
 #### Keyczar.dll
 
@@ -31,9 +31,9 @@ Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard featu
 
 Dependencies should be downloaded automaticially with [nuget](http://nuget.org) which is integrated into the solution. Build all triggers nuget.
 
-#### MonoDevelop
+#### MonoDevelop v3.0.4 or later
 
- *Unknown*
+Run `MonoRestoreNugetPackages.sh` script first to restore nuget dependency then builds fine from monodevelop
 
 ## Compatibility
 

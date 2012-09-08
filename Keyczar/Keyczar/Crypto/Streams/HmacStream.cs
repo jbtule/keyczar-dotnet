@@ -53,7 +53,7 @@ namespace Keyczar.Crypto.Streams
             if (disposing)
             {
                 Finish();
-                _hmacAlg.Dispose();
+                //_hmacAlg.Dispose();
             }
 
             _hmacAlg = null;

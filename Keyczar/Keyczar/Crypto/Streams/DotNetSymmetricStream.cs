@@ -88,7 +88,7 @@ namespace Keyczar.Crypto.Streams
             _transform = null; 
             if(disposing)
             {
-                _alg.Dispose();
+                //_alg.Dispose();
 
             }
             _alg = null;
