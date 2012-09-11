@@ -127,7 +127,11 @@ namespace Keyczar
             /// <returns></returns>
             public byte[] Sign(Stream data, DateTime expiration)
             {
-                return Sign(data, expiration, postfixData: null, sigData: expiration);
+				using(var stream = new MemoryStream()){
+					Sign(data,stream, prefixData:expiration, postfixData: null, sigData: expiration);
+					stream.Flush();
+					return stream.ToArray();
+				}
             }
 
             /// <summary>
@@ -149,13 +153,13 @@ namespace Keyczar
             /// <param name="signature">The signature.</param>
             /// <param name="extra">The extra data passed by sigData.</param>
             /// <returns></returns>
-            protected override byte[] PadSignature(byte[] signature, object extra)
+            protected override void PadSignature(byte[] signature, Stream outstream, object extra)
             {
                 var expiration = Utility.GetBytes(FromDateTime((DateTime)extra));
                 var timedSig = new byte[signature.Length + expiration.Length];
                 Array.Copy(expiration,0,timedSig,0,expiration.Length);
                 Array.Copy(signature,0,timedSig,expiration.Length, signature.Length);
-                return base.PadSignature(timedSig, null);
+                base.PadSignature(timedSig,outstream, null);
             }
 
         }

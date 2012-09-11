@@ -65,7 +65,7 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(BlockLength), AesKeyBytes,
+            return Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
                                   HmacKey.HmacKeyBytes);
         }
 

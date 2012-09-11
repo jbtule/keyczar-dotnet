@@ -92,7 +92,7 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(BlockLength), Encoding.UTF8.GetBytes(Mode), AesKeyBytes);
+            return Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(AesKeyBytes.Length), Encoding.UTF8.GetBytes(Mode), AesKeyBytes);
         }
 
         private Func<IBlockCipher, IAeadBlockCipher> GetMode()

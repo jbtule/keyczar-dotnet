@@ -134,7 +134,8 @@ namespace Keyczar
             {
                 foreach (var path in _filePaths)
                 {
-                    var newPath = Path.ChangeExtension(path, String.Empty);
+                    var newPath = Path.Combine(Path.GetDirectoryName(path),
+					                           Path.GetFileNameWithoutExtension(path));
                     File.Delete(newPath);
                     File.Move(path, newPath);
                 }

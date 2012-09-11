@@ -85,7 +85,7 @@ namespace KeyczarTest.Unofficial
         }
 
            [Test]
-          public  void testWrongSession() {
+          public  void TestWrongSession() {
               using (var localCrypter = new SessionCrypter(publicKeyEncrypter, symmetricKeyType: KeyType.AES_AEAD, keyPacker: new BsonSessionKeyPacker()))
               using (var localCrypter2 = new SessionCrypter(publicKeyEncrypter, symmetricKeyType: KeyType.AES_AEAD, keyPacker: new BsonSessionKeyPacker()))
               {

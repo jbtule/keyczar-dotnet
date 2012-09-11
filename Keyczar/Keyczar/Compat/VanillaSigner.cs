@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -87,15 +88,16 @@ namespace Keyczar.Compat
 
         }
 
-        /// <summary>
-        /// Pads the signature with extra data.
-        /// </summary>
-        /// <param name="signature">The signature.</param>
-        /// <param name="extra">The extra data passed by sigData.</param>
-        /// <returns></returns>
-        protected override byte[] PadSignature(byte[] signature, object extra)
+		/// <summary>
+		/// Pads the signature with extra data.
+		/// </summary>
+		/// <param name="signature">The signature.</param>
+		/// <param name="outstream">The padded signature.</param>
+		/// <param name="extra">The extra data passed by sigData.</param>
+		/// <returns></returns>
+        protected override void PadSignature(byte[] signature, Stream outstream,  object extra)
         {
-            return signature;
+            outstream.Write(signature,0,signature.Length);
         }
 
         /// <summary>

@@ -81,7 +81,11 @@ namespace Keyczar
         /// <returns></returns>
         public byte[] Sign(Stream data)
         {
-            return Sign(data, prefixData: null, postfixData: null, sigData: null);
+			using(var stream = new MemoryStream()){
+            	Sign(data, stream, prefixData: null, postfixData: null, sigData: null);
+				stream.Flush();
+				return stream.ToArray();
+			}
         }
 
         /// <summary>
@@ -92,7 +96,7 @@ namespace Keyczar
         /// <param name="postfixData">The postfix data.</param>
         /// <param name="sigData">The sig data.</param>
         /// <returns></returns>
-        protected virtual byte[] Sign(Stream data, object prefixData, object postfixData, object sigData)
+        protected virtual void Sign(Stream data, Stream outstream, object prefixData, object postfixData, object sigData)
         {
             var key = GetPrimaryKey() as ISignerKey;
             using (var reader = new NonDestructiveBinaryReader(data))
@@ -109,7 +113,7 @@ namespace Keyczar
                     signingStream.Finish();
 
                     var signature = signingStream.HashValue;
-                    return PadSignature(signature, sigData);
+                    PadSignature(signature, outstream, sigData);
                 }
             }
         }
@@ -138,19 +142,16 @@ namespace Keyczar
         /// Pads the signature with extra data.
         /// </summary>
         /// <param name="signature">The signature.</param>
+		/// <param name="outstream">The padded signature.</param>
         /// <param name="extra">The extra data passed by sigData.</param>
         /// <returns></returns>
-        protected virtual byte[] PadSignature(byte[] signature, object extra)
+        protected virtual void PadSignature(byte[] signature, Stream outstream, object extra)
         {
             var key = GetPrimaryKey() as ISignerKey;
-            var signatureWithHeader = new byte[signature.Length + HEADER_LENGTH];
-            Array.Copy(signature, 0, signatureWithHeader, HEADER_LENGTH, signature.Length);
-            Array.Copy(FORMAT_BYTES, 0, signatureWithHeader, 0, FORMAT_BYTES.Length);
-            Array.Copy(key.GetKeyHash(), 0, signatureWithHeader, FORMAT_BYTES.Length, KEY_HASH_LENGTH);
-            return signatureWithHeader;
+			outstream.Write(FORMAT_BYTES,0,FORMAT_BYTES.Length);
+			outstream.Write(key.GetKeyHash(),0,KEY_HASH_LENGTH);
+			outstream.Write(signature,0,signature.Length);
         }
 
-
-   
     }
 }
