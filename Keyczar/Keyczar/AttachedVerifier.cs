@@ -83,7 +83,7 @@ namespace Keyczar
         /// <returns></returns>
 		public bool Verify(Stream signedMessage, byte[] hidden =null)
         {
-            return _verifier.Verify(signedMessage, hidden);
+			return _verifier.VerifyHidden(signedMessage, hidden);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Keyczar
             /// <param name="signedMessage">The signed message.</param>
             /// <param name="hidden">The hidden data used to generate the digest signature.</param>
             /// <returns></returns>
-            public bool Verify(Stream signedMessage, byte[] hidden)
+            public bool VerifyHidden(Stream signedMessage, byte[] hidden)
             {
         
                 using (var reader = new NonDestructiveBinaryReader(signedMessage))

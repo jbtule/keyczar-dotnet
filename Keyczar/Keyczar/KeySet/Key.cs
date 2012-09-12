@@ -62,6 +62,12 @@ namespace Keyczar
             }
         }
 
+		/// <summary>
+		/// Gets or sets the size.
+		/// </summary>
+		/// <value>The size.</value>
+		public int Size{get;set;}
+
         /// <summary>
         /// Reads the specified type.
         /// </summary>
@@ -93,6 +99,7 @@ namespace Keyczar
             }
             var key =(Key)Activator.CreateInstance(type.Type);
             key.GenerateKey(size);
+			key.Size = size;
             return key;
         }
 

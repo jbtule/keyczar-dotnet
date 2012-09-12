@@ -58,12 +58,6 @@ namespace Keyczar.Crypto
         public byte[] PublicExponent { get; set; }
 
         /// <summary>
-        /// Gets or sets the size.
-        /// </summary>
-        /// <value>The size.</value>
-        public int Size { get; set; }
-
-        /// <summary>
         /// Gets or sets the padding.
         /// </summary>
         /// <value>The padding. If not set uses OEAP padding</value>

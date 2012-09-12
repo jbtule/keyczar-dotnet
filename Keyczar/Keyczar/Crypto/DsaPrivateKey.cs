@@ -56,11 +56,7 @@ namespace Keyczar.Crypto
         [JsonConverter(typeof(WebSafeBase64ByteConverter))]
         public byte[] X { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size.
-        /// </summary>
-        /// <value>The size.</value>
-        public int Size { get; set; }
+     
 
 
         /// <summary>

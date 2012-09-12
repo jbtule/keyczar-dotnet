@@ -77,12 +77,7 @@ namespace Keyczar.Crypto
          [JsonConverter(typeof(WebSafeBase64ByteConverter))]
          public byte[] CrtCoefficient { get; set; }
 
-         /// <summary>
-         /// Gets or sets the size.
-         /// </summary>
-         /// <value>The size.</value>
-         public int Size { get; set; }
-
+        
          /// <summary>
          /// Gets the key hash.
          /// </summary>

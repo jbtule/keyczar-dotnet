@@ -61,13 +61,7 @@ namespace Keyczar.Crypto
         public byte[] Y { get; set; }
 
 
-        /// <summary>
-        /// Gets or sets the size.
-        /// </summary>
-        /// <value>The size.</value>
-        public int Size { get; set; }
-
-
+     
         /// <summary>
         /// Gets the key hash.
         /// </summary>
