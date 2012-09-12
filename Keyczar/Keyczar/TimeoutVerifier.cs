@@ -44,7 +44,7 @@ namespace Keyczar
             return (long)((date.ToUniversalTime() - new DateTime(1970, 1, 1).ToUniversalTime()).TotalMilliseconds);
         }
 
-        private Verifier _verify;
+        private Verifier _verifier;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeoutVerifier"/> class.
@@ -60,7 +60,7 @@ namespace Keyczar
         /// <param name="keySet">The key set.</param>
         public TimeoutVerifier(IKeySet keySet) : base(keySet)
         {
-            _verify = new TimeoutVerifierHelper(keySet);
+            _verifier = new TimeoutVerifierHelper(keySet);
         }
 
         /// <summary>
@@ -68,8 +68,8 @@ namespace Keyczar
         /// </summary>
         public override void Dispose()
         {
-            _verify.Dispose();
-            _verify = null;
+            _verifier.Dispose();
+            _verifier = null;
             base.Dispose();
         }
 
@@ -110,7 +110,7 @@ namespace Keyczar
         {
             var milliseconds = FromDateTime(DateTime.Now);
 
-            if(!_verify.Verify(data, signature))
+            if(!_verifier.Verify(data, signature))
                 return false; 
             using(var stream = new MemoryStream(signature))
             using (var reader = new NonDestructiveBinaryReader(stream))
@@ -150,9 +150,9 @@ namespace Keyczar
             /// <param name="data">The data.</param>
             /// <param name="signature">The signature.</param>
             /// <param name="prefixData">The prefix data.</param>
-            /// <param name="postFixData">The post fix data.</param>
+            /// <param name="postfixData">The post fix data.</param>
             /// <returns></returns>
-            protected override bool Verify(Stream data, byte[] signature, object prefixData, object postFixData)
+            protected override bool Verify(Stream data, byte[] signature, object prefixData, object postfixData)
             {
                 var newsig = new byte[signature.Length - TimeoutLength];
                 Array.Copy(signature,0,newsig,0,HEADER_LENGTH);
@@ -160,7 +160,7 @@ namespace Keyczar
                 var expireBytes = new byte[TimeoutLength];
                 Array.Copy(signature,HEADER_LENGTH, expireBytes,0,TimeoutLength);
 
-                return base.Verify(data, newsig, expireBytes, postFixData);
+                return base.Verify(data, newsig, expireBytes, postfixData);
             }
 
 

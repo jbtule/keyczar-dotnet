@@ -16,10 +16,17 @@
 
 using System;
 using System.IO;
+using Keyczar.Util;
+
 namespace Keyczar
 {
+    /// <summary>
+    /// Verifies a message with an attached signature.
+    /// </summary>
 	public class AttachedVerifier:Keyczar
-	{
+    {
+        private HelperAttachedVerify _verifier;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AttachedSigner"/> class.
 		/// </summary>
@@ -40,20 +47,105 @@ namespace Keyczar
 			{
 				throw new InvalidKeyTypeException("This key set can not be used for verifying signatures.");
 			}
+            _verifier = new HelperAttachedVerify(keySet);
 		}
 
 
-		public bool Verify(string message, byte[] hidden =null){
-			throw new NotImplementedException();
-		}
-		
-		public bool Verify(byte[] message, byte[] hidden =null){
-			throw new NotImplementedException();
+        /// <summary>
+        /// Verifies the specified message.
+        /// </summary>
+        /// <param name="signedMessage">The signed message.</param>
+        /// <param name="hidden">The hidden.</param>
+        /// <returns></returns>
+		public bool Verify(string signedMessage, byte[] hidden =null){
+
+            return Verify(DefaultEncoding.GetBytes(signedMessage), hidden);
 		}
 
-		public bool Verify(Stream message, byte[] hidden =null){
-			throw new NotImplementedException();
+        /// <summary>
+        /// Verifies the specified message.
+        /// </summary>
+        /// <param name="signedMessage">The signed message.</param>
+        /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+        /// <returns></returns>
+		public bool Verify(byte[] signedMessage, byte[] hidden =null){
+            using (var memstream = new MemoryStream(signedMessage))
+            {
+                return Verify(memstream, hidden);
+            }
 		}
+
+        /// <summary>
+        /// Verifies the specified message.
+        /// </summary>
+        /// <param name="signedMessage">The signed message.</param>
+        /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+        /// <returns></returns>
+		public bool Verify(Stream signedMessage, byte[] hidden =null)
+        {
+            return _verifier.Verify(signedMessage, hidden);
+        }
+
+        /// <summary>
+        /// Does the attache verify work.
+        /// </summary>
+        protected class HelperAttachedVerify:Verifier
+        {
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="HelperAttachedVerify"/> class.
+            /// </summary>
+            /// <param name="keySet">The key set.</param>
+            public HelperAttachedVerify(IKeySet keySet) : base(keySet)
+            {
+            }
+
+            /// <summary>
+            /// Verifies the specified signed message.
+            /// </summary>
+            /// <param name="signedMessage">The signed message.</param>
+            /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+            /// <returns></returns>
+            public bool Verify(Stream signedMessage, byte[] hidden)
+            {
+        
+                using (var reader = new NonDestructiveBinaryReader(signedMessage))
+                {
+                    var header = reader.ReadBytes(HEADER_LENGTH);
+                    var length = Utility.ToInt32(reader.ReadBytes(4));
+                    var position = signedMessage.Position;
+                    signedMessage.Seek(length, SeekOrigin.Begin);
+                    using(var sigStream = new MemoryStream())
+                    {
+                        sigStream.Write(header,0,header.Length);
+                        while (reader.Peek() != -1)
+                        {
+                           var buffer = reader.ReadBytes(BUFFER_SIZE);
+                           sigStream.Write(buffer, 0, buffer.Length);
+                        } 
+                        signedMessage.SetLength(position + length);
+                        sigStream.Flush();
+                        return Verify(signedMessage, sigStream.ToArray(), prefixData: null, postfixData: hidden);
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Postfixes data before verifying.
+            /// </summary>
+            /// <param name="verifyingStream">The verifying stream.</param>
+            /// <param name="extra">The extra data passed by postFixData</param>
+            protected override void PostfixData(Crypto.Streams.VerifyingStream verifyingStream, object extra)
+            {
+                var bytes = extra as byte[] ?? new byte[0];
+
+                var len = Utility.GetBytes(bytes.Length);
+                verifyingStream.Write(len, 0, len.Length);
+                verifyingStream.Write(bytes, 0, bytes.Length);
+
+                base.PostfixData(verifyingStream, extra: null);
+            }
+        }
 	}
 }
 

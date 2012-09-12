@@ -106,7 +106,7 @@ namespace Keyczar
         /// <returns></returns>
         public bool Verify(Stream data, byte[] signature)
         {
-            return Verify(data, signature, prefixData: null, postFixData:null);
+            return Verify(data, signature, prefixData: null, postfixData:null);
         }
 
         /// <summary>
@@ -119,11 +119,11 @@ namespace Keyczar
             
         }
         /// <summary>
-        /// Posts the fix data before verifying.
+        /// Postfixes data before verifying.
         /// </summary>
         /// <param name="verifyingStream">The verifying stream.</param>
-        /// <param name="extra">The extra data passed by postFixData</param>
-        protected virtual void PostFixData(VerifyingStream verifyingStream, object extra)
+        /// <param name="extra">The extra data passed by postfixData</param>
+        protected virtual void PostfixData(VerifyingStream verifyingStream, object extra)
         {
             verifyingStream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
         }
@@ -134,9 +134,9 @@ namespace Keyczar
         /// <param name="data">The data.</param>
         /// <param name="signature">The signature.</param>
         /// <param name="prefixData">The prefix data.</param>
-        /// <param name="postFixData">The post fix data.</param>
+        /// <param name="postfixData">The postfix data.</param>
         /// <returns></returns>
-        protected virtual bool Verify(Stream data, byte[] signature, object prefixData, object postFixData)
+        protected virtual bool Verify(Stream data, byte[] signature, object prefixData, object postfixData)
         {
 
             using (var reader = new NonDestructiveBinaryReader(data))
@@ -155,7 +155,7 @@ namespace Keyczar
                             byte[] buffer = reader.ReadBytes(BUFFER_SIZE);
                             verifyStream.Write(buffer, 0, buffer.Length);
                         }
-                            PostFixData(verifyStream,postFixData);
+                            PostfixData(verifyStream,postfixData);
 
                         if (verifyStream.VerifySignature(trimmedSig))
                         {

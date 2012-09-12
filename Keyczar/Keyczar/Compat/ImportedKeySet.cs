@@ -114,16 +114,17 @@ namespace Keyczar.Compat
         public class Importer
         {
             /// <summary>
-            /// Dummy password finder used for bouncy castle api
+            ///  password finder used for bouncy castle api
             /// </summary>
-            public class DummyPasswordFinder : IPasswordFinder
+            public class PasswordFinder : IPasswordFinder
             {
-                string _password ;
+                private Func<string> _password;
+
                 /// <summary>
                 /// Initializes a new instance of the <see cref="DummyPasswordFinder"/> class.
                 /// </summary>
                 /// <param name="passsword">The passsword.</param>
-                public DummyPasswordFinder(string passsword)
+                public PasswordFinder(Func<string> passsword)
                 {
                     _password = passsword;
                 }
@@ -138,7 +139,7 @@ namespace Keyczar.Compat
                     {
                         return null;
                     }
-                    return  _password.ToCharArray();
+                    return  _password().ToCharArray();
                 }
             }
 
@@ -147,12 +148,12 @@ namespace Keyczar.Compat
             /// </summary>
             /// <param name="purpose">The purpose.</param>
             /// <param name="path">The path.</param>
-            /// <param name="passPhrase">The pass phrase.</param>
+            /// <param name="passPhrasePrompt">The pass phrase prompt.</param>
             /// <returns></returns>
-            public ImportedKeySet PkcsKey(KeyPurpose purpose, string path, string passPhrase = null)
+            public ImportedKeySet PkcsKey(KeyPurpose purpose, string path, Func<string> passPhrasePrompt = null)
             {
                 using (var stream = File.OpenRead(path))
-                    return PkcsKey(purpose, stream, passPhrase);
+                    return PkcsKey(purpose, stream, passPhrasePrompt);
             }
 
             /// <summary>
@@ -160,23 +161,35 @@ namespace Keyczar.Compat
             /// </summary>
             /// <param name="purpose">The purpose.</param>
             /// <param name="input">The input.</param>
-            /// <param name="passPhrase">The pass phrase.</param>
+            /// <param name="passPhrasePrompt">The pass phrase prompt.</param>
             /// <returns></returns>
-            public virtual ImportedKeySet PkcsKey(KeyPurpose purpose, Stream input, string passPhrase = null)
+            public virtual ImportedKeySet PkcsKey(KeyPurpose purpose, Stream input, Func<string> passPhrasePrompt = null)
             {
                 AsymmetricKeyParameter bouncyKey = null;
                 var position = input.Position;
+                string _passPhrase =null;
+                bool _passPhraseRun = false;
+                Func<string> cachedPrompt =
+                () =>
+                     {
+                         if (!_passPhraseRun && passPhrasePrompt != null)
+                         {
+                             _passPhrase = passPhrasePrompt();
+                             _passPhraseRun = true;
+                         }
+                         return _passPhrase;
+                     };
                 using (var streamReader = new NonDestructiveStreamReader(input))
                 {
-                    bouncyKey = new PemReader(streamReader, new DummyPasswordFinder(passPhrase)).ReadObject() as AsymmetricKeyParameter;
+                    bouncyKey = new PemReader(streamReader, new PasswordFinder(cachedPrompt)).ReadObject() as AsymmetricKeyParameter;
                 }
 
                 if(bouncyKey == null)
                 {
                     input.Seek(position, SeekOrigin.Begin);
-                    bouncyKey = String.IsNullOrEmpty(passPhrase)
+                    bouncyKey = passPhrasePrompt ==null
                                     ? PrivateKeyFactory.CreateKey(input)
-                                    : PrivateKeyFactory.DecryptKey(passPhrase.ToCharArray(), input);
+                                    : PrivateKeyFactory.DecryptKey((passPhrasePrompt()?? String.Empty).ToCharArray(), input);
                 }
 
                 Key key;

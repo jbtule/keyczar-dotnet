@@ -14,7 +14,7 @@ namespace KeyczarTool
         private string _importLocation;
         private KeyStatus _status;
         private string _crypterLocation;
-        private string _passphrase;
+        private bool _passphrase;
 
         public ImportKey()
         {
@@ -23,7 +23,7 @@ namespace KeyczarTool
             this.HasRequiredOption("i|importlocation=", "The location of the import file.", v => { _importLocation = v; });
             this.HasOption("s|status=", "The status (active|primary).", v => { _status = v; });
             this.HasOption("c|crypter=", "The crypter key set location.", v => { _crypterLocation = v; });
-            this.HasOption("p|passphrase=", "The import files passphrase.", v => { _passphrase = v; });
+            this.HasOption("p|passphrase", "The import files passphrase.", v => { _passphrase = true; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -52,7 +52,15 @@ namespace KeyczarTool
                 }
                 catch
                 {
-                    importedKeySet = ImportedKeySet.Import.PkcsKey(keySet.Metadata.Purpose, _importLocation,_passphrase);
+                    importedKeySet = ImportedKeySet.Import.PkcsKey(keySet.Metadata.Purpose, _importLocation,()=>
+                                                                                                                {
+                                                                                                                    if (_passphrase)
+                                                                                                                    {
+                                                                                                                        Console.WriteLine("Please enter passphrase:");
+                                                                                                                        return Console.ReadLine();
+                                                                                                                    }
+                                                                                                                    return null;
+                                                                                                                });
                 }
                 if (importedKeySet == null)
                 {

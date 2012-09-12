@@ -15,11 +15,17 @@
 
 using System;
 using System.IO;
+using Keyczar.Crypto;
+using Keyczar.Util;
+
 namespace Keyczar
 {
+    /// <summary>
+    /// Signs a message and attaches the signature
+    /// </summary>
 	public class AttachedSigner:AttachedVerifier
 	{
-		Signer _signer;
+        private AttachedSignerHelper _signer;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="AttachedSigner"/> class.
@@ -35,33 +41,54 @@ namespace Keyczar
 		/// <param name="keySet">The key set.</param>
 		public AttachedSigner(IKeySet keySet) : base(keySet)
 		{
-			throw new NotImplementedException();
+			_signer = new AttachedSignerHelper(keySet);
 
 		}
 
-		public string Sign(String rawData,Byte[] hidden =null)
+        /// <summary>
+        /// Signs the specified raw data.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+        /// <returns></returns>
+		public string Sign(String message,Byte[] hidden =null)
 		{
-			throw new NotImplementedException();
+		    return new String(WebSafeBase64.Encode(Sign(DefaultEncoding.GetBytes(message), hidden)));
 
 		}
-		
 
-		public byte[] Sign(byte[] rawData, Byte[] hidden =null)
+
+        /// <summary>
+        /// Signs the specified raw data.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+        /// <returns></returns>
+		public byte[] Sign(byte[] message, Byte[] hidden =null)
 		{
-			throw new NotImplementedException();
+            using (var outstream = new MemoryStream())
+            using (var memstream = new MemoryStream(message))
+            {
+                Sign(memstream,outstream, hidden);
+                outstream.Flush();
+                return outstream.ToArray();
+            }
 		}
-		
-		/// <summary>
-		/// Signs the specified data.
-		/// </summary>
-		/// <param name="data">The data.</param>
-		/// <param name="signedData">The data with attached signature.</param>
-		/// <returns></returns>
+
+        /// <summary>
+        /// Signs the specified data.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <param name="signedData">The stream to write the data with attached signature.</param>
+        /// <param name="hidden">The hidden data that can be used to generate the signature.</param>
 		public void Sign(Stream data, Stream signedData, Byte[] hidden =null)
 		{
-			throw new NotImplementedException();
+		    _signer.Sign(data, signedData, hidden);
 		}
 
+        /// <summary>
+        /// Helper subclass to sign correctly
+        /// </summary>
 		protected class AttachedSignerHelper:Signer
 		{
 			/// <summary>
@@ -74,10 +101,74 @@ namespace Keyczar
 				
 			}
 
+            /// <summary>
+            /// Signs the specified data.
+            /// </summary>
+            /// <param name="data">The data.</param>
+            /// <param name="signedData">The signed data.</param>
+            /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+            public void Sign(Stream data, Stream signedData, Byte[] hidden = null)
+            {
+                if(!data.CanSeek)
+                {
+                    throw new ArgumentException("Stream must be able to seek.", "data");
+                }
+
+                long position = data.Position;
+                long fulllength = data.Length;
+
+                if (Int32.MaxValue < fulllength - position)
+                {
+                    throw new ArgumentException("Data is to large to attach signature", "data");
+                }
+
+                base.Sign(data, signedData, prefixData: null, postfixData: hidden, sigData: Tuple.Create(fulllength,position,data));
+            }
+
+
+
+            /// <summary>
+            /// Postfixes the data then signs it.
+            /// </summary>
+            /// <param name="signingStream">The signing stream.</param>
+            /// <param name="extra">The extra data passed by postfixData.</param>
+            protected override void PostfixData(Crypto.Streams.HashingStream signingStream, object extra)
+            {
+                var bytes = extra as byte[] ?? new byte[0];
+           
+                    var len = Utility.GetBytes(bytes.Length);
+                    signingStream.Write(len, 0, len.Length);
+                    signingStream.Write(bytes,0, bytes.Length);
+
+                base.PostfixData(signingStream, extra:null);
+            }
+
+            /// <summary>
+            /// Pads the signature with extra data.
+            /// </summary>
+            /// <param name="signature">The signature.</param>
+            /// <param name="outstream">The padded signature.</param>
+            /// <param name="extra">The extra data passed by sigData.</param>
+            protected override void PadSignature(byte[] signature, Stream outstream, object extra)
+            {
+                var padData = (Tuple<long, long, Stream>) extra;
+                var key = GetPrimaryKey() as ISignerKey;
+                outstream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
+                outstream.Write(key.GetKeyHash(), 0, KEY_HASH_LENGTH);
+                var lengthBytes = Utility.GetBytes((int) (padData.Item1 - padData.Item2));
+                outstream.Write(lengthBytes, 0, lengthBytes.Length);
+                padData.Item3.Seek(padData.Item2, SeekOrigin.Begin);
+                using (var reader = new NonDestructiveBinaryReader(padData.Item3))
+                {
+                    while (reader.Peek() != -1)
+                    {
+                        byte[] buffer = reader.ReadBytes(BUFFER_SIZE);
+                        outstream.Write(buffer, 0, buffer.Length);
+                    }
+                }
+                outstream.Write(signature, 0, signature.Length);
+            }
 		}
-
-
-
 	}
 }
 

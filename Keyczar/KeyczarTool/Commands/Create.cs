@@ -22,7 +22,7 @@ using NDesk.Options;
 using Keyczar;
 namespace KeyczarTool
 {
-    public class Create : ConsoleCommand
+    class Create : ConsoleCommand
 
     {
         private string _location;

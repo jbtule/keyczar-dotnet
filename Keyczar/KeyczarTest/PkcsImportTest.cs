@@ -49,7 +49,7 @@ namespace KeyczarTest
 
           private void HelperCryptImport(Stream keystream)
           {
-              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.DECRYPT_AND_ENCRYPT, keystream, "pass"))
+              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.DECRYPT_AND_ENCRYPT, keystream, ()=>"pass"/* hard coding for test only!!!!*/))
               using (var crypter = new Crypter(keyset))
               using (var encrypter = new Encrypter(Path.Combine(TEST_DATA, "rsa-crypt")))
               {
@@ -62,7 +62,7 @@ namespace KeyczarTest
 
           private void HelperSignImport(String keyType, Stream keystream)
           {
-              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.SIGN_AND_VERIFY, keystream, "pass"))
+              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.SIGN_AND_VERIFY, keystream, () => "pass"/* hard coding for test only!!!!*/))
               using (var signer = new Signer(keyset))
           
               {

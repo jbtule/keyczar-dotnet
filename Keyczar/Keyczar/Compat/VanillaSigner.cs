@@ -83,7 +83,7 @@ namespace Keyczar.Compat
         /// </summary>
         /// <param name="verifyingStream">The verifying stream.</param>
         /// <param name="extra">The extra data passed by postFixData</param>
-        protected override void PostFixData(VerifyingStream verifyingStream, object extra)
+        protected override void PostfixData(VerifyingStream verifyingStream, object extra)
         {
 
         }
