@@ -36,6 +36,7 @@ namespace KeyczarTool
                                    new Demote(), 
                                    new Revoke(), 
                                    new ImportKey(),
+								   new Export(),
                                    new UseKey(), 
                                };
 

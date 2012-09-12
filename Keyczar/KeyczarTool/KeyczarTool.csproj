@@ -59,6 +59,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Commands\PubKey.cs" />
+    <Compile Include="Commands\Export.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
