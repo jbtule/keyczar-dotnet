@@ -50,7 +50,7 @@ namespace Keyczar
         /// </summary>
         /// <value>The key type.</value>
         [JsonIgnore]
-        public KeyType Type
+        public virtual KeyType Type
         {
             get
             {
@@ -59,7 +59,7 @@ namespace Keyczar
                    _type = KeyType.ForType(GetType());
                 }
                 return _type;
-            }
+			}set{}
         }
 
 		/// <summary>

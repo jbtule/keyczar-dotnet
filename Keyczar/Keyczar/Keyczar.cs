@@ -106,7 +106,7 @@ namespace Keyczar
 
             _hashedKeys = versions
                 .ToLookup(k => k.Hash, v => v)
-                .ToDictionary(k => BitConverter.ToInt32(k.Key,0), v =>
+                .ToDictionary(k => Utility.ToInt32(k.Key), v =>
                                               {
                                                   var list = new SortedList<KeyVersion, Key>();
                                                   foreach (var pair in v)
@@ -148,12 +148,16 @@ namespace Keyczar
         /// <returns></returns>
         protected Key GetKey(byte[] hash)
         {
-            var hashIndex =BitConverter.ToInt32(hash, 0);
+            var hashIndex =Utility.ToInt32(hash);
             SortedList<KeyVersion, Key> list;
             if (_hashedKeys.TryGetValue(hashIndex, out list))
             {
                 return list.Select(it=>it.Value).FirstOrDefault();
             }
+			//For special imported keys
+			if(_hashedKeys.TryGetValue(0, out list)){
+				return list.Select(it=>it.Value).FirstOrDefault();
+			}
             return null;
         }
 

@@ -108,7 +108,7 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public HashingStream GetAuthSigningStream()
         {
-            return HmacKey.GetSigningStream();
+            return HmacKey.Maybe(h=>h.GetSigningStream(),()=> null);
         }
         /// <summary>
         /// Gets the authentication verifying stream.
@@ -116,7 +116,7 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public VerifyingStream GetAuthVerifyingStream()
         {
-            return HmacKey.GetVerifyingStream();
+			return HmacKey.Maybe(h=>h.GetVerifyingStream(),()=> null);
         }
 
         /// <summary>
@@ -147,7 +147,10 @@ namespace Keyczar.Crypto
                               BlockSize = BlockLength * 8
                           };
             alg.GenerateIV();
-            return new DotNetSymmetricStream(alg, output, HmacKey.HashLength, encrypt: true);
+		
+
+			int hashlength =HmacKey.Maybe(h=>h.HashLength,()=>0);
+			return new DotNetSymmetricStream(alg, output,hashlength , encrypt: true);
 
 
             //Bouncy Castle Version-->
@@ -177,7 +180,7 @@ namespace Keyczar.Crypto
                               Padding = PaddingMode.PKCS7,
                               BlockSize = BlockLength * 8
                           };
-            return new DotNetSymmetricStream(alg, output, HmacKey.HashLength, encrypt: false);
+            return new DotNetSymmetricStream(alg, output, HmacKey.Maybe(h=>h.HashLength,()=>0), encrypt: false);
 
                //Bouncy Castle Version-->
                //return new SymmetricStream(

@@ -119,6 +119,8 @@ namespace Keyczar
         /// <returns>The result of the conversion.</returns>
         public static implicit operator KeyType(string identifer)
         {
+			if(String.IsNullOrWhiteSpace(identifer))
+			   return null;
             return new KeyType(identifer);
         }
 
@@ -157,7 +159,7 @@ namespace Keyczar
         /// Gets the clr type.
         /// </summary>
         /// <value>The type.</value>
-        public Type Type
+        public virtual Type Type
         {
             get
             {
@@ -166,7 +168,7 @@ namespace Keyczar
                     _type = _specs[Identifier].Type;
                 }
                 return _type;
-            }
+			}set{}
         }
 
         /// <summary>

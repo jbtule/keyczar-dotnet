@@ -90,6 +90,7 @@ namespace Keyczar
                 var header = Utility.ReadHeader(input, out keyHash);
 
                 var cryptKey = GetKey(keyHash) as ICrypterKey;
+				var pbeKey= cryptKey as IPbeKey;
                 input.Seek(0, SeekOrigin.Begin);
                 var verify = true;
 
@@ -118,9 +119,16 @@ namespace Keyczar
                     throw new InvalidCryptoDataException("Ciphertext was invalid!");
                 }
 
-                input.Seek(HEADER_LENGTH, SeekOrigin.Begin);
-              
-                using (var crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(output), () => new DummyStream()))
+				FinishingStream crypterStream;
+				if(pbeKey !=null){
+					input.Seek(0, SeekOrigin.Begin);
+					crypterStream =pbeKey.GetRawDecryptingStream(output);
+				}else{
+					input.Seek(HEADER_LENGTH, SeekOrigin.Begin);
+					crypterStream =cryptKey.Maybe(m => m.GetDecryptingStream(output), () => new DummyStream());
+				}
+
+                using (crypterStream)
                 {
                     var tagLength = crypterStream.GetTagLength(header);
                     while (input.Position < input.Length - tagLength)

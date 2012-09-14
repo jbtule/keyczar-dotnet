@@ -174,6 +174,23 @@ namespace Keyczar
 
         }
 
+		[JsonConverter(typeof(JsonConverter))]
+		internal class HardcodedKeyType:KeyType{
+			Type _type;
+			internal HardcodedKeyType(String identifer,Type type):base(identifer){
+				_type =type;
+			}
+
+			public override Type Type{
+				get{
+					return _type;
+				}set{
+					_type = value;
+				}
+			}
+		}
+
+
         internal class PbeAesKey : AesKey, IPbeKey
         {
 
@@ -182,6 +199,22 @@ namespace Keyczar
                 IV = new byte[16];
                 Random.NextBytes(IV);
             }
+
+			KeyType _type =new HardcodedKeyType("PBE_AES",typeof(PbeAesKey));
+
+			[JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
+			public override KeyType Type {
+				get {
+					return _type;
+				}set{
+					_type =value;
+				}
+			}
+
+			public override byte[] GetKeyHash()
+			{
+				return Utility.GetBytes(0);
+			}
 
             public byte[] IV { get; set; }
 
