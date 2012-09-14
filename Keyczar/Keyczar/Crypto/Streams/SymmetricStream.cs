@@ -15,16 +15,15 @@
 
 using System;
 using System.IO;
-using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Org.BouncyCastle.Crypto;
 
-namespace Keyczar
+namespace Keyczar.Crypto.Streams
 {
     /// <summary>
     /// Bouncy Castle target symmetric encryption wrapper
     /// </summary>
-    public class SymmetricStream : FinishingStream
+    public class SymmetricStream : CipherTextOnlyFinishingStream
     {
         private IBufferedCipher _cipher;
         private Stream _output;
@@ -73,8 +72,7 @@ namespace Keyczar
         {
             Flush();
             _output = null;
-            Secure.Clear(_iv);
-            _iv = null;
+            _iv = _iv.Clear(); 
             _initFunc = null;
             _cipher.Reset();
             _cipher = null;
@@ -102,16 +100,19 @@ namespace Keyczar
         {
             if (!_init)
             {
-                if (_encrypt)
+                if (!CipherTextOnly)
                 {
-                    _output.Write(_iv, 0, _iv.Length);
+                    if (_encrypt)
+                    {
+                        _output.Write(_iv, 0, _iv.Length);
 
-                }
-                else
-                {
-                    Array.Copy(buffer, 0, _iv, 0, _iv.Length);
-                    offset = offset + _iv.Length;
-                    count = count - _iv.Length;
+                    }
+                    else
+                    {
+                        Array.Copy(buffer, 0, _iv, 0, _iv.Length);
+                        offset = offset + _iv.Length;
+                        count = count - _iv.Length;
+                    }
                 }
                 _initFunc(_iv,_cipher,_encrypt);
                 _init = true;
@@ -120,7 +121,7 @@ namespace Keyczar
             var outBuffer = new byte[_cipher.GetUpdateOutputSize(count)];
             var outLen = _cipher.ProcessBytes(buffer, offset, count, outBuffer, 0);
             _output.Write(outBuffer, 0, outLen);
-            Secure.Clear(outBuffer);
+            outBuffer.Clear();
             _outLen += outLen;
             _inLen += count;
                   
@@ -133,6 +134,8 @@ namespace Keyczar
         /// <returns></returns>
         public override int GetTagLength(byte[] header)
         {
+            if (CipherTextOnly)
+                return 0;
             return _tagSize;
         }
 
@@ -143,7 +146,9 @@ namespace Keyczar
         {
             if (!_init && _encrypt)
             {
-                _output.Write(_iv, 0, _iv.Length);
+                if(!CipherTextOnly)
+                    _output.Write(_iv, 0, _iv.Length);
+
                 _initFunc(_iv, _cipher, _encrypt);
                 _init = true;
             }
@@ -152,7 +157,26 @@ namespace Keyczar
             var buffer = new byte[buffLen];
             var writeLen = _cipher.DoFinal(buffer, 0);
             _output.Write(buffer,  0, writeLen);
-            Secure.Clear(buffer);
+            buffer.Clear();
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the output is  the [cipher text only].
+        /// </summary>
+        /// <value><c>true</c> if [cipher text only]; otherwise, <c>false</c>.</value>
+        public override bool CipherTextOnly { get; set; }
+        /// <summary>
+        /// Gets or sets the IV.
+        /// </summary>
+        /// <value>The IV.</value>
+        public override byte[] IV
+        { 
+
+            get
+            {
+                return _iv;
+            } 
+            set { _iv = value; }
         }
     }
 }

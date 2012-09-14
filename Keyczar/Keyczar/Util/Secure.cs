@@ -27,6 +27,21 @@ namespace Keyczar.Util
     /// </summary>
     public static class Secure
     {
+
+        /// <summary>
+        /// Disposes if not null and returns null to empty variables in one line
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="disposable">The disposable.</param>
+        /// <returns></returns>
+        public static T SafeDispose<T>(this T disposable) where T:class,IDisposable
+        {
+            if(disposable != null)
+                disposable.Dispose();
+            return null;
+        }
+
+
         /// <summary>
         /// Runs the action if the target is not null or the default action if it is null.
         /// </summary>
@@ -50,10 +65,11 @@ namespace Keyczar.Util
         /// Clears the specified array.
         /// </summary>
         /// <param name="a">A.</param>
-        public static void Clear(Array a)
+        public static T[] Clear<T>(this T[] a)
         {
             if (a != null)
                 Array.Clear(a, 0, a.Length);
+            return null;
         }
 
 

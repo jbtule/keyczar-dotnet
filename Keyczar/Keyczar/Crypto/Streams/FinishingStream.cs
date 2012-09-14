@@ -21,11 +21,25 @@ using System.Text;
 
 namespace Keyczar.Crypto.Streams
 {
+
+   
+
     /// <summary>
     /// Abstract stream type that requires a finish method to be called
     /// </summary>
     public abstract class FinishingStream:Stream
     {
+        /// <summary>
+        /// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
+        /// </summary>
+        public override void Close()
+        {
+            this.Dispose(false);
+            GC.SuppressFinalize(this);
+        }
+
+ 
+
         /// <summary>
         /// Gets the length of the tag.
         /// </summary>

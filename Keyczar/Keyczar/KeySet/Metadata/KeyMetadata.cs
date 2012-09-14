@@ -56,7 +56,7 @@ namespace Keyczar
             Purpose = metadata.Purpose;
             Type = metadata.Type;
             Encrypted = metadata.Encrypted;
-            Versions = Versions.Select(it => new KeyVersion(it)).ToList();
+            Versions = metadata.Versions.Select(it => new KeyVersion(it)).ToList();
         }
 
 

@@ -111,12 +111,10 @@ namespace Keyczar
         /// </summary>
         public void Dispose()
         {
-            _keyset.Dispose();
-            _keyset = null;
-            _crypter.Dispose();
-            _crypter = null;
-            Secure.Clear(SessionMaterial);
-            _sessionMaterial = null;
+
+            _keyset = _keyset.SafeDispose(); 
+            _crypter = _crypter.SafeDispose(); 
+            _sessionMaterial = SessionMaterial.Clear(); 
 
         }
         /// <summary>

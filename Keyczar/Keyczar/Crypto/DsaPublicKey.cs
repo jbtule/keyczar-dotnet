@@ -73,10 +73,10 @@ namespace Keyczar.Crypto
             var gMag = Utility.StripLeadingZeros(G);
             var yMag = Utility.StripLeadingZeros(Y);
             var hash = Utility.HashKeyLengthPrefix(Keyczar.KEY_HASH_LENGTH, pMag, qMag, gMag, yMag);
-            Secure.Clear(qMag);
-            Secure.Clear(pMag);
-            Secure.Clear(gMag);
-            Secure.Clear(yMag);
+            qMag.Clear();
+            pMag.Clear();
+            gMag.Clear();
+            yMag.Clear();
             return hash;
         }
 
@@ -94,14 +94,11 @@ namespace Keyczar.Crypto
         /// </summary>
         public override void Dispose()
         {
-            Secure.Clear(Q);
-            Q = null;
-            Secure.Clear(P);
-            P = null;
-            Secure.Clear(Y);
-            Y = null;
-            Secure.Clear(G);
-            G = null;
+
+            Q = Q.Clear(); 
+            P = P.Clear();
+            Y = Y.Clear(); 
+            G = G.Clear(); 
             Size = 0;
         }
 

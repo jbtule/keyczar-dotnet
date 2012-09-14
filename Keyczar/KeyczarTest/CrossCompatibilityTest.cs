@@ -42,15 +42,15 @@ namespace KeyczarTest
         private String plaintext = "This is not a test, this is a real string";
         private String morePlaintext = "Some text to encrypt";
 
-
-        private void HelperDecrypt2(String subDir)
+        [TestCase("aes")]
+        public void TestDecryptPrimaryActive(String subDir)
         {
-            var subPath = Path.Combine(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var crypter = new Crypter(subPath))
             {
                 String activeCiphertext = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
                 String primaryCiphertext = File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
-
+                
                 String activeDecrypted = crypter.Decrypt(activeCiphertext);
                 Expect(activeDecrypted, Is.EqualTo(morePlaintext));
                 String primaryDecrypted = crypter.Decrypt(primaryCiphertext);
@@ -58,11 +58,11 @@ namespace KeyczarTest
             }
         }
 
-        
-        private void HelperDecrypt1(String subDir)
+        [TestCase("rsa")]
+        public void TestDecryptPrimaryOnly(String subDir)
         {
 
-            var subPath = Path.Combine(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var crypter = new Crypter(subPath))
             {
                 String primaryCiphertext = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
@@ -71,9 +71,11 @@ namespace KeyczarTest
             }
         }
 
-        private void HelperVerify(String subDir)
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        public void TestVerify(String subDir)
         {
-            var subPath = Path.Combine(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var verifier = new Signer(subPath))
             {
                 String signature = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
@@ -81,30 +83,7 @@ namespace KeyczarTest
             }
         }
 
-        [Test]
-        public void TestAesDecrypt()
-        {
-            HelperDecrypt2("aes");
-        }
 
-
-        [Test]
-        public void TestRsaDecrypt()
-        {
-            HelperDecrypt1("rsa");
-        }
-
-        [Test]
-        public void TestHmacVerify()
-        {
-            HelperVerify("hmac");
-        }
-
-        [Test]
-        public void TestDsaVerify()
-        {
-            HelperVerify("hmac");
-        }
 
     }
 }

@@ -57,8 +57,7 @@ namespace Keyczar.Crypto
         /// </summary>
         public override void Dispose()
         {
-            Secure.Clear(HmacKeyBytes);
-            HmacKeyBytes = null;
+            HmacKeyBytes =  HmacKeyBytes.Clear();
         }
 
         /// <summary>

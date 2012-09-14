@@ -58,6 +58,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Compat\Export.cs" />
     <Compile Include="Compat\VanillaSigner.cs" />
     <Compile Include="Compat\VanillaVerifier.cs" />
     <Compile Include="Crypter.cs" />
@@ -66,6 +67,7 @@
     <Compile Include="Crypto\Streams\DummyStream.cs" />
     <Compile Include="Crypto\Streams\HmacStream.cs" />
     <Compile Include="Crypto\Streams\DotNetSymmetricStream.cs" />
+    <Compile Include="Crypto\Streams\ICipherTextOnlyStream.cs" />
     <Compile Include="Crypto\Streams\SymmetricStream.cs" />
     <Compile Include="Crypto\IKey.cs" />
     <Compile Include="KeySet\Manage\IKeySetWriter.cs" />
@@ -73,6 +75,9 @@
     <Compile Include="KeySet\Manage\EncryptedKeySetWriter.cs" />
     <Compile Include="KeySet\Manage\KeySetWriter.cs" />
     <Compile Include="Compat\ImportedKeySet.cs" />
+    <Compile Include="KeySet\Manage\PbeKeySetWriter.cs" />
+    <Compile Include="KeySet\Metadata\PbeKeyStore.cs" />
+    <Compile Include="KeySet\PbeKeySet.cs" />
     <Compile Include="SessionCrypter.cs" />
     <Compile Include="TimeoutSigner.cs" />
     <Compile Include="TimeoutVerifier.cs" />
@@ -98,6 +103,7 @@
     <Compile Include="Crypto\Streams\HashingStream.cs" />
     <Compile Include="Unofficial\BlobKeySetWriter.cs" />
     <Compile Include="Unofficial\BsonSessionKeyPacker.cs" />
+    <Compile Include="Util\CachedPrompt.cs" />
     <Compile Include="Util\NonDestructive\NonDestructiveBinaryReader.cs" />
     <Compile Include="Util\NonDestructive\NonDestructiveCryptoStream.cs" />
     <Compile Include="Util\NonDestructive\NonDestructiveStreamReader.cs" />

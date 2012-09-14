@@ -13,7 +13,6 @@
  *  limitations under the License.
  */
 
-using System;
 using System.Linq;
 using Keyczar;
 using Keyczar.Util;
@@ -50,16 +49,6 @@ namespace Keyczar
         {
            var cipherData = _encrypter.Encrypt(keyData);
            _writer.Write(Keyczar.DefaultEncoding.GetBytes(WebSafeBase64.Encode(cipherData)), version);
-        }
-
-        /// <summary>
-        /// Writes the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="version">The version.</param>
-        public void Write(Key key, int version)
-        {
-            Write(Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(key)), version);
         }
 
         /// <summary>

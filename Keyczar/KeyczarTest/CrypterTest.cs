@@ -32,19 +32,8 @@ namespace KeyczarTest
         private static String input = "This is some test data";
         private static byte[] inputBytes = Encoding.UTF8.GetBytes(input);
 
-        private void HelperDecrypt(String subDir)
+        private void HelperDecrypt(Crypter crypter, String subPath)
         {
-            var subPath = Path.Combine(TEST_DATA, subDir);
-            using (var crypter = new Crypter(subPath))
-            {
-                HelperDecrypt(crypter, subDir);
-            }
-        }
-
-        private void HelperDecrypt(Crypter crypter, String subDir)
-        {
-
-            var subPath = Path.Combine(TEST_DATA, subDir);
             String activeCiphertext = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
             String primaryCiphertext = File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
 
@@ -54,10 +43,28 @@ namespace KeyczarTest
             Expect(primaryDecrypted, Is.EqualTo(input));
         }
 
-        private void HelperEncryptDecrypt(String subDir)
+
+        [TestCase("aes","")]
+        [TestCase("rsa", "")]
+        [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        public void TestDecrypt(String subDir,string nestedDir)
         {
-                
-            var subPath = Path.Combine(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
+
+            using (var crypter = new Crypter(subPath))
+            {
+                HelperDecrypt(crypter, subPath);
+            }
+        }
+
+        [TestCase("aes", "")]
+        [TestCase("rsa", "")]
+        [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        public void TestEncryptDecrypt(String subDir, string nestedDir)
+        {
+
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
+
             using (var crypter = new Crypter(subPath))
             {
                 var cipher = crypter.Encrypt(input);
@@ -67,10 +74,14 @@ namespace KeyczarTest
 
         }
 
-
-        private void HelperTestBadCipherText(string subPath)
+        [TestCase("aes", "")]
+        [TestCase("rsa", "")]
+        [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        public void TestBadCipherText(string subDir, string nestedDir)
         {
-            using (var crypter = new Crypter(Path.Combine(TEST_DATA, subPath)))
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
+
+            using (var crypter = new Crypter(subPath))
             {
                 Expect(() => crypter.Decrypt(new byte[0]), Throws.TypeOf<InvalidCryptoDataException>());
                 byte[] ciphertext = crypter.Encrypt(inputBytes);
@@ -85,34 +96,12 @@ namespace KeyczarTest
             }
         }
 
-        private void HelperNonRepeating(string subDir)
-        {
-            var subPath = Path.Combine(TEST_DATA, subDir);
-            using (var crypter = new Crypter(subPath))
-            {
-                var cipher = crypter.Encrypt(input);
-                var cipher2 = crypter.Encrypt(input);
-                Expect(cipher, Is.Not.EqualTo(cipher2));
-            }
 
-        }
- 
-        [Test]
-        public void TestRsaDecrypt()
-        {
-            HelperDecrypt("rsa");
-        }
-
-        [Test]
-        public void TestRsaCryptAndDecrypt()
-        {
-           HelperEncryptDecrypt("rsa");
-        }
 
         [Test]
         public void TestRsaCryptWithPublicKey()
         {
-            using (var encrypter = new Encrypter(Path.Combine(TEST_DATA, "rsa.public")))
+            using (var encrypter = new Encrypter(Util.TestDataPath(TEST_DATA, "rsa.public")))
             {
                 var cipher = encrypter.Encrypt(input);
                 var subPath = Path.Combine(TEST_DATA, "rsa");
@@ -124,47 +113,49 @@ namespace KeyczarTest
             }
         }
 
-        [Test]
-        public void TestBadRsaCiphertexts()
-        {
-            HelperTestBadCipherText("rsa");
-        }
 
-        [Test]
-        public void TestAesDecrypt()
-        {
-            HelperDecrypt("aes");
-        }
-
-        [Test]
-        public void TestAesCryptAndDecrypt()
-        {
-            HelperEncryptDecrypt("aes");
-        }
-
-        [Test]
-        public void TestAesEncryptedKeyDecrypt()
+        [TestCase("aes", "")]
+        [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        public void TestAesEncryptedKeyDecrypt(string subDir, string nestedDir)
         {
             // Test reading and using encrypted keys
-            var keyPath = Path.Combine(TEST_DATA, "aes");
-            var dataPath = Path.Combine(TEST_DATA, "aes-crypted");
+
+
+
+
+            var basePath = Util.TestDataPath(TEST_DATA, nestedDir);
+            var keyPath = Path.Combine(basePath, subDir);
+            var dataPath = Path.Combine(basePath, subDir + "-crypted");
             using (var keyDecrypter = new Crypter(keyPath))
             using (var dataDecrypter = new Crypter(new EncryptedKeySet(dataPath, keyDecrypter)))
             {
-                HelperDecrypt(dataDecrypter, "aes-crypted");
+                HelperDecrypt(dataDecrypter, dataPath);
             }
         }
 
-          [Test]
-        public void TestAesNonRepeating()
+        [TestCase("aes", "")]
+        [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        public void TestAesNonRepeating(string subDir, string nestedDir)
         {
-           HelperNonRepeating("aes");
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
+
+            using (var crypter = new Crypter(subPath))
+            {
+                var cipher = crypter.Encrypt(input);
+                var cipher2 = crypter.Encrypt(input);
+                Expect(cipher, Is.Not.EqualTo(cipher2));
+            }
         }
 
-        [Test]
-        public void TestShortAesEncryptAndDecrypt()
+
+        [TestCase("aes", "")]
+        [TestCase("rsa", "")]
+        [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        public void TestShortEncryptAndDecrypt(string subDir, string nestedDir)
         {
-            using(var crypter = new Crypter(Path.Combine(TEST_DATA, "aes"))){
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
+            using (var crypter = new Crypter(subPath))
+            {
                 for (int i = 0; i < 32; i++)
                 {
                     var letters = Enumerable.Repeat('a', i).ToArray();
@@ -177,10 +168,6 @@ namespace KeyczarTest
 
         }
 
-        [Test]
-        public void TestBadAesCiphertexts()
-        {
-            HelperTestBadCipherText("aes");
-        }
+       
     }
 }

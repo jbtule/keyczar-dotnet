@@ -77,7 +77,6 @@ namespace Keyczar
         public static Key Read(KeyType type, byte[] keyData)
         {
             var key = (Key)JsonConvert.DeserializeObject(Keyczar.DefaultEncoding.GetString(keyData), type.Type);
-            Secure.Clear(keyData);
             return key;
         }
 

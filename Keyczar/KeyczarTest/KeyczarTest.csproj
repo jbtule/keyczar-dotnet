@@ -47,9 +47,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CertificateImportTest.cs" />
+    <Compile Include="CreateManageTest.cs" />
     <Compile Include="PkcsImportTest.cs" />
     <Compile Include="Unofficial\BlobKeySetTest.cs" />
-    <Compile Include="Unofficial\CrypterTest.cs" />
     <Compile Include="CrossCompatibilityTest.cs" />
     <Compile Include="CrypterTest.cs" />
     <Compile Include="KeySetTest.cs" />
@@ -58,7 +58,7 @@
     <Compile Include="SignerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeoutSignerTest.cs" />
-    <Compile Include="Unofficial\SessionTest.cs" />
+    <Compile Include="Util.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

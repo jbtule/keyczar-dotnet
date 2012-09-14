@@ -83,15 +83,7 @@ namespace Keyczar
 
         }
 
-        /// <summary>
-        /// Writes the specified key.
-        /// </summary>
-        /// <param name="key">The key.</param>
-        /// <param name="version">The version.</param>
-        public void Write(Key key, int version)
-        {
-            Write(Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(key)),version);
-        }
+
 
         /// <summary>
         /// Writes the specified metadata.

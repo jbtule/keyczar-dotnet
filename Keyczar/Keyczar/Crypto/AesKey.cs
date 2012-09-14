@@ -15,6 +15,7 @@
  * 
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Cryptography;
@@ -28,10 +29,12 @@ using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Crypto.Paddings;
 namespace Keyczar.Crypto
 {
+   
+ 
     /// <summary>
     /// Encrypts AES
     /// </summary>
-    public class AesKey:Key,ICrypterKey
+    public class AesKey : Key, ICrypterKey
     {
         /// <summary>
         /// Block size is 128bits
@@ -94,11 +97,8 @@ namespace Keyczar.Crypto
         public override void Dispose()
         {
             Mode = null;
-            Secure.Clear(AesKeyBytes);
-            AesKeyBytes = null;
-            if(HmacKey !=null)
-                HmacKey.Dispose();
-            HmacKey = null;
+            AesKeyBytes = AesKeyBytes.Clear();
+            HmacKey = HmacKey.SafeDispose();
         }
 
 

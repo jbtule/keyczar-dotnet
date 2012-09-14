@@ -37,19 +37,6 @@ namespace Keyczar
         }
 
         /// <summary>
-        /// Gets the key.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        public Key GetKey(int version)
-        {
-            if (Metadata.Encrypted)
-                throw new InvalidKeySetException("Key set is encrypted.");
-            return Key.Read(Metadata.Type, GetKeyData(version));
-
-        }
-
-        /// <summary>
         /// Gets the binary data that the key is stored in.
         /// </summary>
         /// <param name="version">The version.</param>

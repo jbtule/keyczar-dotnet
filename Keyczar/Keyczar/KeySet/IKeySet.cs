@@ -17,35 +17,43 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using Keyczar.Util;
 namespace Keyczar
 {
     /// <summary>
-    /// Defines methods for getting keys out of a key set
+    /// Extension Methods for IKeySet
     /// </summary>
-    public interface IKeySet : IRawKeySet
+    public static class StandardKeysetOperations
     {
-
         /// <summary>
-        /// Gets the key.
+        /// Get's deep copy of Key from IKeyset
         /// </summary>
+        /// <param name="keyset">The keyset.</param>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        Key GetKey(int version);
+        public static Key GetKey(this IKeySet keyset, int version)
+        {
+            var keyData = keyset.GetKeyData(version);
+            var key = Key.Read(keyset.Metadata.Type, keyData);
+            keyData.Clear();
+            return key;
+        }
+    }
 
+
+    /// <summary>
+    /// Defines methods for getting keys out of a key set
+    /// </summary>
+    public interface IKeySet 
+    {
+
+      
         /// <summary>
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
         KeyMetadata Metadata { get; }
-        
-    }
 
-    /// <summary>
-    /// Defines method for getting raw data to allow encryption
-    /// </summary>
-    public interface IRawKeySet
-    {
         /// <summary>
         /// Gets the binary data that the key is stored in.
         /// </summary>
@@ -53,4 +61,6 @@ namespace Keyczar
         /// <returns></returns>
         byte[] GetKeyData(int version);
     }
+
+
 }

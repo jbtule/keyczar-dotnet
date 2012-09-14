@@ -28,6 +28,7 @@ namespace Keyczar.Util
     /// </summary>
     public static class Utility
     {
+      
 
         /// <summary>
         /// Gets the bytes for an int laid out big endian

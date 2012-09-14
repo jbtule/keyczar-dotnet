@@ -37,7 +37,7 @@ namespace KeyczarTest
           [Test]
           public void TestGetPrimary(){
                 // based on the checked in files, we know version 2 is primary.
-                var reader = new KeySet(Path.Combine(TEST_DATA , "rsa"));
+              var reader = new KeySet(Util.TestDataPath(TEST_DATA, "rsa"));
                 var knownPrimaryKey = reader.GetKey(2 /* primary key version */);
                 var readerKey = new GetPrimary(reader).GetPrimaryExposed();
                 Expect(readerKey.GetKeyHash(), Is.EqualTo(knownPrimaryKey.GetKeyHash()));
@@ -45,7 +45,7 @@ namespace KeyczarTest
 
           [Test]
           public void TestGetPrimaryFails(){
-              var reader = new KeySet(Path.Combine(TEST_DATA, "aes-noprimary"));
+              var reader = new KeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"));
               Expect(() => new GetPrimary(reader).GetPrimaryExposed(), Throws.TypeOf<MissingPrimaryKeyException>());
 
           }

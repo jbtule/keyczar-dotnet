@@ -113,9 +113,11 @@ namespace Keyczar.Crypto
             PrimeExponentQ = priv.DQ.ToByteArray();
             CrtCoefficient = priv.QInv.ToByteArray();
             var pub = (RsaKeyParameters) pair.Public;
-            PublicKey = new RsaPublicKey();
-            PublicKey.PublicExponent = pub.Exponent.ToByteArray();
-            PublicKey.Modulus = pub.Modulus.ToByteArray();
+            PublicKey = new RsaPublicKey
+                            {
+                                PublicExponent = pub.Exponent.ToByteArray(), 
+                                
+                                Modulus = pub.Modulus.ToByteArray()};
 
         }
 
@@ -124,21 +126,13 @@ namespace Keyczar.Crypto
         /// </summary>
         public override void Dispose()
         {
-            if(PublicKey !=null)
-                PublicKey.Dispose();
-            PublicKey = null;
-            Secure.Clear(PrivateExponent);
-            PrivateExponent = null;
-            Secure.Clear(PrimeP);
-            PrimeP = null;
-            Secure.Clear(PrimeQ);
-            PrimeQ = null;
-            Secure.Clear(PrimeExponentP);
-            PrimeExponentP = null;
-            Secure.Clear(PrimeExponentQ);
-            PrimeExponentQ = null;
-            Secure.Clear(CrtCoefficient);
-            CrtCoefficient = null;
+            PublicKey = PublicKey.SafeDispose(); 
+            PrivateExponent = PrivateExponent.Clear();
+            PrimeP = PrimeP.Clear();
+            PrimeQ = PrimeQ.Clear();
+            PrimeExponentP = PrimeExponentP.Clear();
+            PrimeExponentQ = PrimeExponentQ.Clear();
+            CrtCoefficient = CrtCoefficient.Clear();
             Size = 0;
         }
 

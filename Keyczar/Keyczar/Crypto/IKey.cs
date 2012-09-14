@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.IO;
 using Keyczar.Crypto.Streams;
 
@@ -28,6 +29,16 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <returns></returns>
         byte[] GetKeyHash();
+
+    }
+
+    /// <summary>
+    ///  Interface for keys that can be use for PBE encryption of keys
+    /// </summary>
+    internal interface IPbeKey
+    {
+        CipherTextOnlyFinishingStream GetRawEncryptingStream(Stream output);
+        CipherTextOnlyFinishingStream GetRawDecryptingStream(Stream output);
     }
 
     /// <summary>

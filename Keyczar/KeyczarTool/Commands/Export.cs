@@ -5,7 +5,7 @@ using System.Text;
 using Keyczar;
 using ManyConsole;
 using Keyczar.Compat;
-namespace KeyczarTool.Commands
+namespace KeyczarTool
 {
     class Export : ConsoleCommand
     {

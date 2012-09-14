@@ -20,6 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar.Crypto;
+using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 
 namespace Keyczar
@@ -92,13 +93,20 @@ namespace Keyczar
             Array.Copy(key.GetKeyHash(), 0, header, FORMAT_BYTES.Length, KEY_HASH_LENGTH);
            
             var cryptKey = key as IEncrypterKey;
+            var pbeKey = key as IPbeKey;
 
             using (var reader = new NonDestructiveBinaryReader(input))
             {
-
-                output.Write(header, 0, header.Length);
-              
-                using (var encryptingStream = cryptKey.GetEncryptingStream(output))
+                FinishingStream encryptingStream; 
+                if (pbeKey == null)
+                {
+                    output.Write(header, 0, header.Length);
+                    encryptingStream = cryptKey.GetEncryptingStream(output);
+                }else
+                {
+                    encryptingStream = pbeKey.GetRawEncryptingStream(output);
+                }
+                using (encryptingStream)
                 {
                     encryptingStream.GetTagLength(header);
 

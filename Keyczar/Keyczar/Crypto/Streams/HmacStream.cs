@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Security.Cryptography;
 using Keyczar.Util;
 
@@ -50,12 +51,13 @@ namespace Keyczar.Crypto.Streams
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
+            Finish();
+
             if (disposing)
             {
-                Finish();
-                //_hmacAlg.Dispose();
+                var alg = _hmacAlg as IDisposable;
+                alg.SafeDispose();
             }
-
             _hmacAlg = null;
 
             base.Dispose(disposing);

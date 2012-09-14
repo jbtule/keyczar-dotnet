@@ -42,15 +42,6 @@ namespace Keyczar.Unofficial
 
         }
 
-        /// <summary>
-        /// Gets the key.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        public Key GetKey(int version)
-        {
-           return Key.Read(Metadata.Type, GetKeyData(version));
-        }
 
         /// <summary>
         /// Gets the binary data that the key is stored in.
@@ -87,8 +78,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         public void Dispose()
         {
-            _zipFile.Dispose();
-            _zipFile = null;
+            _zipFile = _zipFile.SafeDispose();
         }
     }
 }

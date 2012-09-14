@@ -17,21 +17,39 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Keyczar
 {
     /// <summary>
-    /// Interface for mechanisms to store keysets
+    /// Extension methods for IKeySetWriter
     /// </summary>
-    public interface IKeySetWriter : IRawKeySetWriter
+    public static class StandardKeySetWriterOperations
     {
-
         /// <summary>
         /// Writes the specified key.
         /// </summary>
+        /// <param name="writer">The writer.</param>
         /// <param name="key">The key.</param>
         /// <param name="version">The version.</param>
-        void Write(Key key, int version);
+        public static void Write(this IKeySetWriter writer,Key key, int version)
+        {
+            writer.Write(Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(key)), version);
+        }
+    }
+
+
+    /// <summary>
+    /// Interface for mechanisms to store keysets
+    /// </summary>
+    public interface IKeySetWriter 
+
+    {    /// <summary>
+        /// Writes the specified key data.
+        /// </summary>
+        /// <param name="keyData">The key data.</param>
+        /// <param name="version">The version.</param>
+        void Write(byte[] keyData, int version);
 
         /// <summary>
         /// Writes the specified metadata.
@@ -46,16 +64,4 @@ namespace Keyczar
         bool Finish();
     }
 
-    /// <summary>
-    /// Interface to access raw data used for encryption
-    /// </summary>
-    public interface IRawKeySetWriter 
-    {
-        /// <summary>
-        /// Writes the specified key data.
-        /// </summary>
-        /// <param name="keyData">The key data.</param>
-        /// <param name="version">The version.</param>
-        void Write(byte[] keyData, int version);
-    }
 }

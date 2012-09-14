@@ -52,8 +52,7 @@ namespace Keyczar
         /// </summary>
         public override void Dispose()
         {
-            _signer.Dispose();
-            _signer = null;
+            _signer = _signer.SafeDispose(); 
             base.Dispose();
         }
         /// <summary>
@@ -151,8 +150,8 @@ namespace Keyczar
             /// Pads the signature with extra data.
             /// </summary>
             /// <param name="signature">The signature.</param>
+            /// <param name="outstream">The padded signature.</param>
             /// <param name="extra">The extra data passed by sigData.</param>
-            /// <returns></returns>
             protected override void PadSignature(byte[] signature, Stream outstream, object extra)
             {
                 var expiration = Utility.GetBytes(FromDateTime((DateTime)extra));

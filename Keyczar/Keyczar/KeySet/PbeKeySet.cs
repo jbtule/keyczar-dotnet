@@ -1,4 +1,8 @@
-﻿/*  Copyright 2012 James Tuley (jay+code@tuley.name)
+using System;
+using Keyczar.Util;
+using Newtonsoft.Json;
+
+/*  Copyright 2012 James Tuley (jay+code@tuley.name)
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,29 +17,25 @@
  *  limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Keyczar.Util;
 
 namespace Keyczar
 {
     /// <summary>
-    /// Wraps a key set to decrypt it
+    /// Password based encrypted Key Set
     /// </summary>
-    public class EncryptedKeySet : IKeySet
+    public class PbeKeySet: IKeySet,IDisposable
     {
-        private readonly IKeySet _keySet;
-        private readonly Crypter _crypter;
+        private IKeySet _keySet;
+        private CachedPrompt _password;
+
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EncryptedKeySet"/> class.
+        /// Initializes a new instance of the <see cref="PbeKeySet"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        /// <param name="crypter">The crypter.</param>
-        public EncryptedKeySet(string keySetLocation, Crypter crypter)
-            :this(new KeySet(keySetLocation), crypter )
+        /// <param name="passwordPrompt">The password prompt.</param>
+        public PbeKeySet(string keySetLocation, Func<string> passwordPrompt)
+            : this(new KeySet(keySetLocation), passwordPrompt)
         {
             
         }
@@ -44,12 +44,12 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="EncryptedKeySet"/> class.
         /// </summary>
         /// <param name="keySet">The key set.</param>
-        /// <param name="crypter">The crypter.</param>
-        public EncryptedKeySet(IKeySet keySet, Crypter crypter)
+        /// <param name="passwordPrompt">The password prompt.</param>
+        public PbeKeySet(IKeySet keySet, Func<string> passwordPrompt)
         {
             _keySet = keySet;
 
-            _crypter = crypter;
+            _password = CachedPrompt.Password(passwordPrompt);
         }
 
         /// <summary>
@@ -64,9 +64,11 @@ namespace Keyczar
             {
                 return cipherData;
             }
-         
-           var cipherString = Keyczar.DefaultEncoding.GetString(cipherData);
-           return _crypter.Decrypt(WebSafeBase64.Decode(cipherString.ToCharArray()));
+
+            var cipherString = Keyczar.DefaultEncoding.GetString(cipherData);
+            var store = JsonConvert.DeserializeObject<PbeKeyStore>(cipherString);
+
+            return store.DecryptKeyData(_password.Prompt);
         }
 
         /// <summary>
@@ -78,5 +80,13 @@ namespace Keyczar
             get { return _keySet.Metadata; }
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            _keySet = null;
+            _password = _password.SafeDispose();
+        }
     }
 }

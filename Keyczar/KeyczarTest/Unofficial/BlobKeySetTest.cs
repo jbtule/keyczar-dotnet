@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,10 +13,13 @@ using Keyczar;
 namespace KeyczarTest.Unofficial
 {
     [TestFixture]
+    [Category("Unofficial")]
     public class BlobKeySetTest : AssertionHelper
     {
         private static string input = "Some test text";
         private static string TEST_DATA = Path.Combine("testdata", "unofficial", "blob");
+
+        private static string WRITE_DATA = Path.Combine("cstestdata", "unofficial", "blob");
 
         [Test]
         public void TestDecrypt()
@@ -42,10 +48,11 @@ namespace KeyczarTest.Unofficial
             }
         }
 
-        [Test]
+        [Test][Category("Create")]
         public void TestCreateBlob()
         {
-           Assert.Ignore("Used to create test data.");
+            Directory.CreateDirectory(WRITE_DATA);
+  
             var keyMetaData = new KeyMetadata
                                   {
                                       Name = "Blob",
@@ -56,7 +63,7 @@ namespace KeyczarTest.Unofficial
             {
                 keySet.AddKey(KeyStatus.PRIMARY, 256);
 
-                using(var stream = File.OpenWrite("cryptkey.zip"))
+                using(var stream = File.OpenWrite(Path.Combine(WRITE_DATA,"cryptkey.zip")))
                 using(var writer =  new BlobKeySetWriter(stream))
                 {
                     keySet.Save(writer);
@@ -64,7 +71,7 @@ namespace KeyczarTest.Unofficial
 
                 using(var crypt = new Crypter(keySet))
                 {
-                    File.WriteAllText("crypt.out",crypt.Encrypt(input));
+                    File.WriteAllText(Path.Combine(WRITE_DATA,"crypt.out"),crypt.Encrypt(input));
                     var keyMetaData2 = new KeyMetadata
                                            {
                                                Name = "Blob",
@@ -74,7 +81,7 @@ namespace KeyczarTest.Unofficial
                     using (var keySet2 = new MutableKeySet(keyMetaData2))
                     {
                         keySet2.AddKey(KeyStatus.PRIMARY);
-                        using (var stream2 = File.OpenWrite("signkey.zip"))
+                        using (var stream2 = File.OpenWrite(Path.Combine(WRITE_DATA,"signkey.zip")))
                         using(var writer2 = new BlobKeySetWriter(stream2))
                         {
                             keySet2.Save(new EncryptedKeySetWriter(writer2,crypt));
@@ -82,7 +89,7 @@ namespace KeyczarTest.Unofficial
 
                         using(var  signer = new Signer(keySet2))
                         {
-                            File.WriteAllText("sign.out",signer.Sign(input));
+                            File.WriteAllText(Path.Combine(WRITE_DATA,"sign.out"),signer.Sign(input));
                         }
                     }
                 }

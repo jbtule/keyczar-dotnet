@@ -36,7 +36,8 @@ namespace KeyczarTest
         private static String input = "This is some test data";
         private static byte[] inputBytes = Encoding.UTF8.GetBytes(input);
 
-        private void HelpSignerVerify(String subDir)
+        [TestCase("hmac")]
+        public void TestSignerVerify(String subDir)
         {
             var subPath = Path.Combine(TEST_DATA, subDir);
             using (var verifier = new Signer(subPath))
@@ -48,7 +49,10 @@ namespace KeyczarTest
             }
         }
 
-         private void HelperPublicVerify(String subDir)
+
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+         public void TestPublicVerify(String subDir)
          {
             var subPath = Path.Combine(TEST_DATA, subDir);
 
@@ -65,7 +69,10 @@ namespace KeyczarTest
             }
          }
 
-         private void HelpBadVerify(String subDir)
+         [TestCase("hmac")]
+         [TestCase("dsa")]
+         [TestCase("rsa-sign")]
+         public void TestBadVerify(String subDir)
          {
              var subPath = Path.Combine(TEST_DATA, subDir);
              using (var verifier = new Signer(subPath))
@@ -78,7 +85,11 @@ namespace KeyczarTest
              }
          }
 
-        private void HelperTestSignAndVerify(String subDir)
+
+         [TestCase("hmac")]
+         [TestCase("dsa")]
+         [TestCase("rsa-sign")]
+        public void TestSignAndVerify(String subDir)
         {
             using (var signer = new Signer(Path.Combine(TEST_DATA, subDir)))
             {
@@ -89,7 +100,10 @@ namespace KeyczarTest
             }
         }
 
-        private void HelperTestVanillaSignAndVerify(String subDir)
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestVanillaSignAndVerify(String subDir)
         {
             using (var signer = new VanillaSigner(Path.Combine(TEST_DATA, subDir)))
             {
@@ -99,99 +113,27 @@ namespace KeyczarTest
                 Expect(signer.Verify("Wrong string", sig), Is.False);
             }
         }
-
-        [Test]
-        public void TestHmac()
-        {
-            HelpSignerVerify("hmac");
-        }
-
-        [Test]
-        public void TestBadHmacVerify()
-        {
-            HelpBadVerify("hmac");
-        }
-
-
-        [Test]
-        public void TestHmacSignAndVerify()
-        {
-            HelperTestSignAndVerify("hmac");
-        }
-
-        [Test]
-        public void TestHmacVanillaSignAndVerify()
-        {
-            HelperTestVanillaSignAndVerify("hmac");
-        }
-          
-
-        [Test]
-        public void TestDsa()
-        {
-            HelperPublicVerify("dsa");
-        }
-
-        [Test]
-        public void TestBadDsaVerify()
-        {
-            HelpBadVerify("dsa");
-        }
-
-        [Test]
-        public void TestDsaSignAndVerify()
-        {
-            HelperTestSignAndVerify("dsa");
-        }
-        [Test]
-        public void TestDsaVanillaSignAndVerify()
-        {
-            HelperTestVanillaSignAndVerify("dsa");
-        }
-          
-
-
-        [Test]
-        public void TestRsa()
-        {
-            HelperPublicVerify("rsa-sign");
-        }
-
-        [Test]
-        public void TestBadRsaVerify()
-        {
-            HelpBadVerify("rsa-sign");
-        }
-
-        [Test]
-        public void TestRsaSignAndVerify()
-        {
-            HelperTestSignAndVerify("rsa-sign");
-        }
-        [Test]
-        public void TestRsaVanillaSignAndVerify()
-        {
-            HelperTestVanillaSignAndVerify("rsa-sign");
-        }
-          
   
 
-        [Test]
-        public void testHmacBadSigs()
+       
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestHmacBadSigs(String subDir)
         {
-            using (Signer hmacSigner = new Signer(Path.Combine(TEST_DATA, "hmac")))
+            using (var signer = new Signer(Path.Combine(TEST_DATA, subDir)))
             {
-                byte[] sig = hmacSigner.Sign(inputBytes);
+                byte[] sig = signer.Sign(inputBytes);
 
                 // Another input string should not verify
-                Assert.That(hmacSigner.Verify(Encoding.UTF8.GetBytes("Some other string"),sig),Is.False);
-                Expect(() => hmacSigner.Verify(inputBytes, new byte[0]), Throws.TypeOf<InvalidCryptoDataException>());
+                Assert.That(signer.Verify(Encoding.UTF8.GetBytes("Some other string"),sig),Is.False);
+                Expect(() => signer.Verify(inputBytes, new byte[0]), Throws.TypeOf<InvalidCryptoDataException>());
                 sig[0] ^= 23;
-                Expect(() => hmacSigner.Verify(inputBytes, sig), Throws.TypeOf<InvalidCryptoVersionException>());
-                Expect(() => hmacSigner.Verify(inputBytes, sig), Throws.TypeOf<InvalidCryptoVersionException>());
+                Expect(() => signer.Verify(inputBytes, sig), Throws.TypeOf<InvalidCryptoVersionException>());
+                Expect(() => signer.Verify(inputBytes, sig), Throws.TypeOf<InvalidCryptoVersionException>());
                 sig[0] ^= 23;
                 sig[1] ^= 45;
-                Expect(hmacSigner.Verify(inputBytes, sig),Is.False);
+                Expect(signer.Verify(inputBytes, sig),Is.False);
             }
         }
     }

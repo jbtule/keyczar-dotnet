@@ -20,6 +20,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Keyczar.Util;
 
 namespace Keyczar
 {
@@ -66,7 +67,7 @@ namespace Keyczar
         {
             foreach (var key in _hashedKeys.SelectMany(it => it.Value).Select(it => it.Value))
             {
-                key.Dispose();
+                key.SafeDispose();
             }
             _versions.Clear();
             _hashedKeys.Clear();

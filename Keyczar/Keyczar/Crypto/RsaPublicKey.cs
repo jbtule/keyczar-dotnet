@@ -79,8 +79,8 @@ namespace Keyczar.Crypto
             }
 
             var hash = Utility.HashKeyLengthPrefix(Keyczar.KEY_HASH_LENGTH, magModulus, magPublicExponent);
-            Secure.Clear(magModulus);
-            Secure.Clear(magPublicExponent);
+            magModulus.Clear();
+            magPublicExponent.Clear();
             return hash;
         }
 

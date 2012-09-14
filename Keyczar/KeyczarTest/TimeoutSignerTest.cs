@@ -32,9 +32,12 @@ namespace KeyczarTest
         private static readonly String TEST_DATA = "testdata";
         private String input = "This is some test data";
 
-          private void HelperTimeoutSignAndVerify(string subPath){
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+          public void TestTimeoutSignAndVerify(string subPath){
 
-            using(var signer = new TimeoutSigner(Path.Combine(TEST_DATA , subPath))){
+            using(var signer = new TimeoutSigner(Util.TestDataPath(TEST_DATA , subPath))){
               
                 // Create a signature that will be valid for a long time
                 var sig = signer.Sign(input, DateTime.Now.AddDays(365));
@@ -57,20 +60,6 @@ namespace KeyczarTest
         
           }
   
-    [Test]
-      public void testHmac()  {
-          HelperTimeoutSignAndVerify("hmac");
-      }
-  
-      [Test]
-      public void testDsa() {
 
-        HelperTimeoutSignAndVerify("dsa");
-      }
-  
-      [Test]
-      public void testRsa(){
-        HelperTimeoutSignAndVerify("rsa-sign");
-      }
     }
 }

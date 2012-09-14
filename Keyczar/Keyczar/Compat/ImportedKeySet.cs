@@ -70,16 +70,7 @@ namespace Keyczar.Compat
             };
         }
 
-        /// <summary>
-        /// Gets the key.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        public Key GetKey(int version)
-        {
-            return _key;
-        }
-
+       
         /// <summary>
         /// Gets the binary data that the key is stored in.
         /// </summary>
@@ -104,8 +95,7 @@ namespace Keyczar.Compat
         /// </summary>
         public void Dispose()
         {
-            _key.Dispose();
-            _key = null;
+            _key = _key.SafeDispose();
         }
 
         /// <summary>
@@ -121,7 +111,7 @@ namespace Keyczar.Compat
                 private Func<string> _password;
 
                 /// <summary>
-                /// Initializes a new instance of the <see cref="DummyPasswordFinder"/> class.
+                /// Initializes a new instance of the <see cref="PasswordFinder"/> class.
                 /// </summary>
                 /// <param name="passsword">The passsword.</param>
                 public PasswordFinder(Func<string> passsword)
@@ -148,12 +138,12 @@ namespace Keyczar.Compat
             /// </summary>
             /// <param name="purpose">The purpose.</param>
             /// <param name="path">The path.</param>
-            /// <param name="passPhrasePrompt">The pass phrase prompt.</param>
+            /// <param name="passwordPrompt">The pass phrase prompt.</param>
             /// <returns></returns>
-            public ImportedKeySet PkcsKey(KeyPurpose purpose, string path, Func<string> passPhrasePrompt = null)
+            public ImportedKeySet PkcsKey(KeyPurpose purpose, string path, Func<string> passwordPrompt = null)
             {
                 using (var stream = File.OpenRead(path))
-                    return PkcsKey(purpose, stream, passPhrasePrompt);
+                    return PkcsKey(purpose, stream, passwordPrompt);
             }
 
             /// <summary>
@@ -161,92 +151,87 @@ namespace Keyczar.Compat
             /// </summary>
             /// <param name="purpose">The purpose.</param>
             /// <param name="input">The input.</param>
-            /// <param name="passPhrasePrompt">The pass phrase prompt.</param>
+            /// <param name="passwordPrompt">The pass phrase prompt.</param>
             /// <returns></returns>
-            public virtual ImportedKeySet PkcsKey(KeyPurpose purpose, Stream input, Func<string> passPhrasePrompt = null)
+            public virtual ImportedKeySet PkcsKey(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null)
             {
-                AsymmetricKeyParameter bouncyKey = null;
-                var position = input.Position;
-                string _passPhrase =null;
-                bool _passPhraseRun = false;
-                Func<string> cachedPrompt =
-                () =>
-                     {
-                         if (!_passPhraseRun && passPhrasePrompt != null)
-                         {
-                             _passPhrase = passPhrasePrompt();
-                             _passPhraseRun = true;
-                         }
-                         return _passPhrase;
-                     };
-                using (var streamReader = new NonDestructiveStreamReader(input))
+                using (var password = CachedPrompt.Password(passwordPrompt))
                 {
-                    bouncyKey = new PemReader(streamReader, new PasswordFinder(cachedPrompt)).ReadObject() as AsymmetricKeyParameter;
-                }
-
-                if(bouncyKey == null)
-                {
-                    input.Seek(position, SeekOrigin.Begin);
-                    bouncyKey = passPhrasePrompt ==null
-                                    ? PrivateKeyFactory.CreateKey(input)
-                                    : PrivateKeyFactory.DecryptKey((passPhrasePrompt()?? String.Empty).ToCharArray(), input);
-                }
-
-                Key key;
-
-                if (bouncyKey is RsaPrivateCrtKeyParameters)
-                {
-                    var keyParam = bouncyKey as RsaPrivateCrtKeyParameters;
-                    key = new RsaPrivateKey()
+                    AsymmetricKeyParameter bouncyKey;
+                    var position = input.Position;
+                    using (var streamReader = new NonDestructiveStreamReader(input))
                     {
-                        PublicKey = new RsaPublicKey()
+                        bouncyKey =
+                            new PemReader(streamReader, new PasswordFinder(password.Prompt)).ReadObject() as
+                            AsymmetricKeyParameter;
+                    }
+
+                    if (bouncyKey == null)
+                    {
+                        input.Seek(position, SeekOrigin.Begin);
+                        bouncyKey = passwordPrompt == null
+                                        ? PrivateKeyFactory.CreateKey(input)
+                                        : PrivateKeyFactory.DecryptKey(
+                                            (password.Prompt() ?? String.Empty).ToCharArray(), input);
+                    }
+
+                    Key key;
+
+                    if (bouncyKey is RsaPrivateCrtKeyParameters)
+                    {
+                        var keyParam = bouncyKey as RsaPrivateCrtKeyParameters;
+                        key = new RsaPrivateKey()
+                                  {
+                                      PublicKey = new RsaPublicKey()
+                                                      {
+                                                          Modulus = keyParam.Modulus.ToByteArray(),
+                                                          PublicExponent = keyParam.PublicExponent.ToByteArray(),
+                                                          Size = keyParam.Modulus.BitLength,
+                                                      },
+                                      PrimeP = keyParam.P.ToByteArray(),
+                                      PrimeExponentP = keyParam.DP.ToByteArray(),
+                                      PrimeExponentQ = keyParam.DQ.ToByteArray(),
+                                      PrimeQ = keyParam.Q.ToByteArray(),
+                                      CrtCoefficient = keyParam.QInv.ToByteArray(),
+                                      PrivateExponent = keyParam.Exponent.ToByteArray(),
+                                      Size = keyParam.Modulus.BitLength,
+                                  };
+
+                    }
+                    else if (bouncyKey is DsaPrivateKeyParameters)
+                    {
+                        var keyParam = bouncyKey as DsaPrivateKeyParameters;
+                        if (KeyPurpose.DECRYPT_AND_ENCRYPT == purpose)
                         {
-                            Modulus = keyParam.Modulus.ToByteArray(),
-                            PublicExponent = keyParam.PublicExponent.ToByteArray(),
-                            Size = keyParam.Modulus.BitLength,
-                        },
-                        PrimeP = keyParam.P.ToByteArray(),
-                        PrimeExponentP = keyParam.DP.ToByteArray(),
-                        PrimeExponentQ = keyParam.DQ.ToByteArray(),
-                        PrimeQ = keyParam.Q.ToByteArray(),
-                        CrtCoefficient = keyParam.QInv.ToByteArray(),
-                        PrivateExponent = keyParam.Exponent.ToByteArray(),
-                        Size = keyParam.Modulus.BitLength,
-                    };
+                            throw new InvalidKeySetException("DSA key cannot be used for encryption and decryption!");
+                        }
 
-                }
-                else if (bouncyKey is DsaPrivateKeyParameters)
-                {
-                    var keyParam = bouncyKey as DsaPrivateKeyParameters;
-                    if (KeyPurpose.DECRYPT_AND_ENCRYPT == purpose)
+
+                        key = new DsaPrivateKey()
+                                  {
+                                      X = keyParam.X.ToByteArray(),
+                                      PublicKey = new DsaPublicKey
+                                                      {
+                                                          Y =
+                                                              keyParam.Parameters.G.ModPow(keyParam.X,
+                                                                                           keyParam.Parameters.P)
+                                                              .ToByteArray(),
+                                                          G = keyParam.Parameters.G.ToByteArray(),
+                                                          P = keyParam.Parameters.P.ToByteArray(),
+                                                          Q = keyParam.Parameters.Q.ToByteArray(),
+                                                          Size = keyParam.Parameters.P.BitLength
+                                                      },
+                                      Size = keyParam.Parameters.P.BitLength
+                                  };
+                    }
+                    else
                     {
-                        throw new InvalidKeySetException("DSA key cannot be used for encryption and decryption!");
+                        throw new InvalidKeySetException("Unsupported key type!");
                     }
 
 
-                    key = new DsaPrivateKey()
-                    {
-                        X = keyParam.X.ToByteArray(),
-                        PublicKey = new DsaPublicKey
-                        {
-                            Y =
-                                keyParam.Parameters.G.ModPow(keyParam.X, keyParam.Parameters.P)
-                                .ToByteArray(),
-                            G = keyParam.Parameters.G.ToByteArray(),
-                            P = keyParam.Parameters.P.ToByteArray(),
-                            Q = keyParam.Parameters.Q.ToByteArray(),
-                            Size = keyParam.Parameters.P.BitLength
-                        },
-                        Size = keyParam.Parameters.P.BitLength
-                    };
+                    return new ImportedKeySet(key, purpose, "imported from pkcs file");
                 }
-                else
-                {
-                    throw new InvalidKeySetException("Unsupported key type!");
-                }
-
-
-                return new ImportedKeySet(key, purpose, "imported from pkcs file");
             }
 
             /// <summary>

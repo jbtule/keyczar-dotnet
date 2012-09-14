@@ -68,8 +68,7 @@ namespace Keyczar
         /// </summary>
         public override void Dispose()
         {
-            _verifier.Dispose();
-            _verifier = null;
+            _verifier = _verifier.SafeDispose(); 
             base.Dispose();
         }
 

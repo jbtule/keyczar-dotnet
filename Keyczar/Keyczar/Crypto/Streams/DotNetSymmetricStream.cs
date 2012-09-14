@@ -23,7 +23,7 @@ namespace Keyczar.Crypto.Streams
     /// <summary>
     /// standard microsoft targeted symmetric encryption wrapper
     /// </summary>
-    public class DotNetSymmetricStream : FinishingStream
+    public class DotNetSymmetricStream : CipherTextOnlyFinishingStream
     {
 
         /// <summary>
@@ -33,6 +33,8 @@ namespace Keyczar.Crypto.Streams
         /// <returns></returns>
         public override int GetTagLength(byte[] header)
         {
+            if (CipherTextOnly)
+                return 0;
             return _tagSize;
         }
 
@@ -79,20 +81,20 @@ namespace Keyczar.Crypto.Streams
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
-            if (_output !=null)
-                _output.Dispose();
-            _output = null;
+            _output = _output.SafeDispose();
+            if (disposing)
+            {
+                _rawOutput.SafeDispose();
+            }
             _rawOutput = null;
-            if(_transform !=null)
-                _transform.Dispose();
-            _transform = null; 
+            _transform = _transform.SafeDispose();
             if(disposing)
             {
-                //_alg.Dispose();
-
+                var alg = _alg as IDisposable;
+                alg.SafeDispose();
             }
             _alg = null;
-      
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -120,11 +122,11 @@ namespace Keyczar.Crypto.Streams
         /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if(!_init)
+            if(!_init && !CipherTextOnly)
             {
                 if (_encrypt)
                 {
-                    _rawOutput.Write(_alg.IV, 0, _alg.IV.Length);
+                     _rawOutput.Write(_alg.IV, 0, _alg.IV.Length);
 
                 }else
                 {
@@ -144,12 +146,30 @@ namespace Keyczar.Crypto.Streams
         /// </summary>
         public override void Finish()
         {
-            if (!_init && _encrypt)
+
+            if (!_init && _encrypt && !CipherTextOnly)
             {
                 _rawOutput.Write(_alg.IV, 0, _alg.IV.Length);
                 _init = true;
             }
             Output.FlushFinalBlock();
+        }
+
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the output is  the [cipher text only].
+        /// </summary>
+        /// <value><c>true</c> if [cipher text only]; otherwise, <c>false</c>.</value>
+        public override bool CipherTextOnly { get; set; }
+
+        /// <summary>
+        /// Gets or sets the IV.
+        /// </summary>
+        /// <value>The IV.</value>
+        public override byte[] IV
+        {
+            get { return _alg.IV; }
+            set { _alg.IV = value; }
         }
     }
 }

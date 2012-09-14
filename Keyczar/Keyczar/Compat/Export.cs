@@ -11,11 +11,21 @@ using Org.BouncyCastle.Security;
 
 namespace Keyczar.Compat
 {
+    /// <summary>
+    /// Methods for exporting a keyset to a third party format
+    /// </summary>
     public static class Export
     {
-        static SecureRandom Random = new SecureRandom();
+        static readonly SecureRandom Random = new SecureRandom();
 
-        public static bool ExportPrimaryAsPKCS(this IKeySet keyset, string location, Func<string> passPhrase)
+        /// <summary>
+        /// Exports the primary key as PKCS.
+        /// </summary>
+        /// <param name="keyset">The keyset.</param>
+        /// <param name="location">The location.</param>
+        /// <param name="passwordPrompt">The password prompt.</param>
+        /// <returns></returns>
+        public static bool ExportPrimaryAsPKCS(this IKeySet keyset, string location, Func<string> passwordPrompt)
         {
             var i =keyset.Metadata.Versions.First(it => it.Status == KeyStatus.PRIMARY).VersionNumber;
             var key =keyset.GetKey(i);
@@ -57,7 +67,7 @@ namespace Keyczar.Compat
                 }
 
 
-                pemWriter.WriteObject(writeKey, "AES-CBC", passPhrase().ToCharArray(), Random);
+                pemWriter.WriteObject(writeKey, "AES-CBC", passwordPrompt().ToCharArray(), Random);
             }
 
             return true;

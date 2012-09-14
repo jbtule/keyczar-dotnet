@@ -65,7 +65,9 @@ namespace Keyczar
             foreach (var version in keySet.Metadata.Versions)
             {
                 //Easy way to deep copy keys
-                var key = Key.Read(_metadata.Type, keySet.GetKeyData(version.VersionNumber));
+                var keyData = keySet.GetKeyData(version.VersionNumber);
+                var key = Key.Read(_metadata.Type, keyData);
+                keyData.Clear();
                 _keys.Add(version.VersionNumber, key);
             }
         }
@@ -221,23 +223,13 @@ namespace Keyczar
         }
 
         /// <summary>
-        /// Gets the key.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        public Key GetKey(int version)
-        {
-            return _keys[version];
-        }
-
-        /// <summary>
         /// Gets the binary data that the key is stored in.
         /// </summary>
         /// <param name="version">The version.</param>
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(GetKey(version)));
+            return Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(_keys[version]));
         }
 
         /// <summary>
@@ -256,7 +248,7 @@ namespace Keyczar
         {
             foreach (var keyPair in _keys)
             {
-                keyPair.Value.Dispose();
+                keyPair.Value.SafeDispose();
             }
             _keys.Clear();
             _metadata = null;

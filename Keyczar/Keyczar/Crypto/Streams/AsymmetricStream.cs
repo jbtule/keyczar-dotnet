@@ -106,7 +106,7 @@ namespace Keyczar.Crypto.Streams
                 var outBuffer = new byte[_cipher.GetUpdateOutputSize(count)];
                 var outLen = _cipher.ProcessBytes(buffer, offset, count, outBuffer, 0);
                 _output.Write(outBuffer, 0, outLen);
-                Secure.Clear(outBuffer);
+                outBuffer.Clear();
                 _outLen += outLen;
                 _inLen += count;
             }
@@ -139,7 +139,7 @@ namespace Keyczar.Crypto.Streams
                 var buffer = new byte[buffLen];
                 var writeLen = _cipher.DoFinal(buffer, 0);
                 _output.Write(buffer, 0, writeLen);
-                Secure.Clear(buffer);
+                buffer.Clear();
             }
             catch (InvalidCipherTextException ex)
             {

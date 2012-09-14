@@ -97,11 +97,8 @@ namespace Keyczar.Crypto
         /// </summary>
         public override void Dispose()
         {
-            if(PublicKey !=null)
-               PublicKey.Dispose();
-            PublicKey = null;
-            Secure.Clear(X);
-            X = null;
+            PublicKey = PublicKey.SafeDispose();
+            X = X.Clear();
             Size = 0;
         }
 

@@ -92,11 +92,11 @@ namespace Keyczar
         /// Signs the specified data.
         /// </summary>
         /// <param name="data">The data.</param>
+        /// <param name="outstream">The outstream.</param>
         /// <param name="prefixData">The prefix data.</param>
         /// <param name="postfixData">The postfix data.</param>
         /// <param name="sigData">The sig data.</param>
-        /// <returns></returns>
-        protected virtual void Sign(Stream data, Stream outstream, object prefixData, object postfixData, object sigData)
+        protected void Sign(Stream data, Stream outstream, object prefixData, object postfixData, object sigData)
         {
             var key = GetPrimaryKey() as ISignerKey;
             using (var reader = new NonDestructiveBinaryReader(data))
