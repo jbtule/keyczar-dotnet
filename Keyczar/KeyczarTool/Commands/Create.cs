@@ -37,7 +37,7 @@ namespace KeyczarTool
         {
             this.IsCommand("create", "Create a new key set.");
             this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
-            this.HasRequiredOption("p|purpose=", "The purpose of the key set (sign|crypt).", v => { _pupose = v; });
+            this.HasRequiredOption("o|purpose=", "The purpose of the key set (sign|crypt).", v => { _pupose = v; });
             this.HasOption("n|name=", "The key set name.", v => { _name = v; });
             this.HasOption("a|asymmetric:", "Use asymmetric algorithm (dsa|rsa)", v => { _asymm = true;
                                                                                            _asymmAlg = v;

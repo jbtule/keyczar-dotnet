@@ -72,6 +72,29 @@ namespace KeyczarTest
               }
           }
 
+		[Test]
+		public void TestRevoke()
+		{
+			using(var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"))){
+				var status =reader.Demote(1);
+				Expect(status, Is.EqualTo(KeyStatus.INACTIVE));
+				var re = reader.Revoke(1);
+				Expect(re,Is.True);
+				Expect(reader.Metadata.Versions.Any(),Is.False);
+			}
+		}
+
+		[Test]
+		public void TestPromotePrimary()
+		{
+			using(var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"))){
+				var status =reader.Promote(1);
+				Expect(status, Is.EqualTo(KeyStatus.PRIMARY));
+				Expect(() => new GetPrimary(reader).GetPrimaryExposed(), Is.Not.Null);
+			}
+		}
+
+
           [Test]
           public void TestGetPrimaryFails()
           {

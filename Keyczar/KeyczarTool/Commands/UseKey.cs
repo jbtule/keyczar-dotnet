@@ -42,7 +42,6 @@ namespace KeyczarTool
             this.HasOption("m|message=", "The message (uses std in if not set).", v => { _message = v; });
             this.HasOption("d|destination=", "The output destination.", v => { _destination = v; });
             this.HasOption("f|file", "The message is a file location", v => { _file = true; });
-  
             this.HasOption("b|binary", "Specifies binary output.", v => { _binary = true; });
             this.SkipsCommandSummaryBeforeRunning();
         }
