@@ -92,7 +92,7 @@ namespace KeyczarTest
                   
                 foreach (var stdArg in stdInArgs)
 				{  
-					process.WaitForInputIdle(5000);
+				    Thread.Sleep(3000);
                     process.StandardInput.WriteLine(stdArg.ToString());
                 }
 
