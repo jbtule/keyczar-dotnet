@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar.Crypto;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.OpenSsl;
@@ -34,11 +35,11 @@ namespace Keyczar.Compat
                 throw new InvalidKeyTypeException("Needs to be a private key.");
             }
 
-            using (var stream = File.OpenWrite(location))
+            using (var stream = new FileStream(location,FileMode.Create))
             using (var writer = new StreamWriter(stream))
             {
-                var pemWriter = new PemWriter(writer);
-                object writeKey;
+                var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);
+                AsymmetricKeyParameter writeKey;
                 if (key.Type == KeyType.DSA_PRIV)
                 {
                     var dsaKey = (DsaPrivateKey)key;
@@ -66,8 +67,8 @@ namespace Keyczar.Compat
                     throw new InvalidKeyTypeException("Non exportable key type.");
                 }
 
-
-                pemWriter.WriteObject(writeKey, "AES-CBC", passwordPrompt().ToCharArray(), Random);
+                pemWriter.WriteObject(new Pkcs8Generator(writeKey, Pkcs8Generator.PbeSha1_RC2_128) { Password = (passwordPrompt()??String.Empty).ToCharArray(), SecureRandom = Random, IterationCount = 4096 });
+               
             }
 
             return true;

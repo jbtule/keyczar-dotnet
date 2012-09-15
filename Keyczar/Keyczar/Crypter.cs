@@ -88,58 +88,73 @@ namespace Keyczar
             {
                 byte[] keyHash;
                 var header = Utility.ReadHeader(input, out keyHash);
-
-                var cryptKey = GetKey(keyHash) as ICrypterKey;
-				var pbeKey= cryptKey as IPbeKey;
-                input.Seek(0, SeekOrigin.Begin);
                 var verify = true;
 
-
-                //in case there aren't any keys that match that hash we are going to fake verify.
-                using (var verifyStream = cryptKey.Maybe(m => m.GetAuthVerifyingStream(), () => new DummyStream()))
+                foreach (var key in GetKey(keyHash))
                 {
-                    //If we verify in once pass like with AEAD verify stream will be null;
-                    if (verifyStream != null) 
+
+                    var cryptKey = key as ICrypterKey;
+                    var pbeKey = cryptKey as IPbeKey;
+                    input.Seek(0, SeekOrigin.Begin);
+                
+
+
+                    //in case there aren't any keys that match that hash we are going to fake verify.
+                    using (var verifyStream = cryptKey.Maybe(m => m.GetAuthVerifyingStream(), () => new DummyStream()))
                     {
-                        var tagLength = verifyStream.GetTagLength(header);
+                        //If we verify in once pass like with AEAD verify stream will be null;
+                        if (verifyStream != null)
+                        {
+                            var tagLength = verifyStream.GetTagLength(header);
+                            while (input.Position < input.Length - tagLength)
+                            {
+                                byte[] buffer =
+                                    reader.ReadBytes((int) Math.Min(4096L, input.Length - tagLength - input.Position));
+                                verifyStream.Write(buffer, 0, buffer.Length);
+                            }
+                            var signature = reader.ReadBytes(tagLength);
+
+                            verify = verifyStream.VerifySignature(signature);
+                        }
+                    }
+
+                    if (!verify || input.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    FinishingStream crypterStream;
+                    if (pbeKey != null)
+                    {
+                        input.Seek(0, SeekOrigin.Begin);
+                        crypterStream = pbeKey.GetRawDecryptingStream(output);
+                    }
+                    else
+                    {
+                        input.Seek(HEADER_LENGTH, SeekOrigin.Begin);
+                        crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(output), () => new DummyStream());
+                    }
+
+                    using (crypterStream)
+                    {
+                        var tagLength = crypterStream.GetTagLength(header);
                         while (input.Position < input.Length - tagLength)
                         {
                             byte[] buffer =
                                 reader.ReadBytes((int) Math.Min(4096L, input.Length - tagLength - input.Position));
-                            verifyStream.Write(buffer, 0, buffer.Length);
+                            crypterStream.Write(buffer, 0, buffer.Length);
                         }
-                        var signature = reader.ReadBytes(tagLength);
-
-                        verify = verifyStream.VerifySignature(signature);
+                        crypterStream.Finish();
                     }
-                }
 
-                if (!verify || input.Length == 0)
+                    return;
+
+                }
+                if (!verify)
                 {
                     throw new InvalidCryptoDataException("Ciphertext was invalid!");
                 }
-
-				FinishingStream crypterStream;
-				if(pbeKey !=null){
-					input.Seek(0, SeekOrigin.Begin);
-					crypterStream =pbeKey.GetRawDecryptingStream(output);
-				}else{
-					input.Seek(HEADER_LENGTH, SeekOrigin.Begin);
-					crypterStream =cryptKey.Maybe(m => m.GetDecryptingStream(output), () => new DummyStream());
-				}
-
-                using (crypterStream)
-                {
-                    var tagLength = crypterStream.GetTagLength(header);
-                    while (input.Position < input.Length - tagLength)
-                    {
-                        byte[] buffer = reader.ReadBytes((int)Math.Min(4096L, input.Length - tagLength - input.Position));
-                        crypterStream.Write(buffer, 0, buffer.Length);
-                    }
-                    crypterStream.Finish();
-                }
-                
             }
         }
-}
+    }
 }

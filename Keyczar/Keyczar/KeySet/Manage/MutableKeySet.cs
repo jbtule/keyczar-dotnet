@@ -218,8 +218,13 @@ namespace Keyczar
                 ? KeyPurpose.VERIFY 
                 : KeyPurpose.ENCRYPT;
 
+           var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
+                .Select(p => new {p.Key, p.PublicKey.Type, Value = Keyczar.DefaultEncoding.GetBytes(p.PublicKey.ToJson())})
+                .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value)});
 
-           return new MutableKeySet(newMeta, _keys.ToDictionary(k=>k.Key, v=> ((IPrivateKey)v.Value).PublicKey));
+            newMeta.Type = copiedKeys.Select(it => it.Value.Type).First();
+
+           return new MutableKeySet(newMeta, copiedKeys.ToDictionary(k => k.Key, v => v.Value));
         }
 
         /// <summary>
@@ -229,7 +234,7 @@ namespace Keyczar
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(_keys[version]));
+            return Keyczar.DefaultEncoding.GetBytes(_keys[version].ToJson());
         }
 
         /// <summary>

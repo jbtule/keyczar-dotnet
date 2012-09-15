@@ -20,11 +20,14 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
+
 namespace Keyczar
 {
+
     /// <summary>
     /// Metadata for a keyset
     /// </summary>
+    
     public class KeyMetadata
     {
 

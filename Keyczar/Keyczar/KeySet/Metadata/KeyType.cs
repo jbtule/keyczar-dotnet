@@ -72,10 +72,10 @@ namespace Keyczar
                   {
                      AES.KeySizes<AesKey>(128,192,256),
                      HMAC_SHA1.KeySizes<HmacSha1Key>(256).WithDigestSizes(20),
-                     DSA_PRIV.KeySizes<DsaPrivateKey>(1024).WithDigestSizes(48),
-                     DSA_PUB.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48),
-                     RSA_PRIV.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512),
-                     RSA_PUB.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512),
+                     DSA_PRIV.KeySizes<DsaPrivateKey>(1024).WithDigestSizes(48).IsAsymmetric(),
+                     DSA_PUB.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48).IsAsymmetric(),
+                     RSA_PRIV.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512).IsAsymmetric(),
+                     RSA_PUB.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512).IsAsymmetric(),
                      //Unofficial
                      AES_AEAD.KeySizes<Unofficial.AesAeadKey>(256,192,128).IsUnofficial(),
                   }.ToDictionary(k => k.Name.Identifier, v => v);
@@ -99,7 +99,7 @@ namespace Keyczar
             public int[] KeySizes;
             public int[] DigestSizes = new int[]{0};
             public bool Unofficial;
-
+            public bool Asymmetric;
             public KeyTypeSpec WithDigestSizes(params int[] sigSizes)
             {
                 DigestSizes = sigSizes;
@@ -108,6 +108,12 @@ namespace Keyczar
             public KeyTypeSpec IsUnofficial()
             {
                 Unofficial = true;
+                return this;
+            }
+
+            public KeyTypeSpec IsAsymmetric()
+            {
+                Asymmetric = true;
                 return this;
             }
         }
@@ -138,7 +144,7 @@ namespace Keyczar
         private Type _type;
         private int[] _keySizeOptions;
         private bool? _unofficial;
-
+        private bool? _asymmetric;
         /// <summary>
         /// Gets the key size options.
         /// </summary>
@@ -169,6 +175,22 @@ namespace Keyczar
                 }
                 return _type;
 			}set{}
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="KeyType"/> is a public key.
+        /// </summary>
+        /// <value><c>true</c> if public; otherwise, <c>false</c>.</value>
+        public bool Asymmetric
+        {
+            get
+            {
+                if (!_asymmetric.HasValue)
+                {
+                    _asymmetric = _specs[Identifier].Asymmetric;
+                }
+                return _asymmetric.Value;
+            }
         }
 
         /// <summary>

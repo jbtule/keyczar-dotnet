@@ -28,7 +28,7 @@ using Keyczar.Util;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Security;
 
-namespace Keyczar
+namespace Keyczar.Pbe
 {
     /// <summary>
     /// Stores a key encrypted by password

@@ -33,28 +33,15 @@ namespace KeyczarTool
                 ks = new EncryptedKeySet(ks, crypter);
             }
 
-            if (!ks.ExportPrimaryAsPKCS(_destination, () =>
-                                                      {
-                                                          int i = 0;
-                                                          while (i++<4)
-                                                            {
-                                                                Console.WriteLine("Please enter passphrase:");
-                                                                var phrase1 = Console.ReadLine();
-                                                                Console.WriteLine("Please re-enter passphrase:");
-                                                                var phrase2 = Console.ReadLine();
-
-                                                                if (phrase1.Equals(phrase2))
-                                                                {
-                                                                    return phrase1;
-                                                                }
-                                                                Console.WriteLine("Passphrase didn't match.");
-                                                            } 
-                                                          Console.WriteLine("Giving up.");
-                                                          throw new Exception("Entered non matching password too many times");
-                                                      }))
+            if (!ks.ExportPrimaryAsPKCS(_destination, Util.DoublePromptForPassword))
             {
                 ret = -1;
+            }else
+            {
+                Console.WriteLine("Exported to pem.");
             }
+
+            
 
             if (crypter != null)
                 crypter.Dispose();

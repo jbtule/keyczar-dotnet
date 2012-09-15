@@ -91,7 +91,10 @@ namespace Keyczar.Util
         /// <value>The identifier.</value>
         public string Identifier { get; protected set; }
 
-
+        public override string ToString()
+        {
+            return Identifier;
+        }
         /// <summary>
         /// Implements the operator ==.
         /// </summary>

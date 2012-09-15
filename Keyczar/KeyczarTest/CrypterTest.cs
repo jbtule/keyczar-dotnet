@@ -25,10 +25,19 @@ using NUnit.Framework;
 
 namespace KeyczarTest
 {
-    [TestFixture]
+    [TestFixture("testdata")]
+    [TestFixture("cstestdata")]
+    [TestFixture("tool_cstestdata")]
     public class CrypterTest:AssertionHelper
     {
-        private static readonly String TEST_DATA = "testdata";
+        
+          private readonly String TEST_DATA;
+
+          public CrypterTest(string testPath)
+          {
+              TEST_DATA = testPath;
+          }
+
         private static String input = "This is some test data";
         private static byte[] inputBytes = Encoding.UTF8.GetBytes(input);
 

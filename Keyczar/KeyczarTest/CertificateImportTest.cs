@@ -37,13 +37,14 @@ namespace KeyczarTest
     public class CertificateImportTest:AssertionHelper
     {
           private static readonly String TEST_DATA = Path.Combine("testdata","certificates");
-          private static readonly String[] FILE_FORMATS = { "pem", "der" };
-          private static readonly String[] KEY_TYPES = { "rsa", "dsa" };
+
           private String input = "This is some test data";
 
-        private void HelperCryptImport(String fileFormat){
+          [Test]
+          public void TestCryptImport([Values("rsa")]String keyType, [Values("pem", "der")]String fileFormat)
+          {
 
-            using(var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.ENCRYPT,Path.Combine(TEST_DATA , "rsa-crypt-crt." +fileFormat)))
+            using(var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.ENCRYPT,Path.Combine(TEST_DATA , keyType+"-crypt-crt." +fileFormat)))
             using(var encrypter = new Encrypter(keyset))
             using (var crypter = new Crypter(Path.Combine(TEST_DATA, "rsa-crypt")))
             {
@@ -53,8 +54,10 @@ namespace KeyczarTest
                 Expect(plaintext, Is.EqualTo(input));
             }
         }
-
-        private void HelperSignImport(String keyType, String fileFormat)
+             
+        
+         [Test]
+          public void TestSignImport([Values("rsa", "dsa")]String keyType, [Values("pem", "der")] String fileFormat)
         {
              using (var signer = new Signer(Path.Combine(TEST_DATA, keyType + "-sign")))
              {
@@ -66,25 +69,7 @@ namespace KeyczarTest
                  }
              }
          }
-        [Test]
-        public void TestCryptImport()
-        {
-            foreach (var format in FILE_FORMATS)
-            {
-                HelperCryptImport(format);
-            }
-        }
+   
 
-        [Test]
-        public void TestSignImport()
-        {
-            foreach (var format in FILE_FORMATS)
-            {
-                foreach (var keyType in KEY_TYPES)
-                {
-                    HelperSignImport(keyType,format);
-                }
-            }
-        }
     }
 }

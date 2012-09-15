@@ -31,15 +31,18 @@ namespace KeyczarTool
         private bool _file;
         private string _destination;
         private bool _binary;
+        private bool _password;
 
         public UseKey()
         {
             this.IsCommand("usekey", "Uses keyset to encrypt or sign a message.");
             this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
             this.HasOption("c|crypter=", "The crypter key set location.", v => { _crypterLocation = v; });
+            this.HasOption("p|password", "Password for decrypting the key.", v => { _password = true; });
             this.HasOption("m|message=", "The message (uses std in if not set).", v => { _message = v; });
             this.HasOption("d|destination=", "The output destination.", v => { _destination = v; });
             this.HasOption("f|file", "The message is a file location", v => { _file = true; });
+  
             this.HasOption("b|binary", "Specifies binary output.", v => { _binary = true; });
             this.SkipsCommandSummaryBeforeRunning();
         }
@@ -56,6 +59,10 @@ namespace KeyczarTool
                 {
 
                     ks = new EncryptedKeySet(ks, keycrypter);
+                }
+                else if (_password)
+                {
+                    ks = new PbeKeySet(ks, Util.PromptForPassword);
                 }
 
                     Stream inStream;

@@ -20,6 +20,9 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Bson;
+using Newtonsoft.Json.Serialization;
 
 namespace Keyczar.Util
 {
@@ -28,7 +31,35 @@ namespace Keyczar.Util
     /// </summary>
     public static class Utility
     {
-      
+
+
+        /// <summary>
+        /// Json Serializes the object.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns></returns>
+        public static string ToJson(this object obj)
+        {
+            return JsonConvert.SerializeObject(obj,
+                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+        }
+
+        /// <summary>
+        /// Bson Serializes the object.
+        /// </summary>
+        /// <param name="obj">The obj.</param>
+        /// <returns></returns>
+        public static byte[] ToBson(this object obj)
+        {
+            using (var output = new MemoryStream())
+            {
+                var serializer = new JsonSerializer {ContractResolver = new CamelCasePropertyNamesContractResolver()};
+                var writer = new BsonWriter(output);
+                serializer.Serialize(writer, obj);
+                output.Flush();
+                return output.ToArray();
+            }
+        }
 
         /// <summary>
         /// Gets the bytes for an int laid out big endian

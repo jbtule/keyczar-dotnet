@@ -104,7 +104,7 @@ namespace Keyczar
                 using (var stream = File.OpenWrite(file))
                 using (var writer = new StreamWriter(stream))
                 {
-                    writer.Write(JsonConvert.SerializeObject(metadata));
+                    writer.Write(metadata.ToJson());
                 }
             }
             catch(Exception ex)

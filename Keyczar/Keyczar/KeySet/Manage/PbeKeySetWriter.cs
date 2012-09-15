@@ -15,6 +15,7 @@
 
 
 using System;
+using Keyczar.Pbe;
 using Keyczar.Util;
 using Newtonsoft.Json;
 
@@ -53,7 +54,7 @@ namespace Keyczar
         public void Write(byte[] keyData, int version)
         {
             var keyStore = PbeKeyStore.EncryptKeyData(keyData, _password.Prompt, _interationsCount);
-            _writer.Write(Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(keyStore)),version);
+            _writer.Write(Keyczar.DefaultEncoding.GetBytes(keyStore.ToJson()), version);
         }
 
 

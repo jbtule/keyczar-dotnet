@@ -32,7 +32,7 @@ namespace KeyczarTest
     public class RsaPaddingTest:AssertionHelper
     {
 
-         private static readonly String TEST_DATA = "testdata";
+         private static readonly String input = "testdata";
   private IKeySet defaultReader;
   private IKeySet oaepReader;
   private IKeySet pkcsReader;
@@ -91,9 +91,9 @@ namespace KeyczarTest
 
            [Test]
           public void TestPkcsEncryption(){
-            var ciphertext = new Encrypter(pkcsReader).Encrypt(TEST_DATA);
+            var ciphertext = new Encrypter(pkcsReader).Encrypt(input);
             var plaintext = new Crypter(pkcsReader).Decrypt(ciphertext);
-            Expect(plaintext, Is.EqualTo(TEST_DATA));
+            Expect(plaintext, Is.EqualTo(input));
           }
 
          [Test]
@@ -108,7 +108,7 @@ namespace KeyczarTest
         [Test]
           public void TestIncompatibility() {
             var encrypter = new Encrypter(oaepReader);
-            var ciphertext = encrypter.Encrypt(TEST_DATA);
+            var ciphertext = encrypter.Encrypt(input);
             var crypter = new Crypter(pkcsReader);
             Expect(()=> crypter.Decrypt(ciphertext), Throws.TypeOf<InvalidCryptoDataException>());  
           

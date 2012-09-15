@@ -57,7 +57,7 @@ namespace Keyczar.Unofficial
         /// <param name="metadata">The metadata.</param>
         public void Write(KeyMetadata metadata)
         {
-            _zipFile.AddEntry("meta", JsonConvert.SerializeObject(metadata));
+            _zipFile.AddEntry("meta", metadata.ToJson());
         }
 
         /// <summary>

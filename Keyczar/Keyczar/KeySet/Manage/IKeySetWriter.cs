@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Keyczar.Util;
 using Newtonsoft.Json;
 
 namespace Keyczar
@@ -34,7 +35,7 @@ namespace Keyczar
         /// <param name="version">The version.</param>
         public static void Write(this IKeySetWriter writer,Key key, int version)
         {
-            writer.Write(Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(key)), version);
+            writer.Write(Keyczar.DefaultEncoding.GetBytes(key.ToJson()), version);
         }
     }
 

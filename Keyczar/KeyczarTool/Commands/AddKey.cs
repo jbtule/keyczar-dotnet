@@ -30,6 +30,7 @@ namespace KeyczarTool
         private int _size;
         private string _crypterLocation;
         private string _padding;
+        private bool _password;
 
         public AddKey()
         {
@@ -38,7 +39,8 @@ namespace KeyczarTool
             this.HasOption("s|status=", "The status (active|primary).", v => { _status = v; });
             this.HasOption<int>("b|size=", "The key size in bits.", v => { _size = v; });
             this.HasOption("c|crypter=", "The crypter key set location.", v => { _crypterLocation = v; });
-            this.HasOption("p|padding=", "RSA Padding (oaep|pkcs).", v => { _padding = v; });
+            this.HasOption("p|password", "Password for decrypting the key.", v => { _password = true; });
+            this.HasOption("g|padding=", "RSA Padding (oaep|pkcs).", v => { _padding = v; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -52,6 +54,12 @@ namespace KeyczarTool
             {
                 crypter = new Crypter(_crypterLocation);
                 ks = new EncryptedKeySet(ks, crypter);
+            } if (_password)
+            {
+                ks = ks.Metadata.Encrypted
+                    ? new PbeKeySet(ks, Util.PromptForPassword)
+                    : new PbeKeySet(ks, Util.DoublePromptForPassword);
+
             }
 
             using (var keySet = new MutableKeySet(ks))

@@ -76,7 +76,7 @@
     <Compile Include="KeySet\Manage\KeySetWriter.cs" />
     <Compile Include="Compat\ImportedKeySet.cs" />
     <Compile Include="KeySet\Manage\PbeKeySetWriter.cs" />
-    <Compile Include="KeySet\Metadata\PbeKeyStore.cs" />
+    <Compile Include="KeySet\Pbe\PbeKeyStore.cs" />
     <Compile Include="KeySet\PbeKeySet.cs" />
     <Compile Include="SessionCrypter.cs" />
     <Compile Include="TimeoutSigner.cs" />

@@ -78,7 +78,7 @@ namespace Keyczar.Compat
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.DefaultEncoding.GetBytes(JsonConvert.SerializeObject(_key));
+            return Keyczar.DefaultEncoding.GetBytes(_key.ToJson());
         }
 
         /// <summary>

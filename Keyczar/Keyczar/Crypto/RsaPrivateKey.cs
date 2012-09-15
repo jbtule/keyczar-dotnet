@@ -112,11 +112,12 @@ namespace Keyczar.Crypto
             PrimeExponentP = priv.DP.ToByteArray();
             PrimeExponentQ = priv.DQ.ToByteArray();
             CrtCoefficient = priv.QInv.ToByteArray();
+
             var pub = (RsaKeyParameters) pair.Public;
             PublicKey = new RsaPublicKey
                             {
+                                Size = size,
                                 PublicExponent = pub.Exponent.ToByteArray(), 
-                                
                                 Modulus = pub.Modulus.ToByteArray()};
 
         }

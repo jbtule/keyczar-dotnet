@@ -94,8 +94,8 @@ namespace Keyczar
             Utility.ReadHeader(signature, out keyHash);
             trimmedSig = new byte[signature.Length - HEADER_LENGTH];
             Array.Copy(signature, HEADER_LENGTH, trimmedSig, 0, trimmedSig.Length);
-            var key = GetKey(keyHash) as IVerifierkey;
-            return new[] {key};
+            var keys = GetKey(keyHash);
+            return keys.Select(it=>it as IVerifierkey);
         }
 
         /// <summary>

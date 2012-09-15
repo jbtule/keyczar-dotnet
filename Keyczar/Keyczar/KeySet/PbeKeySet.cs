@@ -1,4 +1,5 @@
 using System;
+using Keyczar.Pbe;
 using Keyczar.Util;
 using Newtonsoft.Json;
 

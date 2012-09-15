@@ -18,9 +18,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Keyczar.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 
 namespace Keyczar.Unofficial
 {
@@ -70,14 +72,8 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public byte[] Pack(Key key)
         {
-            using (var output = new MemoryStream())
-            {
-                var serializer = new JsonSerializer();
-                var writer = new BsonWriter(output);
-                serializer.Serialize(writer, PackIt((dynamic)key));
-                output.Flush();
-                return output.ToArray();
-            }
+
+            return Utility.ToBson(PackIt((dynamic) key));
           
         }
 
@@ -92,10 +88,10 @@ namespace Keyczar.Unofficial
             using (var input2 = new MemoryStream(bytes)) 
             {
                 var reader = new BsonReader(input);
-                var serializer = new JsonSerializer();
+                var serializer = new JsonSerializer ();
                 var val = JToken.ReadFrom(reader);
                 reader = new BsonReader(input2);
-                var keyType = (KeyType)(string)val["Type"];
+                var keyType = (KeyType)(string)val["type"];
                 var pack = (dynamic)serializer.Deserialize(reader, typeof(KeyPack<>).MakeGenericType(keyType.Type));
                 return pack.Key;
             }

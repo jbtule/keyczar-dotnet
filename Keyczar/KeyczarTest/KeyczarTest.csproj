@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -45,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CertificateImportTest.cs" />
+    <Compile Include="CreateToolTest.cs" />
     <Compile Include="PkcsImportTest.cs" />
     <Compile Include="Unofficial\BlobKeySetTest.cs" />
     <Compile Include="CrossCompatibilityTest.cs" />
@@ -352,7 +356,9 @@
     <Content Include="testdata\unofficial\blob\signkey.zip">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <None Include="testdata\pbe_json\1" />
+    <Content Include="testdata\pbe_json\1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="testdata\pbe_json\password.txt" />
     <Content Include="testdata\pbe_json\meta">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -362,6 +368,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KeyczarTool\KeyczarTool.csproj">
+      <Project>{27C1284A-EF74-418E-81AC-0C6B0880B559}</Project>
+      <Name>KeyczarTool</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Keyczar\Keyczar.csproj">
       <Project>{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}</Project>
       <Name>Keyczar</Name>
@@ -377,7 +387,5 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <ItemGroup>
-    <Folder Include="testdata\pbe_json\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -25,11 +25,20 @@ using NUnit.Framework;
 
 namespace KeyczarTest
 {
-    [TestFixture]
+    [TestFixture("testdata")]
+    [TestFixture("cstestdata")]
+    [TestFixture("tool_cstestdata")]
     public class TimeoutSignerTest:AssertionHelper
     { 
         
-        private static readonly String TEST_DATA = "testdata";
+          private readonly String TEST_DATA;
+
+          public TimeoutSignerTest(string testPath)
+          {
+              TEST_DATA = testPath;
+          }
+
+
         private String input = "This is some test data";
 
         [TestCase("hmac")]

@@ -145,20 +145,20 @@ namespace Keyczar
         /// Gets the key using a hash.
         /// </summary>
         /// <param name="hash">The hash.</param>
-        /// <returns></returns>
-        protected Key GetKey(byte[] hash)
+        /// <returns>List of keys that match the hash</returns>
+        protected IEnumerable<Key> GetKey(byte[] hash)
         {
             var hashIndex =Utility.ToInt32(hash);
             SortedList<KeyVersion, Key> list;
             if (_hashedKeys.TryGetValue(hashIndex, out list))
             {
-                return list.Select(it=>it.Value).FirstOrDefault();
+                return list.Select(it => it.Value).ToList();
             }
 			//For special imported keys
 			if(_hashedKeys.TryGetValue(0, out list)){
-				return list.Select(it=>it.Value).FirstOrDefault();
+				return list.Select(it=>it.Value).ToList();
 			}
-            return null;
+            return new Key[] {null};
         }
 
 

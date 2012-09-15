@@ -24,15 +24,22 @@ using System.Linq;
 using System.Text;
 using Keyczar;
 using NUnit.Framework;
+using Newtonsoft.Json.Linq;
 
 namespace KeyczarTest
 {
-    [TestFixture]
+    [TestFixture("testdata")]
+    [TestFixture("cstestdata")]
+    [TestFixture("tool_cstestdata")]
     public class KeySetTest:AssertionHelper
     {
 
-        private static readonly String TEST_DATA = "testdata";
+          private readonly String TEST_DATA;
 
+          public KeySetTest(string testPath)
+          {
+              TEST_DATA = testPath;
+          }
 
           [Test]
           public void TestGetPrimary(){
@@ -44,7 +51,27 @@ namespace KeyczarTest
           }
 
           [Test]
-          public void TestGetPrimaryFails(){
+          public void TestPbeKeysetRead(){
+              Func<string> password = ()=>"cartman"; //Hardcoded because this is a test
+              using (var reader = new PbeKeySet(new KeySet(Util.TestDataPath(TEST_DATA, "pbe_json")), password))
+              {
+                  var data1 = Encoding.UTF8.GetString(reader.GetKeyData(1));
+                  var data2 = Encoding.UTF8.GetString(reader.GetKeyData(1));
+
+                  var token1 = JToken.Parse(data1);
+
+                  var size = token1["size"];
+                  Expect(size.ToString(), Is.EqualTo("128"));
+
+                  var token2 = JToken.Parse(data2);
+                  var mode = token2["mode"];
+                  Expect(mode.ToString(), Is.EqualTo("CBC"));
+              }
+          }
+
+          [Test]
+          public void TestGetPrimaryFails()
+          {
               var reader = new KeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"));
               Expect(() => new GetPrimary(reader).GetPrimaryExposed(), Throws.TypeOf<MissingPrimaryKeyException>());
 
