@@ -36,7 +36,7 @@ namespace KeyczarTool
         {
             this.IsCommand("addkey", "Add a new key to an existing key set.");
             this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
-            this.HasOption("s|status=", "The status (active|primary).", v => { _status = v; });
+			this.HasRequiredOption("s|status=", "The status (active|primary).", v => { _status = v; });
             this.HasOption<int>("b|size=", "The key size in bits.", v => { _size = v; });
             this.HasOption("c|crypter=", "The crypter key set location.", v => { _crypterLocation = v; });
             this.HasOption("p|password", "Password for decrypting the key.", v => { _password = true; });
@@ -50,15 +50,18 @@ namespace KeyczarTool
             var ret = 0;
             Crypter crypter = null;
             IKeySet ks = new KeySet(_location);
+
+			var prompt = ks.Metadata.Encrypted 
+				 ? new Func<string>(CachedPrompt.Password(Util.PromptForPassword).Prompt)
+				 : new Func<string>(CachedPrompt.Password(Util.DoublePromptForPassword).Prompt);
+
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
             {
                 crypter = new Crypter(_crypterLocation);
                 ks = new EncryptedKeySet(ks, crypter);
-            } if (_password)
+            }else if (_password)
             {
-                ks = ks.Metadata.Encrypted
-                    ? new PbeKeySet(ks, Util.PromptForPassword)
-                    : new PbeKeySet(ks, Util.DoublePromptForPassword);
+				ks = new PbeKeySet(ks, prompt);
 
             }
 
@@ -73,8 +76,8 @@ namespace KeyczarTool
                 var ver = keySet.AddKey(_status, _size);
                 if (!String.IsNullOrWhiteSpace(_padding))
                 {
-                    dynamic key =keySet.GetKey(ver);
-                    key.Padding = _padding;
+                    var key =keySet.GetKey(ver);
+                    ((dynamic)key).Padding = _padding;
                 }
 
                 IKeySetWriter writer = new KeySetWriter(_location, overwrite:true);
@@ -82,7 +85,10 @@ namespace KeyczarTool
                 if (crypter != null)
                 {
                     writer = new EncryptedKeySetWriter(writer,crypter);
-                }
+                }else if(_password){
+					writer = new PbeKeySetWriter(writer, prompt);
+
+				}
 
                 if (keySet.Save(writer))
                 {

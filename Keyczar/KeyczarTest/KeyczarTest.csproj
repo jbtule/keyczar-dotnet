@@ -32,9 +32,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -44,6 +41,9 @@
     <Reference Include="System.Xml" />
     <Reference Include="nunit.framework">
       <HintPath>..\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
+      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -368,13 +368,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KeyczarTool\KeyczarTool.csproj">
-      <Project>{27C1284A-EF74-418E-81AC-0C6B0880B559}</Project>
-      <Name>KeyczarTool</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Keyczar\Keyczar.csproj">
       <Project>{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}</Project>
       <Name>Keyczar</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KeyczarTool\KeyczarTool.csproj">
+      <Project>{27C1284A-EF74-418E-81AC-0C6B0880B559}</Project>
+      <Name>KeyczarTool</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

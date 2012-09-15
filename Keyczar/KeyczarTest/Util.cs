@@ -48,7 +48,7 @@ namespace KeyczarTest
         internal class KeyczarToolRunner : DynamicObject
         {
 
-
+			bool IsRunningOnMono = (Type.GetType ("Mono.Runtime") != null);
 
             public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
             {
@@ -67,33 +67,41 @@ namespace KeyczarTest
                                                                                ? String.Format("--{0}", n)
                                                                                : string.Format("--{0}=\"{1}\"", n, p));
 
-                var combinedArg = String.Join(" ", separateArgs);
 
-                Console.WriteLine("{0} {1}", "KeyczarTool", combinedArg);
+                var combinedArg = String.Join(" ", separateArgs);
+				var program = "KeyczarTool";
+				if(IsRunningOnMono){
+					combinedArg = "KeyczarTool.exe " + combinedArg;
+					program = "mono";
+				}
+
+				Console.WriteLine("{0} {1}", program, combinedArg);
 
                 var process = new Process()
                 {
-                    StartInfo = new ProcessStartInfo("KeyczarTool", String.Join(" ", combinedArg))
+					StartInfo = new ProcessStartInfo(program, combinedArg)
                     {
                         RedirectStandardInput = true,
                         RedirectStandardOutput = true,
+						RedirectStandardError = true,
                         UseShellExecute = false,
                         CreateNoWindow = true
                     }
                 };
                 process.Start();
-                if (stdInArgs.Any())
-                    Thread.Sleep(3000);
+                  
                 foreach (var stdArg in stdInArgs)
-                {
+				{  
+					process.WaitForInputIdle(5000);
                     process.StandardInput.WriteLine(stdArg.ToString());
                 }
 
 
-                process.WaitForExit();
+                process.WaitForExit(5000);
 
                 result = process.StandardOutput.ReadToEnd();
                 Console.WriteLine(result);
+				Console.WriteLine(process.StandardError.ReadToEnd());
                 return true;
             }
         }

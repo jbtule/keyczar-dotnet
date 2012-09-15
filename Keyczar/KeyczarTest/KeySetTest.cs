@@ -55,6 +55,9 @@ namespace KeyczarTest
               Func<string> password = ()=>"cartman"; //Hardcoded because this is a test
               using (var reader = new PbeKeySet(new KeySet(Util.TestDataPath(TEST_DATA, "pbe_json")), password))
               {
+
+				Expect(reader.Metadata.Encrypted, Is.True);
+
                   var data1 = Encoding.UTF8.GetString(reader.GetKeyData(1));
                   var data2 = Encoding.UTF8.GetString(reader.GetKeyData(1));
 

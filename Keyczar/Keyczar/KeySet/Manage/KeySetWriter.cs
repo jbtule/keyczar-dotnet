@@ -60,8 +60,9 @@ namespace Keyczar
         public void Write(byte[] keyData, int version)
         {
             CreateDir();
-            var file = Path.Combine(_location, version.ToString(CultureInfo.InvariantCulture)+".temp");
-            if (!_overwrite && File.Exists(file))
+            var versionFile = Path.Combine(_location, version.ToString(CultureInfo.InvariantCulture));
+			var file = versionFile +".temp";
+            if (!_overwrite && File.Exists(versionFile))
             {
                 success = false;
                 return;
@@ -69,7 +70,7 @@ namespace Keyczar
             _filePaths.Add(file);
             try
             {
-                using (var stream = File.OpenWrite(file))
+				using (var stream = new FileStream(file,FileMode.Create))
                 using (var writer = new BinaryWriter(stream))
                 {
                     writer.Write(keyData);
@@ -92,7 +93,8 @@ namespace Keyczar
         public void Write(KeyMetadata metadata)
         {
             CreateDir();
-            var file = Path.Combine(_location, "meta.temp");
+			var meta_file = Path.Combine(_location, "meta");
+			var file = meta_file +".temp";
             if (!_overwrite && File.Exists(file))
             {
                 success = false;
@@ -101,7 +103,7 @@ namespace Keyczar
             try
             {
                 _filePaths.Add(file);
-                using (var stream = File.OpenWrite(file))
+                using (var stream = new FileStream(file,FileMode.Create))
                 using (var writer = new StreamWriter(stream))
                 {
                     writer.Write(metadata.ToJson());

@@ -148,6 +148,7 @@ namespace KeyczarTest
             if (!string.IsNullOrWhiteSpace(asymmetric))
             {
                 var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public");
+				Directory.Delete(pubpath,true);
                 result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
                 Expect(result, Is.StringContaining("Created new public keyset"));
             }
@@ -183,6 +184,7 @@ namespace KeyczarTest
             if (!string.IsNullOrWhiteSpace(asymmetric))
             {
                 var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public", "certificates");
+				Directory.Delete(pubpath,true);
                 result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
                 Expect(result, Is.StringContaining("Created new public keyset"));
             }
@@ -194,6 +196,8 @@ namespace KeyczarTest
             string result,outPath;
 
             var path = Util.TestDataPath(WRITE_DATA, "pbe_json");
+
+			Directory.Delete(path, true);
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
 

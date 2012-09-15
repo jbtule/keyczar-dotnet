@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keyczar", "Keyczar\Keyczar.csproj", "{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyczarTool", "KeyczarTool\KeyczarTool.csproj", "{27C1284A-EF74-418E-81AC-0C6B0880B559}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{386EA88A-2149-473B-AF48-05672E301AE0}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -13,6 +11,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{386EA8
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyczarTest", "KeyczarTest\KeyczarTest.csproj", "{FCDC85F7-BC0C-4F95-8DF2-3C2F8FAA8FE7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyczarTool", "KeyczarTool\KeyczarTool.csproj", "{27C1284A-EF74-418E-81AC-0C6B0880B559}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,11 +35,13 @@ Global
 		{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}.Release|x86.ActiveCfg = Release|Any CPU
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Debug|Any CPU.Build.0 = Debug|x86
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Debug|x86.ActiveCfg = Debug|x86
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Debug|x86.Build.0 = Debug|x86
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Release|Any CPU.ActiveCfg = Release|x86
+		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Release|Any CPU.Build.0 = Release|x86
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Release|Mixed Platforms.Build.0 = Release|x86
 		{27C1284A-EF74-418E-81AC-0C6B0880B559}.Release|x86.ActiveCfg = Release|x86
@@ -54,6 +56,11 @@ Global
 		{FCDC85F7-BC0C-4F95-8DF2-3C2F8FAA8FE7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FCDC85F7-BC0C-4F95-8DF2-3C2F8FAA8FE7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FCDC85F7-BC0C-4F95-8DF2-3C2F8FAA8FE7}.Release|x86.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Keyczar\Keyczar.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
