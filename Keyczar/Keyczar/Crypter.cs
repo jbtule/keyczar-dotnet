@@ -22,6 +22,7 @@ using System.Text;
 using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
+using Ionic.Zlib;
 
 namespace Keyczar
 {
@@ -123,31 +124,39 @@ namespace Keyczar
                         continue;
                     }
 
-                    FinishingStream crypterStream;
-                    if (pbeKey != null)
-                    {
-                        input.Seek(0, SeekOrigin.Begin);
-                        crypterStream = pbeKey.GetRawDecryptingStream(output);
-                    }
-                    else
-                    {
-                        input.Seek(HEADER_LENGTH, SeekOrigin.Begin);
-                        crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(output), () => new DummyStream());
-                    }
+					Stream wrapper = output;
+				/*	if(Compression == CompressionType.Gzip){
+						wrapper = new GZipStream(output,CompressionMode.Decompress,true);
+					}else */if(Compression == CompressionType.Zlib){
+						wrapper = new ZlibStream(output,CompressionMode.Decompress,true);
+					}
+					using(Compression == CompressionType.None ? null : wrapper){
+	                    FinishingStream crypterStream;
+	                    if (pbeKey != null)
+	                    {
+	                        input.Seek(0, SeekOrigin.Begin);
+							crypterStream = pbeKey.GetRawDecryptingStream(wrapper);
+	                    }
+	                    else
+	                    {
+	                        input.Seek(HEADER_LENGTH, SeekOrigin.Begin);
+							crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper), () => new DummyStream());
+	                    }
 
-                    using (crypterStream)
-                    {
-                        var tagLength = crypterStream.GetTagLength(header);
-                        while (input.Position < input.Length - tagLength)
-                        {
-                            byte[] buffer =
-                                reader.ReadBytes((int) Math.Min(4096L, input.Length - tagLength - input.Position));
-                            crypterStream.Write(buffer, 0, buffer.Length);
-                        }
-                        crypterStream.Finish();
-                    }
+	                    using (crypterStream)
+	                    {
+	                        var tagLength = crypterStream.GetTagLength(header);
+	                        while (input.Position < input.Length - tagLength)
+	                        {
+	                            byte[] buffer =
+	                                reader.ReadBytes((int) Math.Min(4096L, input.Length - tagLength - input.Position));
+	                                crypterStream.Write(buffer, 0, buffer.Length);
+	                        }
+	                        crypterStream.Finish();
+	                    }
 
-                    return;
+	                    return;
+					}
 
                 }
                 if (!verify)

@@ -22,9 +22,16 @@ using System.Text;
 using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
-
+using Ionic.Zlib;
 namespace Keyczar
 {
+
+	public enum CompressionType{
+		None =0,
+		//Gzip =1,
+		Zlib =2,
+	}
+
     /// <summary>
     ///  Encrypts data using a given key set.
     /// </summary>
@@ -53,6 +60,10 @@ namespace Keyczar
             }
 
         }
+
+		public CompressionType Compression{
+			get;set;
+		}
 
         /// <summary>
         /// Encrypts the specified raw string data.
@@ -95,29 +106,40 @@ namespace Keyczar
             var cryptKey = key as IEncrypterKey;
             var pbeKey = key as IPbeKey;
 
-            using (var reader = new NonDestructiveBinaryReader(input))
-            {
-                FinishingStream encryptingStream; 
-                if (pbeKey == null)
-                {
-                    output.Write(header, 0, header.Length);
-                    encryptingStream = cryptKey.GetEncryptingStream(output);
-                }else
-                {
-                    encryptingStream = pbeKey.GetRawEncryptingStream(output);
-                }
-                using (encryptingStream)
-                {
-                    encryptingStream.GetTagLength(header);
 
-                    while (reader.Peek() != -1)
-                    {
-                        byte[] buffer = reader.ReadBytes(4096);
-                        encryptingStream.Write(buffer, 0, buffer.Length);
-                    }
-                    encryptingStream.Finish();
-                }
-            }
+				using (var reader = new NonDestructiveBinaryReader(input))
+	            {
+	                FinishingStream encryptingStream; 
+	                if (pbeKey == null)
+	                {
+	                    output.Write(header, 0, header.Length);
+	                    encryptingStream = cryptKey.GetEncryptingStream(output);
+	                }else
+	                {
+	                    encryptingStream = pbeKey.GetRawEncryptingStream(output);
+	                }
+
+					Stream wrapper = encryptingStream;
+					/*if(Compression == CompressionType.Gzip){
+						wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
+					}else*/ if(Compression == CompressionType.Zlib){
+						wrapper = new ZlibStream(encryptingStream,CompressionMode.Compress,true);
+					}
+
+	                using (encryptingStream)
+	                {
+	                    encryptingStream.GetTagLength(header);
+						using(Compression == CompressionType.None ? null : wrapper){
+		                    while (reader.Peek() != -1)
+		                    {
+		                        byte[] buffer = reader.ReadBytes(4096);
+								wrapper.Write(buffer, 0, buffer.Length);
+		                    }
+						}
+	                    encryptingStream.Finish();
+	                }
+	            }
+
            
             byte[] hash;
             using (var outputReader = new NonDestructiveBinaryReader(output))

@@ -138,6 +138,8 @@ namespace Keyczar.Crypto.Streams
                 }
                 _init = true;
             }
+
+
             Output.Write(buffer, offset, count);
         }
 
