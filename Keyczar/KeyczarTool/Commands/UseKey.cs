@@ -32,6 +32,8 @@ namespace KeyczarTool
         private string _destination;
         private bool _binary;
         private bool _password;
+		private bool _usecompression;
+		string _compression;
 
         public UseKey()
         {
@@ -43,6 +45,7 @@ namespace KeyczarTool
             this.HasOption("d|destination=", "The output destination.", v => { _destination = v; });
             this.HasOption("f|file", "The message is a file location", v => { _file = true; });
             this.HasOption("b|binary", "Specifies binary output.", v => { _binary = true; });
+			this.HasOption("z|compression:", "Specifies binary output. (zlib)", v => {_usecompression = true; _compression = v; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -103,6 +106,10 @@ namespace KeyczarTool
                     {
                         using (var crypter =  new Crypter(ks))
                         {
+							if(_usecompression){
+								crypter.Compression = CompressionType.Zlib;
+							}
+
                             crypter.Encrypt(inStream, outstream);
                         }
                     }else
