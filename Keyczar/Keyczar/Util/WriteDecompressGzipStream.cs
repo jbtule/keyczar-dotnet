@@ -37,12 +37,17 @@ namespace Keyczar.Util
 		/// </summary>
 		public override void Close()
 		{
+          
+
 			this.Dispose(false);
 			GC.SuppressFinalize(this);
 		}
 
 		protected override void Dispose (bool disposing)
 		{
+		    _tempStream.Seek(0, SeekOrigin.Begin);
+            _gzipread.CopyTo(_stream);
+
 			_gzipread =_gzipread.SafeDispose();
 			_tempStream = _tempStream.SafeDispose();
 
@@ -62,16 +67,9 @@ namespace Keyczar.Util
 			int offset,
 			int count
 			){
-			var pos =_tempStream.Position;
+	
 			_tempStream.Write(buffer,offset,count);
-			_tempStream.Seek(pos, SeekOrigin.Begin);
-			_gzipread.Flush();
-			var dbuffer = new byte[count];
-			int n;
-			while ((n= _gzipread.Read(dbuffer, 0, dbuffer.Length)) != 0)
-			{
-				_stream.Write(dbuffer, 0, n);
-			}
+            
 		}
 	
 

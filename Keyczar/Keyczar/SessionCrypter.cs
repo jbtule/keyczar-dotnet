@@ -117,13 +117,21 @@ namespace Keyczar
             _sessionMaterial = SessionMaterial.Clear(); 
 
         }
+
+        public CompressionType Compression
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Decrypts the specified data.
         /// </summary>
         /// <param name="data">The data.</param>
         /// <returns></returns>
          public string Decrypt(string data)
-         {
+        {
+            _crypter.Compression = Compression;
              return _crypter.Decrypt(data);
          }
 
@@ -133,7 +141,8 @@ namespace Keyczar
          /// <param name="data">The data.</param>
          /// <returns></returns>
         public byte[] Decrypt(byte[] data)
-        {
+         {
+             _crypter.Compression = Compression;
             return _crypter.Decrypt(data);
         }
 
@@ -144,6 +153,7 @@ namespace Keyczar
         /// <param name="output">The output.</param>
         public void Decrypt(Stream input, Stream output)
         {
+            _crypter.Compression = Compression;
             _crypter.Decrypt(input, output);
         }
 
@@ -154,6 +164,7 @@ namespace Keyczar
         /// <returns></returns>
         public string Encrypt(string rawData)
         {
+            _crypter.Compression = Compression;
             return _crypter.Encrypt(rawData);
         }
 
@@ -164,6 +175,7 @@ namespace Keyczar
         /// <returns></returns>
         public byte[] Encrypt(byte[] data)
         {
+            _crypter.Compression = Compression;
             return _crypter.Encrypt(data);
         }
 
@@ -174,6 +186,7 @@ namespace Keyczar
         /// <param name="output">The output.</param>
         public void Encrypt(Stream input, Stream output)
         {
+            _crypter.Compression = Compression;
             _crypter.Encrypt(input, output);
         }
 
