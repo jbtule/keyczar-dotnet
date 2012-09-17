@@ -40,6 +40,7 @@ namespace KeyczarTest
 
         private static String input = "This is some test data";
         private static byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+		private static byte[] bigInput = new byte[10000];
 
         private void HelperDecrypt(Crypter crypter, String subPath)
         {
@@ -98,6 +99,13 @@ namespace KeyczarTest
 					var decrypt2 =crypter2.Decrypt(cipher);
 					Expect(decrypt2, Is.Not.EqualTo(input));
 				}
+
+				var ciphertiny = crypter.Encrypt(bigInput);
+				//large array of zeros will compress down a lot
+				Expect(ciphertiny.Length, Is.LessThan(bigInput.Length));
+				var big =crypter.Decrypt(ciphertiny);
+				Expect(big, Is.EqualTo(bigInput));
+
 			}
 		}
 

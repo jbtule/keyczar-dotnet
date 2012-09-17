@@ -28,7 +28,7 @@ namespace Keyczar.Util
 		public WriteDecompressGzipStream (Stream stream):base()
 		{
 			_tempStream = new MemoryStream();
-			_gzipread= new Ionic.Zlib.GZipStream(_tempStream,CompressionMode.Decompress,true);
+			_gzipread= new GZipStream(_tempStream,CompressionMode.Decompress,true);
 			_stream =stream;
 		}
 
@@ -62,15 +62,15 @@ namespace Keyczar.Util
 			int offset,
 			int count
 			){
-
+			var pos =_tempStream.Position;
 			_tempStream.Write(buffer,offset,count);
-			_tempStream.Seek(-count, SeekOrigin.Current);
-			var outl =count;
-			while(outl == count){
-				var dbuffer =new byte[count];
-				outl =_gzipread.Read(dbuffer,0, count);
-				_stream.Write(dbuffer,0,outl);
-
+			_tempStream.Seek(pos, SeekOrigin.Begin);
+			_gzipread.Flush();
+			var dbuffer = new byte[count];
+			int n;
+			while ((n= _gzipread.Read(dbuffer, 0, dbuffer.Length)) != 0)
+			{
+				_stream.Write(dbuffer, 0, n);
 			}
 		}
 	
