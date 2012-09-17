@@ -82,7 +82,7 @@ namespace KeyczarTest
             }
         }
 
-		//[TestCase(CompressionType.Gzip)]
+		[TestCase(CompressionType.Gzip)]
 		[TestCase(CompressionType.Zlib)]
 		public void TestEncryptDecryptCompression(CompressionType compression)
 		{

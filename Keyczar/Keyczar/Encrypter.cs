@@ -28,7 +28,7 @@ namespace Keyczar
 
 	public enum CompressionType{
 		None =0,
-		//Gzip =1,
+		Gzip =1,
 		Zlib =2,
 	}
 
@@ -120,9 +120,9 @@ namespace Keyczar
 	                }
 
 					Stream wrapper = encryptingStream;
-					/*if(Compression == CompressionType.Gzip){
+					if(Compression == CompressionType.Gzip){
 						wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
-					}else*/ if(Compression == CompressionType.Zlib){
+					}else if(Compression == CompressionType.Zlib){
 						wrapper = new ZlibStream(encryptingStream,CompressionMode.Compress,true);
 					}
 

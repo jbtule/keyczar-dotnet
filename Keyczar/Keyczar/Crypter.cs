@@ -125,9 +125,9 @@ namespace Keyczar
                     }
 
 					Stream wrapper = output;
-				/*	if(Compression == CompressionType.Gzip){
-						wrapper = new GZipStream(output,CompressionMode.Decompress,true);
-					}else */if(Compression == CompressionType.Zlib){
+					if(Compression == CompressionType.Gzip){
+						wrapper = new WriteDecompressGzipStream(output);
+					}else if(Compression == CompressionType.Zlib){
 						wrapper = new ZlibStream(output,CompressionMode.Decompress,true);
 					}
 					using(Compression == CompressionType.None ? null : wrapper){
