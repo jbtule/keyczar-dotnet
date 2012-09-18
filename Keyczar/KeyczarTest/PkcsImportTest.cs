@@ -62,8 +62,17 @@ namespace KeyczarTest
                   Expect(plaintext, Is.EqualTo(input));
               }
           }
-
-
+        [Test]
+         public void TestCryptImportBadKey(
+           [Values("dsa")] string keyType,
+           [Values("pem", "der")] string format)
+         {
+             using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
+             {
+                 Expect(()=> ImportedKeySet.Import.PkcsKey(KeyPurpose.DECRYPT_AND_ENCRYPT, keystream, () => "pass"/* hard coding for test only!!!!*/),Throws.InstanceOf<InvalidKeySetException>());
+             }
+            
+         }
      
          [Test]
           public void TestSignImport(

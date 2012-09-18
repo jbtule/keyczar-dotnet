@@ -118,6 +118,10 @@ namespace Keyczar
 
         }
 
+        /// <summary>
+        /// Gets or sets the compression.
+        /// </summary>
+        /// <value>The compression.</value>
         public CompressionType Compression
         {
             get;

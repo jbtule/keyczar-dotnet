@@ -20,11 +20,18 @@ using Ionic.Zlib;
 
 namespace Keyczar.Util
 {
+    /// <summary>
+    /// Decompress a giz
+    /// </summary>
 	public class WriteDecompressGzipStream:Stream
 	{
 		Stream _stream;
 		Stream _tempStream;
 		Stream _gzipread;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WriteDecompressGzipStream"/> class.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
 		public WriteDecompressGzipStream (Stream stream):base()
 		{
 			_tempStream = new MemoryStream();
@@ -43,6 +50,10 @@ namespace Keyczar.Util
 			GC.SuppressFinalize(this);
 		}
 
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="T:System.IO.Stream"/> and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
 		protected override void Dispose (bool disposing)
 		{
 		    _tempStream.Seek(0, SeekOrigin.Begin);
@@ -57,11 +68,29 @@ namespace Keyczar.Util
 			_stream =null;
 		}
 
+        /// <summary>
+        /// When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+        /// </summary>
+        /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
 	public override void Flush ()
 		{
 			_stream.Flush();
 		}
 
+    /// <summary>
+    /// When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
+    /// </summary>
+    /// <param name="buffer">An array of bytes. This method copies <paramref name="count"/> bytes from <paramref name="buffer"/> to the current stream.</param>
+    /// <param name="offset">The zero-based byte offset in <paramref name="buffer"/> at which to begin copying bytes to the current stream.</param>
+    /// <param name="count">The number of bytes to be written to the current stream.</param>
+    /// <exception cref="T:System.ArgumentException">The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the buffer length. </exception>
+    /// <exception cref="T:System.ArgumentNullException">
+    /// 	<paramref name="buffer"/> is null. </exception>
+    /// <exception cref="T:System.ArgumentOutOfRangeException">
+    /// 	<paramref name="offset"/> or <paramref name="count"/> is negative. </exception>
+    /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+    /// <exception cref="T:System.NotSupportedException">The stream does not support writing. </exception>
+    /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
 	  public override void Write(
 			byte[] buffer,
 			int offset,
@@ -71,8 +100,19 @@ namespace Keyczar.Util
 			_tempStream.Write(buffer,offset,count);
             
 		}
-	
 
+
+      /// <summary>
+      /// When overridden in a derived class, sets the position within the current stream.
+      /// </summary>
+      /// <param name="offset">A byte offset relative to the <paramref name="origin"/> parameter.</param>
+      /// <param name="origin">A value of type <see cref="T:System.IO.SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
+      /// <returns>
+      /// The new position within the current stream.
+      /// </returns>
+      /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
+      /// <exception cref="T:System.NotSupportedException">The stream does not support seeking, such as if the stream is constructed from a pipe or console output. </exception>
+      /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
 		public override long Seek(long offset, SeekOrigin origin)
 		{
 			throw new NotSupportedException();

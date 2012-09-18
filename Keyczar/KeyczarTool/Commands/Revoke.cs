@@ -46,7 +46,7 @@ namespace KeyczarTool
                     return -1;
                 }
 
-                if (keySet.Save(new KeySetWriter(_location)))
+                if (keySet.Save(new KeySetWriter(_location, overwrite:true)))
                 {
                     Console.WriteLine("Revoked Version {0}", _version);
                     return 0;

@@ -26,7 +26,7 @@ using NUnit.Framework;
 namespace KeyczarTest
 {
     [TestFixture]
-    public class CreateToolTest : AssertionHelper
+    public class CreateDataToolTest : AssertionHelper
     {
         private static string WRITE_DATA = "tool_cstestdata";
 
@@ -38,6 +38,9 @@ namespace KeyczarTest
             string result;
 
             var path = Util.TestDataPath(WRITE_DATA, topDir, subDir);
+
+            if(Directory.Exists(path))
+                Directory.Delete(path,recursive:true);
 
             result = !unofficial
                 ? Util.KeyczarTool(create: null, location: path, purpose: "crypt")
@@ -65,6 +68,9 @@ namespace KeyczarTest
             /*Encrypted Keysets*/
             var crypterpath = path;
             path = Util.TestDataPath(WRITE_DATA, topDir+"-crypted", subDir);
+
+            if (Directory.Exists(path))
+                Directory.Delete(path, recursive: true);
 
             result = !unofficial
                 ? Util.KeyczarTool(create: null, location: path, purpose: "crypt")
@@ -95,7 +101,8 @@ namespace KeyczarTest
             string result;
 
             var path = Util.TestDataPath(WRITE_DATA, topDir);
-
+            if(Directory.Exists(path))
+                Directory.Delete(path, recursive:true);
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
 
             Expect(result, Is.StringContaining("Created Key set."));
@@ -121,6 +128,9 @@ namespace KeyczarTest
             string result;
 
             var path = Util.TestDataPath(WRITE_DATA, topDir);
+
+            if(Directory.Exists(path))
+                Directory.Delete(path,recursive:true);
 
             result = String.IsNullOrWhiteSpace(asymmetric)
                  ? Util.KeyczarTool(create: null, location: path, purpose: purpose)
@@ -148,7 +158,8 @@ namespace KeyczarTest
             if (!string.IsNullOrWhiteSpace(asymmetric))
             {
                 var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public");
-				Directory.Delete(pubpath,true);
+                if(Directory.Exists(pubpath))
+				    Directory.Delete(pubpath,true);
                 result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
                 Expect(result, Is.StringContaining("Created new public keyset"));
             }
@@ -163,6 +174,9 @@ namespace KeyczarTest
             string result;
 
             var path = Util.TestDataPath(WRITE_DATA, topDir,"certificates");
+            
+            if(Directory.Exists(path))
+                Directory.Delete(path,recursive:true);
 
             result = String.IsNullOrWhiteSpace(asymmetric)
                  ? Util.KeyczarTool(create: null, location: path, purpose: purpose)
@@ -184,7 +198,8 @@ namespace KeyczarTest
             if (!string.IsNullOrWhiteSpace(asymmetric))
             {
                 var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public", "certificates");
-				Directory.Delete(pubpath,true);
+                if(Directory.Exists(pubpath))
+				    Directory.Delete(pubpath,true);
                 result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
                 Expect(result, Is.StringContaining("Created new public keyset"));
             }
@@ -197,7 +212,8 @@ namespace KeyczarTest
 
             var path = Util.TestDataPath(WRITE_DATA, "pbe_json");
 
-			Directory.Delete(path, true);
+            if(Directory.Exists(path))
+			    Directory.Delete(path, true);
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
 

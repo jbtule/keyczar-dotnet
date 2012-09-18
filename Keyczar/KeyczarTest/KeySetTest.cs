@@ -72,6 +72,20 @@ namespace KeyczarTest
               }
           }
 
+          [Test]
+          public void TestOverwriteFalse()
+          {
+              using (var ks = new MutableKeySet(new KeyMetadata { Name = "Don't Write", Purpose = KeyPurpose.DECRYPT_AND_ENCRYPT, Type = KeyType.AES }))
+              {
+                  ks.AddKey(KeyStatus.PRIMARY);
+                  var writer = new KeySetWriter(Util.TestDataPath(TEST_DATA, "pbe_json"),overwrite:false);
+                  
+                  Expect(() => ks.Save(writer), Is.False);
+
+              }
+          }
+
+
 		[Test]
 		public void TestRevoke()
 		{

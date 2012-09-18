@@ -46,7 +46,7 @@ namespace KeyczarTool
                     return -1;
                 }
 
-                if (keySet.Save(new KeySetWriter(_location)))
+                if (keySet.Save(new KeySetWriter(_location, overwrite:true)))
                 {
                     Console.WriteLine("Demoted Version {0} to {1} ",_version,status);
                     return 0;

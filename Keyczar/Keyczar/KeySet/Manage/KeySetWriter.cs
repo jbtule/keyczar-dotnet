@@ -95,7 +95,7 @@ namespace Keyczar
             CreateDir();
 			var meta_file = Path.Combine(_location, "meta");
 			var file = meta_file +".temp";
-            if (!_overwrite && File.Exists(file))
+            if (!_overwrite && File.Exists(meta_file))
             {
                 success = false;
                 return;

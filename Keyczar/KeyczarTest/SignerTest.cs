@@ -117,11 +117,17 @@ namespace KeyczarTest
         public void TestVanillaSignAndVerify(String subDir)
         {
             using (var signer = new VanillaSigner(Path.Combine(TEST_DATA, subDir)))
+            using (var verifier = new VanillaVerifier(Path.Combine(TEST_DATA, subDir)))
             {
                 String sig = signer.Sign(input);
 
+
+
                 Expect(signer.Verify(input, sig), Is.True);
                 Expect(signer.Verify("Wrong string", sig), Is.False);
+
+                Expect(verifier.Verify(input, sig), Is.True);
+                Expect(verifier.Verify("Wrong string", sig), Is.False);
             }
         }
   

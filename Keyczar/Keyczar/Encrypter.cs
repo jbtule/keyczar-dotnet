@@ -26,9 +26,21 @@ using Ionic.Zlib;
 namespace Keyczar
 {
 
+    /// <summary>
+    /// Types of compression for plaintext
+    /// </summary>
 	public enum CompressionType{
+        /// <summary>
+        /// None
+        /// </summary>
 		None =0,
+        /// <summary>
+        /// Gzip compression
+        /// </summary>
 		Gzip =1,
+        /// <summary>
+        /// Zlib compression
+        /// </summary>
 		Zlib =2,
 	}
 
@@ -61,6 +73,10 @@ namespace Keyczar
 
         }
 
+        /// <summary>
+        /// Gets or sets the compression.
+        /// </summary>
+        /// <value>The compression.</value>
 		public CompressionType Compression{
 			get;set;
 		}
