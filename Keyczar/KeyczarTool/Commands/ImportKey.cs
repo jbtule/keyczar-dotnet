@@ -52,15 +52,7 @@ namespace KeyczarTool
                 }
                 catch
                 {
-                    importedKeySet = ImportedKeySet.Import.PkcsKey(keySet.Metadata.Purpose, _importLocation,()=>
-                                                                                                                {
-                                                                                                                    if (_passphrase)
-                                                                                                                    {
-                                                                                                                        Console.WriteLine("Please enter passphrase:");
-                                                                                                                        return Console.ReadLine();
-                                                                                                                    }
-                                                                                                                    return null;
-                                                                                                                });
+                    importedKeySet = ImportedKeySet.Import.PkcsKey(keySet.Metadata.Purpose, _importLocation,Util.PromptForPassword);
                 }
                 if (importedKeySet == null)
                 {

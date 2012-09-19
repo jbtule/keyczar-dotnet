@@ -64,6 +64,7 @@
     <Compile Include="SignerTimeoutTest.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="CreateDataManageTest.cs" />
+    <Compile Include="ToolTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
