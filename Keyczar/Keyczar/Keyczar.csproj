@@ -106,6 +106,7 @@
     <Compile Include="Util\CachedPrompt.cs" />
     <Compile Include="Util\NonDestructive\NonDestructiveBinaryReader.cs" />
     <Compile Include="Util\NonDestructive\NonDestructiveCryptoStream.cs" />
+    <Compile Include="Util\NonDestructive\NonDestructiveLengthLimitingStream.cs" />
     <Compile Include="Util\NonDestructive\NonDestructiveStreamReader.cs" />
     <Compile Include="Util\NonDestructive\NonDestructiveZipFile.cs" />
     <Compile Include="Util\NonDestructive\NonDistructiveBinaryWriter.cs" />

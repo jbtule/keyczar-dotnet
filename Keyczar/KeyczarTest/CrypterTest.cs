@@ -83,6 +83,17 @@ namespace KeyczarTest
             }
         }
 
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        [TestCase("rsa-sign.public")]
+        public void TestWrongPurpose(String subDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            Expect(()=>new Crypter(subPath),Throws.InstanceOf<InvalidKeySetException>());
+            Expect(() => new Encrypter(subPath), Throws.InstanceOf<InvalidKeySetException>());
+           
+        }
+
 		[TestCase(CompressionType.Gzip)]
 		[TestCase(CompressionType.Zlib)]
 		public void TestEncryptDecryptCompression(CompressionType compression)

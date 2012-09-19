@@ -94,7 +94,7 @@ namespace Keyczar
             }
             if (!type.KeySizeOptions.Contains(size))
             {
-                throw new InvalidKeyException(string.Format("Invalid Size: {0}!", size));
+                throw new InvalidKeyTypeException(string.Format("Invalid Size: {0}!", size));
             }
             var key =(Key)Activator.CreateInstance(type.Type);
             key.GenerateKey(size);

@@ -89,16 +89,18 @@ namespace KeyczarTool
 					writer = new PbeKeySetWriter(writer, prompt);
 
 				}
-
-                if (keySet.Save(writer))
+                using (writer as IDisposable)
                 {
-                    Console.WriteLine("Created new key version:{0}", ver);
-                    ret = 0;
-                }
-                else
-                {
-                    ret = -1;
+                    if (keySet.Save(writer))
+                    {
+                        Console.WriteLine("Created new key version:{0}", ver);
+                        ret = 0;
+                    }
+                    else
+                    {
+                        ret = -1;
 
+                    }
                 }
             }
 

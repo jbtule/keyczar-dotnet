@@ -68,7 +68,7 @@ namespace Keyczar
             if (keySet.Metadata.Purpose != KeyPurpose.ENCRYPT
                 && keySet.Metadata.Purpose != KeyPurpose.DECRYPT_AND_ENCRYPT)
             {
-                throw new InvalidKeyTypeException("This key set can not be used for encryption.");
+                throw new InvalidKeySetException("This key set can not be used for encryption.");
             }
 
         }

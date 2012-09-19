@@ -75,7 +75,6 @@ namespace KeyczarTest
             }
         }
 
-
         [TestCase("")]
         [TestCase("bson", Category = "Unofficial")]
        public  void TestCrypterDecryptsOwnCiphertext(string unoffical){

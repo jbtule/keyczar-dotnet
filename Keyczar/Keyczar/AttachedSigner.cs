@@ -119,7 +119,7 @@ namespace Keyczar
 
                 if (Int32.MaxValue < fulllength - position)
                 {
-                    throw new ArgumentException("Data is to large to attach signature", "data");
+                    throw new ArgumentException("Data is too large to attach signature", "data");
                 }
 
                 base.Sign(data, signedData, prefixData: null, postfixData: hidden, sigData: Tuple.Create(fulllength,position,data));

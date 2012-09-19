@@ -132,11 +132,11 @@ namespace Keyczar.Pbe
             }
             else if (Hmac == PbeHashType.HMAC_SHA256)
             {
-                throw new InvalidKeyTypeException("Hmac_Sha256 not supported.");
+                throw new InvalidKeySetException("Hmac_Sha256 not supported.");
             }
             else
             {
-                throw new InvalidKeyTypeException("Unknown Pbe Cipher");
+                throw new InvalidKeySetException("Unknown Pbe Cipher");
             }
             using (pdb)
             {
@@ -159,7 +159,7 @@ namespace Keyczar.Pbe
             }
             else
             {
-                throw new InvalidKeyTypeException("Unknown Pbe Cipher");
+                throw new InvalidKeySetException("Unknown Pbe Cipher");
             }
 
             key.AesKeyBytes = GetDerivedBytes(key.Size/8, passswordPrompt);

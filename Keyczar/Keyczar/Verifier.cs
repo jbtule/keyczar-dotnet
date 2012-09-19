@@ -35,7 +35,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
         public Verifier(string keySetLocation)
-            : base(keySetLocation)
+            : this(new KeySet(keySetLocation))
         {
         }
 
@@ -48,7 +48,7 @@ namespace Keyczar
             if (keySet.Metadata.Purpose != KeyPurpose.VERIFY
                 && keySet.Metadata.Purpose != KeyPurpose.SIGN_AND_VERIFY)
             {
-                throw new InvalidKeyTypeException("This key set can not be used for verifying signatures.");
+                throw new InvalidKeySetException("This key set can not be used for verifying signatures.");
             }
         }
 

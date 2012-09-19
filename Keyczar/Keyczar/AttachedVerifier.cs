@@ -17,6 +17,7 @@
 using System;
 using System.IO;
 using Keyczar.Util;
+using Keyczar.Util.NonDestructive;
 
 namespace Keyczar
 {
@@ -32,7 +33,7 @@ namespace Keyczar
 		/// </summary>
 		/// <param name="keySetLocation">The key set location.</param>
 		public AttachedVerifier(string keySetLocation)
-			: base(keySetLocation)
+            : this(new KeySet(keySetLocation))
 		{
 		}
 
@@ -45,7 +46,7 @@ namespace Keyczar
 			if (keySet.Metadata.Purpose != KeyPurpose.VERIFY
 			    && keySet.Metadata.Purpose != KeyPurpose.SIGN_AND_VERIFY)
 			{
-				throw new InvalidKeyTypeException("This key set can not be used for verifying signatures.");
+                throw new InvalidKeySetException("This key set can not be used for verifying signatures.");
 			}
             _verifier = new HelperAttachedVerify(keySet);
 		}
@@ -59,7 +60,7 @@ namespace Keyczar
         /// <returns></returns>
 		public bool Verify(string signedMessage, byte[] hidden =null){
 
-            return Verify(DefaultEncoding.GetBytes(signedMessage), hidden);
+            return Verify(WebSafeBase64.Decode(signedMessage.ToCharArray()), hidden);
 		}
 
         /// <summary>
@@ -114,7 +115,13 @@ namespace Keyczar
                     var header = reader.ReadBytes(HEADER_LENGTH);
                     var length = Utility.ToInt32(reader.ReadBytes(4));
                     var position = signedMessage.Position;
-                    signedMessage.Seek(length, SeekOrigin.Begin);
+
+                    if (signedMessage.Length < position + length)
+                    {
+                        throw new InvalidCryptoDataException("Data doesn't appear to have signatures attached!");
+                    }
+
+                    signedMessage.Seek(length, SeekOrigin.Current);
                     using(var sigStream = new MemoryStream())
                     {
                         sigStream.Write(header,0,header.Length);
@@ -122,10 +129,14 @@ namespace Keyczar
                         {
                            var buffer = reader.ReadBytes(BUFFER_SIZE);
                            sigStream.Write(buffer, 0, buffer.Length);
-                        } 
-                        signedMessage.SetLength(position + length);
-                        sigStream.Flush();
-                        return Verify(signedMessage, sigStream.ToArray(), prefixData: null, postfixData: hidden);
+                        }
+                        using (var signedMessage2 = new NonDestructiveLengthLimitingStream(signedMessage))
+                        {
+                            signedMessage.Seek(position, SeekOrigin.Begin);
+                            signedMessage2.SetLength(position + length);
+                            sigStream.Flush();
+                            return Verify(signedMessage2, sigStream.ToArray(), prefixData: null, postfixData: hidden);
+                        }
                     }
                 }
             }

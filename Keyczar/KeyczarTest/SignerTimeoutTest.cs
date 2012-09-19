@@ -28,12 +28,12 @@ namespace KeyczarTest
     [TestFixture("testdata")]
     [TestFixture("cstestdata")]
     [TestFixture("tool_cstestdata")]
-    public class TimeoutSignerTest:AssertionHelper
+    public class SignerTimeoutTest:AssertionHelper
     { 
         
           private readonly String TEST_DATA;
 
-          public TimeoutSignerTest(string testPath)
+          public SignerTimeoutTest(string testPath)
           {
               TEST_DATA = testPath;
           }
@@ -41,30 +41,45 @@ namespace KeyczarTest
 
         private String input = "This is some test data";
 
+        [TestCase("aes", "")]
+        [TestCase("rsa", "")]
+        [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        public void TestWrongPurpose(String subDir, string nestdir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestdir);
+            Expect(() => new TimeoutSigner(subPath), Throws.InstanceOf<InvalidKeySetException>());
+            Expect(() => new TimeoutVerifier(subPath), Throws.InstanceOf<InvalidKeySetException>());
+
+        }
+
+
         [TestCase("hmac")]
         [TestCase("dsa")]
         [TestCase("rsa-sign")]
           public void TestTimeoutSignAndVerify(string subPath){
 
-            using(var signer = new TimeoutSigner(Util.TestDataPath(TEST_DATA , subPath))){
-              
+            using(var signer = new TimeoutSigner(Util.TestDataPath(TEST_DATA , subPath)))
+            using(var verifier = new TimeoutVerifier(Util.TestDataPath(TEST_DATA , subPath))){
+ 
                 // Create a signature that will be valid for a long time
                 var sig = signer.Sign(input, DateTime.Now.AddDays(365));
                 Expect(signer.Verify(input, sig),Is.True);
-    
+                Expect(verifier.Verify(input, sig), Is.True);
+
                 // Create a signature that is already expired
                 sig = signer.Sign(input, DateTime.Now.AddDays(-1));
                 Expect(signer.Verify(input, sig), Is.False);
-    
+                Expect(verifier.Verify(input, sig), Is.False);
+
                 // Create a valid signature, let it expire, and check that it is now invalid
                 var nearExpiration = DateTime.Now.AddSeconds(5);
                 sig = signer.Sign(input, nearExpiration);
-                Expect(signer.Verify(input, sig), Is.True);
+                Expect(verifier.Verify(input, sig), Is.True);
                 while (DateTime.Now < nearExpiration)
                 {
                     Thread.Sleep(1000);
                 }
-                Expect(signer.Verify(input, sig), Is.False);
+                Expect(verifier.Verify(input, sig), Is.False);
               }
         
           }

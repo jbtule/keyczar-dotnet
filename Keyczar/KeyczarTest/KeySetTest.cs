@@ -50,6 +50,27 @@ namespace KeyczarTest
                 Expect(readerKey.GetKeyHash(), Is.EqualTo(knownPrimaryKey.GetKeyHash()));
           }
 
+           [Test]
+           public void TestEncryptedKeysetForNonEncryptedData()
+           {
+               var nonencryptedpath = Util.TestDataPath(TEST_DATA, "rsa");
+               using (var pbereader = new PbeKeySet(nonencryptedpath,()=>"dummy"))
+               {
+                        var key = pbereader.GetKey(1);
+                        Expect(key, Is.Not.Null);
+               }
+
+    
+               using (var crypter = new Crypter(nonencryptedpath))
+               {
+                   var encreader = new EncryptedKeySet(nonencryptedpath, crypter);
+                   var key = encreader.GetKey(1);
+                   Expect(key, Is.Not.Null);
+               }
+
+              
+           }
+
           [Test]
           public void TestPbeKeysetRead(){
               Func<string> password = ()=>"cartman"; //Hardcoded because this is a test
@@ -115,6 +136,15 @@ namespace KeyczarTest
               var reader = new KeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"));
               Expect(() => new GetPrimary(reader).GetPrimaryExposed(), Throws.TypeOf<MissingPrimaryKeyException>());
 
+          }
+
+          [Test]
+          public void TestAddKeySizeFails()
+          {
+              using (var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary")))
+              {
+                  Expect(() => reader.AddKey(KeyStatus.PRIMARY, keySize: 16), Throws.TypeOf<InvalidKeyTypeException>());
+              }
           }
 
         protected class GetPrimary:Keyczar.Keyczar

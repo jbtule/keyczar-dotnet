@@ -72,7 +72,7 @@ namespace KeyczarTest
             using(var encrypter = new Crypter(kspath))
             {
                 var cryptedwriter = new EncryptedKeySetWriter(baseWriter, encrypter);
-                HelperCryptCreate(cryptedwriter, new EncryptedKeySet(kscryptpath,encrypter), kscryptpath);
+                HelperCryptCreate(cryptedwriter, new EncryptedKeySet(kscryptpath,encrypter), kscryptpath, new KeySet(kscryptpath),baseWriter);
             }
 
         }
@@ -84,16 +84,19 @@ namespace KeyczarTest
 			var kspath = Util.TestDataPath(WRITE_DATA, "pbe_json");
 			var writer =new KeySetWriter(kspath, overwrite: true);
 			Func<string> passPrompt = ()=>"cartman"; //hardcoded because this is a test;
-			var encwriter =new PbeKeySetWriter(writer,passPrompt);
+            using (var encwriter = new PbeKeySetWriter(writer, passPrompt))
+            {
 
-			using (var ks = CreateNewKeySet(KeyType.AES, KeyPurpose.DECRYPT_AND_ENCRYPT))
-			{
-				var success = ks.Save(writer);
-				Expect(success, Is.True);
-			}
-			using(var eks = new PbeKeySet(kspath,passPrompt)){
-				HelperCryptCreate(encwriter,eks,  kspath);
-			}
+                using (var ks = CreateNewKeySet(KeyType.AES, KeyPurpose.DECRYPT_AND_ENCRYPT))
+                {
+                    var success = ks.Save(writer);
+                    Expect(success, Is.True);
+                }
+                using (var eks = new PbeKeySet(kspath, passPrompt))
+                {
+                    HelperCryptCreate(encwriter, eks, kspath);
+                }
+            }
 
 
 		}
@@ -332,18 +335,18 @@ namespace KeyczarTest
         }
 
 
-        private void HelperCryptCreate(IKeySetWriter writer, IKeySet keySet, string kspath)
+        private void HelperCryptCreate(IKeySetWriter writer, IKeySet keySet, string kspath, IKeySet nonEncryptedKS= null, IKeySetWriter nonEncryptedWriter=null)
         {
-            using (var ks = new MutableKeySet(keySet))
+            using (var ks = new MutableKeySet(nonEncryptedKS ?? keySet))
             {
                 var ver = ks.AddKey(KeyStatus.PRIMARY);
 				Expect(ver, Is.EqualTo(1));
 
-                var success = ks.Save(writer);
+                var success = ks.Save(nonEncryptedWriter ?? writer);
                 Expect(success, Is.True);
             }
 
-            using (var encrypter = new Encrypter(keySet))
+            using (var encrypter = new Encrypter(nonEncryptedKS ?? keySet))
             {
                 var ciphertext = encrypter.Encrypt(input);
                 File.WriteAllText(Path.Combine(kspath, "1.out"), ciphertext);

@@ -46,7 +46,7 @@ namespace Keyczar
         {
             if (keySet.Metadata.Purpose != KeyPurpose.SIGN_AND_VERIFY)
             {
-                throw new InvalidKeyTypeException("This key set can not be used for signing and verifying.");
+                throw new InvalidKeySetException("This key set can not be used for signing and verifying.");
             }
         }
 
