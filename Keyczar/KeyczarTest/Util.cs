@@ -28,7 +28,7 @@ namespace KeyczarTest
     public static class Util
     {
 
-        public static string TestDataPath(string baseDir, string topDir, string subDir =null)
+        public static string TestDataPath(string baseDir, string topDir, string subDir = null)
         {
             if (String.IsNullOrWhiteSpace(topDir))
             {
@@ -36,19 +36,79 @@ namespace KeyczarTest
             }
 
             return String.IsNullOrWhiteSpace(subDir)
-                ? Path.Combine(baseDir, topDir)
-                : Path.Combine(baseDir, subDir, topDir);
+                       ? Path.Combine(baseDir, topDir)
+                       : Path.Combine(baseDir, subDir, topDir);
         }
 
         internal static dynamic KeyczarTool
         {
-            get { return new KeyczarToolRunner(); }
+            get { return new InProcessKeyczarToolRunner(); }
+        }
+    }
+
+
+        internal class InProcessKeyczarToolRunner : KeyczarToolRunner
+        {
+            protected override void RunTool(out object result, IList<object> stdInArgs, IList<string> separateArgs)
+            {
+
+      
+
+                byte[] stdinbytes;
+                using(var instream = new MemoryStream())
+                using (var tempwrite = new StreamWriter(instream))
+                {
+                    if (stdInArgs.Any())
+                    {
+                        foreach (var args in stdInArgs)
+                        {
+                            tempwrite.WriteLine(args);
+                        }
+                    }
+                    tempwrite.Flush();
+                    stdinbytes =instream.ToArray();
+
+                }
+
+
+                var combinedArg = String.Join(" ", separateArgs);
+                var program = "KeyczarTool";
+                if (IsRunningOnMono)
+                {
+                    combinedArg = "KeyczarTool.exe " + combinedArg;
+                    program = "mono";
+                }
+
+                Console.WriteLine("{0} {1}", program, combinedArg);
+                var origIn = Console.In;
+                var origOut = Console.Out;
+                using (var inbyteStream = new MemoryStream(stdinbytes))
+                using (var input = new StreamReader(inbyteStream))
+                {
+                    Console.SetIn(input);
+                    using (var stream = new MemoryStream())
+                    using (var output = new StreamWriter(stream))
+                    {
+                      
+                        Console.SetOut(output);
+                        KeyczarTool.Program.Main(separateArgs.Select(it => it.Replace("\"", "")).ToArray());
+
+                        output.Flush();
+                        result = Encoding.UTF8.GetString(stream.ToArray());
+                    } 
+                    
+                    Console.SetIn(origIn);
+                    Console.SetOut(origOut);
+                }
+
+                Console.WriteLine(result);
+            }
         }
 
         internal class KeyczarToolRunner : DynamicObject
         {
 
-			bool IsRunningOnMono = (Type.GetType ("Mono.Runtime") != null);
+			protected bool IsRunningOnMono = (Type.GetType ("Mono.Runtime") != null);
 
             public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
             {
@@ -68,31 +128,39 @@ namespace KeyczarTest
                                                                                : string.Format("--{0}=\"{1}\"", n, p));
 
 
-                var combinedArg = String.Join(" ", separateArgs);
-				var program = "KeyczarTool";
-				if(IsRunningOnMono){
-					combinedArg = "KeyczarTool.exe " + combinedArg;
-					program = "mono";
-				}
+                RunTool(out result, stdInArgs.ToList(), separateArgs.ToList());
 
-				Console.WriteLine("{0} {1}", program, combinedArg);
+                return true;
+            }
+
+            protected virtual void RunTool(out object result, IList<object> stdInArgs, IList<string> separateArgs)
+            {
+                var combinedArg = String.Join(" ", separateArgs);
+                var program = "KeyczarTool";
+                if (IsRunningOnMono)
+                {
+                    combinedArg = "KeyczarTool.exe " + combinedArg;
+                    program = "mono";
+                }
+
+                Console.WriteLine("{0} {1}", program, combinedArg);
 
                 var process = new Process()
-                {
-					StartInfo = new ProcessStartInfo(program, combinedArg)
-                    {
-                        RedirectStandardInput = true,
-                        RedirectStandardOutput = true,
-						RedirectStandardError = true,
-                        UseShellExecute = false,
-                        CreateNoWindow = true
-                    }
-                };
+                                  {
+                                      StartInfo = new ProcessStartInfo(program, combinedArg)
+                                                      {
+                                                          RedirectStandardInput = true,
+                                                          RedirectStandardOutput = true,
+                                                          RedirectStandardError = true,
+                                                          UseShellExecute = false,
+                                                          CreateNoWindow = true
+                                                      }
+                                  };
                 process.Start();
-                  
+
                 foreach (var stdArg in stdInArgs)
-				{  
-				    Thread.Sleep(3000);
+                {
+                    Thread.Sleep(3000);
                     process.StandardInput.WriteLine(stdArg.ToString());
                 }
 
@@ -101,9 +169,8 @@ namespace KeyczarTest
 
                 result = process.StandardOutput.ReadToEnd();
                 Console.WriteLine(result);
-				Console.WriteLine(process.StandardError.ReadToEnd());
-                return true;
-            }
-        }
-    }
+                Console.WriteLine(process.StandardError.ReadToEnd());
+           }
+      }
 }
+

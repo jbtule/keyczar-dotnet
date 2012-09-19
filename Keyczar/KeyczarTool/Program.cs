@@ -23,7 +23,7 @@ namespace KeyczarTool
 {
     public class Program
     {
-        static void Main(string[] args)
+        public static int Main(string[] args)
         { 
             
             // locate any commands in the assembly (or use an IoC container, or whatever source)
@@ -41,8 +41,9 @@ namespace KeyczarTool
                                };
 
             // run the command for the console input
-            ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
-
+            return ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
         }
+
+       
     }
 }
