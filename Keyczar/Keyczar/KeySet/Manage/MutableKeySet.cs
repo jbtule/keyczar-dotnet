@@ -107,10 +107,15 @@ namespace Keyczar
         /// </summary>
         /// <param name="status">The status.</param>
         /// <param name="keySize">Size of the key.</param>
+        /// <param name="options">The options. dictionary or annoymous type of properties to set</param>
         /// <returns></returns>
-        public int AddKey(KeyStatus status, int keySize =0)
+        public int AddKey(KeyStatus status, int keySize =0, object options=null)
         {
             var key = Key.Generate(_metadata.Type, keySize);
+            if (options != null)
+            {
+                Utility.CopyProperties((dynamic) options, key);
+            }
             return AddKey(status, key);
         }
 

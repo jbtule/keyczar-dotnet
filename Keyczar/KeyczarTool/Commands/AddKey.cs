@@ -34,13 +34,13 @@ namespace KeyczarTool
 
         public AddKey()
         {
-            this.IsCommand("addkey", "Add a new key to an existing key set.");
-            this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
-			this.HasRequiredOption("s|status=", "The status (active|primary).", v => { _status = v; });
-            this.HasOption<int>("b|size=", "The key size in bits.", v => { _size = v; });
-            this.HasOption("c|crypter=", "The crypter key set location.", v => { _crypterLocation = v; });
-            this.HasOption("p|password", "Password for decrypting the key.", v => { _password = true; });
-            this.HasOption("g|padding=", "RSA Padding (oaep|pkcs).", v => { _padding = v; });
+            this.IsCommand("addkey", Localized.AddKey);
+            this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
+			this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
+            this.HasOption<int>("b|size=", Localized.Size, v => { _size = v; });
+            this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
+            this.HasOption("p|password", Localized.Password, v => { _password = true; });
+            this.HasOption("g|padding=", Localized.Padding, v => { _padding = v; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -51,61 +51,89 @@ namespace KeyczarTool
             Crypter crypter = null;
             IKeySet ks = new KeySet(_location);
 
+            Func<string> crypterPrompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
+
 			var prompt = ks.Metadata.Encrypted 
 				 ? new Func<string>(CachedPrompt.Password(Util.PromptForPassword).Prompt)
 				 : new Func<string>(CachedPrompt.Password(Util.DoublePromptForPassword).Prompt);
 
+            IDisposable dks = null;
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
             {
-                crypter = new Crypter(_crypterLocation);
+                if (_password)
+                {
+                    var cks = new PbeKeySet(_crypterLocation, crypterPrompt);
+                    crypter = new Crypter(cks);
+                    dks = cks;
+                }
+                else
+                {     
+                    crypter = new Crypter(_crypterLocation);
+                }
                 ks = new EncryptedKeySet(ks, crypter);
-            }else if (_password)
+            }else  if (_password)
             {
-				ks = new PbeKeySet(ks, prompt);
-
+                ks = new PbeKeySet(ks, prompt);
             }
+            var d2ks = ks as IDisposable;
 
+
+            using(crypter)
+            using (dks)
+            using (d2ks)
             using (var keySet = new MutableKeySet(ks))
             {
                  if(_status != KeyStatus.PRIMARY && _status != KeyStatus.ACTIVE)
                  {
-                     Console.WriteLine("Invalid status:{0}",_status.Identifier);
+                     Console.WriteLine("{0} {1}.",Localized.MsgInvalidStatus, _status.Identifier);
                      return -1;
                  }
 
-                var ver = keySet.AddKey(_status, _size);
-                if (!String.IsNullOrWhiteSpace(_padding))
-                {
-                    var key =keySet.GetKey(ver);
-                    ((dynamic)key).Padding = _padding;
-                }
+                 object options = null;
+                 if (!String.IsNullOrWhiteSpace(_padding))
+                 {
+                     options = new {Padding = _padding};
+                 }
+
+                 var ver = keySet.AddKey(_status, _size, options);
+               
 
                 IKeySetWriter writer = new KeySetWriter(_location, overwrite:true);
-
+               
                 if (crypter != null)
                 {
                     writer = new EncryptedKeySetWriter(writer,crypter);
-                }else if(_password){
-					writer = new PbeKeySetWriter(writer, prompt);
+                }
+                else if (_password)
+                {
+                    writer = new PbeKeySetWriter(writer, prompt);
+                }
 
-				}
                 using (writer as IDisposable)
                 {
-                    if (keySet.Save(writer))
+                    try
                     {
-                        Console.WriteLine("Created new key version:{0}", ver);
-                        ret = 0;
+                        if (keySet.Save(writer))
+                        {
+                            Console.WriteLine("{0} {1}.",Localized.MsgCreatedKey, ver);
+                            ret = 0;
+                        }
+                        else
+                        {
+                            ret = -1;
+                        }
                     }
-                    else
+                    catch
                     {
                         ret = -1;
-
                     }
                 }
             }
 
-            if(crypter !=null)
-                crypter.Dispose();
+            if (ret != 0)
+            {
+                Console.WriteLine("{0} {1}.",Localized.MsgCouldNotWrite, _location);
+            }
 
             return ret;
         }

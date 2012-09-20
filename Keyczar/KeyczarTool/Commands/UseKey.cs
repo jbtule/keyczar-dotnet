@@ -37,39 +37,61 @@ namespace KeyczarTool
 
         public UseKey()
         {
-            this.IsCommand("usekey", "Uses keyset to encrypt or sign a message.");
-            this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
-            this.HasOption("c|crypter=", "The crypter key set location.", v => { _crypterLocation = v; });
-            this.HasOption("p|password", "Password for decrypting the key.", v => { _password = true; });
-            this.HasOption("m|message=", "The message (uses std in if not set).", v => { _message = v; });
-            this.HasOption("d|destination=", "The output destination.", v => { _destination = v; });
-            this.HasOption("f|file", "The message is a file location", v => { _file = true; });
-            this.HasOption("b|binary", "Specifies binary output.", v => { _binary = true; });
-			this.HasOption("z|compression:", "Specifies binary output. (zlib)", v => {_usecompression = true; _compression = v; });
+            this.IsCommand("usekey", Localized.UseKey);
+            this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
+            this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
+            this.HasOption("p|password", Localized.Password, v => { _password = true; });
+            this.HasOption("m|message=", Localized.Message, v => { _message = v; });
+            this.HasOption("d|destination=", Localized.Destination, v => { _destination = v; });
+            this.HasOption("f|file", Localized.File, v => { _file = true; });
+            this.HasOption("b|binary", Localized.Binary, v => { _binary = true; });
+			this.HasOption("z|compression:", Localized.Compression, v => {_usecompression = true; _compression = v; });
             this.SkipsCommandSummaryBeforeRunning();
-        }
+        }  
 
 
         public override int Run(string[] remainingArguments)
         {
 
-            using (var keycrypter = String.IsNullOrWhiteSpace(_crypterLocation) ? null :  new Crypter(_crypterLocation))
+            Crypter crypter = null;
+            IKeySet ks = new KeySet(_location);
+            Func<string> prompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
+
+            IDisposable dks = null;
+            if (!String.IsNullOrWhiteSpace(_crypterLocation))
             {
-
-                IKeySet ks = new KeySet(_location);
-                if (!String.IsNullOrWhiteSpace(_crypterLocation))
+                if (_password)
                 {
-
-                    ks = new EncryptedKeySet(ks, keycrypter);
+                    var cks = new PbeKeySet(_crypterLocation, prompt);
+                    crypter = new Crypter(cks);
+                    dks = cks;
                 }
-                else if (_password)
+                else
                 {
-                    ks = new PbeKeySet(ks, Util.PromptForPassword);
+                    crypter = new Crypter(_crypterLocation);
                 }
+                ks = new EncryptedKeySet(ks, crypter);
+            }
+            else if (_password)
+            {
+                ks = new PbeKeySet(ks, prompt);
+            }
+            var d2ks = ks as IDisposable;
+
+
+            using (crypter)
+            using (dks)
+            using (d2ks){
 
                     Stream inStream;
                     if (String.IsNullOrWhiteSpace(_message))
                     {
+                        if (_password)
+                        {
+                            Console.WriteLine(Localized.MsgMessageFlagWithPassword);
+                            return -1;
+                        }
+
                         inStream = Console.OpenStandardInput();
                     }else if (_file)
                     {
@@ -104,13 +126,28 @@ namespace KeyczarTool
                     if(ks.Metadata.Purpose == KeyPurpose.DECRYPT_AND_ENCRYPT
                         || ks.Metadata.Purpose == KeyPurpose.ENCRYPT )
                     {
-                        using (var crypter =  new Crypter(ks))
+                        using (var ucrypter =  new Crypter(ks))
                         {
 							if(_usecompression){
-								crypter.Compression = CompressionType.Zlib;
+
+                                if (string.IsNullOrWhiteSpace(_compression)
+                                    || _compression.Equals("zlib", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    ucrypter.Compression = CompressionType.Zlib;
+                                }
+                                else if (_compression.Equals("gzip", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    ucrypter.Compression = CompressionType.Gzip;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("{0} {1}.", Localized.MsgUnknownCompression, _compression);
+                                    return -1;
+                                }
+					
 							}
 
-                            crypter.Encrypt(inStream, outstream);
+                            ucrypter.Encrypt(inStream, outstream);
                         }
                     }else
                     {
@@ -138,7 +175,6 @@ namespace KeyczarTool
                             File.WriteAllText(_destination, new string(encodedOutput));
                         }
                     }
-                    
                 }
             }
 

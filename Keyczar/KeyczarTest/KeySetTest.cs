@@ -129,6 +129,15 @@ namespace KeyczarTest
 			}
 		}
 
+        [Test]
+        public void TestAddUnknownProperty()
+        {
+            using (var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary")))
+            {
+              
+                Expect(() => reader.AddKey(KeyStatus.PRIMARY,options:new{FakeProp="BlahBlah"}), Throws.Nothing);
+            }
+        }
 
           [Test]
           public void TestGetPrimaryFails()

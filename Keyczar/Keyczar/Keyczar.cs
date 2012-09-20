@@ -105,8 +105,8 @@ namespace Keyczar
             _versions = versions.ToDictionary(k => k.Version.VersionNumber, v => v.CryptKey);
 
             _hashedKeys = versions
-                .ToLookup(k => k.Hash, v => v)
-                .ToDictionary(k => Utility.ToInt32(k.Key), v =>
+                .ToLookup(k => Utility.ToInt32(k.Hash), v => v)
+                .ToDictionary(k => k.Key, v =>
                                               {
                                                   var list = new SortedList<KeyVersion, Key>();
                                                   foreach (var pair in v)

@@ -29,9 +29,9 @@ namespace KeyczarTool
 
         public Revoke()
         {
-            this.IsCommand("revoke", "Revoke a given key version from the key set.");
-            this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
-            this.HasRequiredOption("v|version=", "The key version.", v => { _version = int.Parse(v); });
+            this.IsCommand("revoke", Localized.Revoke);
+            this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
+            this.HasRequiredOption("v|version=", Localized.Version, v => { _version = int.Parse(v); });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -42,16 +42,19 @@ namespace KeyczarTool
                 var status = keySet.Revoke(_version);
                 if (!status)
                 {
-                    Console.WriteLine("Could not revoke Version {0}", _version);
+                    Console.WriteLine("{0} {1}.",Localized.MsgCouldNotRevoke, _version);
                     return -1;
                 }
-
-                if (keySet.Save(new KeySetWriter(_location, overwrite:true)))
+                try
                 {
-                    Console.WriteLine("Revoked Version {0}", _version);
-                    return 0;
+                    if (keySet.Save(new KeySetWriter(_location, overwrite: true)))
+                    {
+                        Console.WriteLine("{0} {1}.", Localized.MsgRevokedVersion, _version);
+                        return 0;
+                    }
                 }
-                Console.WriteLine("Could not write file to {0}", _location);
+                catch{}
+                Console.WriteLine("{0} {1}.",Localized.MsgCouldNotWrite, _location);
                 return -1;
             }
         }

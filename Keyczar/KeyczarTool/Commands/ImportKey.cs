@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Keyczar;
 using Keyczar.Compat;
+using Keyczar.Util;
 using ManyConsole;
 
 namespace KeyczarTool
@@ -15,15 +16,16 @@ namespace KeyczarTool
         private KeyStatus _status;
         private string _crypterLocation;
         private bool _passphrase;
+        private bool _password;
 
         public ImportKey()
         {
-            this.IsCommand("importkey", "Imports a key into to an existing key set.");
-            this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
-            this.HasRequiredOption("i|importlocation=", "The location of the import file.", v => { _importLocation = v; });
-            this.HasOption("s|status=", "The status (active|primary).", v => { _status = v; });
-            this.HasOption("c|crypter=", "The crypter key set location.", v => { _crypterLocation = v; });
-            this.HasOption("p|passphrase", "The import files passphrase.", v => { _passphrase = true; });
+            this.IsCommand("importkey", Localized.ImportKey);
+            this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
+            this.HasRequiredOption("i|importlocation=", Localized.ImportLocation, v => { _importLocation = v; });
+            this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
+            this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
+            this.HasOption("p|password", Localized.Password, v => { _password = true; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -32,17 +34,51 @@ namespace KeyczarTool
               var ret = 0;
             Crypter crypter = null;
             IKeySet ks = new KeySet(_location);
+
+            Func<string> singlePrompt = CachedPrompt.Password(() =>
+            {
+                Console.WriteLine(Localized.MsgForKeySet);
+                return Util.PromptForPassword();
+            }).Prompt;
+
+            var prompt = ks.Metadata.Encrypted
+                 ? singlePrompt
+                 : CachedPrompt.Password(() =>
+                                             {
+                                                 Console.WriteLine(Localized.MsgForKeySet);
+                                                 return Util.PromptForPassword();
+                                             }).Prompt;
+
+            IDisposable dks = null;
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
             {
-                crypter = new Crypter(_crypterLocation);
+                if (_password)
+                {
+                    var cks = new PbeKeySet(_crypterLocation, singlePrompt);
+                    crypter = new Crypter(cks);
+                    dks = cks;
+                }
+                else
+                {
+                    crypter = new Crypter(_crypterLocation);
+                }
                 ks = new EncryptedKeySet(ks, crypter);
             }
+            else if (_password)
+            {
+                ks = new PbeKeySet(ks, prompt);
+            }
+            var d2ks = ks as IDisposable;
 
+
+            using (crypter)
+            using (dks)
+            using (d2ks)
             using (var keySet = new MutableKeySet(ks))
             {
                  if(_status != KeyStatus.PRIMARY && _status != KeyStatus.ACTIVE)
                  {
-                     Console.WriteLine("Invalid status:{0}",_status.Identifier);
+                     Console.WriteLine("{0} {1}.",Localized.Status, _status.Identifier);
                      return -1;
                  }
                 ImportedKeySet importedKeySet = null;
@@ -52,11 +88,17 @@ namespace KeyczarTool
                 }
                 catch
                 {
-                    importedKeySet = ImportedKeySet.Import.PkcsKey(keySet.Metadata.Purpose, _importLocation,Util.PromptForPassword);
+              
+                    importedKeySet = ImportedKeySet.Import.PkcsKey(
+                        keySet.Metadata.Purpose, _importLocation,
+                        CachedPrompt.Password(() => { 
+                            Console.WriteLine(Localized.MsgForImport);
+                            return Util.PromptForPassword();
+                        }).Prompt);
                 }
                 if (importedKeySet == null)
                 {
-                    Console.WriteLine("unparsable import file.");
+                    Console.WriteLine(Localized.MsgUnparsableImport);
                     ret = -1;
                 }
                 else
@@ -70,7 +112,7 @@ namespace KeyczarTool
                         else
                         {
                             ret = -1;
-                            Console.WriteLine("conflicting key types. {0} != {1}",
+                            Console.WriteLine(Localized.MsgConflictingKeyTypes,
                                               keySet.Metadata.Type.Identifier,
                                               importedKeySet.Metadata.Type);
                         }
@@ -89,10 +131,15 @@ namespace KeyczarTool
                             {
                                 writer = new EncryptedKeySetWriter(writer, crypter);
                             }
+                            else if (_password)
+                            {
+                                writer = new PbeKeySetWriter(writer, prompt);
+
+                            }
 
                             if (keySet.Save(writer))
                             {
-                                Console.WriteLine("Imported new key version:{0}", ver);
+                                Console.WriteLine("{0} {1}.", Localized.MsgImportedNewKey,ver);
                                 ret = 0;
                             }
                             else
@@ -104,9 +151,6 @@ namespace KeyczarTool
                     }
                 }
             }
-
-            if(crypter !=null)
-                crypter.Dispose();
 
             return ret;
         }

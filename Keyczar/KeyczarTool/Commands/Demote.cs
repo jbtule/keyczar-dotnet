@@ -29,9 +29,9 @@ namespace KeyczarTool
 
         public Demote()
         {
-            this.IsCommand("demote", "Demote a given key version from the key set.");
-            this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
-            this.HasRequiredOption("v|version=", "The key version.", v => { _version = int.Parse(v); });
+            this.IsCommand("demote", Localized.Demote);
+            this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
+            this.HasRequiredOption("v|version=", Localized.Version, v => { _version = int.Parse(v); });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -42,19 +42,23 @@ namespace KeyczarTool
                 var status =keySet.Demote(_version);
                 if (status == null)
                 {
-                    Console.WriteLine("Unknown Version {0}",_version);
+                    Console.WriteLine("{0} {1}",Localized.MsgUnknownVersion,_version);
                     return -1;
                 }
-
-                if (keySet.Save(new KeySetWriter(_location, overwrite:true)))
+                try
                 {
-                    Console.WriteLine("Demoted Version {0} to {1} ",_version,status);
-                    return 0;
+                    if (keySet.Save(new KeySetWriter(_location, overwrite: true)))
+                    {
+                        Console.WriteLine(Localized.MsgDemotedVersion, _version, status);
+                        return 0;
+                    }
+                }
+                catch
+                {
                 }
             }
 
-
-                 Console.WriteLine("Could not write file to {0}", _location);
+                 Console.WriteLine("{0} {1}",Localized.MsgCouldNotWrite, _location);
                  return -1;
         }
     }

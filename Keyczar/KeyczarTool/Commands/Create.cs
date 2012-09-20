@@ -35,14 +35,14 @@ namespace KeyczarTool
 
         public Create()
         {
-            this.IsCommand("create", "Create a new key set.");
-            this.HasRequiredOption("l|location=", "The location of the key set.", v => { _location = v; });
-            this.HasRequiredOption("o|purpose=", "The purpose of the key set (sign|crypt).", v => { _pupose = v; });
-            this.HasOption("n|name=", "The key set name.", v => { _name = v; });
-            this.HasOption("a|asymmetric:", "Use asymmetric algorithm (dsa|rsa)", v => { _asymm = true;
+            this.IsCommand("create", Localized.Create);
+            this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
+            this.HasRequiredOption("o|purpose=", Localized.Purpose, v => { _pupose = v; });
+            this.HasOption("n|name=", Localized.Name, v => { _name = v; });
+            this.HasOption("a|asymmetric:", Localized.Asymmetric, v => { _asymm = true;
                                                                                            _asymmAlg = v;
             });
-            this.HasOption("u|unofficial:", "Use unofficial key type (aes_aead)", v =>
+            this.HasOption("u|unofficial:", Localized.UnofficialCreate, v =>
                                                                                       {
                                                                                           _unofficial = true;
                                                                                            _unoffAlg = v;
@@ -68,11 +68,11 @@ namespace KeyczarTool
 
                 if (keySet.Save(new KeySetWriter(_location)))
                 {
-                    Console.WriteLine("Created Key set. " + (_name ?? ""));
+                    Console.WriteLine(Localized.MsgCreatedKeySet);
                     return 0;
                 }
             }
-            Console.WriteLine("Could not create key set at location:{0}", _location);
+            Console.WriteLine("{0} {1}.", Localized.MsgExistingKeySet, _location);
 
             return -1;
         }

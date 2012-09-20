@@ -25,7 +25,7 @@ namespace KeyczarTool
     {
         public static string PromptForPassword()
         {
-            Console.WriteLine("Please enter passphrase:");
+            Console.WriteLine(Localized.MsgPleaseEnterPassword);
             return Console.ReadLine();
         }
 
@@ -35,18 +35,18 @@ namespace KeyczarTool
             int i = 0;
             while (i++ < 4)
             {
-                Console.WriteLine("Please enter passphrase:");
+                Console.WriteLine(Localized.MsgPleaseEnterPassword);
                 var phrase1 = Console.ReadLine();
-                Console.WriteLine("Please re-enter passphrase:");
+                Console.WriteLine(Localized.MsgPleaseReenterPassword);
                 var phrase2 = Console.ReadLine();
 
                 if (phrase1.Equals(phrase2))
                 {
                     return phrase1;
                 }
-                Console.WriteLine("Passphrase didn't match.");
+                Console.WriteLine(Localized.MsgPasswordDidNotMatch);
             }
-            Console.WriteLine("Giving up.");
+            Console.WriteLine(Localized.MsgPasswordGiveUp);
             throw new Exception("Entered non matching password too many times");
         }
     }

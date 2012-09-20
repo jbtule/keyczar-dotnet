@@ -20,6 +20,7 @@ using System.Dynamic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using Keyczar;
 using NUnit.Framework;
 
 
@@ -46,11 +47,11 @@ namespace KeyczarTest
                 ? Util.KeyczarTool(create: null, location: path, purpose: "crypt")
                 : Util.KeyczarTool(create: null, location: path, purpose: "crypt", unofficial: null);
 
-            Expect(result, Is.StringContaining("Created Key set."));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining("Created new key version:1"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             var outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
             Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
@@ -58,7 +59,7 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining("Created new key version:2"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
             outPath = Path.Combine(path, "2.out");
             File.Delete(outPath);//Delete if already exists
@@ -76,11 +77,11 @@ namespace KeyczarTest
                 ? Util.KeyczarTool(create: null, location: path, purpose: "crypt")
              : Util.KeyczarTool(create: null, location: path, purpose: "crypt", unofficial: null);
 
-            Expect(result, Is.StringContaining("Created Key set."));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath);
 
-            Expect(result, Is.StringContaining("Created new key version:1"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
             Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath, crypter: crypterpath);
@@ -88,7 +89,7 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath);
 
-            Expect(result, Is.StringContaining("Created new key version:2"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
             outPath = Path.Combine(path, "2.out");
             File.Delete(outPath);//Delete if already exists
@@ -103,19 +104,19 @@ namespace KeyczarTest
             var path = Util.TestDataPath(WRITE_DATA, topDir);
             if(Directory.Exists(path))
                 Directory.Delete(path, recursive:true);
-            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
+            result = Util.KeyczarTool(create: null,name:"Test", location: path, purpose: "crypt");
 
-            Expect(result, Is.StringContaining("Created Key set."));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining("Created new key version:1"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             var outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
             Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
 
             result = Util.KeyczarTool(demote: null, location: path, version: 1);
-            Expect(result, Is.StringContaining("Demoted Version 1 to ACTIVE"));
+            Expect(result, Is.StringContaining(String.Format(KeyczarTool.Localized.MsgDemotedVersion,1,KeyStatus.ACTIVE)));
         }
 
 
@@ -133,14 +134,15 @@ namespace KeyczarTest
                 Directory.Delete(path,recursive:true);
 
             result = String.IsNullOrWhiteSpace(asymmetric)
-                 ? Util.KeyczarTool(create: null, location: path, purpose: purpose)
-                 : Util.KeyczarTool(create: null, location: path, purpose: purpose, asymmetric: asymmetric);
+                ? Util.KeyczarTool(create: null, name:"Test", location: path, purpose: purpose)
+                 : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric);
 
-            Expect(result, Is.StringContaining("Created Key set."));
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining("Created new key version:1"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             var outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
             Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
@@ -148,7 +150,7 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining("Created new key version:2"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
             outPath = Path.Combine(path, "2.out");
             File.Delete(outPath);//Delete if already exists
@@ -161,7 +163,7 @@ namespace KeyczarTest
                 if(Directory.Exists(pubpath))
 				    Directory.Delete(pubpath,true);
                 result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
-                Expect(result, Is.StringContaining("Created new public keyset"));
+                Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
             }
         }
 
@@ -179,21 +181,21 @@ namespace KeyczarTest
                 Directory.Delete(path,recursive:true);
 
             result = String.IsNullOrWhiteSpace(asymmetric)
-                 ? Util.KeyczarTool(create: null, location: path, purpose: purpose)
-                 : Util.KeyczarTool(create: null, location: path, purpose: purpose, asymmetric: asymmetric);
+                 ? Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose)
+                 : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric);
 
-            Expect(result, Is.StringContaining("Created Key set."));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining("Created new key version:1"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
            
             
             var exportpath = Util.TestDataPath(WRITE_DATA, topDir + "-pkcs8.pem", "certificates");
             //send password via std in
             result = Util.KeyczarTool("pass", "pass", export: null, location: path, destination: exportpath);
 
-            Expect(result, Is.StringContaining("Exported to pem."));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
 
             if (!string.IsNullOrWhiteSpace(asymmetric))
             {
@@ -201,7 +203,7 @@ namespace KeyczarTest
                 if(Directory.Exists(pubpath))
 				    Directory.Delete(pubpath,true);
                 result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
-                Expect(result, Is.StringContaining("Created new public keyset"));
+                Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
             }
         }
 
@@ -215,14 +217,15 @@ namespace KeyczarTest
             if(Directory.Exists(path))
 			    Directory.Delete(path, true);
 
-            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
+            result = Util.KeyczarTool(create: null, name: "Test", location: path, purpose: "crypt");
 
-            Expect(result, Is.StringContaining("Created Key set."));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             //First time double prompts for password
             result = Util.KeyczarTool("cartman", "cartman", addkey: null, location: path, status: "primary", password: null);
 
-            Expect(result, Is.StringContaining("Created new key version:1"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+
             outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
             Util.KeyczarTool("cartman", usekey: null, location: path, message: input, destination: outPath, password: null);
@@ -230,7 +233,7 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool("cartman", addkey: null, location: path, status: "primary", password: null);
 
-            Expect(result, Is.StringContaining("Created new key version:2"));
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
             outPath = Path.Combine(path, "2.out");
             File.Delete(outPath);//Delete if already exists

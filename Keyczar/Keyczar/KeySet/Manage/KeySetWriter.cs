@@ -133,8 +133,9 @@ namespace Keyczar
                     File.Delete(newPath);
                     File.Move(path, newPath);
                 }
+            }
 
-            }else
+            if(!success)
             {
                 foreach (var path in _filePaths)
                 {

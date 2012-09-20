@@ -31,6 +31,33 @@ namespace Keyczar.Util
     /// </summary>
     public static class Utility
     {
+        /// <summary>
+        /// Copies string/object dictionary to the destnation objects properties.
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="dest">The dest.</param>
+        public static void CopyProperties(IDictionary<string,object> source, object dest)
+        {
+            foreach (var pair in source)
+            {
+                var prop =dest.GetType().GetProperty(pair.Key);
+                if (prop != null)
+                {
+                    prop.SetValue(dest,pair.Value,null);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Copies the properties from one object to the next
+        /// </summary>
+        /// <param name="source">The source.</param>
+        /// <param name="dest">The dest.</param>
+        public static void CopyProperties(object source, object dest)
+        {
+            var dict =source.GetType().GetProperties().ToDictionary(k => k.Name, v => v.GetValue(source,null));
+            CopyProperties(dict, dest);
+        }
 
 
         /// <summary>

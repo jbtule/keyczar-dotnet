@@ -77,6 +77,16 @@ namespace Keyczar.Crypto
          [JsonConverter(typeof(WebSafeBase64ByteConverter))]
          public byte[] CrtCoefficient { get; set; }
 
+         /// <summary>
+         /// Gets or sets the padding.
+         /// </summary>
+         /// <value>The padding.</value>
+        [JsonIgnore]
+        public string Padding
+        {
+            get { return PublicKey.Padding; }
+            set { PublicKey.Padding = value; }
+        }
         
          /// <summary>
          /// Gets the key hash.
