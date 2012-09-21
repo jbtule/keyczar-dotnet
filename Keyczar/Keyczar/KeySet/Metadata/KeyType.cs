@@ -68,20 +68,27 @@ namespace Keyczar
             return _specs.Where(it => it.Value.Type == type).Select(it=>it.Key).FirstOrDefault();
         }
 
-        private static readonly IDictionary<string, KeyTypeSpec> _specs = new[]
-                  {
-                     AES.KeySizes<AesKey>(128,192,256),
-                     HMAC_SHA1.KeySizes<HmacSha1Key>(256).WithDigestSizes(20),
-                     DSA_PRIV.KeySizes<DsaPrivateKey>(1024).WithDigestSizes(48).IsAsymmetric(),
-                     DSA_PUB.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48).IsAsymmetric(),
-                     RSA_PRIV.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512).IsAsymmetric(),
-                     RSA_PUB.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512).IsAsymmetric(),
-                     //Unofficial
-                     AES_AEAD.KeySizes<Unofficial.AesAeadKey>(256,192,128).IsUnofficial(),
-                  }.ToDictionary(k => k.Name.Identifier, v => v);
+		protected static bool DefineSpec(KeyTypeSpec spec){
+			if(_specs.ContainsKey(spec.Name.Identifier))
+				return false;
+			_specs.Add(spec.Name.Identifier, spec);
+			return true;
+		}
 
+		static KeyType(){
+			AES.KeySizes<AesKey>(128,192,256).DefineSpec();
+			HMAC_SHA1.KeySizes<HmacSha1Key>(256).WithDigestSizes(20).DefineSpec();
+			DSA_PRIV.KeySizes<DsaPrivateKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
+			DSA_PUB.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
+			RSA_PRIV.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
+			RSA_PUB.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
+			//Unofficial
+			AES_AEAD.KeySizes<Unofficial.AesAeadKey>(256,192,128).IsUnofficial().DefineSpec();
+		}
 
-        private KeyTypeSpec KeySizes<T>(params int[] keySizes) where T: Key
+		private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();
+
+        public KeyTypeSpec KeySizes<T>(params int[] keySizes) where T: Key
         {
 
             return new KeyTypeSpec
@@ -92,8 +99,11 @@ namespace Keyczar
             };
         }
 
-        private class KeyTypeSpec
+        public class KeyTypeSpec
         {
+			internal KeyTypeSpec(){
+			}
+
             public KeyType Name;
             public Type Type;
             public int[] KeySizes;
@@ -116,6 +126,12 @@ namespace Keyczar
                 Asymmetric = true;
                 return this;
             }
+
+			public KeyType DefineSpec(){
+				if(KeyType.DefineSpec(this))
+					return Name;
+				return null;
+			}
         }
 
         /// <summary>
@@ -140,6 +156,10 @@ namespace Keyczar
 
 
         }
+
+		public static KeyType Name(string identifier){
+			return identifier;
+		}
 
         private Type _type;
         private int[] _keySizeOptions;

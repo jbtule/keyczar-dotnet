@@ -22,11 +22,7 @@ using System.Security.Cryptography;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Modes;
-using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Crypto.Paddings;
+
 namespace Keyczar.Crypto
 {
    
@@ -137,7 +133,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output)
+		public virtual FinishingStream GetEncryptingStream(Stream output)
         {
             var alg = new AesManaged
                           {
@@ -171,7 +167,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetDecryptingStream(Stream output)
+		public virtual FinishingStream GetDecryptingStream(Stream output)
         {
             var alg = new AesManaged
                           {
