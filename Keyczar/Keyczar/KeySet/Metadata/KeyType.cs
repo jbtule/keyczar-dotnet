@@ -68,6 +68,11 @@ namespace Keyczar
             return _specs.Where(it => it.Value.Type == type).Select(it=>it.Key).FirstOrDefault();
         }
 
+        /// <summary>
+        /// Defines the spec.
+        /// </summary>
+        /// <param name="spec">The spec.</param>
+        /// <returns></returns>
 		protected static bool DefineSpec(KeyTypeSpec spec){
 			if(_specs.ContainsKey(spec.Name.Identifier))
 				return false;
@@ -88,6 +93,12 @@ namespace Keyczar
 
 		private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();
 
+        /// <summary>
+        /// Describes the sizes and algorithms.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="keySizes">The key sizes.</param>
+        /// <returns></returns>
         public KeyTypeSpec KeySizes<T>(params int[] keySizes) where T: Key
         {
 
@@ -99,34 +110,84 @@ namespace Keyczar
             };
         }
 
+        /// <summary>
+        /// Describes meta data about keytypes
+        /// </summary>
         public class KeyTypeSpec
         {
 			internal KeyTypeSpec(){
+                DigestSizes = new int[]{0};
+			    
 			}
 
-            public KeyType Name;
-            public Type Type;
-            public int[] KeySizes;
-            public int[] DigestSizes = new int[]{0};
-            public bool Unofficial;
-            public bool Asymmetric;
+            
+            /// <summary>
+            /// Gets or sets the name.
+            /// </summary>
+            /// <value>The name.</value>
+            public KeyType Name { get; internal set; }
+          
+            /// <summary>
+            /// Gets or sets the type.
+            /// </summary>
+            /// <value>The type.</value>
+            public Type Type{ get; internal set; }
+
+            /// <summary>
+            /// Gets or sets the key sizes.
+            /// </summary>
+            /// <value>The key sizes.</value>
+            public int[] KeySizes{ get; internal set; }
+            /// <summary>
+            /// Gets or sets the digest sizes.
+            /// </summary>
+            /// <value>The digest sizes.</value>
+            public int[] DigestSizes{ get; internal set; }
+            /// <summary>
+            /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is unofficial.
+            /// </summary>
+            /// <value><c>true</c> if unofficial; otherwise, <c>false</c>.</value>
+            public bool Unofficial{ get; internal set; }
+            /// <summary>
+            /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is asymmetric.
+            /// </summary>
+            /// <value><c>true</c> if asymmetric; otherwise, <c>false</c>.</value>
+            public bool Asymmetric{ get; internal set; }
+
+            /// <summary>
+            /// Describes the digest sizes.
+            /// </summary>
+            /// <param name="sigSizes">The sig sizes.</param>
+            /// <returns></returns>
             public KeyTypeSpec WithDigestSizes(params int[] sigSizes)
             {
                 DigestSizes = sigSizes;
                 return this;
             }
+            /// <summary>
+            /// Specifies this  instance is unofficial.
+            /// </summary>
+            /// <returns></returns>
             public KeyTypeSpec IsUnofficial()
             {
                 Unofficial = true;
                 return this;
             }
 
+            /// <summary>
+            /// Specifies this instance is asymmetric.
+            /// </summary>
+            /// <returns></returns>
             public KeyTypeSpec IsAsymmetric()
             {
                 Asymmetric = true;
                 return this;
             }
 
+            /// <summary>
+            /// Defines the spec.
+            /// </summary>
+            /// <returns></returns>
 			public KeyType DefineSpec(){
 				if(KeyType.DefineSpec(this))
 					return Name;
@@ -157,6 +218,11 @@ namespace Keyczar
 
         }
 
+        /// <summary>
+        /// Returns or creates a keytype
+        /// </summary>
+        /// <param name="identifier">The identifier.</param>
+        /// <returns></returns>
 		public static KeyType Name(string identifier){
 			return identifier;
 		}
