@@ -130,7 +130,7 @@
     <None Include="sn.snk" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Unofficial\Readme.txt" />
+    <None Include="Unofficial\Readme.txt" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

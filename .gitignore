@@ -4,6 +4,7 @@
 
 #nuget
 packages/
+*.nupkg
 
 # mstest test results
 TestResults

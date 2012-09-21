@@ -1,5 +1,5 @@
 = Keyczar dotnet =
-Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
+Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features and will interoperate with them by default. Uses BouncyCastle as backend for most encryption. Official keyczar site: http://keyczar.org
 
 == Usage ==
 
@@ -33,7 +33,7 @@ Dependencies should be downloaded automaticially with [nuget](http://nuget.org) 
 
 ==== MonoDevelop v3.0.4 or later =====
 
-Run `MonoRestoreNugetPackages.sh` script first to restore nuget dependency then builds fine from monodevelop. Sometime nuget.exe has weird null exceptions, repeating running the script usually fixes it.
+Run `MonoRestoreNugetPackages.sh` script first to restore nuget dependency then builds fine from monodevelop. Sometimes nuget.exe under mono has weird null exceptions, repeating running the script usually fixes this issue.
 
 == Compatibility ==
 
