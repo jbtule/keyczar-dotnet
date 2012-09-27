@@ -51,9 +51,9 @@ namespace Keyczar
         /// <param name="message">The message.</param>
         /// <param name="hidden">The hidden data used to generate the digest signature.</param>
         /// <returns></returns>
-		public string Sign(String message,Byte[] hidden =null)
+		public WebBase64 Sign(String message,Byte[] hidden =null)
 		{
-		    return new String(WebSafeBase64.Encode(Sign(DefaultEncoding.GetBytes(message), hidden)));
+			return WebBase64.FromBytes(Sign(DefaultEncoding.GetBytes(message), hidden));
 
 		}
 

@@ -41,8 +41,8 @@ namespace KeyczarTest
             using (var signer = new AttachedSigner(Path.Combine(TEST_DATA, subDir)))
             using (var verifier = new AttachedVerifier(Path.Combine(TEST_DATA, subDir)))
             {
-                String signedoutput = signer.Sign(input);
-                var badoutput = WebSafeBase64.Decode(signedoutput.ToCharArray());
+                var signedoutput = signer.Sign(input);
+				var badoutput = signedoutput.ToBytes();
                 badoutput[10] ^= 9;
                 var badlength = new byte[12];
                 Array.Copy(badoutput, badlength, badlength.Length);

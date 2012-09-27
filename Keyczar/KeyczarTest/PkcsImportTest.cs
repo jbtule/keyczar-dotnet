@@ -57,8 +57,8 @@ namespace KeyczarTest
               using (var encrypter = new Encrypter(Util.TestDataPath(TEST_DATA, "rsa-crypt")))
               {
 
-                  String ciphertext = encrypter.Encrypt(input);
-                  String plaintext = crypter.Decrypt(ciphertext);
+                  var ciphertext = encrypter.Encrypt(input);
+                  var plaintext = crypter.Decrypt(ciphertext);
                   Expect(plaintext, Is.EqualTo(input));
               }
           }
@@ -84,7 +84,7 @@ namespace KeyczarTest
               using (var signer = new Signer(keyset))
           
               {
-                  String signature = signer.Sign(input);
+                  var signature = signer.Sign(input);
                   using (var verifier = new Verifier(Util.TestDataPath(TEST_DATA, keyType + "-sign-pub")))
                   {
                       Expect(verifier.Verify(input, signature), Is.True);

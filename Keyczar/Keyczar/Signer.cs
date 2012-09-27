@@ -55,9 +55,9 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawData">The raw data.</param>
         /// <returns></returns>
-        public string Sign(String rawData)
+        public WebBase64 Sign(String rawData)
         {
-            return  new String(WebSafeBase64.Encode(Sign(DefaultEncoding.GetBytes(rawData))));
+			return WebBase64.FromBytes(Sign(DefaultEncoding.GetBytes(rawData)));
            
         }
 

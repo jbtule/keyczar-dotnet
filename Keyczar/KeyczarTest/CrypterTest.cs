@@ -44,12 +44,12 @@ namespace KeyczarTest
 
         private void HelperDecrypt(Crypter crypter, String subPath)
         {
-            String activeCiphertext = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-            String primaryCiphertext = File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+            var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+			var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
 
-            String activeDecrypted = crypter.Decrypt(activeCiphertext);
+            var activeDecrypted = crypter.Decrypt(activeCiphertext);
             Expect(activeDecrypted, Is.EqualTo(input));
-            String primaryDecrypted = crypter.Decrypt(primaryCiphertext);
+            var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
             Expect(primaryDecrypted, Is.EqualTo(input));
         }
 

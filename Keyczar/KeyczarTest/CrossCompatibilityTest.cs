@@ -48,12 +48,12 @@ namespace KeyczarTest
             var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var crypter = new Crypter(subPath))
             {
-                String activeCiphertext = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                String primaryCiphertext = File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+				var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
                 
-                String activeDecrypted = crypter.Decrypt(activeCiphertext);
+                var activeDecrypted = crypter.Decrypt(activeCiphertext);
                 Expect(activeDecrypted, Is.EqualTo(morePlaintext));
-                String primaryDecrypted = crypter.Decrypt(primaryCiphertext);
+                var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
                 Expect(primaryDecrypted, Is.EqualTo(plaintext));
             }
         }
@@ -65,8 +65,8 @@ namespace KeyczarTest
             var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var crypter = new Crypter(subPath))
             {
-                String primaryCiphertext = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                String primaryDecrypted = crypter.Decrypt(primaryCiphertext);
+                var primaryCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
                 Expect(primaryDecrypted, Is.EqualTo(plaintext));
             }
         }
@@ -78,7 +78,7 @@ namespace KeyczarTest
             var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var verifier = new Signer(subPath))
             {
-                String signature = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var signature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
                 Expect(verifier.Verify(plaintext, signature), Is.True);
             }
         }

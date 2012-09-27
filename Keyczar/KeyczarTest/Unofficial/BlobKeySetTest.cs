@@ -28,7 +28,7 @@ namespace KeyczarTest.Unofficial
             using( var keySet = new BlobKeySet(stream))
             using(var crypter = new Crypter(keySet))
             {
-                var cipherText = File.ReadAllText(Path.Combine(TEST_DATA, "crypt.out"));
+                var cipherText = (WebBase64) File.ReadAllText(Path.Combine(TEST_DATA, "crypt.out"));
                 Expect(crypter.Decrypt(cipherText),Is.EqualTo(input));
             }
         }
@@ -43,7 +43,7 @@ namespace KeyczarTest.Unofficial
             using (var signkeySet = new BlobKeySet(signstream))
             using (var verifier = new Verifier(new EncryptedKeySet(signkeySet,crypter)))
             {
-                var sig = File.ReadAllText(Path.Combine(TEST_DATA, "sign.out"));
+                var sig = (WebBase64)File.ReadAllText(Path.Combine(TEST_DATA, "sign.out"));
                 Expect(verifier.Verify(input,sig), Is.True);
             }
         }

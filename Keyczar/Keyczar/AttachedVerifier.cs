@@ -58,9 +58,9 @@ namespace Keyczar
         /// <param name="signedMessage">The signed message.</param>
         /// <param name="hidden">The hidden.</param>
         /// <returns></returns>
-		public bool Verify(string signedMessage, byte[] hidden =null){
+		public bool Verify(WebBase64 signedMessage, byte[] hidden =null){
 
-            return Verify(WebSafeBase64.Decode(signedMessage.ToCharArray()), hidden);
+            return Verify(signedMessage.ToBytes(), hidden);
 		}
 
         /// <summary>

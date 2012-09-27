@@ -58,9 +58,9 @@ namespace Keyczar
         /// </summary>
         /// <param name="data">The data.</param>
         /// <returns></returns>
-        public string Decrypt(string data)
+        public string Decrypt(WebBase64 data)
         {
-            return DefaultEncoding.GetString(Decrypt(WebSafeBase64.Decode(data.ToCharArray())));
+            return DefaultEncoding.GetString(Decrypt(data.ToBytes()));
         }
 
         /// <summary>

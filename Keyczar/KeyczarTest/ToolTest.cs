@@ -216,7 +216,7 @@ namespace KeyczarTest
                 Expect(eks.Metadata.Encrypted, Is.True);
                 using (var crypter = new Crypter(eks))
                 {
-                    result = crypter.Decrypt(File.ReadAllText(patho));
+                    result = crypter.Decrypt((WebBase64)File.ReadAllText(patho));
                     Expect(result, Is.EqualTo(input));
                 }
             }
@@ -309,7 +309,7 @@ namespace KeyczarTest
                 {
                     Expect(pks.Metadata.Encrypted, Is.True);
                     Expect(eks.Metadata.Encrypted,Is.True);
-                    result = crypter.Decrypt(File.ReadAllText(patho));
+                    result = crypter.Decrypt((WebBase64)File.ReadAllText(patho));
                     Expect(result, Is.EqualTo(input));
                 }
 
@@ -382,7 +382,7 @@ namespace KeyczarTest
             using (var crypter = new Crypter(pks))
             {
                 Expect(pks.Metadata.Encrypted, Is.True);
-                result = crypter.Decrypt(File.ReadAllText(patho));
+                result = crypter.Decrypt((WebBase64)File.ReadAllText(patho));
                 Expect(result, Is.EqualTo(input));
             }
 

@@ -55,7 +55,7 @@ namespace Keyczar
     public class SessionCrypter:IDisposable
     {
         private Crypter _crypter;
-        private byte[] _sessionMaterial;
+        private WebBase64 _sessionMaterial;
         private ImportedKeySet _keyset;
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Keyczar
             dynamic key = Key.Generate(symmetricKeyType, keySize?? symmetricKeyType.DefaultSize); 
             _keyset = new ImportedKeySet(key,KeyPurpose.DECRYPT_AND_ENCRYPT);
             _crypter = new Crypter(_keyset);
-            _sessionMaterial = keyEncrypter.Encrypt(keyPacker.Pack(key));
+            _sessionMaterial = WebBase64.FromBytes(keyEncrypter.Encrypt(keyPacker.Pack(key)));
 
 
         }
@@ -87,11 +87,11 @@ namespace Keyczar
         /// <param name="keyDecrypter">The key decrypter.</param>
         /// <param name="sessionMaterial">The session material.</param>
         /// <param name="keyPacker">The key packer.</param>
-        public SessionCrypter(Crypter keyDecrypter, byte[] sessionMaterial, ISessionKeyPacker keyPacker =null)
+        public SessionCrypter(Crypter keyDecrypter, WebBase64 sessionMaterial, ISessionKeyPacker keyPacker =null)
         {
             keyPacker = keyPacker ?? new SimpleAesHmacSha1KeyPacker();
-
-            dynamic key =keyPacker.Unpack(keyDecrypter.Decrypt(sessionMaterial));
+			var packedBytes =keyDecrypter.Decrypt(sessionMaterial.ToBytes());
+			dynamic key =keyPacker.Unpack(packedBytes);
             _keyset = new ImportedKeySet(key, KeyPurpose.DECRYPT_AND_ENCRYPT);
             _crypter = new Crypter(_keyset);
             _sessionMaterial = sessionMaterial;
@@ -101,7 +101,7 @@ namespace Keyczar
         /// Gets the session material.
         /// </summary>
         /// <value>The session material.</value>
-        public byte[] SessionMaterial
+        public WebBase64 SessionMaterial
         {
             get { return _sessionMaterial; }
         }
@@ -133,7 +133,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="data">The data.</param>
         /// <returns></returns>
-         public string Decrypt(string data)
+         public string Decrypt(WebBase64 data)
         {
             _crypter.Compression = Compression;
              return _crypter.Decrypt(data);
@@ -166,7 +166,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawData">The raw data.</param>
         /// <returns></returns>
-        public string Encrypt(string rawData)
+        public WebBase64 Encrypt(string rawData)
         {
             _crypter.Compression = Compression;
             return _crypter.Encrypt(rawData);

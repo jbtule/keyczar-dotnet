@@ -63,7 +63,7 @@ namespace KeyczarTest
             }
         }
 
-        private SessionCrypter HelperSessionCrypter(Crypter crypter, byte[] session, string unoffical)
+        private SessionCrypter HelperSessionCrypter(Crypter crypter, WebBase64 session, string unoffical)
         {
             if (String.IsNullOrWhiteSpace(unoffical))
             {
@@ -100,7 +100,7 @@ namespace KeyczarTest
             using (var localCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
             {
                 var encrypted = localCrypter.Encrypt(input);
-                byte[] sessionMaterial = localCrypter.SessionMaterial;
+                var sessionMaterial = localCrypter.SessionMaterial;
 
                 using (var remoteCrypter = HelperSessionCrypter(privateKeyDecrypter, sessionMaterial, unoffical))
                 {
@@ -123,7 +123,7 @@ namespace KeyczarTest
             using (var localCrypter2 = HelperSessionCrypter(publicKeyEncrypter, unoffical))
               {
                   var encrypted = localCrypter.Encrypt(input);
-                  byte[] sessionMaterial = localCrypter2.SessionMaterial;
+                  var sessionMaterial = localCrypter2.SessionMaterial;
 
                   using (var remoteCrypter = HelperSessionCrypter(privateKeyDecrypter, sessionMaterial, unoffical))
                   {

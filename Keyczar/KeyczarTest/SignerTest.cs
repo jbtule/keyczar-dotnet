@@ -53,8 +53,8 @@ namespace KeyczarTest
             var subPath = Path.Combine(TEST_DATA, subDir);
             using (var verifier = new Signer(subPath))
             {
-                String activeSignature = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                String primarySignature = File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+				var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
                 Expect(verifier.Verify(input, activeSignature), Is.True);
                 Expect(verifier.Verify(input, primarySignature), Is.True);
             }
@@ -70,8 +70,8 @@ namespace KeyczarTest
             using (var verifier = new Verifier(subPath))
             using (var publicVerifier = new Verifier(subPath + ".public"))
             {
-                String activeSignature = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                String primarySignature = File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+				var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
 
                 Expect(verifier.Verify(input, activeSignature), Is.True);
                 Expect(verifier.Verify(input, primarySignature), Is.True);
@@ -88,11 +88,11 @@ namespace KeyczarTest
              var subPath = Path.Combine(TEST_DATA, subDir);
              using (var verifier = new Signer(subPath))
              {
-                 String activeSignature = File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                 String primarySignature = File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                 var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                 var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
                  Expect(verifier.Verify("Wrong String", activeSignature), Is.False);
                  Expect(verifier.Verify("Wrong String", primarySignature), Is.False);
-                 Expect(verifier.Verify(input, primarySignature.Substring(0, primarySignature.Length - 4) + "junk"), Is.False);
+                 Expect(verifier.Verify(input, (WebBase64)(primarySignature.ToString().Substring(0, primarySignature.ToString().Length - 4) + "junk")), Is.False);
              }
          }
 
@@ -115,7 +115,7 @@ namespace KeyczarTest
         {
             using (var signer = new Signer(Path.Combine(TEST_DATA, subDir)))
             {
-                String sig = signer.Sign(input);
+                var sig = signer.Sign(input);
 
                 Expect(signer.Verify(input, sig), Is.True);
                 Expect(signer.Verify("Wrong string", sig), Is.False);

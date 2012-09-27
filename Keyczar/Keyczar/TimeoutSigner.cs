@@ -55,15 +55,16 @@ namespace Keyczar
             _signer = _signer.SafeDispose(); 
             base.Dispose();
         }
+
         /// <summary>
         /// Signs the specified raw data.
         /// </summary>
         /// <param name="rawData">The raw data.</param>
         /// <param name="expiration">The expiration.</param>
         /// <returns></returns>
-        public string Sign(String rawData, DateTime expiration)
+        public WebBase64 Sign(String rawData, DateTime expiration)
         {
-            return new String(WebSafeBase64.Encode(Sign(DefaultEncoding.GetBytes(rawData), expiration)));
+			return WebBase64.FromBytes(Sign(DefaultEncoding.GetBytes(rawData), expiration));
 
         }
 

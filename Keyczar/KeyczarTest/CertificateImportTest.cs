@@ -49,8 +49,8 @@ namespace KeyczarTest
             using (var crypter = new Crypter(Path.Combine(TEST_DATA, "rsa-crypt")))
             {
 
-                String ciphertext = encrypter.Encrypt(input);
-                String plaintext = crypter.Decrypt(ciphertext);
+                var ciphertext = encrypter.Encrypt(input);
+                var plaintext = crypter.Decrypt(ciphertext);
                 Expect(plaintext, Is.EqualTo(input));
             }
         }
@@ -61,7 +61,7 @@ namespace KeyczarTest
         {
              using (var signer = new Signer(Path.Combine(TEST_DATA, keyType + "-sign")))
              {
-                 String signature = signer.Sign(input);
+                 var signature = signer.Sign(input);
                  using (var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.VERIFY, Path.Combine(TEST_DATA, keyType + "-sign-crt." + fileFormat)))
                  using (var verifier = new Verifier(keyset))
                  {

@@ -124,6 +124,7 @@
     <Compile Include="AttachedSigner.cs" />
     <Compile Include="AttachedVerifier.cs" />
     <Compile Include="Util\WriteDecompressGzipStream.cs" />
+    <Compile Include="WebBase64.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -86,9 +86,9 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawData">The raw string data.</param>
         /// <returns></returns>
-        public string Encrypt(string rawData)
+        public WebBase64 Encrypt(string rawData)
         {
-            return new String(WebSafeBase64.Encode(Encrypt(DefaultEncoding.GetBytes(rawData))));
+			return WebBase64.FromBytes(Encrypt(DefaultEncoding.GetBytes(rawData)));
         }
 
         /// <summary>

@@ -78,11 +78,10 @@ namespace Keyczar
         /// <param name="rawData">The raw data.</param>
         /// <param name="signature">The signature.</param>
         /// <returns></returns>
-        public bool Verify(string rawData, string signature)
+        public bool Verify(string rawData, WebBase64 signature)
         {
-            var decodedSignature = WebSafeBase64.Decode(signature.ToCharArray());
 
-            return Verify(DefaultEncoding.GetBytes(rawData), decodedSignature);
+			return Verify(DefaultEncoding.GetBytes(rawData), signature.ToBytes());
         }
 
         /// <summary>
