@@ -44,8 +44,6 @@ namespace Keyczar.Util
 		/// </summary>
 		public override void Close()
 		{
-          
-
 			this.Dispose(false);
 			GC.SuppressFinalize(this);
 		}
@@ -105,26 +103,28 @@ namespace Keyczar.Util
       /// <summary>
       /// When overridden in a derived class, sets the position within the current stream.
       /// </summary>
-      /// <param name="offset">A byte offset relative to the <paramref name="origin"/> parameter.</param>
-      /// <param name="origin">A value of type <see cref="T:System.IO.SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
+      /// <param name="offset">A byte offset relative to the <paramref name="origin" /> parameter.</param>
+      /// <param name="origin">A value of type <see cref="T:System.IO.SeekOrigin" /> indicating the reference point used to obtain the new position.</param>
       /// <returns>
       /// The new position within the current stream.
       /// </returns>
-      /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
-      /// <exception cref="T:System.NotSupportedException">The stream does not support seeking, such as if the stream is constructed from a pipe or console output. </exception>
-      /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
+      /// <exception cref="System.NotSupportedException"></exception>
+      /// <exception cref="T:System.IO.IOException">An I/O error occurs.</exception>
+      /// <exception cref="T:System.NotSupportedException">The stream does not support seeking, such as if the stream is constructed from a pipe or console output.</exception>
+      /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
 		public override long Seek(long offset, SeekOrigin origin)
 		{
 			throw new NotSupportedException();
 		}
-		
-		/// <summary>
-		/// When overridden in a derived class, sets the length of the current stream.
-		/// </summary>
-		/// <param name="value">The desired length of the current stream in bytes.</param>
-		/// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
-		/// <exception cref="T:System.NotSupportedException">The stream does not support both writing and seeking, such as if the stream is constructed from a pipe or console output. </exception>
-		/// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
+
+        /// <summary>
+        /// When overridden in a derived class, sets the length of the current stream.
+        /// </summary>
+        /// <param name="value">The desired length of the current stream in bytes.</param>
+        /// <exception cref="System.NotSupportedException"></exception>
+        /// <exception cref="T:System.IO.IOException">An I/O error occurs.</exception>
+        /// <exception cref="T:System.NotSupportedException">The stream does not support both writing and seeking, such as if the stream is constructed from a pipe or console output.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
 		public override void SetLength(long value)
 		{
 			throw new NotSupportedException();

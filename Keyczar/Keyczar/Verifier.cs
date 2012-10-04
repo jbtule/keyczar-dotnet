@@ -40,9 +40,10 @@ namespace Keyczar
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Verifier"/> class.
+        /// Initializes a new instance of the <see cref="Verifier" /> class.
         /// </summary>
         /// <param name="keySet">The key set.</param>
+        /// <exception cref="InvalidKeySetException">This key set can not be used for verifying signatures.</exception>
         public Verifier(IKeySet keySet) : base(keySet)
         {
             if (keySet.Metadata.Purpose != KeyPurpose.VERIFY
@@ -83,6 +84,7 @@ namespace Keyczar
         /// <param name="signature">The signature.</param>
         /// <param name="trimmedSig">The trimmed sig.</param>
         /// <returns></returns>
+        /// <exception cref="InvalidCryptoDataException">Signature missing header information.</exception>
         protected virtual IEnumerable<IVerifierkey> GetKeys( byte[] signature, out byte[] trimmedSig)
         {
             if(signature.Length < HEADER_LENGTH)

@@ -37,10 +37,11 @@ namespace Keyczar
 		{
 		}
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AttachedSigner"/> class.
-		/// </summary>
-		/// <param name="keySet">The key set.</param>
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttachedSigner" /> class.
+        /// </summary>
+        /// <param name="keySet">The key set.</param>
+        /// <exception cref="InvalidKeySetException">This key set can not be used for verifying signatures.</exception>
 		public AttachedVerifier(IKeySet keySet) : base(keySet)
 		{
 			if (keySet.Metadata.Purpose != KeyPurpose.VERIFY
@@ -107,6 +108,7 @@ namespace Keyczar
             /// <param name="signedMessage">The signed message.</param>
             /// <param name="hidden">The hidden data used to generate the digest signature.</param>
             /// <returns></returns>
+            /// <exception cref="InvalidCryptoDataException">Data doesn't appear to have signatures attached!</exception>
             public bool VerifyHidden(Stream signedMessage, byte[] hidden)
             {
         

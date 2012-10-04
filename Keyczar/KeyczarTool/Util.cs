@@ -21,14 +21,26 @@ using System.Text;
 
 namespace KeyczarTool
 {
+    /// <summary>
+    /// Internal Utility Methods
+    /// </summary>
     internal class Util
     {
+        /// <summary>
+        /// Prompts for password.
+        /// </summary>
+        /// <returns></returns>
         public static string PromptForPassword()
         {
             Console.WriteLine(Localized.MsgPleaseEnterPassword);
             return Console.ReadLine();
         }
 
+        /// <summary>
+        /// Doubles the prompt for password.
+        /// </summary>
+        /// <returns></returns>
+        /// <exception cref="System.Exception">Entered non matching password too many times</exception>
         public static string DoublePromptForPassword()
         {
 

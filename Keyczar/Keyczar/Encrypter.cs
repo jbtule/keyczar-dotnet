@@ -59,9 +59,10 @@ namespace Keyczar
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Encrypter"/> class.
+        /// Initializes a new instance of the <see cref="Encrypter" /> class.
         /// </summary>
         /// <param name="keySet">The key set.</param>
+        /// <exception cref="InvalidKeySetException">This key set can not be used for encryption.</exception>
         public Encrypter(IKeySet keySet) : base(keySet)
         {
 

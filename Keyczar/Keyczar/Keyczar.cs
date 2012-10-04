@@ -122,6 +122,7 @@ namespace Keyczar
         /// Gets the primary key.
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="System.Data.MissingPrimaryKeyException"></exception>
         protected Key GetPrimaryKey()
         {
             Key key;

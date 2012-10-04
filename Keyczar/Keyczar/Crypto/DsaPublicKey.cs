@@ -84,6 +84,7 @@ namespace Keyczar.Crypto
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
+        /// <exception cref="System.NotSupportedException"></exception>
         protected override void GenerateKey(int size)
         {
             throw new NotSupportedException();
@@ -92,7 +93,7 @@ namespace Keyczar.Crypto
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
 
             Q = Q.Clear(); 

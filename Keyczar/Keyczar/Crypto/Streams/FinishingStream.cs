@@ -135,10 +135,10 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// When overridden in a derived class, gets the length in bytes of the stream.
         /// </summary>
-        /// <value></value>
         /// <returns>A long value representing the length of the stream in bytes.</returns>
-        /// <exception cref="T:System.NotSupportedException">A class derived from Stream does not support seeking. </exception>
-        /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
+        /// <exception cref="System.NotSupportedException"></exception>
+        /// <exception cref="T:System.NotSupportedException">A class derived from Stream does not support seeking.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
         public override long Length
         {
             get { throw new NotSupportedException(); }
@@ -147,11 +147,11 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// When overridden in a derived class, gets or sets the position within the current stream.
         /// </summary>
-        /// <value></value>
         /// <returns>The current position within the stream.</returns>
-        /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
-        /// <exception cref="T:System.NotSupportedException">The stream does not support seeking. </exception>
-        /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
+        /// <exception cref="System.NotSupportedException"></exception>
+        /// <exception cref="T:System.IO.IOException">An I/O error occurs.</exception>
+        /// <exception cref="T:System.NotSupportedException">The stream does not support seeking.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
         public override long Position
         {
             get { throw new NotSupportedException(); }

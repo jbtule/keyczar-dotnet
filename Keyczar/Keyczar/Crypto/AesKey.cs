@@ -90,7 +90,7 @@ namespace Keyczar.Crypto
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
             Mode = null;
             AesKeyBytes = AesKeyBytes.Clear();
@@ -119,6 +119,7 @@ namespace Keyczar.Crypto
         /// Gets the mode.
         /// </summary>
         /// <returns></returns>
+        /// <exception cref="InvalidKeyTypeException">Unsupport AES Mode: </exception>
         private CipherMode GetMode()
         {
             if (Mode == "CBC")

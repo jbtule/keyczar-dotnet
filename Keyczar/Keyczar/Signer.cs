@@ -39,9 +39,10 @@ namespace Keyczar
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Signer"/> class.
+        /// Initializes a new instance of the <see cref="Signer" /> class.
         /// </summary>
         /// <param name="keySet">The key set.</param>
+        /// <exception cref="InvalidKeySetException">This key set can not be used for signing and verifying.</exception>
         public Signer(IKeySet keySet) : base(keySet)
         {
             if (keySet.Metadata.Purpose != KeyPurpose.SIGN_AND_VERIFY)

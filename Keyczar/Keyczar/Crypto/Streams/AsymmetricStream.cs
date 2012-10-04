@@ -87,17 +87,16 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
         /// </summary>
-        /// <param name="buffer">An array of bytes. This method copies <paramref name="count"/> bytes from <paramref name="buffer"/> to the current stream.</param>
-        /// <param name="offset">The zero-based byte offset in <paramref name="buffer"/> at which to begin copying bytes to the current stream.</param>
+        /// <param name="buffer">An array of bytes. This method copies <paramref name="count" /> bytes from <paramref name="buffer" /> to the current stream.</param>
+        /// <param name="offset">The zero-based byte offset in <paramref name="buffer" /> at which to begin copying bytes to the current stream.</param>
         /// <param name="count">The number of bytes to be written to the current stream.</param>
-        /// <exception cref="T:System.ArgumentException">The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the buffer length. </exception>
-        /// <exception cref="T:System.ArgumentNullException">
-        /// 	<paramref name="buffer"/> is null. </exception>
-        /// <exception cref="T:System.ArgumentOutOfRangeException">
-        /// 	<paramref name="offset"/> or <paramref name="count"/> is negative. </exception>
-        /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
-        /// <exception cref="T:System.NotSupportedException">The stream does not support writing. </exception>
-        /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
+        /// <exception cref="InvalidCryptoDataException"></exception>
+        /// <exception cref="T:System.ArgumentException">The sum of <paramref name="offset" /> and <paramref name="count" /> is greater than the buffer length.</exception>
+        /// <exception cref="T:System.ArgumentNullException"><paramref name="buffer" /> is null.</exception>
+        /// <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="offset" /> or <paramref name="count" /> is negative.</exception>
+        /// <exception cref="T:System.IO.IOException">An I/O error occurs.</exception>
+        /// <exception cref="T:System.NotSupportedException">The stream does not support writing.</exception>
+        /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed.</exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
             try
@@ -129,6 +128,7 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// Finishes this instance.
         /// </summary>
+        /// <exception cref="InvalidCryptoDataException"></exception>
         public override void Finish()
         { 
             try

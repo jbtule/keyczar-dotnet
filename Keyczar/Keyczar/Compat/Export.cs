@@ -26,6 +26,8 @@ namespace Keyczar.Compat
         /// <param name="location">The location.</param>
         /// <param name="passwordPrompt">The password prompt.</param>
         /// <returns></returns>
+        /// <exception cref="InvalidKeyTypeException">Needs to be a private key.</exception>
+        /// <exception cref="InvalidKeyTypeException">Non exportable key type.</exception>
         public static bool ExportPrimaryAsPKCS(this IKeySet keyset, string location, Func<string> passwordPrompt)
         {
             var i =keyset.Metadata.Versions.First(it => it.Status == KeyStatus.PRIMARY).VersionNumber;

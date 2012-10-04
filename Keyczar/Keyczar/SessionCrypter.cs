@@ -59,12 +59,13 @@ namespace Keyczar
         private ImportedKeySet _keyset;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SessionCrypter"/> class.
+        /// Initializes a new instance of the <see cref="SessionCrypter" /> class.
         /// </summary>
         /// <param name="keyEncrypter">The key encrypter.</param>
         /// <param name="keySize">Size of the key.</param>
         /// <param name="symmetricKeyType">Type of the symmetric key. (requires keypacker)</param>
         /// <param name="keyPacker">The key packer.</param>
+        /// <exception cref="System.ArgumentException">Without a supplying a keypacker you may only use KeyType.AES;symmetricKeyType</exception>
         public SessionCrypter(Encrypter keyEncrypter, int? keySize=null, KeyType symmetricKeyType = null, ISessionKeyPacker keyPacker = null)
         {
             symmetricKeyType = symmetricKeyType ?? KeyType.AES;

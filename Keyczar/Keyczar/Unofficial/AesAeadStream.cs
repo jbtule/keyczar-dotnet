@@ -151,6 +151,7 @@ namespace Keyczar.Unofficial
         /// <summary>
         /// Finishes this instance.
         /// </summary>
+        /// <exception cref="InvalidCryptoDataException"></exception>
         public override void Finish()
         {
             try

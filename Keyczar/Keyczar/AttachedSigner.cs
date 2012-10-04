@@ -107,6 +107,8 @@ namespace Keyczar
             /// <param name="data">The data.</param>
             /// <param name="signedData">The signed data.</param>
             /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+            /// <exception cref="System.ArgumentException">Stream must be able to seek.;data</exception>
+            /// <exception cref="System.ArgumentException">Data is too large to attach signature.;data</exception>
             public void Sign(Stream data, Stream signedData, Byte[] hidden = null)
             {
                 if(!data.CanSeek)
@@ -119,7 +121,7 @@ namespace Keyczar
 
                 if (Int32.MaxValue < fulllength - position)
                 {
-                    throw new ArgumentException("Data is too large to attach signature", "data");
+                    throw new ArgumentException("Data is too large to attach signature.", "data");
                 }
 
                 base.Sign(data, signedData, prefixData: null, postfixData: hidden, sigData: Tuple.Create(fulllength,position,data));

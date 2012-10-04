@@ -159,7 +159,7 @@ namespace Keyczar.Util.NonDestructive
         /// <returns>true if the stream supports seeking; otherwise, false.</returns>
         public override bool CanSeek
         {
-            get { throw new NotImplementedException(); }
+            get { return false; }
         }
 
         /// <summary>

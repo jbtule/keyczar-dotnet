@@ -162,16 +162,10 @@ namespace Keyczar.Unofficial
         }
 
 
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public override void Dispose()
+        protected override void Dispose(bool disposing)
         {
-            Secure.Clear(AesKeyBytes);
-            AesKeyBytes = null;
+            AesKeyBytes = AesKeyBytes.Clear(); 
         }
-
       
     }
 }

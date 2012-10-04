@@ -78,7 +78,14 @@ namespace Keyczar.Unofficial
         /// </summary>
         public void Dispose()
         {
-            _zipFile = _zipFile.SafeDispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
+
+         protected virtual void Dispose(bool disposing)
+         {
+             
+             _zipFile = _zipFile.SafeDispose();
+         }
     }
 }

@@ -83,6 +83,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
+        /// <exception cref="InvalidCryptoDataException">Ciphertext was invalid!</exception>
         public void Decrypt(Stream input, Stream output)
         {
             using (var reader = new NonDestructiveBinaryReader(input))

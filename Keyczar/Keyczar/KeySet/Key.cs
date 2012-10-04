@@ -86,6 +86,7 @@ namespace Keyczar
         /// <param name="type">The type.</param>
         /// <param name="size">The size.</param>
         /// <returns></returns>
+        /// <exception cref="InvalidKeyTypeException"></exception>
         public static Key Generate(KeyType type, int size=0)
         {
             if (size == 0)
@@ -111,6 +112,15 @@ namespace Keyczar
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public abstract void Dispose();
+        protected abstract void Dispose(bool disposing);
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
     }
 }

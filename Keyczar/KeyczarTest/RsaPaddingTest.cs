@@ -28,7 +28,7 @@ using NUnit.Framework;
 
 namespace KeyczarTest
 {
-    [TestFixture]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable"), TestFixture]
     public class RsaPaddingTest:AssertionHelper
     {
 

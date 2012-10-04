@@ -33,7 +33,7 @@ namespace Keyczar
         private bool onlyMetaChanged = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MutableKeySet"/> class.
+        /// Initializes a new instance of the <see cref="MutableKeySet" /> class.
         /// </summary>
         /// <param name="location">The location.</param>
         public MutableKeySet(string location):this(new KeySet(location))
@@ -42,9 +42,10 @@ namespace Keyczar
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MutableKeySet"/> class.
+        /// Initializes a new instance of the <see cref="MutableKeySet" /> class.
         /// </summary>
         /// <param name="emptyKeySet">The metadata of an empty key set.</param>
+        /// <exception cref="InvalidKeySetException">Only empty key sets can be created using just the KeyMetadata.</exception>
         public MutableKeySet(KeyMetadata emptyKeySet)
         {
             _metadata = emptyKeySet;

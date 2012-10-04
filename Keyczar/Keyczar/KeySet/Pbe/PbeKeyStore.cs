@@ -123,6 +123,7 @@ namespace Keyczar.Pbe
         /// <param name="length">The length.</param>
         /// <param name="passswordPrompt">The passsword prompt.</param>
         /// <returns></returns>
+        /// <exception cref="InvalidKeySetException">Hmac_Sha256 not supported.</exception>
         protected byte[] GetDerivedBytes(int length, Func<string> passswordPrompt)
         {
             Rfc2898DeriveBytes pdb;

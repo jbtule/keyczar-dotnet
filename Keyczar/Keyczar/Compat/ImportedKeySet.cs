@@ -153,6 +153,8 @@ namespace Keyczar.Compat
             /// <param name="input">The input.</param>
             /// <param name="passwordPrompt">The pass phrase prompt.</param>
             /// <returns></returns>
+            /// <exception cref="InvalidKeySetException">DSA key cannot be used for encryption and decryption!</exception>
+            /// <exception cref="InvalidKeySetException">Unsupported key type!</exception>
             public virtual ImportedKeySet PkcsKey(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null)
             {
                 using (var password = CachedPrompt.Password(passwordPrompt))
@@ -240,6 +242,8 @@ namespace Keyczar.Compat
             /// <param name="purpose">The purpose.</param>
             /// <param name="path">The path.</param>
             /// <returns></returns>
+            /// <exception cref="InvalidKeySetException">DSA key cannot be used for encryption and decryption!</exception>
+            /// <exception cref="InvalidKeySetException">Unsupported key type!</exception>
             public ImportedKeySet X509Certificate(KeyPurpose purpose, string path)
             {
                 using (var stream = File.OpenRead(path))
