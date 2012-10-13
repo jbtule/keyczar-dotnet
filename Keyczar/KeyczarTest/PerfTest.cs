@@ -30,8 +30,19 @@ namespace KeyczarTest
 	[TestFixture][Category("Performance")]
 	public class PerfTest:AssertionHelper
 	{
-		public static KeyType BOUNCY_AES 
-			= KeyType.Name("BOUNCY_AES").KeySizes<BouncyAESKey>(128,192,256).DefineSpec();
+        /// <summary>
+        /// Custom KeyType AES decryption using bouncy castle.
+        /// </summary>
+	    public static KeyType BOUNCY_AES = null;
+
+        [SetUp]
+        public void Setup()
+        {
+            if (BOUNCY_AES == null)
+            {
+                BOUNCY_AES = KeyType.Name("BOUNCY_AES").KeySizes<BouncyAESKey>(128, 192, 256).DefineSpec();
+            }
+        }
 
 		public const int iterations = 10000;
 
