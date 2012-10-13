@@ -56,6 +56,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compat\Export.cs" />
@@ -119,12 +120,12 @@
     <Compile Include="KeySet\KeySet.cs" />
     <Compile Include="Signer.cs" />
     <Compile Include="Util\StringEnum.cs" />
-    <Compile Include="Util\WebSafeBase64.cs" />
     <Compile Include="Verifier.cs" />
     <Compile Include="AttachedSigner.cs" />
     <Compile Include="AttachedVerifier.cs" />
     <Compile Include="Util\WriteDecompressGzipStream.cs" />
     <Compile Include="WebBase64.cs" />
+    <Compile Include="Util\BigIntegerWebSafeBase64ByteConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

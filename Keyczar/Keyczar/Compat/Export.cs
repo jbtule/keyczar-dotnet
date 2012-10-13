@@ -9,6 +9,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Security;
+using Keyczar.Util;
 
 namespace Keyczar.Compat
 {
@@ -46,24 +47,24 @@ namespace Keyczar.Compat
                     if (key.Type == KeyType.DSA_PRIV)
                     {
                         var dsaKey = (DsaPrivateKey) key;
-                        writeKey = new DsaPrivateKeyParameters(new BigInteger(dsaKey.X),
-                                                               new DsaParameters(new BigInteger(dsaKey.PublicKey.P),
-                                                                                 new BigInteger(dsaKey.PublicKey.Q),
-                                                                                 new BigInteger(dsaKey.PublicKey.G)));
+						writeKey = new DsaPrivateKeyParameters(dsaKey.X.ToBouncyBigInteger(),
+						                                       new DsaParameters(dsaKey.PublicKey.P.ToBouncyBigInteger(),
+						                  						dsaKey.PublicKey.Q.ToBouncyBigInteger(),
+						                  						dsaKey.PublicKey.G.ToBouncyBigInteger()));
 
                     }
                     else if (key.Type == KeyType.RSA_PRIV)
                     {
                         var rsaKey = (RsaPrivateKey) key;
                         writeKey = new RsaPrivateCrtKeyParameters(
-                            new BigInteger(rsaKey.PublicKey.Modulus),
-                            new BigInteger(rsaKey.PublicKey.PublicExponent),
-                            new BigInteger(rsaKey.PrivateExponent),
-                            new BigInteger(rsaKey.PrimeP),
-                            new BigInteger(rsaKey.PrimeQ),
-                            new BigInteger(rsaKey.PrimeExponentP),
-                            new BigInteger(rsaKey.PrimeExponentQ),
-                            new BigInteger(rsaKey.CrtCoefficient));
+							rsaKey.PublicKey.Modulus.ToBouncyBigInteger(),
+							rsaKey.PublicKey.PublicExponent.ToBouncyBigInteger(),
+							rsaKey.PrivateExponent.ToBouncyBigInteger(),
+							rsaKey.PrimeP.ToBouncyBigInteger(),
+							rsaKey.PrimeQ.ToBouncyBigInteger(),
+							rsaKey.PrimeExponentP.ToBouncyBigInteger(),
+							rsaKey.PrimeExponentQ.ToBouncyBigInteger(),
+							rsaKey.CrtCoefficient.ToBouncyBigInteger());
                     }
                     else
                     {

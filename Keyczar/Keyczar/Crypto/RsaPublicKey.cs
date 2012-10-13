@@ -25,9 +25,9 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using Org.BouncyCastle.Math;
+using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
 using Org.BouncyCastle.Security;
-
+using System.Numerics;
 namespace Keyczar.Crypto
 {
     /// <summary>
@@ -48,14 +48,14 @@ namespace Keyczar.Crypto
         /// Gets or sets the modulus.
         /// </summary>
         /// <value>The modulus.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-        public byte[] Modulus { get; set; }
+        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        public BigInteger Modulus { get; set; }
         /// <summary>
         /// Gets or sets the public exponent.
         /// </summary>
         /// <value>The public exponent.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-        public byte[] PublicExponent { get; set; }
+		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		public BigInteger PublicExponent { get; set; }
 
         /// <summary>
         /// Gets or sets the padding.
@@ -70,12 +70,12 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {      
-            var magModulus = Utility.StripLeadingZeros(Modulus);
-            var magPublicExponent = Utility.StripLeadingZeros(PublicExponent);
+			var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
+			var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
             if (Padding == PkcsPadding)
             {
-                magModulus = (byte[]) Modulus.Clone();
-                magPublicExponent = (byte[])PublicExponent.Clone();
+				magModulus = Utility.GetBytes(Modulus); 
+				magPublicExponent = Utility.GetBytes(PublicExponent); 
             }
 
             var hash = Utility.HashKeyLengthPrefix(Keyczar.KEY_HASH_LENGTH, magModulus, magPublicExponent);
@@ -99,10 +99,8 @@ namespace Keyczar.Crypto
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            Secure.Clear(Modulus);
-            Modulus = null;
-            Secure.Clear(PublicExponent);
-            PublicExponent = null;
+			Modulus = default(BigInteger);
+			PublicExponent = default(BigInteger);
             Size = 0;
         }
 
@@ -114,7 +112,8 @@ namespace Keyczar.Crypto
         {
             var signer = new RsaDigestSigner(new Sha1Digest());
             signer.Init(forSigning:false,parameters:new RsaKeyParameters(false,
-                new BigInteger(Modulus), new BigInteger(PublicExponent)));
+			                                                             Modulus.ToBouncyBigInteger(),
+			                                                             PublicExponent.ToBouncyBigInteger()));
             return new DigestStream(signer);
         }
 
@@ -162,7 +161,8 @@ namespace Keyczar.Crypto
                 oaep,
                 output,
                 (cipher,encrypt)=>  cipher.Init(encrypt,new RsaKeyParameters(false,
-                new BigInteger(Modulus), new BigInteger(PublicExponent))),
+			                                                             Modulus.ToBouncyBigInteger(), 
+			                                                             PublicExponent.ToBouncyBigInteger())),
                 encrypt:true);
         }
 

@@ -24,7 +24,8 @@ using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using Org.BouncyCastle.Math;
+using System.Numerics;
+using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
 using Org.BouncyCastle.Crypto.Generators;
 
 namespace Keyczar.Crypto
@@ -44,38 +45,38 @@ namespace Keyczar.Crypto
         /// Gets or sets the private exponent.
         /// </summary>
         /// <value>The private exponent.</value>
-         [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-         public byte[] PrivateExponent { get; set; }
+         [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+         public BigInteger PrivateExponent { get; set; }
          /// <summary>
          /// Gets or sets the prime P.
          /// </summary>
          /// <value>The prime P.</value>
-         [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-         public byte[] PrimeP { get; set; }
+	  	 [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		 public BigInteger PrimeP { get; set; }
          /// <summary>
          /// Gets or sets the prime Q.
          /// </summary>
          /// <value>The prime Q.</value>
-         [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-         public byte[] PrimeQ { get; set; }
+		 [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		 public BigInteger PrimeQ { get; set; }
          /// <summary>
          /// Gets or sets the prime exponent P.
          /// </summary>
          /// <value>The prime exponent P.</value>
-         [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-         public byte[] PrimeExponentP { get; set; }
+		 [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		 public BigInteger PrimeExponentP { get; set; }
          /// <summary>
          /// Gets or sets the prime exponent Q.
          /// </summary>
          /// <value>The prime exponent Q.</value>
-         [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-         public byte[] PrimeExponentQ { get; set; }
+		 [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		 public BigInteger PrimeExponentQ { get; set; }
          /// <summary>
          /// Gets or sets the CRT coefficient.
          /// </summary>
          /// <value>The CRT coefficient.</value>
-         [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-         public byte[] CrtCoefficient { get; set; }
+		 [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		 public BigInteger CrtCoefficient { get; set; }
 
          /// <summary>
          /// Gets or sets the padding.
@@ -116,19 +117,20 @@ namespace Keyczar.Crypto
             rsaparam.Init(new KeyGenerationParameters(Random,size));
             var pair =rsaparam.GenerateKeyPair();
             var priv =(RsaPrivateCrtKeyParameters) pair.Private;
-            PrivateExponent = priv.Exponent.ToByteArray();
-            PrimeP = priv.P.ToByteArray();
-            PrimeQ = priv.Q.ToByteArray();
-            PrimeExponentP = priv.DP.ToByteArray();
-            PrimeExponentQ = priv.DQ.ToByteArray();
-            CrtCoefficient = priv.QInv.ToByteArray();
+			PrivateExponent = priv.Exponent.ToSystemBigInteger();
+			PrimeP = priv.P.ToSystemBigInteger();
+			PrimeQ = priv.Q.ToSystemBigInteger();
+			PrimeExponentP = priv.DP.ToSystemBigInteger();
+			PrimeExponentQ = priv.DQ.ToSystemBigInteger();
+			CrtCoefficient = priv.QInv.ToSystemBigInteger();
 
             var pub = (RsaKeyParameters) pair.Public;
             PublicKey = new RsaPublicKey
                             {
                                 Size = size,
-                                PublicExponent = pub.Exponent.ToByteArray(), 
-                                Modulus = pub.Modulus.ToByteArray()};
+								PublicExponent = pub.Exponent.ToSystemBigInteger(), 
+								Modulus = pub.Modulus.ToSystemBigInteger()
+			};
 
         }
 
@@ -138,12 +140,12 @@ namespace Keyczar.Crypto
         protected override void Dispose(bool disposing)
         {
             PublicKey = PublicKey.SafeDispose(); 
-            PrivateExponent = PrivateExponent.Clear();
-            PrimeP = PrimeP.Clear();
-            PrimeQ = PrimeQ.Clear();
-            PrimeExponentP = PrimeExponentP.Clear();
-            PrimeExponentQ = PrimeExponentQ.Clear();
-            CrtCoefficient = CrtCoefficient.Clear();
+			PrivateExponent = default(BigInteger);
+			PrimeP  = default(BigInteger);
+			PrimeQ  = default(BigInteger);
+			PrimeExponentP = default(BigInteger);
+			PrimeExponentQ = default(BigInteger);
+			CrtCoefficient = default(BigInteger);
             Size = 0;
         }
 
@@ -186,14 +188,14 @@ namespace Keyczar.Crypto
 
             return new AsymmetricStream(oaep, output, 
                (cipher, encrypt) => cipher.Init( encrypt, new RsaPrivateCrtKeyParameters(
-                new BigInteger(PublicKey.Modulus),
-                new BigInteger(PublicKey.PublicExponent),
-                new BigInteger(PrivateExponent),
-                new BigInteger(PrimeP),
-                new BigInteger(PrimeQ),
-                new BigInteger(PrimeExponentP),
-                new BigInteger(PrimeExponentQ),
-                new BigInteger(CrtCoefficient))),
+                PublicKey.Modulus.ToBouncyBigInteger(),
+				PublicKey.PublicExponent.ToBouncyBigInteger(),
+				PrivateExponent.ToBouncyBigInteger(),
+				PrimeP.ToBouncyBigInteger(),
+				PrimeQ.ToBouncyBigInteger(),
+				PrimeExponentP.ToBouncyBigInteger(),
+				PrimeExponentQ.ToBouncyBigInteger(),
+				CrtCoefficient.ToBouncyBigInteger())),
                 encrypt:false);
         }
 
@@ -215,14 +217,14 @@ namespace Keyczar.Crypto
             var signer = new RsaDigestSigner(new Sha1Digest());
             
             signer.Init(forSigning: true, parameters: new RsaPrivateCrtKeyParameters(
-                new BigInteger(PublicKey.Modulus),
-                new BigInteger(PublicKey.PublicExponent),
-                new BigInteger(PrivateExponent) ,
-                new BigInteger(PrimeP), 
-                new BigInteger(PrimeQ), 
-                new BigInteger(PrimeExponentP),
-                new BigInteger(PrimeExponentQ), 
-                new BigInteger(CrtCoefficient)));
+				PublicKey.Modulus.ToBouncyBigInteger(),
+				PublicKey.PublicExponent.ToBouncyBigInteger(),
+				PrivateExponent.ToBouncyBigInteger() ,
+				PrimeP.ToBouncyBigInteger(), 
+				PrimeQ.ToBouncyBigInteger(), 
+				PrimeExponentP.ToBouncyBigInteger(),
+				PrimeExponentQ.ToBouncyBigInteger(), 
+				CrtCoefficient.ToBouncyBigInteger()));
 
             return new DigestStream(signer);
         }

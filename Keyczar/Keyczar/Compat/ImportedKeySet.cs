@@ -184,19 +184,19 @@ namespace Keyczar.Compat
                         var keyParam = bouncyKey as RsaPrivateCrtKeyParameters;
                         key = new RsaPrivateKey()
                                   {
-                                      PublicKey = new RsaPublicKey()
+                                    PublicKey = new RsaPublicKey()
                                                       {
-                                                          Modulus = keyParam.Modulus.ToByteArray(),
-                                                          PublicExponent = keyParam.PublicExponent.ToByteArray(),
+                                                          Modulus = keyParam.Modulus.ToSystemBigInteger(),
+														  PublicExponent = keyParam.PublicExponent.ToSystemBigInteger(),
                                                           Size = keyParam.Modulus.BitLength,
                                                       },
-                                      PrimeP = keyParam.P.ToByteArray(),
-                                      PrimeExponentP = keyParam.DP.ToByteArray(),
-                                      PrimeExponentQ = keyParam.DQ.ToByteArray(),
-                                      PrimeQ = keyParam.Q.ToByteArray(),
-                                      CrtCoefficient = keyParam.QInv.ToByteArray(),
-                                      PrivateExponent = keyParam.Exponent.ToByteArray(),
-                                      Size = keyParam.Modulus.BitLength,
+									PrimeP = keyParam.P.ToSystemBigInteger(),
+									PrimeExponentP = keyParam.DP.ToSystemBigInteger(),
+									PrimeExponentQ = keyParam.DQ.ToSystemBigInteger(),
+									PrimeQ = keyParam.Q.ToSystemBigInteger(),
+									CrtCoefficient = keyParam.QInv.ToSystemBigInteger(),
+									PrivateExponent = keyParam.Exponent.ToSystemBigInteger(),
+                                    Size = keyParam.Modulus.BitLength,
                                   };
 
                     }
@@ -211,16 +211,16 @@ namespace Keyczar.Compat
 
                         key = new DsaPrivateKey()
                                   {
-                                      X = keyParam.X.ToByteArray(),
+                                      X = keyParam.X.ToSystemBigInteger(),
                                       PublicKey = new DsaPublicKey
                                                       {
                                                           Y =
                                                               keyParam.Parameters.G.ModPow(keyParam.X,
                                                                                            keyParam.Parameters.P)
-                                                              .ToByteArray(),
-                                                          G = keyParam.Parameters.G.ToByteArray(),
-                                                          P = keyParam.Parameters.P.ToByteArray(),
-                                                          Q = keyParam.Parameters.Q.ToByteArray(),
+                                                              .ToSystemBigInteger(),
+													  	G = keyParam.Parameters.G.ToSystemBigInteger(),
+														P = keyParam.Parameters.P.ToSystemBigInteger(),
+														Q = keyParam.Parameters.Q.ToSystemBigInteger(),
                                                           Size = keyParam.Parameters.P.BitLength
                                                       },
                                       Size = keyParam.Parameters.P.BitLength
@@ -269,8 +269,8 @@ namespace Keyczar.Compat
                     var keyParam = bouncyKey as RsaKeyParameters;
                     key = new RsaPublicKey
                     {
-                        Modulus = keyParam.Modulus.ToByteArray(),
-                        PublicExponent = keyParam.Exponent.ToByteArray(),
+                        Modulus = keyParam.Modulus.ToSystemBigInteger(),
+						PublicExponent = keyParam.Exponent.ToSystemBigInteger(),
                         Size = keyParam.Modulus.BitLength,
                     };
                 }
@@ -283,10 +283,10 @@ namespace Keyczar.Compat
                     }
                     key = new DsaPublicKey
                     {
-                        Y = keyParam.Y.ToByteArray(),
-                        G = keyParam.Parameters.G.ToByteArray(),
-                        P = keyParam.Parameters.P.ToByteArray(),
-                        Q = keyParam.Parameters.Q.ToByteArray(),
+						Y = keyParam.Y.ToSystemBigInteger(),
+						G = keyParam.Parameters.G.ToSystemBigInteger(),
+						P = keyParam.Parameters.P.ToSystemBigInteger(),
+						Q = keyParam.Parameters.Q.ToSystemBigInteger(),
                         Size = keyParam.Parameters.P.BitLength
                     };
                 }

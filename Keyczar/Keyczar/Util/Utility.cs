@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Numerics;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
@@ -88,6 +89,21 @@ namespace Keyczar.Util
             }
         }
 
+		public static BigInteger ToSystemBigInteger(this Org.BouncyCastle.Math.BigInteger value){
+			var bytes = value.ToByteArray();
+			if(BitConverter.IsLittleEndian){
+				Array.Reverse(bytes);
+			}
+			var bigint = new BigInteger(bytes);
+			return bigint;
+		}
+
+		public static Org.BouncyCastle.Math.BigInteger ToBouncyBigInteger(this BigInteger value){
+			var bytes = Utility.GetBytes(value);
+			var bigint = new Org.BouncyCastle.Math.BigInteger(bytes);
+			return bigint;
+		}
+
         /// <summary>
         /// Gets the bytes for an int laid out big endian
         /// </summary>
@@ -102,6 +118,7 @@ namespace Keyczar.Util
             }
             return bytes;
         }
+
         /// <summary>
         /// Gets the bytes for a long laid out big endian
         /// </summary>
@@ -116,6 +133,35 @@ namespace Keyczar.Util
             }
             return bytes;
         }
+
+		/// <summary>
+		/// Gets the bytes for a long laid out big endian
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <returns></returns>
+		public static byte[] GetBytes(BigInteger data){
+			var bytes = data.ToByteArray();
+			if(BitConverter.IsLittleEndian){
+				Array.Reverse(bytes);
+			}
+			return bytes;
+		}
+
+		/// <summary>
+		/// To the BigInteger from big endian bytes.
+		/// </summary>
+		/// <param name="data">The data.</param>
+		/// <returns></returns>
+		public static BigInteger ToBigInteger(byte[] data)
+		{
+			var dataclone = (byte[]) data.Clone();
+			if (BitConverter.IsLittleEndian)
+			{
+				Array.Reverse(dataclone);
+			}
+			return new BigInteger(dataclone);
+		}
+
         /// <summary>
         /// To the int64 from big endian bytes.
         /// </summary>
@@ -123,11 +169,12 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static long ToInt64(byte[] data)
         {
+			var dataclone = (byte[]) data.Clone();
             if (BitConverter.IsLittleEndian)
             {
-                Array.Reverse(data);
+				Array.Reverse(dataclone);
             }
-            return BitConverter.ToInt64(data,0);
+			return BitConverter.ToInt64(dataclone,0);
         }
 
         /// <summary>
@@ -137,11 +184,12 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static int ToInt32(byte[] data)
         {
+			var dataclone = (byte[]) data.Clone();
             if (BitConverter.IsLittleEndian)
             {
-                Array.Reverse(data);
+				Array.Reverse(dataclone);
             }
-            return BitConverter.ToInt32(data, 0);
+			return BitConverter.ToInt32(dataclone, 0);
         }
 
         /// <summary>

@@ -25,7 +25,8 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using Org.BouncyCastle.Math;
+using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
+using System.Numerics;
 
 namespace Keyczar.Crypto
 {
@@ -53,8 +54,8 @@ namespace Keyczar.Crypto
         /// Gets or sets the X.
         /// </summary>
         /// <value>The X.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-        public byte[] X { get; set; }
+        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        public BigInteger X { get; set; }
 
      
 
@@ -81,14 +82,14 @@ namespace Keyczar.Crypto
             keygen.Init(new DsaKeyGenerationParameters(Random, paramgen.GenerateParameters()));
             var pair =keygen.GenerateKeyPair();
             var priv =(DsaPrivateKeyParameters) pair.Private;
-            X = priv.X.ToByteArray();
+			X = priv.X.ToSystemBigInteger();
             Size = size;
             PublicKey = new DsaPublicKey();
             var pub =(DsaPublicKeyParameters) pair.Public;
-            PublicKey.Y = pub.Y.ToByteArray();
-            PublicKey.G = pub.Parameters.G.ToByteArray();
-            PublicKey.P = pub.Parameters.P.ToByteArray();
-            PublicKey.Q = pub.Parameters.Q.ToByteArray();
+            PublicKey.Y = pub.Y.ToSystemBigInteger();
+			PublicKey.G = pub.Parameters.G.ToSystemBigInteger();
+			PublicKey.P = pub.Parameters.P.ToSystemBigInteger();
+			PublicKey.Q = pub.Parameters.Q.ToSystemBigInteger();
             PublicKey.Size = size;
         }
 
@@ -98,7 +99,7 @@ namespace Keyczar.Crypto
         protected override void Dispose(bool disposing)
         {
             PublicKey = PublicKey.SafeDispose();
-            X = X.Clear();
+            X = default(BigInteger);
             Size = 0;
         }
 
@@ -109,8 +110,8 @@ namespace Keyczar.Crypto
         public HashingStream GetSigningStream()
         {
             var signer = new DsaDigestSigner(new DsaSigner(), new Sha1Digest());
-            signer.Init(forSigning:true, parameters:new DsaPrivateKeyParameters(new BigInteger(X),
-                new DsaParameters(new BigInteger(PublicKey.P), new BigInteger(PublicKey.Q), new BigInteger(PublicKey.G))));
+            signer.Init(forSigning:true, parameters:new DsaPrivateKeyParameters(X.ToBouncyBigInteger(),
+			                                                                    new DsaParameters(PublicKey.P.ToBouncyBigInteger(), PublicKey.Q.ToBouncyBigInteger(), PublicKey.G.ToBouncyBigInteger())));
             return new DigestStream(signer);
         }
 

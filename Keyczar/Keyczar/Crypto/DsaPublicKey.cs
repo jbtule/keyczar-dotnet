@@ -23,7 +23,8 @@ using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using Org.BouncyCastle.Math;
+using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
+using System.Numerics;
 
 namespace Keyczar.Crypto
 {
@@ -36,29 +37,29 @@ namespace Keyczar.Crypto
         /// Gets or sets the P.
         /// </summary>
         /// <value>The P.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-        public byte[] P { get; set; }
+        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        public BigInteger P { get; set; }
 
         /// <summary>
         /// Gets or sets the Q.
         /// </summary>
         /// <value>The Q.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-        public byte[] Q { get; set; }
+		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		public BigInteger Q { get; set; }
 
         /// <summary>
         /// Gets or sets the G.
         /// </summary>
         /// <value>The G.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-        public byte[] G { get; set; }
+		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		public BigInteger G { get; set; }
 
         /// <summary>
         /// Gets or sets the Y.
         /// </summary>
         /// <value>The Y.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
-        public byte[] Y { get; set; }
+		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+		public BigInteger Y { get; set; }
 
 
      
@@ -68,10 +69,10 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            var qMag = Utility.StripLeadingZeros(Q);
-            var pMag = Utility.StripLeadingZeros(P);
-            var gMag = Utility.StripLeadingZeros(G);
-            var yMag = Utility.StripLeadingZeros(Y);
+            var qMag = Utility.StripLeadingZeros(Utility.GetBytes(Q));
+			var pMag = Utility.StripLeadingZeros(Utility.GetBytes(P));
+			var gMag = Utility.StripLeadingZeros(Utility.GetBytes(G));
+			var yMag = Utility.StripLeadingZeros(Utility.GetBytes(Y));
             var hash = Utility.HashKeyLengthPrefix(Keyczar.KEY_HASH_LENGTH, pMag, qMag, gMag, yMag);
             qMag.Clear();
             pMag.Clear();
@@ -96,10 +97,10 @@ namespace Keyczar.Crypto
         protected override void Dispose(bool disposing)
         {
 
-            Q = Q.Clear(); 
-            P = P.Clear();
-            Y = Y.Clear(); 
-            G = G.Clear(); 
+            Q = default(BigInteger); 
+			P = default(BigInteger);
+			Y = default(BigInteger); 
+			G = default(BigInteger); 
             Size = 0;
         }
 
@@ -111,8 +112,8 @@ namespace Keyczar.Crypto
         public VerifyingStream GetVerifyingStream()
         {
             var tSigner = new DsaSigner();
-            tSigner.Init(forSigning: false, parameters: new DsaPublicKeyParameters(new BigInteger(Y), 
-                new DsaParameters(new BigInteger(P),new BigInteger(Q), new BigInteger(G) ) ));
+            tSigner.Init(forSigning: false, parameters: new DsaPublicKeyParameters(Y.ToBouncyBigInteger(), 
+                new DsaParameters(P.ToBouncyBigInteger(),Q.ToBouncyBigInteger(), G.ToBouncyBigInteger() ) ));
             return new DigestStream(new DsaDigestSigner(tSigner, new Sha1Digest()));
         }
     }
