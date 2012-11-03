@@ -112,12 +112,25 @@ namespace Keyczar
         /// <returns></returns>
         public int AddKey(KeyStatus status, int keySize =0, object options=null)
         {
-            var key = Key.Generate(_metadata.Type, keySize);
-            if (options != null)
-            {
-                Utility.CopyProperties((dynamic) options, key);
-            }
-            return AddKey(status, key);
+			Key key;
+			bool loop;
+			do{
+				loop = false;
+            	key = Key.Generate(_metadata.Type, keySize);
+	            if (options != null)
+	            {
+	                Utility.CopyProperties((dynamic) options, key);
+	            }
+				foreach(var existingkey in _keys){
+					var newhash =Util.Utility.ToInt32(key.GetKeyHash());
+					var existhash = Utility.ToInt32(existingkey.Value.GetKeyHash());
+					if(newhash == existhash){
+						loop = true;
+						break;
+					}
+				}
+			}while(loop);
+			return AddKey(status, key);
         }
 
         /// <summary>
