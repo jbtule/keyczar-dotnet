@@ -26,3 +26,5 @@ test-results
 
 # ReSharper is a .NET coding add-in
 _ReSharper*
+#compressed dll
+*.dep-lzma
