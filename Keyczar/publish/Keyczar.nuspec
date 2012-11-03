@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Keyczar</id>
-        <version>0.7.0</version>
+        <version>0.7.2</version>
         <title>Keyczar</title>
         <authors>Jay Tuley,Google</authors>
         <owners>Jay Tuley</owners>
@@ -10,7 +10,8 @@
         <projectUrl>https://github.com/jbtule/keyczar-dotnet</projectUrl>
         <iconUrl>http://www.keyczar.org/keyczar_logo.jpg</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
-        <description>Keyczar is an open source cryptographic toolkit designed to make it easier and safer for devlopers to use cryptography in their applications. Keyczar supports authentication and encryption with both symmetric and asymmetric keys. Some features of Keyczar include:
+        <description>
+Keyczar is an open source cryptographic toolkit designed to make it easier and safer for devlopers to use cryptography in their applications. Keyczar supports authentication and encryption with both symmetric and asymmetric keys. Some features of Keyczar include:
 
  - A simple API
  - Key rotation and versioning
@@ -31,8 +32,8 @@
     </metadata>
     <files>
 	<file src="..\..\*.txt" target=""/>
-        <file src="..\Keyczar\bin\Release\Keyczar.*" target="lib\net40\" />
+    <file src="..\Keyczar\bin\Release\Keyczar.*" target="lib\net40\" />
 	<file src="..\Keyczar\**\*.cs" target="src" />
-	<file src="bin\keyczartool\KeyczarTool.exe" target="tools\"/>
+	<file src="..\KeyczarTool.Minified\bin\Release\KeyczarTool.Minified.exe" target="tools\KeyczarTool.exe"/>
     </files>
 </package>
