@@ -34,7 +34,38 @@
 
 <h2>Usage</h2>
 
-<p><code>KeyczarTool.exe</code> provides the primary mechanism for creating and managing keysets. Calling <code>KeyczarTool.exe</code> from the commandline without flags will display usage.</p>
+<p><code>KeyczarTool.exe</code> provides the primary mechanism for creating and managing keysets. Calling <code>KeyczarTool.exe</code> from the commandline without flags will display usage. Use it to create your key set first.</p>
+
+<p>Once you have your key set the basic api is very simple to use for encryption:</p>
+
+<div class="highlight"><pre>           <span class="kt">string</span> <span class="n">plaintext</span> <span class="p">=</span> <span class="s">"Secret Message"</span>
+           <span class="kt">string</span> <span class="n">ciphertext</span><span class="p">;</span>
+           <span class="c1">//encrypting</span>
+           <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">encrypter</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Encrypter</span><span class="p">(</span><span class="s">"path_to_keyset"</span><span class="p">))</span>
+            <span class="p">{</span>
+               <span class="n">ciphertext</span> <span class="p">=</span> <span class="n">encrypter</span><span class="p">.</span><span class="n">Encrypt</span><span class="p">(</span><span class="n">plaintext</span><span class="p">);</span>
+            <span class="p">}</span>
+           <span class="c1">//decrypting</span>
+           <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">crypter</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Crypter</span><span class="p">(</span><span class="s">"path_to_keyset"</span><span class="p">)){</span>
+                 <span class="kt">var</span> <span class="n">plaintext2</span> <span class="p">=</span> <span class="n">crypter</span><span class="p">.</span><span class="n">Decrypt</span><span class="p">(</span><span class="n">cipher</span><span class="p">)</span>
+           <span class="p">}</span>
+</pre></div>
+
+<p>and for signatures:</p>
+
+<div class="highlight"><pre>            <span class="kt">string</span> <span class="n">plaintext</span> <span class="p">=</span> <span class="s">"A Message"</span>
+            <span class="kt">string</span> <span class="n">signature</span><span class="p">;</span>
+            <span class="c1">//signing</span>
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">signer</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Signer</span><span class="p">(</span><span class="s">"path_to_keyset"</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="n">signature</span> <span class="p">=</span> <span class="n">signer</span><span class="p">.</span><span class="n">Sign</span><span class="p">(</span><span class="n">plaintext</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="c1">//verifying</span>
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">verifier</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Verifier</span><span class="p">(</span><span class="s">"path_to_keyset"</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">isVerified</span> <span class="p">=</span> <span class="n">verifier</span><span class="p">.</span><span class="n">Verify</span><span class="p">(</span><span class="n">plaintext</span><span class="p">,</span> <span class="n">signature</span><span class="p">);</span>
+            <span class="p">}</span>
+</pre></div>
 
 <h2>Dependancies</h2>
 
