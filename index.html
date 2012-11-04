@@ -34,7 +34,7 @@
 
 <h2>Usage</h2>
 
-<p><code>KeyczarTool.exe</code> provides the primary mechanism for creating and managing keysets. Calling <code>KeyczarTool.exe</code> from the commandline without flags will display usage. Use it to create your key set first.</p>
+<p><code>KeyczarTool.exe</code> provides the primary mechanism for creating and managing keysets. Calling <code>KeyczarTool.exe</code> from the commandline without flags will display usage. Use it to create your key set first and use it to rotate your keys latter.</p>
 
 <p>Once you have your key set the basic api is very simple to use for encryption:</p>
 
@@ -66,6 +66,8 @@
                 <span class="kt">var</span> <span class="n">isVerified</span> <span class="p">=</span> <span class="n">verifier</span><span class="p">.</span><span class="n">Verify</span><span class="p">(</span><span class="n">plaintext</span><span class="p">,</span> <span class="n">signature</span><span class="p">);</span>
             <span class="p">}</span>
 </pre></div>
+
+<p>See more usage in the <a href="https://github.com/jbtule/keyczar-dotnet/wiki">Wiki</a>.</p>
 
 <h2>Dependancies</h2>
 
@@ -129,6 +131,16 @@
       </div>
     </div>
 
-  
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-74886-9");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
