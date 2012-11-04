@@ -43,6 +43,14 @@ namespace Keyczar
         /// <returns></returns>
         public abstract byte[] GetKeyHash();
 
+		/// <summary>
+		/// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
+		/// </summary>
+		/// <returns></returns>
+		public virtual IEnumerable<byte[]> GetFallbackKeyHash(){
+			return Enumerable.Empty<byte[]>();
+		}
+
         private KeyType _type;
 
         /// <summary>

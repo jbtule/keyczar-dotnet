@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using Keyczar.Crypto.Streams;
 
@@ -29,6 +30,8 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <returns></returns>
         byte[] GetKeyHash();
+
+		IEnumerable<byte[]> GetFallbackKeyHash();
 
     }
 

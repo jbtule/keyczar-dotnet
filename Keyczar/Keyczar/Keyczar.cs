@@ -57,6 +57,8 @@ namespace Keyczar
         protected static int BUFFER_SIZE = 4096;
 
         private readonly Dictionary<int, SortedList<KeyVersion, Key>> _hashedKeys;
+		private readonly Dictionary<int, List<Key>> _hashedFallbackKeys;
+
         private readonly Dictionary<int, Key> _versions;
         private readonly KeyVersion _primaryVersion;
 
@@ -71,6 +73,7 @@ namespace Keyczar
             }
             _versions.Clear();
             _hashedKeys.Clear();
+			_hashedFallbackKeys.Clear();
         }
 
         /// <summary>
@@ -115,7 +118,10 @@ namespace Keyczar
                                                   }
                                                   return list;
                                               });
-
+			_hashedFallbackKeys = versions
+				.SelectMany(k=> k.CryptKey.GetFallbackKeyHash().Select(h=>new{ Hash = h, CryptKey = k.CryptKey}))
+				.ToLookup(k=> Utility.ToInt32(k.Hash), v=>v.CryptKey)
+				.ToDictionary(k=>k.Key,v=>v.ToList());
         }
 
         /// <summary>
@@ -151,15 +157,23 @@ namespace Keyczar
         {
             var hashIndex =Utility.ToInt32(hash);
             SortedList<KeyVersion, Key> list;
+			var found = new List<Key>();
             if (_hashedKeys.TryGetValue(hashIndex, out list))
             {
-                return list.Select(it => it.Value).ToList();
+				found.AddRange(list.Select(it => it.Value));
             }
+
+			//Fallback hashes for old/buggy hashes from other keyczar
+			List<Key> fallbacklist;
+			if (_hashedFallbackKeys.TryGetValue(hashIndex, out fallbacklist)){
+				found.AddRange(fallbacklist);
+			}
+
 			//For special imported keys
 			if(_hashedKeys.TryGetValue(0, out list)){
-				return list.Select(it=>it.Value).ToList();
+				found.AddRange(list.Select(it=>it.Value));
 			}
-            return new Key[] {null};
+            return found.Any() ? (IEnumerable<Key>)found : new Key[] {null};
         }
 
 

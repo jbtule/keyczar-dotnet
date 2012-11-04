@@ -84,6 +84,32 @@ namespace Keyczar.Crypto
             return hash;
         }
 
+		/// <summary>
+		/// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<byte[]> GetFallbackKeyHash ()
+		{
+			var list =new List<byte[]>();
+
+			if(Padding == PkcsPadding){
+				//C++ version would always append zeros whether they were needed or not to byte reps of big integers
+				var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
+				var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
+				var destModulus = new byte[magModulus.Length+1];
+				var destPublicExponent = new byte[magPublicExponent.Length+1];
+				Array.Copy(magModulus,0,destModulus,1, magModulus.Length);
+				Array.Copy(magPublicExponent,0,destPublicExponent,1, magPublicExponent.Length);
+				list.Add(Utility.HashKeyLengthPrefix(Keyczar.KEY_HASH_LENGTH, destModulus, destPublicExponent));
+				magModulus.Clear();
+				magPublicExponent.Clear();
+				destModulus.Clear();
+				destPublicExponent.Clear();
+			}
+
+			return list;
+		}
+
         /// <summary>
         /// Generates the key.
         /// </summary>

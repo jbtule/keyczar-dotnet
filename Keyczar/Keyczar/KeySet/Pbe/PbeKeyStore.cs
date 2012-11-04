@@ -217,6 +217,11 @@ namespace Keyczar.Pbe
 				return Utility.GetBytes(0);
 			}
 
+			public override IEnumerable<byte[]> GetFallbackKeyHash ()
+			{
+				return Enumerable.Empty<byte[]>();
+			}
+
             public byte[] IV { get; set; }
 
             public CipherTextOnlyFinishingStream GetRawEncryptingStream(Stream output)

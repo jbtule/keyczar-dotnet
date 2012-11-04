@@ -68,6 +68,22 @@ namespace Keyczar.Crypto
                                   HmacKey.HmacKeyBytes);
         }
 
+		/// <summary>
+		/// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
+		/// </summary>
+		/// <returns></returns>
+		public override IEnumerable<byte[]> GetFallbackKeyHash ()
+		{
+			return new byte[][]{
+				//Java keyczar uses block length instead of keylength for hash
+				Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(BlockLength), AesKeyBytes,
+				                HmacKey.HmacKeyBytes),
+				//c++ keyczar used to strip leading zeros from key bytes
+				Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(AesKeyBytes.Length), Utility.StripLeadingZeros(AesKeyBytes),
+				                HmacKey.HmacKeyBytes),
+			};
+		}
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AesKey"/> class.
         /// </summary>
