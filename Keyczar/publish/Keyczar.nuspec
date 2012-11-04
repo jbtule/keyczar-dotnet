@@ -7,7 +7,7 @@
         <authors>Jay Tuley,Google</authors>
         <owners>Jay Tuley</owners>
         <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseUrl>
-        <projectUrl>https://github.com/jbtule/keyczar-dotnet</projectUrl>
+        <projectUrl>http://jbtule.github.com/keyczar-dotnet/</projectUrl>
         <iconUrl>http://www.keyczar.org/keyczar_logo.jpg</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>
