@@ -38,7 +38,7 @@ namespace Keyczar.Crypto.Streams
             return _tagSize;
         }
 
-        private SymmetricAlgorithm _alg;
+        private SymmetricAlgorithm _algorithm;
         private readonly bool _encrypt;
         private CryptoStream _output;
         private Stream _rawOutput;
@@ -48,13 +48,13 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetSymmetricStream"/> class.
         /// </summary>
-        /// <param name="alg">The alg.</param>
+        /// <param name="algorithm">The alg.</param>
         /// <param name="output">The output.</param>
         /// <param name="tagSize">Size of the tag.</param>
         /// <param name="encrypt">if set to <c>true</c> [encrypt].</param>
-        public DotNetSymmetricStream(SymmetricAlgorithm alg, Stream output, int tagSize, bool encrypt)
+        public DotNetSymmetricStream(SymmetricAlgorithm algorithm, Stream output, int tagSize, bool encrypt)
         {
-            _alg = alg;
+            _algorithm = algorithm;
             _encrypt = encrypt;
                 
             _rawOutput = output;
@@ -67,8 +67,8 @@ namespace Keyczar.Crypto.Streams
             {
                 if ( _output == null)
                 {
-                    _transform = _encrypt ? _alg.CreateEncryptor() : _alg.CreateDecryptor();
-                    _output =new NonDestructiveCryptoStream(_rawOutput, _transform, CryptoStreamMode.Write);
+                    _transform = _encrypt ? _algorithm.CreateEncryptor() : _algorithm.CreateDecryptor();
+                    _output =new NondestructiveCryptoStream(_rawOutput, _transform, CryptoStreamMode.Write);
                 }
                 return _output;
             }
@@ -90,10 +90,10 @@ namespace Keyczar.Crypto.Streams
             _transform = _transform.SafeDispose();
             if(disposing)
             {
-                var alg = _alg as IDisposable;
+                var alg = _algorithm as IDisposable;
                 alg.SafeDispose();
             }
-            _alg = null;
+            _algorithm = null;
             base.Dispose(disposing);
         }
 
@@ -126,13 +126,13 @@ namespace Keyczar.Crypto.Streams
             {
                 if (_encrypt)
                 {
-                     _rawOutput.Write(_alg.IV, 0, _alg.IV.Length);
+                     _rawOutput.Write(_algorithm.IV, 0, _algorithm.IV.Length);
 
                 }else
                 {
-                    var iv = new byte[_alg.BlockSize/8];
+                    var iv = new byte[_algorithm.BlockSize/8];
                     Array.Copy(buffer,0,iv, 0, iv.Length);
-                    _alg.IV = iv;
+                    _algorithm.IV = iv;
                     offset = offset + iv.Length;
                     count = count - iv.Length;
                 }
@@ -151,7 +151,7 @@ namespace Keyczar.Crypto.Streams
 
             if (!_init && _encrypt && !CipherTextOnly)
             {
-                _rawOutput.Write(_alg.IV, 0, _alg.IV.Length);
+                _rawOutput.Write(_algorithm.IV, 0, _algorithm.IV.Length);
                 _init = true;
             }
             Output.FlushFinalBlock();
@@ -170,8 +170,8 @@ namespace Keyczar.Crypto.Streams
         /// <value>The IV.</value>
         public override byte[] IV
         {
-            get { return _alg.IV; }
-            set { _alg.IV = value; }
+            get { return _algorithm.IV; }
+            set { _algorithm.IV = value; }
         }
     }
 }

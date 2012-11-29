@@ -21,9 +21,9 @@ using System.Text;
 namespace Keyczar.Crypto.Streams
 {
     /// <summary>
-    /// Interface for dupporting output of the ciphertext without any other bytes such as the IV
+    /// Interface for supporting output of the ciphertext without any other bytes such as the IV
     /// </summary>
-    interface ICipherTextOnlyStream
+    public interface ICipherTextOnly
     {
         /// <summary>
         /// Gets or sets a value indicating whether the output is  the [cipher text only].
@@ -38,9 +38,9 @@ namespace Keyczar.Crypto.Streams
     }
 
     /// <summary>
-    /// Finishing Stream that implements the ICipherTextOnlyStream interface
+    /// Finishing Stream that implements the ICipherTextOnly interface
     /// </summary>
-    public abstract class CipherTextOnlyFinishingStream : FinishingStream, ICipherTextOnlyStream
+    public abstract class CipherTextOnlyFinishingStream : FinishingStream, ICipherTextOnly
     {
         /// <summary>
         /// Gets or sets a value indicating whether the output is  the [cipher text only].

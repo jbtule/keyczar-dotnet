@@ -1,0 +1,2642 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FxCopProject Version="1.36" Name="My FxCop Project">
+ <ProjectOptions>
+  <SharedProject>True</SharedProject>
+  <Stylesheet Apply="False">c:\program files (x86)\microsoft fxcop 1.36\Xml\FxCopReport.xsl</Stylesheet>
+  <SaveMessages>
+   <Project Status="Active, Excluded" NewOnly="False" />
+   <Report Status="Active" NewOnly="False" />
+  </SaveMessages>
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
+  <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
+  <SourceLookup>True</SourceLookup>
+  <AnalysisExceptionsThreshold>10</AnalysisExceptionsThreshold>
+  <RuleExceptionsThreshold>1</RuleExceptionsThreshold>
+  <Spelling Locale="en-US" />
+  <OverrideRuleVisibilities>False</OverrideRuleVisibilities>
+  <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
+  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
+  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
+ </ProjectOptions>
+ <Targets>
+  <Target Name="$(ProjectDir)/bin/Release/Keyczar.dll" Analyze="True" AnalyzeAllChildren="True" />
+ </Targets>
+ <Rules>
+  <RuleFiles>
+   <RuleFile Name="$(FxCopDir)\Rules\DesignRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\GlobalizationRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\InteroperabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\MobilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\NamingRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PerformanceRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\PortabilityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\SecurityRules.dll" Enabled="True" AllRulesEnabled="True" />
+   <RuleFile Name="$(FxCopDir)\Rules\UsageRules.dll" Enabled="True" AllRulesEnabled="True" />
+  </RuleFiles>
+  <Groups />
+  <Settings />
+ </Rules>
+ <FxCopReport Version="1.36">
+  <Namespaces>
+   <Namespace Name="Keyczar">
+    <Messages>
+     <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Keyczar</Item>
+       <Item>Keyczar</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Keyczar.Compat">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-11-28 19:57:15Z">
+      <Issue>
+       <Item>Keyczar.Compat</Item>
+      </Issue>
+     </Message>
+     <Message Id="Compat" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Compat</Item>
+       <Item>Keyczar.Compat</Item>
+      </Issue>
+     </Message>
+     <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Keyczar</Item>
+       <Item>Keyczar.Compat</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Keyczar.Crypto">
+    <Messages>
+     <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Keyczar</Item>
+       <Item>Keyczar.Crypto</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Keyczar.Crypto.Streams">
+    <Messages>
+     <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Keyczar</Item>
+       <Item>Keyczar.Crypto.Streams</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Keyczar.Pbe">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-11-28 19:57:15Z">
+      <Issue>
+       <Item>Keyczar.Pbe</Item>
+      </Issue>
+     </Message>
+     <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Keyczar</Item>
+       <Item>Keyczar.Pbe</Item>
+      </Issue>
+     </Message>
+     <Message Id="Pbe" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Pbe</Item>
+       <Item>Keyczar.Pbe</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Keyczar.Unofficial">
+    <Messages>
+     <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Keyczar</Item>
+       <Item>Keyczar.Unofficial</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Keyczar.Util">
+    <Messages>
+     <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Keyczar</Item>
+       <Item>Keyczar.Util</Item>
+      </Issue>
+     </Message>
+     <Message Id="Util" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+      <Issue Name="Namespace">
+       <Item>Util</Item>
+       <Item>Keyczar.Util</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+  </Namespaces>
+  <Targets>
+   <Target Name="$(ProjectDir)/bin/Release/Keyczar.dll">
+    <Modules>
+     <Module Name="keyczar.dll">
+      <Messages>
+       <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+        <Issue Name="Assembly">
+         <Item>Keyczar</Item>
+         <Item>'Keyczar.dll'</Item>
+        </Issue>
+       </Message>
+      </Messages>
+      <Namespaces>
+       <Namespace Name="Keyczar">
+        <Types>
+         <Type Name="AttachedSigner">
+          <Members>
+           <Member Name="#Sign(System.Byte[],System.Byte[])">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AttachedSigner.Sign(byte[], byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Sign(System.IO.Stream,System.IO.Stream,System.Byte[])">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AttachedSigner.Sign(Stream, Stream, byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Sign(System.String,System.Byte[])">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AttachedSigner.Sign(string, byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="AttachedSigner+AttachedSignerHelper">
+          <Members>
+           <Member Name="#Sign(System.IO.Stream,System.IO.Stream,System.Byte[])">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AttachedSigner.AttachedSignerHelper.Sign(Stream, Stream, byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="AttachedVerifier">
+          <Members>
+           <Member Name="#Verify(Keyczar.WebBase64,System.Byte[])">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AttachedVerifier.Verify(WebBase64, byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Verify(System.Byte[],System.Byte[])">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AttachedVerifier.Verify(byte[], byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Verify(System.IO.Stream,System.Byte[])">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AttachedVerifier.Verify(Stream, byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="CompressionType">
+          <Members>
+           <Member Name="#Gzip">
+            <Messages>
+             <Message Id="Gzip" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Gzip</Item>
+               <Item>'CompressionType.Gzip'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Zlib">
+            <Messages>
+             <Message Id="Zlib" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Zlib</Item>
+               <Item>'CompressionType.Zlib'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Crypter">
+          <Messages>
+           <Message Id="Crypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Crypter</Item>
+             <Item>'Crypter'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="EncryptedKeySet">
+          <Members>
+           <Member Name="#.ctor(Keyczar.IKeySet,Keyczar.Crypter)">
+            <Messages>
+             <Message Id="crypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameter">
+               <Item>'EncryptedKeySet.EncryptedKeySet(IKeySet, Crypter)'</Item>
+               <Item>crypter</Item>
+               <Item>'crypter'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#.ctor(System.String,Keyczar.Crypter)">
+            <Messages>
+             <Message Id="crypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameter">
+               <Item>'EncryptedKeySet.EncryptedKeySet(string, Crypter)'</Item>
+               <Item>crypter</Item>
+               <Item>'crypter'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="EncryptedKeySetWriter">
+          <Members>
+           <Member Name="#.ctor(Keyczar.IKeySetWriter,Keyczar.Encrypter)">
+            <Messages>
+             <Message Id="encrypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameter">
+               <Item>'EncryptedKeySetWriter.EncryptedKeySetWriter(IKeySetWriter, Encrypter)'</Item>
+               <Item>encrypter</Item>
+               <Item>'encrypter'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Encrypter">
+          <Messages>
+           <Message Id="Encrypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Encrypter</Item>
+             <Item>'Encrypter'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="Key">
+          <Members>
+           <Member Name="#Generate(Keyczar.KeyType,System.Int32)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'Key.Generate(KeyType, int)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'Key.Generate(KeyType, int)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Random">
+            <Messages>
+             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2012-11-28 20:17:55Z">
+              <Issue>
+               <Item>'Key.Random'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Keyczar">
+          <Messages>
+           <Message Id="Keyczar" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Keyczar</Item>
+             <Item>'Keyczar'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="TypeNamesShouldNotMatchNamespaces" Category="Microsoft.Naming" CheckId="CA1724" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'Keyczar'</Item>
+             <Item>Keyczar</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.cctor()">
+            <Messages>
+             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'Keyczar.Keyczar()'</Item>
+               <Item>'Keyczar.FORMAT_VERSION'</Item>
+               <Item>'byte'</Item>
+               <Item>0</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#BUFFER_SIZE">
+            <Messages>
+             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'Keyczar.BUFFER_SIZE'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#DefaultEncoding">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'Keyczar.DefaultEncoding'</Item>
+               <Item>'Encoding'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'Keyczar.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'Keyczar.Dispose()'</Item>
+              </Issue>
+              <Issue Name="DisposeSignature">
+               <Item>'Keyczar.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#FORMAT_BYTES">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'Keyczar.FORMAT_BYTES'</Item>
+               <Item>'ReadOnlyArray&lt;byte&gt;'</Item>
+              </Issue>
+             </Message>
+             <Message Id="BYTES" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>BYTES</Item>
+               <Item>'Keyczar.FORMAT_BYTES'</Item>
+               <Item>Bytes</Item>
+              </Issue>
+             </Message>
+             <Message Id="FORMAT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>FORMAT</Item>
+               <Item>'Keyczar.FORMAT_BYTES'</Item>
+               <Item>Format</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'Keyczar.FORMAT_BYTES'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#FORMAT_VERSION">
+            <Messages>
+             <Message Id="FORMAT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>FORMAT</Item>
+               <Item>'Keyczar.FORMAT_VERSION'</Item>
+               <Item>Format</Item>
+              </Issue>
+             </Message>
+             <Message Id="VERSION" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>VERSION</Item>
+               <Item>'Keyczar.FORMAT_VERSION'</Item>
+               <Item>Version</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'Keyczar.FORMAT_VERSION'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#GetAllKeys()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2012-11-28 19:57:15Z">
+              <Issue Certainty="50">
+               <Item>'Keyczar.GetAllKeys()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#GetPrimaryKey()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2012-11-28 19:57:15Z">
+              <Issue Certainty="50">
+               <Item>'Keyczar.GetPrimaryKey()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#HEADER_LENGTH">
+            <Messages>
+             <Message Id="HEADER" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>HEADER</Item>
+               <Item>'Keyczar.HEADER_LENGTH'</Item>
+               <Item>Header</Item>
+              </Issue>
+             </Message>
+             <Message Id="LENGTH" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>LENGTH</Item>
+               <Item>'Keyczar.HEADER_LENGTH'</Item>
+               <Item>Length</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'Keyczar.HEADER_LENGTH'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#KEY_HASH_LENGTH">
+            <Messages>
+             <Message Id="HASH" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>HASH</Item>
+               <Item>'Keyczar.KEY_HASH_LENGTH'</Item>
+               <Item>Hash</Item>
+              </Issue>
+             </Message>
+             <Message Id="KEY" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>KEY</Item>
+               <Item>'Keyczar.KEY_HASH_LENGTH'</Item>
+               <Item>Key</Item>
+              </Issue>
+             </Message>
+             <Message Id="LENGTH" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>LENGTH</Item>
+               <Item>'Keyczar.KEY_HASH_LENGTH'</Item>
+               <Item>Length</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'Keyczar.KEY_HASH_LENGTH'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="KeyMetadata">
+          <Members>
+           <Member Name="#Versions">
+            <Messages>
+             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyMetadata.Versions'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="KeyPurpose">
+          <Members>
+           <Member Name="#DECRYPT_AND_ENCRYPT">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
+               <Item>'KeyPurpose'</Item>
+              </Issue>
+             </Message>
+             <Message Id="AND" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>AND</Item>
+               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
+               <Item>And</Item>
+              </Issue>
+             </Message>
+             <Message Id="DECRYPT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>DECRYPT</Item>
+               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
+               <Item>Decrypt</Item>
+              </Issue>
+             </Message>
+             <Message Id="ENCRYPT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>ENCRYPT</Item>
+               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
+               <Item>Encrypt</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ENCRYPT">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyPurpose.ENCRYPT'</Item>
+               <Item>'KeyPurpose'</Item>
+              </Issue>
+             </Message>
+             <Message Id="ENCRYPT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>ENCRYPT</Item>
+               <Item>'KeyPurpose.ENCRYPT'</Item>
+               <Item>Encrypt</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_Implicit(System.String):Keyczar.KeyPurpose">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Multiple">
+               <Item>ToXXX</Item>
+               <Item>FromXXX</Item>
+               <Item>'KeyPurpose.implicit operator KeyPurpose(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#SIGN_AND_VERIFY">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
+               <Item>'KeyPurpose'</Item>
+              </Issue>
+             </Message>
+             <Message Id="AND" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>AND</Item>
+               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
+               <Item>And</Item>
+              </Issue>
+             </Message>
+             <Message Id="SIGN" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>SIGN</Item>
+               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
+               <Item>Sign</Item>
+              </Issue>
+             </Message>
+             <Message Id="VERIFY" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>VERIFY</Item>
+               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
+               <Item>Verify</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#VERIFY">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyPurpose.VERIFY'</Item>
+               <Item>'KeyPurpose'</Item>
+              </Issue>
+             </Message>
+             <Message Id="VERIFY" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>VERIFY</Item>
+               <Item>'KeyPurpose.VERIFY'</Item>
+               <Item>Verify</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="KeySetWriter">
+          <Members>
+           <Member Name="#.ctor(System.String,System.Boolean)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeySetWriter.KeySetWriter(string, bool)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Write(Keyczar.KeyMetadata)">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeySetWriter.Write(KeyMetadata)'</Item>
+               <Item>'Exception'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Write(System.Byte[],System.Int32)">
+            <Messages>
+             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeySetWriter.Write(byte[], int)'</Item>
+               <Item>'Exception'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="KeyStatus">
+          <Members>
+           <Member Name="#ACTIVE">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyStatus.ACTIVE'</Item>
+               <Item>'KeyStatus'</Item>
+              </Issue>
+             </Message>
+             <Message Id="ACTIVE" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>ACTIVE</Item>
+               <Item>'KeyStatus.ACTIVE'</Item>
+               <Item>Active</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#INACTIVE">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyStatus.INACTIVE'</Item>
+               <Item>'KeyStatus'</Item>
+              </Issue>
+             </Message>
+             <Message Id="INACTIVE" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>INACTIVE</Item>
+               <Item>'KeyStatus.INACTIVE'</Item>
+               <Item>Inactive</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_Implicit(System.String):Keyczar.KeyStatus">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Multiple">
+               <Item>ToXXX</Item>
+               <Item>FromXXX</Item>
+               <Item>'KeyStatus.implicit operator KeyStatus(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#PRIMARY">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyStatus.PRIMARY'</Item>
+               <Item>'KeyStatus'</Item>
+              </Issue>
+             </Message>
+             <Message Id="PRIMARY" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>PRIMARY</Item>
+               <Item>'KeyStatus.PRIMARY'</Item>
+               <Item>Primary</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="KeyType">
+          <Members>
+           <Member Name="#.cctor()">
+            <Messages>
+             <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AES">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.AES'</Item>
+               <Item>'KeyType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="AES" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>AES</Item>
+               <Item>'KeyType.AES'</Item>
+               <Item>Aes</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#AES_AEAD">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.AES_AEAD'</Item>
+               <Item>'KeyType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="AEAD" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>AEAD</Item>
+               <Item>'KeyType.AES_AEAD'</Item>
+               <Item>Aead</Item>
+              </Issue>
+             </Message>
+             <Message Id="AES" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>AES</Item>
+               <Item>'KeyType.AES_AEAD'</Item>
+               <Item>Aes</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'KeyType.AES_AEAD'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#DSA_PRIV">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.DSA_PRIV'</Item>
+               <Item>'KeyType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="DSA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>DSA</Item>
+               <Item>'KeyType.DSA_PRIV'</Item>
+               <Item>Dsa</Item>
+              </Issue>
+             </Message>
+             <Message Id="PRIV" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>PRIV</Item>
+               <Item>'KeyType.DSA_PRIV'</Item>
+               <Item>Priv</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'KeyType.DSA_PRIV'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#DSA_PUB">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.DSA_PUB'</Item>
+               <Item>'KeyType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="DSA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>DSA</Item>
+               <Item>'KeyType.DSA_PUB'</Item>
+               <Item>Dsa</Item>
+              </Issue>
+             </Message>
+             <Message Id="PUB" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>PUB</Item>
+               <Item>'KeyType.DSA_PUB'</Item>
+               <Item>Pub</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'KeyType.DSA_PUB'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#HMAC_SHA1">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.HMAC_SHA1'</Item>
+               <Item>'KeyType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="HMAC" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>HMAC</Item>
+               <Item>'KeyType.HMAC_SHA1'</Item>
+               <Item>Hmac</Item>
+              </Issue>
+             </Message>
+             <Message Id="SHA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>SHA</Item>
+               <Item>'KeyType.HMAC_SHA1'</Item>
+               <Item>Sha</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'KeyType.HMAC_SHA1'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#KeySizeOptions">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.KeySizeOptions'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#KeySizes`1(System.Int32[])">
+            <Messages>
+             <Message TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.KeySizes&lt;T&gt;(params int[])'</Item>
+               <Item>'T'</Item>
+              </Issue>
+             </Message>
+             <Message Id="0#" TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'keySizes'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_Implicit(System.String):Keyczar.KeyType">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Multiple">
+               <Item>ToXXX</Item>
+               <Item>FromXXX</Item>
+               <Item>'KeyType.implicit operator KeyType(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RSA_PRIV">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.RSA_PRIV'</Item>
+               <Item>'KeyType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="PRIV" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>PRIV</Item>
+               <Item>'KeyType.RSA_PRIV'</Item>
+               <Item>Priv</Item>
+              </Issue>
+             </Message>
+             <Message Id="RSA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>RSA</Item>
+               <Item>'KeyType.RSA_PRIV'</Item>
+               <Item>Rsa</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'KeyType.RSA_PRIV'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RSA_PUB">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.RSA_PUB'</Item>
+               <Item>'KeyType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="PUB" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>PUB</Item>
+               <Item>'KeyType.RSA_PUB'</Item>
+               <Item>Pub</Item>
+              </Issue>
+             </Message>
+             <Message Id="RSA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>RSA</Item>
+               <Item>'KeyType.RSA_PUB'</Item>
+               <Item>Rsa</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'KeyType.RSA_PUB'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="KeyType+KeyTypeSpec">
+          <Messages>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'KeyType.KeyTypeSpec'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#DigestSizes">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.KeyTypeSpec.DigestSizes'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#KeySizes">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'KeyType.KeyTypeSpec.KeySizes'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="KeyVersion">
+          <Members>
+           <Member Name="#op_Equality(Keyczar.KeyVersion,Keyczar.KeyVersion)">
+            <Messages>
+             <Message Id="a" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 20:20:06Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'KeyVersion.operator ==(KeyVersion, KeyVersion)'</Item>
+               <Item>'a'</Item>
+              </Issue>
+             </Message>
+             <Message Id="b" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 20:20:06Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'KeyVersion.operator ==(KeyVersion, KeyVersion)'</Item>
+               <Item>'b'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_GreaterThan(Keyczar.KeyVersion,Keyczar.KeyVersion)">
+            <Messages>
+             <Message Id="a" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 20:23:16Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'KeyVersion.operator &gt;(KeyVersion, KeyVersion)'</Item>
+               <Item>'a'</Item>
+              </Issue>
+             </Message>
+             <Message Id="b" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 20:23:16Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'KeyVersion.operator &gt;(KeyVersion, KeyVersion)'</Item>
+               <Item>'b'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_Inequality(Keyczar.KeyVersion,Keyczar.KeyVersion)">
+            <Messages>
+             <Message Id="a" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 20:20:06Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'KeyVersion.operator !=(KeyVersion, KeyVersion)'</Item>
+               <Item>'a'</Item>
+              </Issue>
+             </Message>
+             <Message Id="b" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 20:20:06Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'KeyVersion.operator !=(KeyVersion, KeyVersion)'</Item>
+               <Item>'b'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_LessThan(Keyczar.KeyVersion,Keyczar.KeyVersion)">
+            <Messages>
+             <Message Id="a" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 20:23:16Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'KeyVersion.operator &lt;(KeyVersion, KeyVersion)'</Item>
+               <Item>'a'</Item>
+              </Issue>
+             </Message>
+             <Message Id="b" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 20:23:16Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'KeyVersion.operator &lt;(KeyVersion, KeyVersion)'</Item>
+               <Item>'b'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="MutableKeySet">
+          <Messages>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+            <Issue Name="ProvideDisposeBool">
+             <Item>'MutableKeySet'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#AddKey(Keyczar.KeyStatus,System.Int32,System.Object)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'MutableKeySet.AddKey(KeyStatus, int, object)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'MutableKeySet.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'MutableKeySet.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PbeKeySet">
+          <Messages>
+           <Message Id="Pbe" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Pbe</Item>
+             <Item>'PbeKeySet'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+            <Issue Name="ProvideDisposeBool">
+             <Item>'PbeKeySet'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'PbeKeySet.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'PbeKeySet.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PbeKeySetWriter">
+          <Messages>
+           <Message Id="Pbe" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Pbe</Item>
+             <Item>'PbeKeySetWriter'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+            <Issue Name="ProvideDisposeBool">
+             <Item>'PbeKeySetWriter'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor(Keyczar.IKeySetWriter,System.Func`1&lt;System.String&gt;,System.Int32)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'PbeKeySetWriter.PbeKeySetWriter(IKeySetWriter, Func&lt;string&gt;, int)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'PbeKeySetWriter.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'PbeKeySetWriter.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="SessionCrypter">
+          <Messages>
+           <Message Id="Crypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Crypter</Item>
+             <Item>'SessionCrypter'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+            <Issue Name="ProvideDisposeBool">
+             <Item>'SessionCrypter'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor(Keyczar.Crypter,Keyczar.WebBase64,Keyczar.ISessionKeyPacker)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'SessionCrypter.SessionCrypter(Crypter, WebBase64, ISessionKeyPacker)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Decrypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameter">
+               <Item>'SessionCrypter.SessionCrypter(Crypter, WebBase64, ISessionKeyPacker)'</Item>
+               <Item>Decrypter</Item>
+               <Item>'keyDecrypter'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#.ctor(Keyczar.Encrypter,System.Nullable`1&lt;System.Int32&gt;,Keyczar.KeyType,Keyczar.ISessionKeyPacker)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'SessionCrypter.SessionCrypter(Encrypter, int?, KeyType, ISessionKeyPacker)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Encrypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameter">
+               <Item>'SessionCrypter.SessionCrypter(Encrypter, int?, KeyType, ISessionKeyPacker)'</Item>
+               <Item>Encrypter</Item>
+               <Item>'keyEncrypter'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'SessionCrypter.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="_crypter" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'SessionCrypter'</Item>
+               <Item>'SessionCrypter._crypter'</Item>
+               <Item>'Crypter'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'SessionCrypter.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="SessionCrypter+SimpleAesHmacSha1KeyPacker">
+          <Messages>
+           <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Hmac</Item>
+             <Item>'SessionCrypter.SimpleAesHmacSha1KeyPacker'</Item>
+            </Issue>
+           </Message>
+           <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Sha</Item>
+             <Item>'SessionCrypter.SimpleAesHmacSha1KeyPacker'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'SessionCrypter.SimpleAesHmacSha1KeyPacker'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="Signer">
+          <Members>
+           <Member Name="#Sign(System.IO.Stream,System.IO.Stream,System.Object,System.Object,System.Object)">
+            <Messages>
+             <Message Id="outstream" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameter">
+               <Item>'Signer.Sign(Stream, Stream, object, object, object)'</Item>
+               <Item>outstream</Item>
+               <Item>'outstream'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="TimeoutSigner">
+          <Members>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'TimeoutSigner.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="_signer" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'TimeoutSigner'</Item>
+               <Item>'TimeoutSigner._signer'</Item>
+               <Item>'TimeoutSigner.TimeoutSignerHelper'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'TimeoutSigner.Dispose()'</Item>
+              </Issue>
+              <Issue Name="DisposeSignature">
+               <Item>'TimeoutSigner.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="TimeoutVerifier">
+          <Members>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'TimeoutVerifier.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="_verifier" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'TimeoutVerifier'</Item>
+               <Item>'TimeoutVerifier._verifier'</Item>
+               <Item>'Verifier'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'TimeoutVerifier.Dispose()'</Item>
+              </Issue>
+              <Issue Name="DisposeSignature">
+               <Item>'TimeoutVerifier.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Verifier">
+          <Members>
+           <Member Name="#GetKeys(System.Byte[],System.Byte[]&amp;)">
+            <Messages>
+             <Message Id="1#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'trimmedSignature'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Keyczar.Compat">
+        <Types>
+         <Type Name="Export">
+          <Members>
+           <Member Name="#ExportPrimaryAsPkcs(Keyczar.IKeySet,System.String,System.Func`1&lt;System.String&gt;)">
+            <Messages>
+             <Message Id="Pkcs" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 21:20:02Z">
+              <Issue Name="Member">
+               <Item>Pkcs</Item>
+               <Item>'Export.ExportPrimaryAsPkcs(this IKeySet, string, Func&lt;string&gt;)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ImportedKeySet">
+          <Messages>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+            <Issue Name="ProvideDisposeBool">
+             <Item>'ImportedKeySet'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor(Keyczar.Key,Keyczar.KeyPurpose,System.String)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'ImportedKeySet.ImportedKeySet(Key, KeyPurpose, string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'ImportedKeySet.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'ImportedKeySet.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Import">
+            <Messages>
+             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'ImportedKeySet.Import'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ImportedKeySet+Importer">
+          <Messages>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'ImportedKeySet.Importer'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#PkcsKey(Keyczar.KeyPurpose,System.IO.Stream,System.Func`1&lt;System.String&gt;)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'ImportedKeySet.Importer.PkcsKey(KeyPurpose, Stream, Func&lt;string&gt;)'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Local">
+               <Item>'bouncyKey'</Item>
+               <Item>'DsaPrivateKeyParameters'</Item>
+               <Item>'ImportedKeySet.Importer.PkcsKey(KeyPurpose, Stream, Func&lt;string&gt;)'</Item>
+               <Item>isint</Item>
+              </Issue>
+              <Issue Name="Local">
+               <Item>'bouncyKey'</Item>
+               <Item>'RsaPrivateCrtKeyParameters'</Item>
+               <Item>'ImportedKeySet.Importer.PkcsKey(KeyPurpose, Stream, Func&lt;string&gt;)'</Item>
+               <Item>isint</Item>
+              </Issue>
+             </Message>
+             <Message Id="Pkcs" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Pkcs</Item>
+               <Item>'ImportedKeySet.Importer.PkcsKey(KeyPurpose, Stream, Func&lt;string&gt;)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#PkcsKey(Keyczar.KeyPurpose,System.String,System.Func`1&lt;System.String&gt;)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'ImportedKeySet.Importer.PkcsKey(KeyPurpose, string, Func&lt;string&gt;)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="Pkcs" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Pkcs</Item>
+               <Item>'ImportedKeySet.Importer.PkcsKey(KeyPurpose, string, Func&lt;string&gt;)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#X509Certificate(Keyczar.KeyPurpose,System.IO.Stream)">
+            <Messages>
+             <Message TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Local">
+               <Item>'bouncyKey'</Item>
+               <Item>'DsaPublicKeyParameters'</Item>
+               <Item>'ImportedKeySet.Importer.X509Certificate(KeyPurpose, Stream)'</Item>
+               <Item>isint</Item>
+              </Issue>
+              <Issue Name="Local">
+               <Item>'bouncyKey'</Item>
+               <Item>'RsaKeyParameters'</Item>
+               <Item>'ImportedKeySet.Importer.X509Certificate(KeyPurpose, Stream)'</Item>
+               <Item>isint</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ImportedKeySet+Importer+PasswordFinder">
+          <Messages>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'ImportedKeySet.Importer.PasswordFinder'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Keyczar.Crypto">
+        <Types>
+         <Type Name="AesKey">
+          <Members>
+           <Member Name="#AesKeyBytes">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AesKey.AesKeyBytes'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#BlockLength">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AesKey.BlockLength'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#HmacKey">
+            <Messages>
+             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Hmac</Item>
+               <Item>'AesKey.HmacKey'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="DsaPrivateKey">
+          <Messages>
+           <Message Id="Dsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Dsa</Item>
+             <Item>'DsaPrivateKey'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#X">
+            <Messages>
+             <Message Id="X" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'DsaPrivateKey.X'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="DsaPublicKey">
+          <Messages>
+           <Message Id="Dsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Dsa</Item>
+             <Item>'DsaPublicKey'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#G">
+            <Messages>
+             <Message Id="G" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'DsaPublicKey.G'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#P">
+            <Messages>
+             <Message Id="P" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'DsaPublicKey.P'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Q">
+            <Messages>
+             <Message Id="Q" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'DsaPublicKey.Q'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Y">
+            <Messages>
+             <Message Id="Y" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberMoreMeaningfulName">
+               <Item>'DsaPublicKey.Y'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="HmacSha1Key">
+          <Messages>
+           <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Hmac</Item>
+             <Item>'HmacSha1Key'</Item>
+            </Issue>
+           </Message>
+           <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Sha</Item>
+             <Item>'HmacSha1Key'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#HashLength">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'HmacSha1Key.HashLength'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#HmacKeyBytes">
+            <Messages>
+             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Hmac</Item>
+               <Item>'HmacSha1Key.HmacKeyBytes'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'HmacSha1Key.HmacKeyBytes'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ICrypterKey">
+          <Messages>
+           <Message Id="Crypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Crypter</Item>
+             <Item>'ICrypterKey'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#GetAuthVerifyingStream()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2012-11-28 19:57:15Z">
+              <Issue Certainty="50">
+               <Item>'ICrypterKey.GetAuthVerifyingStream()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IEncrypterKey">
+          <Messages>
+           <Message Id="Encrypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Encrypter</Item>
+             <Item>'IEncrypterKey'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#GetAuthSigningStream()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2012-11-28 19:57:15Z">
+              <Issue Certainty="50">
+               <Item>'IEncrypterKey.GetAuthSigningStream()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IKey">
+          <Members>
+           <Member Name="#GetFallbackKeyHash()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2012-11-28 19:57:15Z">
+              <Issue Certainty="50">
+               <Item>'IKey.GetFallbackKeyHash()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ISignerKey">
+          <Members>
+           <Member Name="#GetSigningStream()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2012-11-28 19:57:15Z">
+              <Issue Certainty="50">
+               <Item>'ISignerKey.GetSigningStream()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IVerifierKey">
+          <Members>
+           <Member Name="#GetVerifyingStream()">
+            <Messages>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2012-11-28 21:37:21Z">
+              <Issue Certainty="50">
+               <Item>'IVerifierKey.GetVerifyingStream()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="RsaPrivateKey">
+          <Messages>
+           <Message Id="Rsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Rsa</Item>
+             <Item>'RsaPrivateKey'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#GetTagLength(System.Byte[])">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-11-28 19:57:15Z" FixCategory="DependsOnFix">
+              <Issue>
+               <Item>'RsaPrivateKey.GetTagLength(byte[])'</Item>
+              </Issue>
+             </Message>
+             <Message Id="header" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-11-28 19:57:15Z" FixCategory="DependsOnFix">
+              <Issue>
+               <Item>'header'</Item>
+               <Item>'RsaPrivateKey.GetTagLength(byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="RsaPublicKey">
+          <Messages>
+           <Message Id="Rsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Rsa</Item>
+             <Item>'RsaPublicKey'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#GetTagLength(System.Byte[])">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-11-28 19:57:15Z" FixCategory="DependsOnFix">
+              <Issue>
+               <Item>'RsaPublicKey.GetTagLength(byte[])'</Item>
+              </Issue>
+             </Message>
+             <Message Id="header" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-11-28 19:57:15Z" FixCategory="DependsOnFix">
+              <Issue>
+               <Item>'header'</Item>
+               <Item>'RsaPublicKey.GetTagLength(byte[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#OaepPadding">
+            <Messages>
+             <Message Id="Oaep" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Oaep</Item>
+               <Item>'RsaPublicKey.OaepPadding'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#PkcsPadding">
+            <Messages>
+             <Message Id="Pkcs" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Pkcs</Item>
+               <Item>'RsaPublicKey.PkcsPadding'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#UpdatePadding(Org.BouncyCastle.Crypto.IAsymmetricBlockCipher)">
+            <Messages>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'RsaPublicKey.UpdatePadding(IAsymmetricBlockCipher)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Keyczar.Crypto.Streams">
+        <Types>
+         <Type Name="DigestStream">
+          <Members>
+           <Member Name="#.ctor(Org.BouncyCastle.Crypto.ISigner)">
+            <Messages>
+             <Message Id="dsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameter">
+               <Item>'DigestStream.DigestStream(ISigner)'</Item>
+               <Item>dsa</Item>
+               <Item>'dsaDigestSigner'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="DotNetSymmetricStream">
+          <Members>
+           <Member Name="#Dispose(System.Boolean)">
+            <Messages>
+             <Message Id="_output" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'DotNetSymmetricStream'</Item>
+               <Item>'DotNetSymmetricStream._output'</Item>
+               <Item>'CryptoStream'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="FinishingStream">
+          <Members>
+           <Member Name="#Close()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="OutsideDispose">
+               <Item>'FinishingStream.Close()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="HashingStream">
+          <Members>
+           <Member Name="#HashValue">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'HashingStream.HashValue'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="HmacStream">
+          <Messages>
+           <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Hmac</Item>
+             <Item>'HmacStream'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="ICipherTextOnly">
+          <Members>
+           <Member Name="#IV">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 21:20:02Z">
+              <Issue>
+               <Item>'ICipherTextOnly.IV'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Keyczar.Pbe">
+        <Types>
+         <Type Name="PbeHashType">
+          <Messages>
+           <Message Id="Pbe" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Pbe</Item>
+             <Item>'PbeHashType'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#HMAC_SHA1">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'PbeHashType.HMAC_SHA1'</Item>
+               <Item>'PbeHashType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="HMAC" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>HMAC</Item>
+               <Item>'PbeHashType.HMAC_SHA1'</Item>
+               <Item>Hmac</Item>
+              </Issue>
+             </Message>
+             <Message Id="SHA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>SHA</Item>
+               <Item>'PbeHashType.HMAC_SHA1'</Item>
+               <Item>Sha</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'PbeHashType.HMAC_SHA1'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#HMAC_SHA256">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'PbeHashType.HMAC_SHA256'</Item>
+               <Item>'PbeHashType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="HMAC" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>HMAC</Item>
+               <Item>'PbeHashType.HMAC_SHA256'</Item>
+               <Item>Hmac</Item>
+              </Issue>
+             </Message>
+             <Message Id="SHA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>SHA</Item>
+               <Item>'PbeHashType.HMAC_SHA256'</Item>
+               <Item>Sha</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'PbeHashType.HMAC_SHA256'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_Implicit(System.String):Keyczar.Pbe.PbeHashType">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Multiple">
+               <Item>ToXXX</Item>
+               <Item>FromXXX</Item>
+               <Item>'PbeHashType.implicit operator PbeHashType(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PbeKeyStore">
+          <Messages>
+           <Message Id="Pbe" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Pbe</Item>
+             <Item>'PbeKeyStore'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Hmac">
+            <Messages>
+             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Hmac</Item>
+               <Item>'PbeKeyStore.Hmac'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IV">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'PbeKeyStore.IV'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Key">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'PbeKeyStore.Key'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Random">
+            <Messages>
+             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2012-11-28 20:17:55Z">
+              <Issue>
+               <Item>'PbeKeyStore.Random'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Salt">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'PbeKeyStore.Salt'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="PbeKeyType">
+          <Messages>
+           <Message Id="Pbe" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Pbe</Item>
+             <Item>'PbeKeyType'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#AES_128">
+            <Messages>
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'PbeKeyType.AES_128'</Item>
+               <Item>'PbeKeyType'</Item>
+              </Issue>
+             </Message>
+             <Message Id="AES" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>AES</Item>
+               <Item>'PbeKeyType.AES_128'</Item>
+               <Item>Aes</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>'PbeKeyType.AES_128'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_Implicit(System.String):Keyczar.Pbe.PbeKeyType">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Multiple">
+               <Item>ToXXX</Item>
+               <Item>FromXXX</Item>
+               <Item>'PbeKeyType.implicit operator PbeKeyType(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Keyczar.Unofficial">
+        <Types>
+         <Type Name="AesAeadKey">
+          <Messages>
+           <Message Id="Aead" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Aead</Item>
+             <Item>'AesAeadKey'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#AesKeyBytes">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AesAeadKey.AesKeyBytes'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#BlockLength">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AesAeadKey.BlockLength'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#NonceLength">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AesAeadKey.NonceLength'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#TagLength">
+            <Messages>
+             <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AesAeadKey.TagLength'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="AesAeadStream">
+          <Messages>
+           <Message Id="Aead" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Aead</Item>
+             <Item>'AesAeadStream'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#_tagLength">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'AesAeadStream._tagLength'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="BlobKeySetWriter">
+          <Members>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'BlobKeySetWriter.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Dispose(System.Boolean)">
+            <Messages>
+             <Message Id="_zipFile" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'BlobKeySetWriter'</Item>
+               <Item>'BlobKeySetWriter._zipFile'</Item>
+               <Item>'ZipFile'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="BsonSessionKeyPacker">
+          <Messages>
+           <Message Id="Bson" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Bson</Item>
+             <Item>'BsonSessionKeyPacker'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="BsonSessionKeyPacker+KeyPack`1">
+          <Messages>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'BsonSessionKeyPacker.KeyPack&lt;T&gt;'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Keyczar.Util">
+        <Types>
+         <Type Name="CachedPrompt">
+          <Messages>
+           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+            <Issue Name="ProvideDisposeBool">
+             <Item>'CachedPrompt'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Dispose()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="NotCalled">
+               <Item>'CachedPrompt.Dispose()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
+              <Issue Name="DisposeImplementation">
+               <Item>'CachedPrompt.Dispose()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NondestructiveLengthLimitingStream">
+          <Members>
+           <Member Name="#Close()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 21:13:45Z">
+              <Issue Name="OutsideDispose">
+               <Item>'NondestructiveLengthLimitingStream.Close()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="NondestructiveZipFile">
+          <Messages>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'NondestructiveZipFile'</Item>
+             <Item>Collection</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="ReadOnlyArray`1">
+          <Messages>
+           <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'ReadOnlyArray&lt;T&gt;'</Item>
+             <Item>Collection</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#op_Implicit(Keyczar.Util.ReadOnlyArray`1&lt;!0&gt;):!0[]">
+            <Messages>
+             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Multiple">
+               <Item>ToXXX</Item>
+               <Item>FromXXX</Item>
+               <Item>'ReadOnlyArray&lt;T&gt;.implicit operator T[](ReadOnlyArray&lt;T&gt;)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Secure">
+          <Members>
+           <Member Name="#Clear`1(!!0[])">
+            <Messages>
+             <Message Id="a" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'Secure.Clear&lt;T&gt;(this T[])'</Item>
+               <Item>'a'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Equals(System.Array,System.Array,System.Int32)">
+            <Messages>
+             <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'Secure.Equals(Array, Array, int)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="a" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'Secure.Equals(Array, Array, int)'</Item>
+               <Item>'a'</Item>
+              </Issue>
+             </Message>
+             <Message Id="b" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'Secure.Equals(Array, Array, int)'</Item>
+               <Item>'b'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="StringType">
+          <Members>
+           <Member Name="#op_Equality(Keyczar.Util.StringType,Keyczar.Util.StringType)">
+            <Messages>
+             <Message Id="a" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'StringType.operator ==(StringType, StringType)'</Item>
+               <Item>'a'</Item>
+              </Issue>
+             </Message>
+             <Message Id="b" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'StringType.operator ==(StringType, StringType)'</Item>
+               <Item>'b'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#op_Inequality(Keyczar.Util.StringType,Keyczar.Util.StringType)">
+            <Messages>
+             <Message Id="a" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'StringType.operator !=(StringType, StringType)'</Item>
+               <Item>'a'</Item>
+              </Issue>
+             </Message>
+             <Message Id="b" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="MemberParameterMoreMeaningfulName">
+               <Item>'StringType.operator !=(StringType, StringType)'</Item>
+               <Item>'b'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="StringTypeJsonConverter">
+          <Messages>
+           <Message Id="Json" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Json</Item>
+             <Item>'StringTypeJsonConverter'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="Utility">
+          <Members>
+           <Member Name="#ReadHeader(System.Byte[],System.Byte[]&amp;)">
+            <Messages>
+             <Message Id="1#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'keyHash'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ReadHeader(System.IO.Stream,System.Byte[]&amp;)">
+            <Messages>
+             <Message Id="1#" TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'keyHash'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ToBson(System.Object)">
+            <Messages>
+             <Message Id="Bson" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Bson</Item>
+               <Item>'Utility.ToBson(this object)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ToJson(System.Object)">
+            <Messages>
+             <Message Id="Json" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+              <Issue Name="Member">
+               <Item>Json</Item>
+               <Item>'Utility.ToJson(this object)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="WebSafeBase64">
+          <Members>
+           <Member Name="#.cctor()">
+            <Messages>
+             <Message TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'WebSafeBase64'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="WebSafeBase64+Base64DecodingException">
+          <Messages>
+           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2012-11-28 19:57:15Z">
+            <Issue Name="MissingConstructor">
+             <Item>'WebSafeBase64.Base64DecodingException'</Item>
+             <Item>protected Base64DecodingException(SerializationInfo, StreamingContext)</Item>
+            </Issue>
+            <Issue Name="MissingConstructor">
+             <Item>'WebSafeBase64.Base64DecodingException'</Item>
+             <Item>public Base64DecodingException()</Item>
+            </Issue>
+            <Issue Name="MissingConstructor">
+             <Item>'WebSafeBase64.Base64DecodingException'</Item>
+             <Item>public Base64DecodingException(String, Exception)</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237" Created="2012-11-28 19:57:15Z">
+            <Issue Certainty="95" Level="Error">
+             <Item>'WebSafeBase64.Base64DecodingException'</Item>
+            </Issue>
+           </Message>
+           <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2012-11-28 19:57:15Z">
+            <Issue>
+             <Item>'WebSafeBase64.Base64DecodingException'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#.ctor(System.String)">
+            <Messages>
+             <Message Id="message" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-11-28 19:57:15Z" FixCategory="DependsOnFix">
+              <Issue>
+               <Item>'message'</Item>
+               <Item>'WebSafeBase64.Base64DecodingException.Base64DecodingException(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="WriteDecompressGzipStream">
+          <Messages>
+           <Message Id="Gzip" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
+            <Issue Name="Type">
+             <Item>Gzip</Item>
+             <Item>'WriteDecompressGzipStream'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+          <Members>
+           <Member Name="#Close()">
+            <Messages>
+             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
+              <Issue Name="OutsideDispose">
+               <Item>'WriteDecompressGzipStream.Close()'</Item>
+               <Item>'GC.SuppressFinalize(object)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Dispose(System.Boolean)">
+            <Messages>
+             <Message Id="_gzipread" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'WriteDecompressGzipStream'</Item>
+               <Item>'WriteDecompressGzipStream._gzipread'</Item>
+               <Item>'Stream'</Item>
+              </Issue>
+             </Message>
+             <Message Id="_tempStream" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
+              <Issue>
+               <Item>'WriteDecompressGzipStream'</Item>
+               <Item>'WriteDecompressGzipStream._tempStream'</Item>
+               <Item>'Stream'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+  </Targets>
+  <Rules>
+   <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
+    <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidOutParameters" Category="Microsoft.Design" CheckId="CA1021">
+    <Resolution Name="Default">Consider a design that does not require that {0} be an out parameter.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
+    <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
+   </Rule>
+   <Rule TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816">
+    <Resolution Name="NotCalled">Change {0} to call {1}. This will prevent unnecessary finalization of the object once it has been disposed and it has fallen out of scope.</Resolution>
+    <Resolution Name="OutsideDispose">{0} calls {1}, a method that is typically only called within an implementation of 'IDisposable.Dispose'. Refer to the IDisposable pattern for more information.</Resolution>
+   </Rule>
+   <Rule TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227">
+    <Resolution Name="Default">Change {0} to be read-only by removing the property setter.</Resolution>
+   </Rule>
+   <Rule TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026">
+    <Resolution Name="Default">Replace method {0} with an overload that supplies all default arguments.</Resolution>
+   </Rule>
+   <Rule TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213">
+    <Resolution Name="Default">{0} contains field {1} that is of IDisposable type: {2}. Change the Dispose method on {0} to call Dispose or Close on this field.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800">
+    <Resolution Name="Local">{0}, a variable, is cast to type {1} multiple times in method {2}. Cache the result of the 'as' operator or direct cast in order to eliminate the redundant {3} instruction.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+    <Resolution Name="Default">Modify {0} to catch a more specific exception than {1} or rethrow the exception.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104">
+    <Resolution Name="Default">Remove the read-only designation from {0} or change the field to one that is an immutable reference type. If the reference type {1} is, in fact, immutable, exclude this message.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051">
+    <Resolution Name="Default">Because field {0} is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805">
+    <Resolution Name="Default">{0} initializes field {1} of type {2} to {3}. Remove this initialization because it will be done automatically by the runtime.</Resolution>
+   </Rule>
+   <Rule TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004">
+    <Resolution Name="Default">Consider a design where {0} doesn't require explicit type parameter {1} in any call to it.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
+    <Resolution Name="Member">Correct the casing of '{0}' in member name {1} by changing it to '{2}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
+    <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="MemberMoreMeaningfulName">Consider providing a more meaningful name than member name {0}.</Resolution>
+    <Resolution Name="MemberParameter">In method {0}, correct the spelling of '{1}' in parameter name {2} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="MemberParameterMoreMeaningfulName">In method {0}, consider providing a more meaningful name than parameter name {1}.</Resolution>
+    <Resolution Name="Namespace">Correct the spelling of '{0}' in namespace name '{1}'.</Resolution>
+    <Resolution Name="Type">Correct the spelling of '{0}' in type name {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710">
+    <Resolution Name="Default">Rename {0} to end in '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707">
+    <Resolution Name="Member">Remove the underscores from member name {0}.</Resolution>
+   </Rule>
+   <Rule TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063">
+    <Resolution Name="DisposeImplementation">Modify {0} so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns.</Resolution>
+    <Resolution Name="DisposeSignature">Ensure that {0} is declared as public and sealed.</Resolution>
+    <Resolution Name="ProvideDisposeBool">Provide an overridable implementation of Dispose(bool) on {0} or mark the type as sealed. A call to Dispose(false) should only clean up native resources. A call to Dispose(true) should clean up both managed and native resources.</Resolution>
+   </Rule>
+   <Rule TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032">
+    <Resolution Name="MissingConstructor">Add the following constructor to {0}: {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810">
+    <Resolution Name="Default">Initialize all static fields in {0} when those fields are declared and remove the explicit static constructor.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237">
+    <Resolution Name="Default">Add [Serializable] to {0} as this type implements ISerializable.</Resolution>
+   </Rule>
+   <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
+    <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
+   </Rule>
+   <Rule TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034">
+    <Resolution Name="Default">Do not nest type {0}. Alternatively, change its accessibility so that it is not externally visible.</Resolution>
+   </Rule>
+   <Rule TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211">
+    <Resolution Name="Default">Consider making {0} non-public or a constant.</Resolution>
+   </Rule>
+   <Rule TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225">
+    <Resolution Name="Multiple">Provide a method named '{0}' or '{1}' as an alternate for operator {2}.</Resolution>
+   </Rule>
+   <Rule TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719">
+    <Resolution Name="Default">Change either member or parameter name {0} so that one differs from the other.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819">
+    <Resolution Name="Default">Change {0} to return a collection or make it a method.</Resolution>
+   </Rule>
+   <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
+    <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+    <Resolution Name="Default">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Resolution>
+   </Rule>
+   <Rule TypeName="TypeNamesShouldNotMatchNamespaces" Category="Microsoft.Naming" CheckId="CA1724">
+    <Resolution Name="Default">The type name {0} conflicts in whole or in part with the namespace name '{1}'. Change either name to eliminate the conflict.</Resolution>
+   </Rule>
+   <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
+    <Resolution Name="Default">Change {0} to a property if appropriate.</Resolution>
+   </Rule>
+  </Rules>
+ </FxCopReport>
+</FxCopProject>

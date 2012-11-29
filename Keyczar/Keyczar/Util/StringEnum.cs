@@ -16,6 +16,7 @@
 
 using System;
 using System.Collections;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
@@ -71,25 +72,30 @@ namespace Keyczar.Util
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Identifier}")]
     [JsonConverter(typeof(StringTypeJsonConverter))]
+    [ImmutableObject(true)]
     public class StringType
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StringType"/> class.
         /// </summary>
-        /// <param name="identifer">The identifer.</param>
-        public StringType(string identifer)
+        /// <param name="identifier">The identifer.</param>
+        public StringType(string identifier)
         {
-            if(String.IsNullOrWhiteSpace(identifer))
-                throw new ArgumentException("Invalid identifier","identifer");
-            Identifier = identifer.ToUpperInvariant();
+            if(String.IsNullOrWhiteSpace(identifier))
+                throw new ArgumentException("Invalid identifier","identifier");
+            _identifier = identifier.ToUpperInvariant();
         }
 
+        private readonly string _identifier;
 
         /// <summary>
         /// Gets or sets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
-        public string Identifier { get; protected set; }
+        public string Identifier
+        {
+            get { return _identifier; }
+        }
 
         /// <summary>
         /// Returns a <see cref="System.String"/> that represents this instance.

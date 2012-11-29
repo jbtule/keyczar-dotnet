@@ -49,8 +49,8 @@ namespace Keyczar
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeoutVerifier"/> class.
         /// </summary>
-        /// <param name="keysetLocation">The keyset location.</param>
-        public TimeoutVerifier(string keysetLocation) : this(new KeySet(keysetLocation))
+        /// <param name="keySetLocation">The keyset location.</param>
+        public TimeoutVerifier(string keySetLocation) : this(new KeySet(keySetLocation))
         {
         }
 
@@ -111,7 +111,7 @@ namespace Keyczar
             if(!_verifier.Verify(data, signature))
                 return false; 
             using(var stream = new MemoryStream(signature))
-            using (var reader = new NonDestructiveBinaryReader(stream))
+            using (var reader = new NondestructiveBinaryReader(stream))
             {
                 reader.ReadBytes(HEADER_LENGTH);
                 var expiration =reader.ReadBytes(TimeoutLength);
@@ -167,9 +167,9 @@ namespace Keyczar
             /// </summary>
             /// <param name="verifyingStream">The verifying stream.</param>
             /// <param name="extra">The extra data passed by prefixData</param>
-            protected override void PrefixData(VerifyingStream verifyingStream, object extra)
+            protected override void PrefixDataVerify(VerifyingStream verifyingStream, object extra)
             {
-                base.PrefixData(verifyingStream, null);
+                base.PrefixDataVerify(verifyingStream, null);
                 var timeout = (byte[]) extra;
                 verifyingStream.Write(timeout, 0, timeout.Length);
             }

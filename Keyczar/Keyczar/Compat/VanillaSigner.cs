@@ -53,7 +53,7 @@ namespace Keyczar.Compat
         /// </summary>
         /// <param name="signingStream">The signing stream.</param>
         /// <param name="extra">The extra data passed by prefixData.</param>
-        protected override void PrefixData(HashingStream signingStream, object extra)
+        protected override void PrefixDataSign(HashingStream signingStream, object extra)
         {
             
         }
@@ -63,7 +63,7 @@ namespace Keyczar.Compat
         /// </summary>
         /// <param name="signingStream">The signing stream.</param>
         /// <param name="extra">The extra data passed by postfixData.</param>
-        protected override void PostfixData(HashingStream signingStream, object extra)
+        protected override void PostfixDataSign(HashingStream signingStream, object extra)
         {
            
         }
@@ -73,7 +73,7 @@ namespace Keyczar.Compat
         /// </summary>
         /// <param name="verifyingStream">The verifying stream.</param>
         /// <param name="extra">The extra data passed by prefixData</param>
-        protected override void PrefixData(VerifyingStream verifyingStream, object extra)
+        protected override void PrefixDataVerify(VerifyingStream verifyingStream, object extra)
         {
 
         }
@@ -83,7 +83,7 @@ namespace Keyczar.Compat
         /// </summary>
         /// <param name="verifyingStream">The verifying stream.</param>
         /// <param name="extra">The extra data passed by postFixData</param>
-        protected override void PostfixData(VerifyingStream verifyingStream, object extra)
+        protected override void PostfixDataVerify(VerifyingStream verifyingStream, object extra)
         {
 
         }
@@ -92,24 +92,24 @@ namespace Keyczar.Compat
 		/// Pads the signature with extra data.
 		/// </summary>
 		/// <param name="signature">The signature.</param>
-		/// <param name="outstream">The padded signature.</param>
+		/// <param name="outputStream">The padded signature.</param>
 		/// <param name="extra">The extra data passed by sigData.</param>
 		/// <returns></returns>
-        protected override void PadSignature(byte[] signature, Stream outstream,  object extra)
+        protected override void PadSignature(byte[] signature, Stream outputStream,  object extra)
         {
-            outstream.Write(signature,0,signature.Length);
+            outputStream.Write(signature,0,signature.Length);
         }
 
         /// <summary>
         /// Gets the keys.
         /// </summary>
         /// <param name="signature">The signature.</param>
-        /// <param name="trimmedSig">The trimmed sig.</param>
+        /// <param name="trimmedSignature">The trimmed sig.</param>
         /// <returns></returns>
-        protected override IEnumerable<IVerifierkey> GetKeys(byte[] signature, out byte[] trimmedSig)
+        protected override IEnumerable<IVerifierKey> GetKeys(byte[] signature, out byte[] trimmedSignature)
         {
-            trimmedSig = signature;
-            return GetAllKeys().OfType<IVerifierkey>();
+            trimmedSignature = signature;
+            return GetAllKeys().OfType<IVerifierKey>();
         }
     }
 

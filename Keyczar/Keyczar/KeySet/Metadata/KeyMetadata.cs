@@ -34,11 +34,11 @@ namespace Keyczar
         /// <summary>
         /// Reads the specified meta data.
         /// </summary>
-        /// <param name="metaData">The meta data.</param>
+        /// <param name="metadata">The meta data.</param>
         /// <returns></returns>
-        public static KeyMetadata Read(string metaData)
+        public static KeyMetadata Read(string metadata)
         {
-            return JsonConvert.DeserializeObject<KeyMetadata>(metaData);
+            return JsonConvert.DeserializeObject<KeyMetadata>(metadata);
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Keyczar
         {
             Name = metadata.Name;
             Purpose = metadata.Purpose;
-            Type = metadata.Type;
+            KeyType = metadata.KeyType;
             Encrypted = metadata.Encrypted;
             Versions = metadata.Versions.Select(it => new KeyVersion(it)).ToList();
         }
@@ -74,11 +74,14 @@ namespace Keyczar
         /// </summary>
         /// <value>The purpose.</value>
         public KeyPurpose Purpose { get; set; }
+
         /// <summary>
         /// Gets or sets the key type.
         /// </summary>
         /// <value>The key type.</value>
-        public KeyType Type { get; set; }
+        [JsonProperty("Type")]
+        public KeyType KeyType { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="KeyMetadata"/> is encrypted.
         /// </summary>

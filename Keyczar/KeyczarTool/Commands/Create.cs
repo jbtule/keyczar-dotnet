@@ -61,7 +61,7 @@ namespace KeyczarTool
                 {
                     Name = _name,
                     Purpose = purpose,
-                    Type = type,
+                    KeyType = type,
                 };
             using (var keySet = new MutableKeySet(meta))
             {

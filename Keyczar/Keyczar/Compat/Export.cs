@@ -23,16 +23,16 @@ namespace Keyczar.Compat
         /// <summary>
         /// Exports the primary key as PKCS.
         /// </summary>
-        /// <param name="keyset">The keyset.</param>
+        /// <param name="keySet">The keyset.</param>
         /// <param name="location">The location.</param>
         /// <param name="passwordPrompt">The password prompt.</param>
         /// <returns></returns>
         /// <exception cref="InvalidKeyTypeException">Needs to be a private key.</exception>
         /// <exception cref="InvalidKeyTypeException">Non exportable key type.</exception>
-        public static bool ExportPrimaryAsPKCS(this IKeySet keyset, string location, Func<string> passwordPrompt)
+        public static bool ExportPrimaryAsPkcs(this IKeySet keySet, string location, Func<string> passwordPrompt)
         {
-            var i =keyset.Metadata.Versions.First(it => it.Status == KeyStatus.PRIMARY).VersionNumber;
-            using (var key = keyset.GetKey(i))
+            var i =keySet.Metadata.Versions.First(it => it.Status == KeyStatus.PRIMARY).VersionNumber;
+            using (var key = keySet.GetKey(i))
             {
                 if (!(key is IPrivateKey))
                 {
@@ -44,7 +44,7 @@ namespace Keyczar.Compat
                 {
                     var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);
                     AsymmetricKeyParameter writeKey;
-                    if (key.Type == KeyType.DSA_PRIV)
+                    if (key.KeyType == KeyType.DSA_PRIV)
                     {
                         var dsaKey = (DsaPrivateKey) key;
 						writeKey = new DsaPrivateKeyParameters(dsaKey.X.ToBouncyBigInteger(),
@@ -53,7 +53,7 @@ namespace Keyczar.Compat
 						                  						dsaKey.PublicKey.G.ToBouncyBigInteger()));
 
                     }
-                    else if (key.Type == KeyType.RSA_PRIV)
+                    else if (key.KeyType == KeyType.RSA_PRIV)
                     {
                         var rsaKey = (RsaPrivateKey) key;
                         writeKey = new RsaPrivateCrtKeyParameters(

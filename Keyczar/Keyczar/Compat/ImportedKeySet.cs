@@ -52,12 +52,12 @@ namespace Keyczar.Compat
         public ImportedKeySet(Key key, KeyPurpose purpose, string description =null)
         {
             _key = key;
-            var keyType = key.Type;
+            var keyType = key.KeyType;
             _metadata = new KeyMetadata()
             {
-                Name = description ?? "Imported" + key.Type.Identifier,
+                Name = description ?? "Imported" + key.KeyType.Identifier,
                 Purpose = purpose,
-                Type = keyType,
+                KeyType = keyType,
                 Versions = new List<KeyVersion>
                                   {
                                       new KeyVersion
@@ -113,10 +113,10 @@ namespace Keyczar.Compat
                 /// <summary>
                 /// Initializes a new instance of the <see cref="PasswordFinder"/> class.
                 /// </summary>
-                /// <param name="passsword">The passsword.</param>
-                public PasswordFinder(Func<string> passsword)
+                /// <param name="password">The passsword.</param>
+                public PasswordFinder(Func<string> password)
                 {
-                    _password = passsword;
+                    _password = password;
                 }
 
                 /// <summary>
@@ -161,7 +161,7 @@ namespace Keyczar.Compat
                 {
                     AsymmetricKeyParameter bouncyKey;
                     var position = input.Position;
-                    using (var streamReader = new NonDestructiveStreamReader(input))
+                    using (var streamReader = new NondestructiveStreamReader(input))
                     {
                         bouncyKey =
                             new PemReader(streamReader, new PasswordFinder(password.Prompt)).ReadObject() as

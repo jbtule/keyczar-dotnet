@@ -124,7 +124,7 @@ namespace Keyczar
             var pbeKey = key as IPbeKey;
 
 
-				using (var reader = new NonDestructiveBinaryReader(input))
+				using (var reader = new NondestructiveBinaryReader(input))
 	            {
 	                FinishingStream encryptingStream; 
 	                if (pbeKey == null)
@@ -159,7 +159,7 @@ namespace Keyczar
 
            
             byte[] hash;
-            using (var outputReader = new NonDestructiveBinaryReader(output))
+            using (var outputReader = new NondestructiveBinaryReader(output))
             using (var signingStream = cryptKey.GetAuthSigningStream())
             {
                 if (signingStream == null || signingStream.GetTagLength(header) ==0)

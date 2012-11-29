@@ -39,7 +39,7 @@ namespace KeyczarTest
                 {
                     Name = "Test",
                     Purpose = purpose,
-                    Type = type
+                    KeyType = type
                 });
         }
 
@@ -272,7 +272,7 @@ namespace KeyczarTest
                 }
                 Func<string> password = () => "pass";//Hardcoding because this is a test
 
-                var success = ks.ExportPrimaryAsPKCS(exportPath, password);
+                var success = ks.ExportPrimaryAsPkcs(exportPath, password);
                 Expect(success, Is.True);
 
                 success = ks.Save(writer);
@@ -291,7 +291,7 @@ namespace KeyczarTest
             {
                 Name = "Blob",
                 Purpose = KeyPurpose.DECRYPT_AND_ENCRYPT,
-                Type = KeyType.AES
+                KeyType = KeyType.AES
             };
             using (var keySet = new MutableKeySet(keyMetaData))
             {
@@ -310,7 +310,7 @@ namespace KeyczarTest
                     {
                         Name = "Blob",
                         Purpose = KeyPurpose.SIGN_AND_VERIFY,
-                        Type = KeyType.RSA_PRIV
+                        KeyType = KeyType.RSA_PRIV
                     };
                     using (var keySet2 = new MutableKeySet(keyMetaData2))
                     {

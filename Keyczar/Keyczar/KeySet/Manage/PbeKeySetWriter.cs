@@ -28,7 +28,7 @@ namespace Keyczar
     {
     
         private IKeySetWriter _writer;
-        private readonly int _interationsCount;
+        private readonly int _iterationCount;
         private CachedPrompt _password;
 
 
@@ -37,12 +37,12 @@ namespace Keyczar
         /// </summary>
         /// <param name="writer">The writer.</param>
         /// <param name="passwordPrompt">The password prompt.</param>
-        /// <param name="interationsCount">The interations count.</param>
-        public PbeKeySetWriter(IKeySetWriter writer, Func<string> passwordPrompt, int interationsCount = 4096)
+        /// <param name="iterationCount">The interations count.</param>
+        public PbeKeySetWriter(IKeySetWriter writer, Func<string> passwordPrompt, int iterationCount = 4096)
         {
             _password = CachedPrompt.Password(passwordPrompt);
             _writer = writer;
-            _interationsCount = interationsCount;
+            _iterationCount = iterationCount;
         }
 
 
@@ -53,7 +53,7 @@ namespace Keyczar
         /// <param name="version">The version.</param>
         public void Write(byte[] keyData, int version)
         {
-            var keyStore = PbeKeyStore.EncryptKeyData(keyData, _password.Prompt, _interationsCount);
+            var keyStore = PbeKeyStore.EncryptKeyData(keyData, _password.Prompt, _iterationCount);
             _writer.Write(Keyczar.DefaultEncoding.GetBytes(keyStore.ToJson()), version);
         }
 

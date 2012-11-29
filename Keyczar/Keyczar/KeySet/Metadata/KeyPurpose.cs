@@ -13,11 +13,14 @@
  *  limitations under the License.
  */
 
+using System.ComponentModel;
+
 namespace Keyczar
 {
     /// <summary>
     /// Key purpose
-    /// </summary>
+    /// </summary>'
+    [ImmutableObject(true)]
     public class KeyPurpose:Util.StringType
     {
 
@@ -41,18 +44,18 @@ namespace Keyczar
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="KeyPurpose"/>.
         /// </summary>
-        /// <param name="identifer">The identifer.</param>
+        /// <param name="identifier">The identifier.</param>
         /// <returns>The result of the conversion.</returns>
-        public static  implicit operator KeyPurpose(string identifer)
+        public static  implicit operator KeyPurpose(string identifier)
         {
-            return new KeyPurpose(identifer);
+            return new KeyPurpose(identifier);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyPurpose"/> class.
         /// </summary>
-        /// <param name="identifer">The identifer.</param>
-        public KeyPurpose(string identifer) : base(identifer)
+        /// <param name="identifier">The identifer.</param>
+        public KeyPurpose(string identifier) : base(identifier)
         {
         }
     }

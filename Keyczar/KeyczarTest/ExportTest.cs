@@ -19,7 +19,7 @@ namespace KeyczarTest
         public void TestSymetricKeyExport()
         {
             var ks = new KeySet(Util.TestDataPath(TEST_DATA, "aes"));
-            Expect(() => ks.ExportPrimaryAsPKCS(Path.Combine(Path.GetTempPath(),"dummy.pem"), ()=>"dummy"),Throws.InstanceOf<InvalidKeyTypeException>());
+            Expect(() => ks.ExportPrimaryAsPkcs(Path.Combine(Path.GetTempPath(),"dummy.pem"), ()=>"dummy"),Throws.InstanceOf<InvalidKeyTypeException>());
             
 
         }

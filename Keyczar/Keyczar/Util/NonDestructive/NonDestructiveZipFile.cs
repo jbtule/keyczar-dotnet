@@ -24,7 +24,7 @@ namespace Keyczar.Util
     /// <summary>
     /// Zip file that doesn't close the underlying stream when disposed
     /// </summary>
-    public class NonDestructiveZipFile:ZipFile
+    public class NondestructiveZipFile:ZipFile
     {
         /// <summary>
         /// Disposes any managed resources, if the flag is set, then marks the

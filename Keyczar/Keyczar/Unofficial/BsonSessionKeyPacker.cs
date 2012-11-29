@@ -43,7 +43,7 @@ namespace Keyczar.Unofficial
             /// <param name="key">The key.</param>
             public KeyPack(T key)
             {
-                Type = key.Type;
+                KeyType = key.KeyType;
                 Key = key;
             }
 
@@ -51,7 +51,9 @@ namespace Keyczar.Unofficial
             /// Gets or sets the type.
             /// </summary>
             /// <value>The type.</value>
-            public KeyType Type { get; set; }
+            [JsonProperty("Type")]
+            public KeyType KeyType { get; set; }
+
             /// <summary>
             /// Gets or sets the key.
             /// </summary>
@@ -60,7 +62,7 @@ namespace Keyczar.Unofficial
 
         }
 
-        private KeyPack<T> PackIt<T>(T key) where T : Key
+        private static KeyPack<T> PackIt<T>(T key) where T : Key
         {
             return new KeyPack<T>(key);
         }
@@ -80,19 +82,19 @@ namespace Keyczar.Unofficial
         /// <summary>
         /// Unpacks the specified bytes into a key.
         /// </summary>
-        /// <param name="bytes">The bytes.</param>
+        /// <param name="data">The bytes.</param>
         /// <returns></returns>
-        public Key Unpack(byte[] bytes)
+        public Key Unpack(byte[] data)
         {
-            using (var input = new MemoryStream(bytes)) 
-            using (var input2 = new MemoryStream(bytes)) 
+            using (var input = new MemoryStream(data)) 
+            using (var input2 = new MemoryStream(data)) 
             {
                 var reader = new BsonReader(input);
                 var serializer = new JsonSerializer ();
                 var val = JToken.ReadFrom(reader);
                 reader = new BsonReader(input2);
                 var keyType = (KeyType)(string)val["type"];
-                var pack = (dynamic)serializer.Deserialize(reader, typeof(KeyPack<>).MakeGenericType(keyType.Type));
+                var pack = (dynamic)serializer.Deserialize(reader, typeof(KeyPack<>).MakeGenericType(keyType.RepresentedType));
                 return pack.Key;
             }
         }

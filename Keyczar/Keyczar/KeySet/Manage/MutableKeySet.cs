@@ -67,7 +67,7 @@ namespace Keyczar
             {
                 //Easy way to deep copy keys
                 var keyData = keySet.GetKeyData(version.VersionNumber);
-                var key = Key.Read(_metadata.Type, keyData);
+                var key = Key.Read(_metadata.KeyType, keyData);
                 keyData.Clear();
                 _keys.Add(version.VersionNumber, key);
             }
@@ -116,7 +116,7 @@ namespace Keyczar
 			bool loop;
 			do{
 				loop = false;
-            	key = Key.Generate(_metadata.Type, keySize);
+            	key = Key.Generate(_metadata.KeyType, keySize);
 	            if (options != null)
 	            {
 	                Utility.CopyProperties((dynamic) options, key);
@@ -227,7 +227,7 @@ namespace Keyczar
         /// <returns></returns>
         public MutableKeySet PublicKey()
         {
-            if(!typeof(IPrivateKey).IsAssignableFrom(Metadata.Type.Type))
+            if(!typeof(IPrivateKey).IsAssignableFrom(Metadata.KeyType.RepresentedType))
             {
                 return null;
             }
@@ -238,10 +238,10 @@ namespace Keyczar
                 : KeyPurpose.ENCRYPT;
 
            var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
-                .Select(p => new {p.Key, p.PublicKey.Type, Value = Keyczar.DefaultEncoding.GetBytes(p.PublicKey.ToJson())})
+                .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = Keyczar.DefaultEncoding.GetBytes(p.PublicKey.ToJson())})
                 .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value)});
 
-            newMeta.Type = copiedKeys.Select(it => it.Value.Type).First();
+            newMeta.KeyType = copiedKeys.Select(it => it.Value.KeyType).First();
 
            return new MutableKeySet(newMeta, copiedKeys.ToDictionary(k => k.Key, v => v.Value));
         }

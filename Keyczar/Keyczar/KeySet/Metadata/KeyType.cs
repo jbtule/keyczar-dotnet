@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Keyczar.Crypto;
 
@@ -22,7 +23,8 @@ namespace Keyczar
 {
     /// <summary>
     /// Metadata for Key Types
-    /// </summary>
+    /// </summary> 
+    [ImmutableObject(true)]
     public class KeyType : Util.StringType
     {
 
@@ -65,7 +67,7 @@ namespace Keyczar
         /// <returns></returns>
         public static KeyType ForType(Type type)
         {
-            return _specs.Where(it => it.Value.Type == type).Select(it=>it.Key).FirstOrDefault();
+            return _specs.Where(it => it.Value.RepresentedType == type).Select(it=>it.Key).FirstOrDefault();
         }
 
         /// <summary>
@@ -105,7 +107,7 @@ namespace Keyczar
             return new KeyTypeSpec
             {
                 Name =  Identifier,
-                Type = typeof(T),
+                RepresentedType = typeof(T),
                 KeySizes = keySizes,
             };
         }
@@ -131,7 +133,7 @@ namespace Keyczar
             /// Gets or sets the type.
             /// </summary>
             /// <value>The type.</value>
-            public Type Type{ get; internal set; }
+            public Type RepresentedType{ get; internal set; }
 
             /// <summary>
             /// Gets or sets the key sizes.
@@ -157,11 +159,11 @@ namespace Keyczar
             /// <summary>
             /// Describes the digest sizes.
             /// </summary>
-            /// <param name="sigSizes">The sig sizes.</param>
+            /// <param name="sizes">The sig sizes.</param>
             /// <returns></returns>
-            public KeyTypeSpec WithDigestSizes(params int[] sigSizes)
+            public KeyTypeSpec WithDigestSizes(params int[] sizes)
             {
-                DigestSizes = sigSizes;
+                DigestSizes = sizes;
                 return this;
             }
             /// <summary>
@@ -198,21 +200,21 @@ namespace Keyczar
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="KeyType"/>.
         /// </summary>
-        /// <param name="identifer">The identifer.</param>
+        /// <param name="identifier">The identifier.</param>
         /// <returns>The result of the conversion.</returns>
-        public static implicit operator KeyType(string identifer)
+        public static implicit operator KeyType(string identifier)
         {
-			if(String.IsNullOrWhiteSpace(identifer))
+			if(String.IsNullOrWhiteSpace(identifier))
 			   return null;
-            return new KeyType(identifer);
+            return new KeyType(identifier);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyType"/> class.
         /// </summary>
-        /// <param name="identifer">The identifer.</param>
-        public KeyType(string identifer)
-            : base(identifer)
+        /// <param name="identifier">The identifer.</param>
+        public KeyType(string identifier)
+            : base(identifier)
         {
 
 
@@ -227,7 +229,7 @@ namespace Keyczar
 			return identifier;
 		}
 
-        private Type _type;
+        private Type _representedType;
         private int[] _keySizeOptions;
         private bool? _unofficial;
         private bool? _asymmetric;
@@ -251,15 +253,15 @@ namespace Keyczar
         /// Gets the clr type.
         /// </summary>
         /// <value>The type.</value>
-        public virtual Type Type
+        public virtual Type RepresentedType
         {
             get
             {
-                if (_type == null)
+                if (_representedType == null)
                 {
-                    _type = _specs[Identifier].Type;
+                    _representedType = _specs[Identifier].RepresentedType;
                 }
-                return _type;
+                return _representedType;
 			}set{}
         }
 

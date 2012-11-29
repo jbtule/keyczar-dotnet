@@ -83,7 +83,7 @@ namespace Keyczar
         public byte[] Sign(Stream data)
         {
 			using(var stream = new MemoryStream()){
-            	Sign(data, stream, prefixData: null, postfixData: null, sigData: null);
+            	Sign(data, stream, prefixData: null, postfixData: null, signatureData: null);
 				stream.Flush();
 				return stream.ToArray();
 			}
@@ -96,25 +96,25 @@ namespace Keyczar
         /// <param name="outstream">The outstream.</param>
         /// <param name="prefixData">The prefix data.</param>
         /// <param name="postfixData">The postfix data.</param>
-        /// <param name="sigData">The sig data.</param>
-        protected void Sign(Stream data, Stream outstream, object prefixData, object postfixData, object sigData)
+        /// <param name="signatureData">The sig data.</param>
+        protected void Sign(Stream data, Stream outstream, object prefixData, object postfixData, object signatureData)
         {
             var key = GetPrimaryKey() as ISignerKey;
-            using (var reader = new NonDestructiveBinaryReader(data))
+            using (var reader = new NondestructiveBinaryReader(data))
             {
                 using (var signingStream = key.GetSigningStream())
                 {
-                    PrefixData(signingStream, prefixData);
+                    PrefixDataSign(signingStream, prefixData);
                     while (reader.Peek() != -1)
                     {
                         byte[] buffer = reader.ReadBytes(BUFFER_SIZE);
                         signingStream.Write(buffer, 0, buffer.Length);
                     }
-                    PostfixData(signingStream, postfixData);
+                    PostfixDataSign(signingStream, postfixData);
                     signingStream.Finish();
 
                     var signature = signingStream.HashValue;
-                    PadSignature(signature, outstream, sigData);
+                    PadSignature(signature, outstream, signatureData);
                 }
             }
         }
@@ -124,7 +124,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="signingStream">The signing stream.</param>
         /// <param name="extra">The extra data passed by prefixData.</param>
-        protected virtual void PrefixData(HashingStream signingStream, object extra)
+        protected virtual void PrefixDataSign(HashingStream signingStream, object extra)
         {
 
         }
@@ -134,7 +134,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="signingStream">The signing stream.</param>
         /// <param name="extra">The extra data passed by postfixData.</param>
-        protected virtual void PostfixData(HashingStream signingStream, object extra)
+        protected virtual void PostfixDataSign(HashingStream signingStream, object extra)
         {
             signingStream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
         }
@@ -143,15 +143,15 @@ namespace Keyczar
         /// Pads the signature with extra data.
         /// </summary>
         /// <param name="signature">The signature.</param>
-		/// <param name="outstream">The padded signature.</param>
+		/// <param name="outputStream">The padded signature.</param>
         /// <param name="extra">The extra data passed by sigData.</param>
         /// <returns></returns>
-        protected virtual void PadSignature(byte[] signature, Stream outstream, object extra)
+        protected virtual void PadSignature(byte[] signature, Stream outputStream, object extra)
         {
             var key = GetPrimaryKey() as ISignerKey;
-			outstream.Write(FORMAT_BYTES,0,FORMAT_BYTES.Length);
-			outstream.Write(key.GetKeyHash(),0,KEY_HASH_LENGTH);
-			outstream.Write(signature,0,signature.Length);
+			outputStream.Write(FORMAT_BYTES,0,FORMAT_BYTES.Length);
+			outputStream.Write(key.GetKeyHash(),0,KEY_HASH_LENGTH);
+			outputStream.Write(signature,0,signature.Length);
         }
 
     }

@@ -44,9 +44,9 @@ namespace Keyczar
         /// <summary>
         /// Unpacks the specified bytes into a key.
         /// </summary>
-        /// <param name="bytes">The bytes.</param>
+        /// <param name="data">The bytes.</param>
         /// <returns></returns>
-        Key Unpack(byte[] bytes);
+        Key Unpack(byte[] data);
     }
 
     /// <summary>
@@ -238,11 +238,11 @@ namespace Keyczar
             /// <summary>
             /// Unpacks the specified bytes into a key.
             /// </summary>
-            /// <param name="bytes">The bytes.</param>
+            /// <param name="data">The bytes.</param>
             /// <returns></returns>
-            public Key Unpack(byte[] bytes)
+            public Key Unpack(byte[] data)
             {
-                using (Stream input = new MemoryStream(bytes))
+                using (Stream input = new MemoryStream(data))
                 {
                     var lengthBuffer = new byte[4];
                     input.Read(lengthBuffer, 0, lengthBuffer.Length);

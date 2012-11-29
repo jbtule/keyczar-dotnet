@@ -23,18 +23,18 @@ namespace Keyczar
     /// <summary>
     /// Extension Methods for IKeySet
     /// </summary>
-    public static class StandardKeysetOperations
+    public static class StandardKeySetOperations
     {
         /// <summary>
         /// Get's deep copy of Key from IKeyset
         /// </summary>
-        /// <param name="keyset">The keyset.</param>
+        /// <param name="keySet">The keyset.</param>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        public static Key GetKey(this IKeySet keyset, int version)
+        public static Key GetKey(this IKeySet keySet, int version)
         {
-            var keyData = keyset.GetKeyData(version);
-            var key = Key.Read(keyset.Metadata.Type, keyData);
+            var keyData = keySet.GetKeyData(version);
+            var key = Key.Read(keySet.Metadata.KeyType, keyData);
             keyData.Clear();
             return key;
         }

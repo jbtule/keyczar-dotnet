@@ -103,18 +103,18 @@ namespace KeyczarTool
                 }
                 else
                 {
-                    if (keySet.Metadata.Type != importedKeySet.Metadata.Type)
+                    if (keySet.Metadata.KeyType != importedKeySet.Metadata.KeyType)
                     {
                         if (!keySet.Metadata.Versions.Any())
                         {
-                            keySet.Metadata.Type = importedKeySet.Metadata.Type;
+                            keySet.Metadata.KeyType = importedKeySet.Metadata.KeyType;
                         }
                         else
                         {
                             ret = -1;
                             Console.WriteLine(Localized.MsgConflictingKeyTypes,
-                                              keySet.Metadata.Type.Identifier,
-                                              importedKeySet.Metadata.Type);
+                                              keySet.Metadata.KeyType.Identifier,
+                                              importedKeySet.Metadata.KeyType);
                         }
                     }
                    

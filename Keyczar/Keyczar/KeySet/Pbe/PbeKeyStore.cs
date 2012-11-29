@@ -39,16 +39,16 @@ namespace Keyczar.Pbe
         /// <summary>
         /// Random number generator
         /// </summary>
-        protected static readonly SecureRandom Random = new SecureRandom();
+        protected static SecureRandom Random = new SecureRandom();
 
         /// <summary>
         /// Encrypts the key data.
         /// </summary>
         /// <param name="key">The key.</param>
-        /// <param name="passswordPrompt">The passsword prompt.</param>
-        /// <param name="interationCount">The interation count.</param>
+        /// <param name="passwordPrompt">The password prompt.</param>
+        /// <param name="iterationCount">The interation count.</param>
         /// <returns></returns>
-        public static PbeKeyStore EncryptKeyData(byte[] key, Func<string> passswordPrompt, int interationCount)
+        public static PbeKeyStore EncryptKeyData(byte[] key, Func<string> passwordPrompt, int iterationCount)
         {
 
 
@@ -56,14 +56,14 @@ namespace Keyczar.Pbe
                           {
                               Cipher = PbeKeyType.AES_128,
                               Hmac = PbeHashType.HMAC_SHA1,
-                              IterationCount = interationCount,
+                              IterationCount = iterationCount,
                               Salt = new byte[16]
                           };
 
             Random.NextBytes(pks.Salt);
 
             var pbeKey = new PbeAesKey(){Size = 128};
-            pbeKey.AesKeyBytes = pks.GetDerivedBytes(pbeKey.Size / 8, passswordPrompt);
+            pbeKey.AesKeyBytes = pks.GetDerivedBytes(pbeKey.Size / 8, passwordPrompt);
             pks.IV = pbeKey.IV;
 
             using (pbeKey)
@@ -121,15 +121,15 @@ namespace Keyczar.Pbe
         /// Gets the derived bytes using the store's parameters
         /// </summary>
         /// <param name="length">The length.</param>
-        /// <param name="passswordPrompt">The passsword prompt.</param>
+        /// <param name="passwordPrompt">The password prompt.</param>
         /// <returns></returns>
         /// <exception cref="InvalidKeySetException">Hmac_Sha256 not supported.</exception>
-        protected byte[] GetDerivedBytes(int length, Func<string> passswordPrompt)
+        protected byte[] GetDerivedBytes(int length, Func<string> passwordPrompt)
         {
             Rfc2898DeriveBytes pdb;
             if (Hmac == PbeHashType.HMAC_SHA1)
             {
-                pdb = new Rfc2898DeriveBytes(passswordPrompt(), Salt, IterationCount);
+                pdb = new Rfc2898DeriveBytes(passwordPrompt(), Salt, IterationCount);
             }
             else if (Hmac == PbeHashType.HMAC_SHA256)
             {
@@ -148,9 +148,9 @@ namespace Keyczar.Pbe
         /// <summary>
         /// Decrypts the key data.
         /// </summary>
-        /// <param name="passswordPrompt">The passsword prompt.</param>
+        /// <param name="passwordPrompt">The passsword prompt.</param>
         /// <returns></returns>
-        public byte[] DecryptKeyData(Func<string> passswordPrompt)
+        public byte[] DecryptKeyData(Func<string> passwordPrompt)
         {
             var key = new PbeAesKey { IV = IV };
 
@@ -163,7 +163,7 @@ namespace Keyczar.Pbe
                 throw new InvalidKeySetException("Unknown Pbe Cipher");
             }
 
-            key.AesKeyBytes = GetDerivedBytes(key.Size/8, passswordPrompt);
+            key.AesKeyBytes = GetDerivedBytes(key.Size/8, passwordPrompt);
 
                 using (key)
                 using(var ks = new ImportedKeySet(key,KeyPurpose.DECRYPT_AND_ENCRYPT,"Pbe key"))
@@ -177,16 +177,16 @@ namespace Keyczar.Pbe
 
 		[JsonConverter(typeof(JsonConverter))]
 		internal class HardcodedKeyType:KeyType{
-			Type _type;
-			internal HardcodedKeyType(String identifer,Type type):base(identifer){
-				_type =type;
+			Type _representedType;
+			internal HardcodedKeyType(String identifier,Type representedType):base(identifier){
+				_representedType =representedType;
 			}
 
-			public override Type Type{
+			public override Type RepresentedType{
 				get{
-					return _type;
+					return _representedType;
 				}set{
-					_type = value;
+					_representedType = value;
 				}
 			}
 		}
@@ -201,14 +201,14 @@ namespace Keyczar.Pbe
                 Random.NextBytes(IV);
             }
 
-			KeyType _type =new HardcodedKeyType("PBE_AES",typeof(PbeAesKey));
+			KeyType _keyType =new HardcodedKeyType("PBE_AES",typeof(PbeAesKey));
 
 			[JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
-			public override KeyType Type {
+			public override KeyType KeyType {
 				get {
-					return _type;
+					return _keyType;
 				}set{
-					_type =value;
+					_keyType =value;
 				}
 			}
 
@@ -240,70 +240,6 @@ namespace Keyczar.Pbe
                 return stream;
             }
 
-        }
-    }
-
-    /// <summary>
-    /// Type of cipher to use for encrypting keys with password.
-    /// </summary>
-    public class PbeKeyType : StringType
-    {
-        /// <summary>
-        /// AES 128
-        /// </summary>
-        public static readonly PbeKeyType AES_128 = "AES128";
-
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="PbeKeyType"/>.
-        /// </summary>
-        /// <param name="identifer">The identifer.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator PbeKeyType(string identifer)
-        {
-            return new PbeKeyType(identifer);
-        }
-
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PbeKeyType"/> class.
-        /// </summary>
-        /// <param name="identifer">The identifer.</param>
-        public PbeKeyType(string identifer) : base(identifer)
-        {
-        }
-    }
-
-    /// <summary>
-    /// Type of Hash to use for the Password Derived Bytes
-    /// </summary>
-    public class PbeHashType : StringType
-    {
-        /// <summary>
-        /// Hmac Sha1
-        /// </summary>
-        public static readonly PbeHashType HMAC_SHA1 = "HMAC_SHA1";
-        /// <summary>
-        /// Hmac Sha256
-        /// </summary>
-        public static readonly PbeHashType HMAC_SHA256 = "HMAC_SHA256";
-
-        /// <summary>
-        /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="PbeHashType"/>.
-        /// </summary>
-        /// <param name="identifer">The identifer.</param>
-        /// <returns>The result of the conversion.</returns>
-        public static implicit operator PbeHashType(string identifer)
-        {
-            return new PbeHashType(identifer);
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PbeHashType"/> class.
-        /// </summary>
-        /// <param name="identifer">The identifer.</param>
-        public PbeHashType(string identifer) : base(identifer)
-        {
         }
     }
 }

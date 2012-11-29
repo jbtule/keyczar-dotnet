@@ -86,7 +86,7 @@ namespace Keyczar
         /// <exception cref="InvalidCryptoDataException">Ciphertext was invalid!</exception>
         public void Decrypt(Stream input, Stream output)
         {
-            using (var reader = new NonDestructiveBinaryReader(input))
+            using (var reader = new NondestructiveBinaryReader(input))
             {
                 byte[] keyHash;
                 var header = Utility.ReadHeader(input, out keyHash);

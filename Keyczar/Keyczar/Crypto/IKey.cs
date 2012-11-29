@@ -47,7 +47,7 @@ namespace Keyczar.Crypto
     /// <summary>
     /// interfaces for keys that can be used for signing &amp; verifying
     /// </summary>
-    public interface ISignerKey : IVerifierkey
+    public interface ISignerKey : IVerifierKey
     {
         /// <summary>
         /// Gets the signing stream.
@@ -59,7 +59,7 @@ namespace Keyczar.Crypto
     /// <summary>
     /// Interface for keys that can be used for verifying
     /// </summary>
-    public interface IVerifierkey : IKey
+    public interface IVerifierKey : IKey
     {
         /// <summary>
         /// Gets the verifying stream.

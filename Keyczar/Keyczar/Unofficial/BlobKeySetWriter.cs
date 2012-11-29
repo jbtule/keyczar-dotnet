@@ -29,7 +29,7 @@ namespace Keyczar.Unofficial
     public class BlobKeySetWriter:IKeySetWriter, IDisposable
     {
         private Stream _writeStream;
-        ZipFile _zipFile = new NonDestructiveZipFile();
+        ZipFile _zipFile = new NondestructiveZipFile();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlobKeySetWriter"/> class.

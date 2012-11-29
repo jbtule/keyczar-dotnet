@@ -19,21 +19,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
-namespace Keyczar.Util.NonDestructive
+namespace Keyczar.Util
 {
     /// <summary>
     /// Wraps a stream to limit it's length
     /// </summary>
-    public class NonDestructiveLengthLimitingStream:Stream
+    public class NondestructiveLengthLimitingStream:Stream
     {
         private  Stream _stream;
         private long _length;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NonDestructiveLengthLimitingStream"/> class.
+        /// Initializes a new instance of the <see cref="NondestructiveLengthLimitingStream"/> class.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public NonDestructiveLengthLimitingStream(Stream stream)
+        public NondestructiveLengthLimitingStream(Stream stream)
         {
             _stream = stream;
         }

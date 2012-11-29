@@ -13,11 +13,14 @@
  *  limitations under the License.
  */
 
+using System.ComponentModel;
+
 namespace Keyczar
 {
     /// <summary>
     /// The key status
     /// </summary>
+    [ImmutableObject(true)]
     public class KeyStatus:Util.StringType
     {
         /// <summary>
@@ -36,18 +39,18 @@ namespace Keyczar
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="KeyStatus"/>.
         /// </summary>
-        /// <param name="identifer">The identifer.</param>
+        /// <param name="identifier">The identifer.</param>
         /// <returns>The result of the conversion.</returns>
-        public static  implicit operator KeyStatus(string identifer)
+        public static  implicit operator KeyStatus(string identifier)
         {
-            return new KeyStatus(identifer);
+            return new KeyStatus(identifier);
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyStatus"/> class.
         /// </summary>
-        /// <param name="identifer">The identifer.</param>
-        public KeyStatus(string identifer): base(identifer)
+        /// <param name="identifier">The identifer.</param>
+        public KeyStatus(string identifier): base(identifier)
         {
         }
     }

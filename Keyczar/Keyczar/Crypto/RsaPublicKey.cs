@@ -33,7 +33,7 @@ namespace Keyczar.Crypto
     /// <summary>
     /// The RSA public key
     /// </summary>
-    public class RsaPublicKey : Key,IEncrypterKey,IVerifierkey
+    public class RsaPublicKey : Key,IEncrypterKey,IVerifierKey
     {
         /// <summary>
         /// PkcsPadding identifier

@@ -64,7 +64,7 @@ namespace KeyczarTool
             using (d2ks)
             {
 
-                if (!ks.ExportPrimaryAsPKCS(_destination, CachedPrompt.Password(() =>
+                if (!ks.ExportPrimaryAsPkcs(_destination, CachedPrompt.Password(() =>
                                                                                     {
                                                                                         Console.WriteLine(
                                                                                             Localized.MsgForExport);

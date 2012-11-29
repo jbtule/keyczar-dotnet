@@ -82,20 +82,20 @@ namespace Keyczar
         /// Gets the keys.
         /// </summary>
         /// <param name="signature">The signature.</param>
-        /// <param name="trimmedSig">The trimmed sig.</param>
+        /// <param name="trimmedSignature">The trimmed sig.</param>
         /// <returns></returns>
         /// <exception cref="InvalidCryptoDataException">Signature missing header information.</exception>
-        protected virtual IEnumerable<IVerifierkey> GetKeys( byte[] signature, out byte[] trimmedSig)
+        protected virtual IEnumerable<IVerifierKey> GetKeys( byte[] signature, out byte[] trimmedSignature)
         {
             if(signature.Length < HEADER_LENGTH)
                 throw new InvalidCryptoDataException("Signature missing header information.");
 
             byte[] keyHash;
             Utility.ReadHeader(signature, out keyHash);
-            trimmedSig = new byte[signature.Length - HEADER_LENGTH];
-            Array.Copy(signature, HEADER_LENGTH, trimmedSig, 0, trimmedSig.Length);
+            trimmedSignature = new byte[signature.Length - HEADER_LENGTH];
+            Array.Copy(signature, HEADER_LENGTH, trimmedSignature, 0, trimmedSignature.Length);
             var keys = GetKey(keyHash);
-            return keys.Select(it=>it as IVerifierkey);
+            return keys.Select(it=>it as IVerifierKey);
         }
 
         /// <summary>
@@ -114,7 +114,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="verifyingStream">The verifying stream.</param>
         /// <param name="extra">The extra data passed by prefixData</param>
-        protected virtual void PrefixData(VerifyingStream verifyingStream, object extra)
+        protected virtual void PrefixDataVerify(VerifyingStream verifyingStream, object extra)
         {
             
         }
@@ -123,7 +123,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="verifyingStream">The verifying stream.</param>
         /// <param name="extra">The extra data passed by postfixData</param>
-        protected virtual void PostfixData(VerifyingStream verifyingStream, object extra)
+        protected virtual void PostfixDataVerify(VerifyingStream verifyingStream, object extra)
         {
             verifyingStream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
         }
@@ -139,7 +139,7 @@ namespace Keyczar
         protected virtual bool Verify(Stream data, byte[] signature, object prefixData, object postfixData)
         {
 
-            using (var reader = new NonDestructiveBinaryReader(data))
+            using (var reader = new NondestructiveBinaryReader(data))
             {
                 byte[] trimmedSig;
                 var startPosition = data.Position;
@@ -149,13 +149,13 @@ namespace Keyczar
                     //in case there aren't any keys that match that hash we are going to fake verify.
                     using (var verifyStream = key.Maybe(m => m.GetVerifyingStream(), () => new DummyStream()))
                     {
-                        PrefixData(verifyStream,prefixData);
+                        PrefixDataVerify(verifyStream,prefixData);
                         while (reader.Peek() != -1)
                         {
                             byte[] buffer = reader.ReadBytes(BUFFER_SIZE);
                             verifyStream.Write(buffer, 0, buffer.Length);
                         }
-                            PostfixData(verifyStream,postfixData);
+                            PostfixDataVerify(verifyStream,postfixData);
 
                         if (verifyStream.VerifySignature(trimmedSig))
                         {

@@ -17,7 +17,6 @@
 using System;
 using System.IO;
 using Keyczar.Util;
-using Keyczar.Util.NonDestructive;
 
 namespace Keyczar
 {
@@ -112,7 +111,7 @@ namespace Keyczar
             public bool VerifyHidden(Stream signedMessage, byte[] hidden)
             {
         
-                using (var reader = new NonDestructiveBinaryReader(signedMessage))
+                using (var reader = new NondestructiveBinaryReader(signedMessage))
                 {
                     var header = reader.ReadBytes(HEADER_LENGTH);
                     var length = Utility.ToInt32(reader.ReadBytes(4));
@@ -132,7 +131,7 @@ namespace Keyczar
                            var buffer = reader.ReadBytes(BUFFER_SIZE);
                            sigStream.Write(buffer, 0, buffer.Length);
                         }
-                        using (var signedMessage2 = new NonDestructiveLengthLimitingStream(signedMessage))
+                        using (var signedMessage2 = new NondestructiveLengthLimitingStream(signedMessage))
                         {
                             signedMessage.Seek(position, SeekOrigin.Begin);
                             signedMessage2.SetLength(position + length);
@@ -148,7 +147,7 @@ namespace Keyczar
             /// </summary>
             /// <param name="verifyingStream">The verifying stream.</param>
             /// <param name="extra">The extra data passed by postFixData</param>
-            protected override void PostfixData(Crypto.Streams.VerifyingStream verifyingStream, object extra)
+            protected override void PostfixDataVerify(Crypto.Streams.VerifyingStream verifyingStream, object extra)
             {
                 var bytes = extra as byte[] ?? new byte[0];
 
@@ -156,7 +155,7 @@ namespace Keyczar
                 verifyingStream.Write(len, 0, len.Length);
                 verifyingStream.Write(bytes, 0, bytes.Length);
 
-                base.PostfixData(verifyingStream, extra: null);
+                base.PostfixDataVerify(verifyingStream, extra: null);
             }
         }
 	}

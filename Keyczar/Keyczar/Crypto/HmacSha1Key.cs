@@ -26,7 +26,7 @@ namespace Keyczar.Crypto
     /// <summary>
     /// The Hmac 256 Sha1 key
     /// </summary>
-    public class HmacSha1Key:Key,ISignerKey,IVerifierkey
+    public class HmacSha1Key:Key,ISignerKey,IVerifierKey
     {
         /// <summary>
         /// The hash size is 160 bits

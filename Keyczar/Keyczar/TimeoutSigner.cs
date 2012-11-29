@@ -33,8 +33,8 @@ namespace Keyczar
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeoutSigner"/> class.
         /// </summary>
-        /// <param name="keysetLocation">The keyset location.</param>
-        public TimeoutSigner(string keysetLocation) : this(new KeySet(keysetLocation))
+        /// <param name="keySetLocation">The keyset location.</param>
+        public TimeoutSigner(string keySetLocation) : this(new KeySet(keySetLocation))
         {
         }
 
@@ -128,7 +128,7 @@ namespace Keyczar
             public byte[] Sign(Stream data, DateTime expiration)
             {
 				using(var stream = new MemoryStream()){
-					Sign(data,stream, prefixData:expiration, postfixData: null, sigData: expiration);
+					Sign(data,stream, prefixData:expiration, postfixData: null, signatureData: expiration);
 					stream.Flush();
 					return stream.ToArray();
 				}
@@ -139,9 +139,9 @@ namespace Keyczar
             /// </summary>
             /// <param name="signingStream">The signing stream.</param>
             /// <param name="extra">The extra data passed by prefixData.</param>
-            protected override void PrefixData(HashingStream signingStream, object extra)
+            protected override void PrefixDataSign(HashingStream signingStream, object extra)
             {
-                base.PrefixData(signingStream, extra);
+                base.PrefixDataSign(signingStream, extra);
                 var expiration = FromDateTime((DateTime)extra);
                 var buffer = Utility.GetBytes(expiration);
                 signingStream.Write(buffer, 0, buffer.Length);
@@ -151,15 +151,15 @@ namespace Keyczar
             /// Pads the signature with extra data.
             /// </summary>
             /// <param name="signature">The signature.</param>
-            /// <param name="outstream">The padded signature.</param>
+            /// <param name="outputStream">The padded signature.</param>
             /// <param name="extra">The extra data passed by sigData.</param>
-            protected override void PadSignature(byte[] signature, Stream outstream, object extra)
+            protected override void PadSignature(byte[] signature, Stream outputStream, object extra)
             {
                 var expiration = Utility.GetBytes(FromDateTime((DateTime)extra));
                 var timedSig = new byte[signature.Length + expiration.Length];
                 Array.Copy(expiration,0,timedSig,0,expiration.Length);
                 Array.Copy(signature,0,timedSig,expiration.Length, signature.Length);
-                base.PadSignature(timedSig,outstream, null);
+                base.PadSignature(timedSig,outputStream, null);
             }
 
         }

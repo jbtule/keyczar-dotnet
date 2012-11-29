@@ -25,22 +25,22 @@ namespace Keyczar.Util
     /// <summary>
     /// Binary writer that doesn't close underlying stream when disposed
     /// </summary>
-    public class NonDistructiveBinaryWriter:BinaryWriter
+    public class NondestructiveBinaryWriter:BinaryWriter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NonDistructiveBinaryWriter"/> class.
+        /// Initializes a new instance of the <see cref="NondestructiveBinaryWriter"/> class.
         /// </summary>
         /// <param name="input">The input.</param>
-        public NonDistructiveBinaryWriter(Stream input) : base(input)
+        public NondestructiveBinaryWriter(Stream input) : base(input)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NonDistructiveBinaryWriter"/> class.
+        /// Initializes a new instance of the <see cref="NondestructiveBinaryWriter"/> class.
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="encoding">The encoding.</param>
-         public NonDistructiveBinaryWriter(Stream input, Encoding encoding)
+         public NondestructiveBinaryWriter(Stream input, Encoding encoding)
                    : base(input, encoding)
         {
         }

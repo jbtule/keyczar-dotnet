@@ -25,25 +25,25 @@ namespace Keyczar.Util
     /// <summary>
     /// Reader that won't close the stream when disposed
     /// </summary>
-    public class NonDestructiveBinaryReader: BinaryReader
+    public class NondestructiveBinaryReader: BinaryReader
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NonDestructiveBinaryReader"/> class.
+        /// Initializes a new instance of the <see cref="NondestructiveBinaryReader"/> class.
         /// </summary>
         /// <param name="input">The input.</param>
-        public NonDestructiveBinaryReader(Stream input) : base(input)
+        public NondestructiveBinaryReader(Stream input) : base(input)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NonDestructiveBinaryReader"/> class.
+        /// Initializes a new instance of the <see cref="NondestructiveBinaryReader"/> class.
         /// </summary>
         /// <param name="input">The supplied stream.</param>
         /// <param name="encoding">The character encoding.</param>
         /// <exception cref="T:System.ArgumentException">The stream does not support reading, the stream is null, or the stream is already closed. </exception>
         /// <exception cref="T:System.ArgumentNullException">
         /// 	<paramref name="encoding"/> is null. </exception>
-        public NonDestructiveBinaryReader(Stream input, Encoding encoding) : base(input, encoding)
+        public NondestructiveBinaryReader(Stream input, Encoding encoding) : base(input, encoding)
         {
         }
 

@@ -24,14 +24,14 @@ namespace Keyczar.Util
     /// <summary>
     /// Streamreader that won't close the stream when finished
     /// </summary>
-    public class NonDestructiveStreamReader:StreamReader
+    public class NondestructiveStreamReader:StreamReader
     {
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NonDestructiveStreamReader"/> class.
+        /// Initializes a new instance of the <see cref="NondestructiveStreamReader"/> class.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public NonDestructiveStreamReader(Stream stream):base(stream)
+        public NondestructiveStreamReader(Stream stream):base(stream)
         {
             
         }

@@ -46,12 +46,12 @@ namespace Keyczar.Util
         /// Runs the action if the target is not null or the default action if it is null.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <typeparam name="R"></typeparam>
+        /// <typeparam name="TReturn"></typeparam>
         /// <param name="target">The target.</param>
         /// <param name="action">The action.</param>
         /// <param name="defaultAction">The default action.</param>
         /// <returns></returns>
-        public static R Maybe<T, R>(this T target, Func<T, R> action, Func<R> defaultAction) where T : class
+        public static TReturn Maybe<T, TReturn>(this T target, Func<T, TReturn> action, Func<TReturn> defaultAction) where T : class
         {
             if (target != null)
             {

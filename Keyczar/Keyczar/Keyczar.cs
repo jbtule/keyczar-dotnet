@@ -42,10 +42,11 @@ namespace Keyczar
         /// Keyczar format version
         /// </summary>
         public static readonly byte FORMAT_VERSION = 0;
+
         /// <summary>
         /// Keyczar format version bytes for header
         /// </summary>
-        public static readonly byte[] FORMAT_BYTES = new []{ FORMAT_VERSION };
+        public static readonly ReadOnlyArray<byte> FORMAT_BYTES = ReadOnlyArray.Create(FORMAT_VERSION);
         /// <summary>
         /// Full keyczar format header length
         /// </summary>

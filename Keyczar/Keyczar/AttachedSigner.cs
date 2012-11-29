@@ -124,7 +124,7 @@ namespace Keyczar
                     throw new ArgumentException("Data is too large to attach signature.", "data");
                 }
 
-                base.Sign(data, signedData, prefixData: null, postfixData: hidden, sigData: Tuple.Create(fulllength,position,data));
+                base.Sign(data, signedData, prefixData: null, postfixData: hidden, signatureData: Tuple.Create(fulllength,position,data));
             }
 
 
@@ -134,7 +134,7 @@ namespace Keyczar
             /// </summary>
             /// <param name="signingStream">The signing stream.</param>
             /// <param name="extra">The extra data passed by postfixData.</param>
-            protected override void PostfixData(Crypto.Streams.HashingStream signingStream, object extra)
+            protected override void PostfixDataSign(Crypto.Streams.HashingStream signingStream, object extra)
             {
                 var bytes = extra as byte[] ?? new byte[0];
            
@@ -142,33 +142,33 @@ namespace Keyczar
                     signingStream.Write(len, 0, len.Length);
                     signingStream.Write(bytes,0, bytes.Length);
 
-                base.PostfixData(signingStream, extra:null);
+                base.PostfixDataSign(signingStream, extra:null);
             }
 
             /// <summary>
             /// Pads the signature with extra data.
             /// </summary>
             /// <param name="signature">The signature.</param>
-            /// <param name="outstream">The padded signature.</param>
+            /// <param name="outputStream">The padded signature.</param>
             /// <param name="extra">The extra data passed by sigData.</param>
-            protected override void PadSignature(byte[] signature, Stream outstream, object extra)
+            protected override void PadSignature(byte[] signature, Stream outputStream, object extra)
             {
                 var padData = (Tuple<long, long, Stream>) extra;
                 var key = GetPrimaryKey() as ISignerKey;
-                outstream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
-                outstream.Write(key.GetKeyHash(), 0, KEY_HASH_LENGTH);
+                outputStream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
+                outputStream.Write(key.GetKeyHash(), 0, KEY_HASH_LENGTH);
                 var lengthBytes = Utility.GetBytes((int) (padData.Item1 - padData.Item2));
-                outstream.Write(lengthBytes, 0, lengthBytes.Length);
+                outputStream.Write(lengthBytes, 0, lengthBytes.Length);
                 padData.Item3.Seek(padData.Item2, SeekOrigin.Begin);
-                using (var reader = new NonDestructiveBinaryReader(padData.Item3))
+                using (var reader = new NondestructiveBinaryReader(padData.Item3))
                 {
                     while (reader.Peek() != -1)
                     {
                         byte[] buffer = reader.ReadBytes(BUFFER_SIZE);
-                        outstream.Write(buffer, 0, buffer.Length);
+                        outputStream.Write(buffer, 0, buffer.Length);
                     }
                 }
-                outstream.Write(signature, 0, signature.Length);
+                outputStream.Write(signature, 0, signature.Length);
             }
 		}
 	}

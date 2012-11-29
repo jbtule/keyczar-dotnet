@@ -50,7 +50,7 @@ namespace Keyczar.Compat
         /// </summary>
         /// <param name="verifyingStream">The verifying stream.</param>
         /// <param name="extra">The extra data passed by prefixData</param>
-        protected override void PrefixData(VerifyingStream verifyingStream, object extra)
+        protected override void PrefixDataVerify(VerifyingStream verifyingStream, object extra)
         {
             
         }
@@ -60,7 +60,7 @@ namespace Keyczar.Compat
         /// </summary>
         /// <param name="verifyingStream">The verifying stream.</param>
         /// <param name="extra">The extra data passed by postFixData</param>
-        protected override void PostfixData(VerifyingStream verifyingStream, object extra)
+        protected override void PostfixDataVerify(VerifyingStream verifyingStream, object extra)
         {
            
         }
@@ -69,12 +69,12 @@ namespace Keyczar.Compat
         /// Gets the keys.
         /// </summary>
         /// <param name="signature">The signature.</param>
-        /// <param name="trimmedSig">The trimmed signature.</param>
+        /// <param name="trimmedSignature">The trimmed signature.</param>
         /// <returns></returns>
-        protected override IEnumerable<IVerifierkey> GetKeys(byte[] signature, out byte[] trimmedSig)
+        protected override IEnumerable<IVerifierKey> GetKeys(byte[] signature, out byte[] trimmedSignature)
         {
-            trimmedSig = signature;
-            return GetAllKeys().OfType<IVerifierkey>();
+            trimmedSignature = signature;
+            return GetAllKeys().OfType<IVerifierKey>();
         }
     }
 }

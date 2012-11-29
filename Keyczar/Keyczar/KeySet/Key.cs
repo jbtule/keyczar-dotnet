@@ -35,7 +35,7 @@ namespace Keyczar
         /// <summary>
         /// Random byte generator
         /// </summary>
-        protected static readonly SecureRandom Random = new SecureRandom();
+        protected static SecureRandom Random = new SecureRandom();
 
         /// <summary>
         /// Gets the key hash.
@@ -58,7 +58,7 @@ namespace Keyczar
         /// </summary>
         /// <value>The key type.</value>
         [JsonIgnore]
-        public virtual KeyType Type
+        public virtual KeyType KeyType
         {
             get
             {
@@ -84,7 +84,7 @@ namespace Keyczar
         /// <returns></returns>
         public static Key Read(KeyType type, byte[] keyData)
         {
-            var key = (Key)JsonConvert.DeserializeObject(Keyczar.DefaultEncoding.GetString(keyData), type.Type);
+            var key = (Key)JsonConvert.DeserializeObject(Keyczar.DefaultEncoding.GetString(keyData), type.RepresentedType);
             return key;
         }
 
@@ -105,7 +105,7 @@ namespace Keyczar
             {
                 throw new InvalidKeyTypeException(string.Format("Invalid Size: {0}!", size));
             }
-            var key =(Key)Activator.CreateInstance(type.Type);
+            var key =(Key)Activator.CreateInstance(type.RepresentedType);
             key.GenerateKey(size);
 			key.Size = size;
             return key;

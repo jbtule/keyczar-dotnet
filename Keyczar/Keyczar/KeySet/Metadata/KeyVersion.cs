@@ -87,6 +87,64 @@ namespace Keyczar
             return 1;
         }
 
+
+
+        /// <summary>
+        /// less than the specified a.
+        /// </summary>
+        /// <param name="a">A.</param>
+        /// <param name="b">The b.</param>
+        /// <returns></returns>
+        public static bool operator <(KeyVersion a, KeyVersion b)
+        {
+            return a.CompareTo(b) < 0;
+        }
+
+        /// <summary>
+        /// greater thanover the specified a.
+        /// </summary>
+        /// <param name="a">A.</param>
+        /// <param name="b">The b.</param>
+        /// <returns></returns>
+        public static bool operator >(KeyVersion a, KeyVersion b)
+        {
+            return a.CompareTo(b) > 0;
+        }
+
+        /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="a">A.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(KeyVersion a, KeyVersion b)
+        {
+            // If both are null, or both are same instance, return true.
+            if (System.Object.ReferenceEquals(a, b))
+            {
+                return true;
+            }
+
+            // If one is null, but not both, return false.
+            if (((object)a == null) || ((object)b == null))
+            {
+                return false;
+            }
+
+            return a.Equals(b);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="a">A.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(KeyVersion a, KeyVersion b)
+        {
+            return !(a == b);
+        }
+
         /// <summary>
         /// Equals the specified other.
         /// </summary>

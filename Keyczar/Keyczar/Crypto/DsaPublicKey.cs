@@ -31,7 +31,7 @@ namespace Keyczar.Crypto
     /// <summary>
     /// The Dsa Public Key
     /// </summary>
-    public class DsaPublicKey : Key,IVerifierkey
+    public class DsaPublicKey : Key,IVerifierKey
     {
         /// <summary>
         /// Gets or sets the P.
