@@ -113,7 +113,7 @@ namespace Keyczar
             using(var stream = new MemoryStream(signature))
             using (var reader = new NondestructiveBinaryReader(stream))
             {
-                reader.ReadBytes(HEADER_LENGTH);
+                reader.ReadBytes(HeaderLength);
                 var expiration =reader.ReadBytes(TimeoutLength);
                 var expMilliseconds = Utility.ToInt64(expiration);
                 return milliseconds < expMilliseconds;
@@ -153,10 +153,10 @@ namespace Keyczar
             protected override bool Verify(Stream data, byte[] signature, object prefixData, object postfixData)
             {
                 var newsig = new byte[signature.Length - TimeoutLength];
-                Array.Copy(signature,0,newsig,0,HEADER_LENGTH);
-                Array.Copy(signature,HEADER_LENGTH+TimeoutLength,newsig,HEADER_LENGTH,newsig.Length - HEADER_LENGTH);
+                Array.Copy(signature,0,newsig,0,HeaderLength);
+                Array.Copy(signature,HeaderLength+TimeoutLength,newsig,HeaderLength,newsig.Length - HeaderLength);
                 var expireBytes = new byte[TimeoutLength];
-                Array.Copy(signature,HEADER_LENGTH, expireBytes,0,TimeoutLength);
+                Array.Copy(signature,HeaderLength, expireBytes,0,TimeoutLength);
 
                 return base.Verify(data, newsig, expireBytes, postfixData);
             }

@@ -54,8 +54,8 @@ namespace Keyczar.Pbe
 
             var pks = new PbeKeyStore()
                           {
-                              Cipher = PbeKeyType.AES_128,
-                              Hmac = PbeHashType.HMAC_SHA1,
+                              Cipher = PbeKeyType.Aes128,
+                              Hmac = PbeHashType.HmacSha1,
                               IterationCount = iterationCount,
                               Salt = new byte[16]
                           };
@@ -67,7 +67,7 @@ namespace Keyczar.Pbe
             pks.IV = pbeKey.IV;
 
             using (pbeKey)
-            using (var ks = new ImportedKeySet(pbeKey, KeyPurpose.DECRYPT_AND_ENCRYPT, "Pbe key"))
+            using (var ks = new ImportedKeySet(pbeKey, KeyPurpose.DecryptAndEncrypt, "Pbe key"))
             using (var crypter = new Crypter(ks))
             {
                 pks.Key = crypter.Encrypt(key);
@@ -127,11 +127,11 @@ namespace Keyczar.Pbe
         protected byte[] GetDerivedBytes(int length, Func<string> passwordPrompt)
         {
             Rfc2898DeriveBytes pdb;
-            if (Hmac == PbeHashType.HMAC_SHA1)
+            if (Hmac == PbeHashType.HmacSha1)
             {
                 pdb = new Rfc2898DeriveBytes(passwordPrompt(), Salt, IterationCount);
             }
-            else if (Hmac == PbeHashType.HMAC_SHA256)
+            else if (Hmac == PbeHashType.HmacSha256)
             {
                 throw new InvalidKeySetException("Hmac_Sha256 not supported.");
             }
@@ -154,7 +154,7 @@ namespace Keyczar.Pbe
         {
             var key = new PbeAesKey { IV = IV };
 
-            if (Cipher == PbeKeyType.AES_128)
+            if (Cipher == PbeKeyType.Aes128)
             {
                 key.Size = 128;
             }
@@ -166,7 +166,7 @@ namespace Keyczar.Pbe
             key.AesKeyBytes = GetDerivedBytes(key.Size/8, passwordPrompt);
 
                 using (key)
-                using(var ks = new ImportedKeySet(key,KeyPurpose.DECRYPT_AND_ENCRYPT,"Pbe key"))
+                using(var ks = new ImportedKeySet(key,KeyPurpose.DecryptAndEncrypt,"Pbe key"))
                 using(var crypter = new Crypter(ks))
                 {
                      return crypter.Decrypt(Key);

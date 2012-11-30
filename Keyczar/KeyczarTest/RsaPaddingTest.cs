@@ -75,10 +75,10 @@ namespace KeyczarTest
           public void setUp()
           {
 
-              defaultReader = new ImportedKeySet(Key.Read(KeyType.RSA_PRIV, BuildKey("")), KeyPurpose.DECRYPT_AND_ENCRYPT);
-              oaepReader = new ImportedKeySet(Key.Read(KeyType.RSA_PRIV, BuildKey(oaepPaddingString)), KeyPurpose.DECRYPT_AND_ENCRYPT);
-              pkcsReader = new ImportedKeySet(Key.Read(KeyType.RSA_PRIV, BuildKey(pkcsPaddingString)), KeyPurpose.DECRYPT_AND_ENCRYPT);
-              invalidReader = new ImportedKeySet(Key.Read(KeyType.RSA_PRIV, BuildKey(invalidPaddingString)), KeyPurpose.DECRYPT_AND_ENCRYPT);
+              defaultReader = new ImportedKeySet(Key.Read(KeyType.RsaPriv, BuildKey("")), KeyPurpose.DecryptAndEncrypt);
+              oaepReader = new ImportedKeySet(Key.Read(KeyType.RsaPriv, BuildKey(oaepPaddingString)), KeyPurpose.DecryptAndEncrypt);
+              pkcsReader = new ImportedKeySet(Key.Read(KeyType.RsaPriv, BuildKey(pkcsPaddingString)), KeyPurpose.DecryptAndEncrypt);
+              invalidReader = new ImportedKeySet(Key.Read(KeyType.RsaPriv, BuildKey(invalidPaddingString)), KeyPurpose.DecryptAndEncrypt);
           }
 
           [Test]

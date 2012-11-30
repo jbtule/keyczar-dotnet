@@ -123,8 +123,8 @@ namespace KeyczarTool
                 using(inStream)
                 using(outstream)
                 {
-                    if(ks.Metadata.Purpose == KeyPurpose.DECRYPT_AND_ENCRYPT
-                        || ks.Metadata.Purpose == KeyPurpose.ENCRYPT )
+                    if(ks.Metadata.Purpose == KeyPurpose.DecryptAndEncrypt
+                        || ks.Metadata.Purpose == KeyPurpose.Encrypt )
                     {
                         using (var ucrypter =  new Crypter(ks))
                         {

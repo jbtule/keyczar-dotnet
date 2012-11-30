@@ -27,19 +27,19 @@ namespace Keyczar
         /// <summary>
         /// Decrypt and Encrypt
         /// </summary>
-        public static readonly KeyPurpose DECRYPT_AND_ENCRYPT = "DECRYPT_AND_ENCRYPT";
+        public static readonly KeyPurpose DecryptAndEncrypt = "DECRYPT_AND_ENCRYPT";
         /// <summary>
         /// Encrypt
         /// </summary>
-        public static readonly KeyPurpose ENCRYPT = "ENCRYPT";
+        public static readonly KeyPurpose Encrypt = "ENCRYPT";
         /// <summary>
         /// Sign and verify
         /// </summary>
-        public static readonly KeyPurpose SIGN_AND_VERIFY = "SIGN_AND_VERIFY";
+        public static readonly KeyPurpose SignAndVerify = "SIGN_AND_VERIFY";
         /// <summary>
         /// Verify
         /// </summary>
-        public static readonly KeyPurpose VERIFY = "VERIFY";
+        public static readonly KeyPurpose Verify = "VERIFY";
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="KeyPurpose"/>.

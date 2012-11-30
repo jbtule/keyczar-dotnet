@@ -200,13 +200,13 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static byte[] ReadHeader(byte[] data, out byte[] keyHash)
         {
-            var output = new byte[Keyczar.HEADER_LENGTH];
+            var output = new byte[Keyczar.HeaderLength];
             
             Array.Copy(data, 0, output, 0, output.Length);
-            keyHash = new byte[Keyczar.KEY_HASH_LENGTH];
-            Array.Copy(data, Keyczar.FORMAT_BYTES.Length, keyHash, 0, keyHash.Length);
+            keyHash = new byte[Keyczar.KeyHashLength];
+            Array.Copy(data, Keyczar.FormatBytes.Length, keyHash, 0, keyHash.Length);
 
-            if(output[0] !=  Keyczar.FORMAT_VERSION)
+            if(output[0] !=  Keyczar.FormatVersion)
                  throw new InvalidCryptoVersionException("The version identifier doesn't match the current framework.");
 
             return output;
@@ -220,10 +220,10 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static byte[] ReadHeader(Stream data, out byte[] keyHash)
         {
-            var output = new byte[Keyczar.HEADER_LENGTH];
+            var output = new byte[Keyczar.HeaderLength];
             data.Read(output, 0, output.Length);
-            keyHash = new byte[Keyczar.KEY_HASH_LENGTH];
-            Array.Copy(output, Keyczar.FORMAT_BYTES.Length, keyHash, 0, keyHash.Length);
+            keyHash = new byte[Keyczar.KeyHashLength];
+            Array.Copy(output, Keyczar.FormatBytes.Length, keyHash, 0, keyHash.Length);
             return output;
         }
 

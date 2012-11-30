@@ -12,7 +12,7 @@ namespace Keyczar.Pbe
         /// <summary>
         /// AES 128
         /// </summary>
-        public static readonly PbeKeyType AES_128 = "AES128";
+        public static readonly PbeKeyType Aes128 = "AES128";
 
 
         /// <summary>

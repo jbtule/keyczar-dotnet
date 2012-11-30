@@ -78,7 +78,7 @@ namespace Keyczar.Crypto
 				magPublicExponent = Utility.GetBytes(PublicExponent); 
             }
 
-            var hash = Utility.HashKeyLengthPrefix(Keyczar.KEY_HASH_LENGTH, magModulus, magPublicExponent);
+            var hash = Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, magModulus, magPublicExponent);
             magModulus.Clear();
             magPublicExponent.Clear();
             return hash;
@@ -100,7 +100,7 @@ namespace Keyczar.Crypto
 				var destPublicExponent = new byte[magPublicExponent.Length+1];
 				Array.Copy(magModulus,0,destModulus,1, magModulus.Length);
 				Array.Copy(magPublicExponent,0,destPublicExponent,1, magPublicExponent.Length);
-				list.Add(Utility.HashKeyLengthPrefix(Keyczar.KEY_HASH_LENGTH, destModulus, destPublicExponent));
+				list.Add(Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, destModulus, destPublicExponent));
 				magModulus.Clear();
 				magPublicExponent.Clear();
 				destModulus.Clear();

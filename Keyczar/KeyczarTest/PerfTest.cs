@@ -55,7 +55,7 @@ namespace KeyczarTest
 		{
 			KeyType type = alg;
 			var key =Key.Generate(type,keysize);
-			using(var ks = new ImportedKeySet(key,KeyPurpose.DECRYPT_AND_ENCRYPT,"Test"))
+			using(var ks = new ImportedKeySet(key,KeyPurpose.DecryptAndEncrypt,"Test"))
 			using(var crypter = new Crypter(ks))
 			{
 				var watchEncrypt = new System.Diagnostics.Stopwatch();

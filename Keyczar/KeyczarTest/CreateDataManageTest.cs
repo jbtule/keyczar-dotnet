@@ -51,7 +51,7 @@ namespace KeyczarTest
             var kspath = Util.TestDataPath(WRITE_DATA, topDir, subDir);
             var writer =new KeySetWriter(kspath, overwrite: true);
 
-            using (var ks = CreateNewKeySet(type, KeyPurpose.DECRYPT_AND_ENCRYPT))
+            using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
             {
                 var success = ks.Save(writer);
                 Expect(success, Is.True);
@@ -63,7 +63,7 @@ namespace KeyczarTest
 
 
             var baseWriter = new KeySetWriter(kscryptpath, overwrite: true);
-            using (var ks = CreateNewKeySet(type, KeyPurpose.DECRYPT_AND_ENCRYPT))
+            using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
             {
                 var success = ks.Save(baseWriter);
                 Expect(success, Is.True);
@@ -87,7 +87,7 @@ namespace KeyczarTest
             using (var encwriter = new PbeKeySetWriter(writer, passPrompt))
             {
 
-                using (var ks = CreateNewKeySet(KeyType.AES, KeyPurpose.DECRYPT_AND_ENCRYPT))
+                using (var ks = CreateNewKeySet(KeyType.Aes, KeyPurpose.DecryptAndEncrypt))
                 {
                     var success = ks.Save(writer);
                     Expect(success, Is.True);
@@ -108,9 +108,9 @@ namespace KeyczarTest
 			var kspath = Util.TestDataPath(WRITE_DATA, topDir);
 			var writer =new KeySetWriter(kspath, overwrite: true);
 			
-			using (var ks = CreateNewKeySet(type, KeyPurpose.DECRYPT_AND_ENCRYPT))
+			using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
 			{
-				int ver = ks.AddKey(KeyStatus.PRIMARY);
+				int ver = ks.AddKey(KeyStatus.Primary);
 				Expect(ver, Is.EqualTo(1));
 
 				var success = ks.Save(writer);
@@ -126,7 +126,7 @@ namespace KeyczarTest
 			using (var ks = new MutableKeySet(kspath))
 			{
 				var status = ks.Demote(1);
-				Expect(status, Is.EqualTo(KeyStatus.ACTIVE));
+				Expect(status, Is.EqualTo(KeyStatus.Active));
 
 				var success = ks.Save(writer);
 				Expect(success, Is.True);
@@ -143,9 +143,9 @@ namespace KeyczarTest
             var kspath = Util.TestDataPath(WRITE_DATA, topDir);
             var writer = new KeySetWriter(kspath, overwrite: true);
 
-            using (var ks = CreateNewKeySet(type, KeyPurpose.SIGN_AND_VERIFY))
+            using (var ks = CreateNewKeySet(type, KeyPurpose.SignAndVerify))
             {
-                var ver = ks.AddKey(KeyStatus.PRIMARY);
+                var ver = ks.AddKey(KeyStatus.Primary);
 				Expect(ver, Is.EqualTo(1));
 			
                 var success = ks.Save(writer);
@@ -160,7 +160,7 @@ namespace KeyczarTest
 
             using (var ks = new MutableKeySet(kspath))
             {
-                var ver = ks.AddKey(KeyStatus.PRIMARY);
+                var ver = ks.AddKey(KeyStatus.Primary);
 				Expect(ver, Is.EqualTo(2));
 
                 var success = ks.Save(writer);
@@ -198,9 +198,9 @@ namespace KeyczarTest
             var kspath = Util.TestDataPath(WRITE_DATA, topDir);
             var writer = new KeySetWriter(kspath, overwrite: true);
 
-            using (var ks = CreateNewKeySet(type, KeyPurpose.DECRYPT_AND_ENCRYPT))
+            using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
             {
-                var ver = ks.AddKey(KeyStatus.PRIMARY);
+                var ver = ks.AddKey(KeyStatus.Primary);
                 Expect(ver, Is.EqualTo(1));
 
                 var success = ks.Save(writer);
@@ -215,7 +215,7 @@ namespace KeyczarTest
 
             using (var ks = new MutableKeySet(kspath))
             {
-                var ver = ks.AddKey(KeyStatus.PRIMARY);
+                var ver = ks.AddKey(KeyStatus.Primary);
                 Expect(ver, Is.EqualTo(2));
 
                 var success = ks.Save(writer);
@@ -262,7 +262,7 @@ namespace KeyczarTest
             var pubWriter = new KeySetWriter(pubPath, overwrite: true);
             using (var ks = CreateNewKeySet(kt, p))
             {
-                var ver =ks.AddKey(KeyStatus.PRIMARY);
+                var ver =ks.AddKey(KeyStatus.Primary);
                 Expect(ver, Is.EqualTo(1));
 
                 using (var pubks = ks.PublicKey())
@@ -290,12 +290,12 @@ namespace KeyczarTest
             var keyMetaData = new KeyMetadata
             {
                 Name = "Blob",
-                Purpose = KeyPurpose.DECRYPT_AND_ENCRYPT,
-                KeyType = KeyType.AES
+                Purpose = KeyPurpose.DecryptAndEncrypt,
+                KeyType = KeyType.Aes
             };
             using (var keySet = new MutableKeySet(keyMetaData))
             {
-                keySet.AddKey(KeyStatus.PRIMARY, 256);
+                keySet.AddKey(KeyStatus.Primary, 256);
 
                 using (var stream = File.OpenWrite(Util.TestDataPath(WRITE_DATA, "cryptkey.zip","unofficial")))
                 using (var writer = new BlobKeySetWriter(stream))
@@ -309,12 +309,12 @@ namespace KeyczarTest
                     var keyMetaData2 = new KeyMetadata
                     {
                         Name = "Blob",
-                        Purpose = KeyPurpose.SIGN_AND_VERIFY,
-                        KeyType = KeyType.RSA_PRIV
+                        Purpose = KeyPurpose.SignAndVerify,
+                        KeyType = KeyType.RsaPriv
                     };
                     using (var keySet2 = new MutableKeySet(keyMetaData2))
                     {
-                        keySet2.AddKey(KeyStatus.PRIMARY);
+                        keySet2.AddKey(KeyStatus.Primary);
                         using (var stream2 = File.OpenWrite(Util.TestDataPath(WRITE_DATA, "signkey.zip", "unofficial")))
                         using (var writer2 = new BlobKeySetWriter(stream2))
                         {
@@ -339,7 +339,7 @@ namespace KeyczarTest
         {
             using (var ks = new MutableKeySet(nonEncryptedKS ?? keySet))
             {
-                var ver = ks.AddKey(KeyStatus.PRIMARY);
+                var ver = ks.AddKey(KeyStatus.Primary);
 				Expect(ver, Is.EqualTo(1));
 
                 var success = ks.Save(nonEncryptedWriter ?? writer);
@@ -354,7 +354,7 @@ namespace KeyczarTest
 
             using (var ks = new MutableKeySet(keySet))
             {
-				var ver = ks.AddKey(KeyStatus.PRIMARY);
+				var ver = ks.AddKey(KeyStatus.Primary);
 				Expect(ver, Is.EqualTo(2));
                 var success = ks.Save(writer);
                 Expect(success, Is.True);

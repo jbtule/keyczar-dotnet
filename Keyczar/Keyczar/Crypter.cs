@@ -47,7 +47,7 @@ namespace Keyczar
         public Crypter(IKeySet keySet)
             : base(keySet)
         {
-            if (keySet.Metadata.Purpose != KeyPurpose.DECRYPT_AND_ENCRYPT)
+            if (keySet.Metadata.Purpose != KeyPurpose.DecryptAndEncrypt)
             {
                 throw new InvalidKeySetException("This key set can not be used for decryption and encryption.");
             }
@@ -140,7 +140,7 @@ namespace Keyczar
 	                    }
 	                    else
 	                    {
-	                        input.Seek(HEADER_LENGTH, SeekOrigin.Begin);
+	                        input.Seek(HeaderLength, SeekOrigin.Begin);
 							crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper), () => new DummyStream());
 	                    }
 

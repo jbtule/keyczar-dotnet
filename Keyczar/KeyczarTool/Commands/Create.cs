@@ -52,7 +52,7 @@ namespace KeyczarTool
         
         public override int Run(string[] remainingArguments)
         {
-            KeyPurpose purpose = _pupose == "sign" ? KeyPurpose.SIGN_AND_VERIFY : KeyPurpose.DECRYPT_AND_ENCRYPT;
+            KeyPurpose purpose = _pupose == "sign" ? KeyPurpose.SignAndVerify : KeyPurpose.DecryptAndEncrypt;
 
             KeyType type = PickKeyType(purpose);
 
@@ -84,34 +84,34 @@ namespace KeyczarTool
             {
                 if (_asymmAlg == "rsa")
                 {
-                    type = KeyType.RSA_PRIV;
+                    type = KeyType.RsaPriv;
                 }
                 else
                 {
-                    if (purpose == KeyPurpose.DECRYPT_AND_ENCRYPT)
+                    if (purpose == KeyPurpose.DecryptAndEncrypt)
                     {
-                        type = KeyType.RSA_PRIV;
+                        type = KeyType.RsaPriv;
                     }
                     else
                     {
-                        type = KeyType.DSA_PRIV;
+                        type = KeyType.DsaPriv;
                     }
                 }
             }
-            else if (purpose == KeyPurpose.DECRYPT_AND_ENCRYPT)
+            else if (purpose == KeyPurpose.DecryptAndEncrypt)
             {
                 if (_unofficial)
                 {
-                    type = KeyType.AES_AEAD;
+                    type = KeyType.AesAead;
                 }
                 else
                 {
-                    type = KeyType.AES;
+                    type = KeyType.Aes;
                 }
             }
             else
             {
-                type = KeyType.HMAC_SHA1;
+                type = KeyType.HmacSha1;
             }
             return type;
         }

@@ -26,15 +26,15 @@ namespace Keyczar
         /// <summary>
         /// Primary
         /// </summary>
-        public static readonly KeyStatus PRIMARY = "PRIMARY";
+        public static readonly KeyStatus Primary = "PRIMARY";
         /// <summary>
         /// Active
         /// </summary>
-        public static readonly KeyStatus ACTIVE = "ACTIVE";
+        public static readonly KeyStatus Active = "ACTIVE";
         /// <summary>
         /// Inactive
         /// </summary>
-        public static readonly KeyStatus INACTIVE = "INACTIVE";
+        public static readonly KeyStatus Inactive = "INACTIVE";
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="KeyStatus"/>.

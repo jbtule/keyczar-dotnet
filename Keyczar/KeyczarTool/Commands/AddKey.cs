@@ -83,7 +83,7 @@ namespace KeyczarTool
             using (d2ks)
             using (var keySet = new MutableKeySet(ks))
             {
-                 if(_status != KeyStatus.PRIMARY && _status != KeyStatus.ACTIVE)
+                 if(_status != KeyStatus.Primary && _status != KeyStatus.Active)
                  {
                      Console.WriteLine("{0} {1}.",Localized.MsgInvalidStatus, _status.Identifier);
                      return -1;

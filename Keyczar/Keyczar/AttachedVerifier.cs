@@ -43,8 +43,8 @@ namespace Keyczar
         /// <exception cref="InvalidKeySetException">This key set can not be used for verifying signatures.</exception>
 		public AttachedVerifier(IKeySet keySet) : base(keySet)
 		{
-			if (keySet.Metadata.Purpose != KeyPurpose.VERIFY
-			    && keySet.Metadata.Purpose != KeyPurpose.SIGN_AND_VERIFY)
+			if (keySet.Metadata.Purpose != KeyPurpose.Verify
+			    && keySet.Metadata.Purpose != KeyPurpose.SignAndVerify)
 			{
                 throw new InvalidKeySetException("This key set can not be used for verifying signatures.");
 			}
@@ -113,7 +113,7 @@ namespace Keyczar
         
                 using (var reader = new NondestructiveBinaryReader(signedMessage))
                 {
-                    var header = reader.ReadBytes(HEADER_LENGTH);
+                    var header = reader.ReadBytes(HeaderLength);
                     var length = Utility.ToInt32(reader.ReadBytes(4));
                     var position = signedMessage.Position;
 
@@ -128,7 +128,7 @@ namespace Keyczar
                         sigStream.Write(header,0,header.Length);
                         while (reader.Peek() != -1)
                         {
-                           var buffer = reader.ReadBytes(BUFFER_SIZE);
+                           var buffer = reader.ReadBytes(BufferSize);
                            sigStream.Write(buffer, 0, buffer.Length);
                         }
                         using (var signedMessage2 = new NondestructiveLengthLimitingStream(signedMessage))

@@ -73,7 +73,7 @@ namespace Keyczar.Crypto
 			var pMag = Utility.StripLeadingZeros(Utility.GetBytes(P));
 			var gMag = Utility.StripLeadingZeros(Utility.GetBytes(G));
 			var yMag = Utility.StripLeadingZeros(Utility.GetBytes(Y));
-            var hash = Utility.HashKeyLengthPrefix(Keyczar.KEY_HASH_LENGTH, pMag, qMag, gMag, yMag);
+            var hash = Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, pMag, qMag, gMag, yMag);
             qMag.Clear();
             pMag.Clear();
             gMag.Clear();

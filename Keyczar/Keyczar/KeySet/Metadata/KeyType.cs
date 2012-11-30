@@ -31,33 +31,33 @@ namespace Keyczar
         /// <summary>
         /// Aes key
         /// </summary>
-        public static readonly KeyType AES = "AES";
+        public static readonly KeyType Aes = "AES";
         /// <summary>
         /// Hmac Sha1 key
         /// </summary>
-        public static readonly KeyType HMAC_SHA1 = "HMAC_SHA1";
+        public static readonly KeyType HmacSha1 = "HMAC_SHA1";
         /// <summary>
         /// DSA Private Key
         /// </summary>
-        public static readonly KeyType DSA_PRIV = "DSA_PRIV";
+        public static readonly KeyType DsaPriv = "DSA_PRIV";
         /// <summary>
         /// Dsa Public key
         /// </summary>
-        public static readonly KeyType DSA_PUB = "DSA_PUB";
+        public static readonly KeyType DsaPub = "DSA_PUB";
         /// <summary>
         /// RSA private key
         /// </summary>
-        public static readonly KeyType RSA_PRIV = "RSA_PRIV";
+        public static readonly KeyType RsaPriv = "RSA_PRIV";
         /// <summary>
         /// Rsa public key type
         /// </summary>
-        public static readonly KeyType RSA_PUB = "RSA_PUB";
+        public static readonly KeyType RsaPub = "RSA_PUB";
 
         //Unofficial
         /// <summary>
         /// Unofficial type AES Authenticated Encryption with Associated Data
         /// </summary>
-        public static readonly KeyType AES_AEAD = "C#_AES_AEAD";
+        public static readonly KeyType AesAead = "C#_AES_AEAD";
 
 
         /// <summary>
@@ -83,14 +83,14 @@ namespace Keyczar
 		}
 
 		static KeyType(){
-			AES.KeySizes<AesKey>(128,192,256).DefineSpec();
-			HMAC_SHA1.KeySizes<HmacSha1Key>(256).WithDigestSizes(20).DefineSpec();
-			DSA_PRIV.KeySizes<DsaPrivateKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
-			DSA_PUB.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
-			RSA_PRIV.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
-			RSA_PUB.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
+			Aes.KeySizes<AesKey>(128,192,256).DefineSpec();
+			HmacSha1.KeySizes<HmacSha1Key>(256).WithDigestSizes(20).DefineSpec();
+			DsaPriv.KeySizes<DsaPrivateKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
+			DsaPub.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
+			RsaPriv.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
+			RsaPub.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
 			//Unofficial
-			AES_AEAD.KeySizes<Unofficial.AesAeadKey>(256,192,128).IsUnofficial().DefineSpec();
+			AesAead.KeySizes<Unofficial.AesAeadKey>(256,192,128).IsUnofficial().DefineSpec();
 		}
 
 		private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();

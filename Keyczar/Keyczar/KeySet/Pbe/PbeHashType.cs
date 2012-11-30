@@ -12,11 +12,11 @@ namespace Keyczar.Pbe
         /// <summary>
         /// Hmac Sha1
         /// </summary>
-        public static readonly PbeHashType HMAC_SHA1 = "HMAC_SHA1";
+        public static readonly PbeHashType HmacSha1 = "HMAC_SHA1";
         /// <summary>
         /// Hmac Sha256
         /// </summary>
-        public static readonly PbeHashType HMAC_SHA256 = "HMAC_SHA256";
+        public static readonly PbeHashType HmacSha256 = "HMAC_SHA256";
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="PbeHashType"/>.

@@ -64,7 +64,7 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
+            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
                                   HmacKey.HmacKeyBytes);
         }
 
@@ -76,10 +76,10 @@ namespace Keyczar.Crypto
 		{
 			return new byte[][]{
 				//Java keyczar uses block length instead of keylength for hash
-				Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(BlockLength), AesKeyBytes,
+				Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
 				                HmacKey.HmacKeyBytes),
 				//c++ keyczar used to strip leading zeros from key bytes
-				Utility.HashKey(Keyczar.KEY_HASH_LENGTH, Utility.GetBytes(AesKeyBytes.Length), Utility.StripLeadingZeros(AesKeyBytes),
+				Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Utility.StripLeadingZeros(AesKeyBytes),
 				                HmacKey.HmacKeyBytes),
 			};
 		}
@@ -100,7 +100,7 @@ namespace Keyczar.Crypto
         {
             AesKeyBytes= new byte[size/8];
             Random.NextBytes(AesKeyBytes);
-            HmacKey = (HmacSha1Key) Generate(KeyType.HMAC_SHA1, 0/*uses default size*/);
+            HmacKey = (HmacSha1Key) Generate(KeyType.HmacSha1, 0/*uses default size*/);
         }
 
         /// <summary>

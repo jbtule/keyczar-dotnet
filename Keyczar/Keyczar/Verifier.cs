@@ -46,8 +46,8 @@ namespace Keyczar
         /// <exception cref="InvalidKeySetException">This key set can not be used for verifying signatures.</exception>
         public Verifier(IKeySet keySet) : base(keySet)
         {
-            if (keySet.Metadata.Purpose != KeyPurpose.VERIFY
-                && keySet.Metadata.Purpose != KeyPurpose.SIGN_AND_VERIFY)
+            if (keySet.Metadata.Purpose != KeyPurpose.Verify
+                && keySet.Metadata.Purpose != KeyPurpose.SignAndVerify)
             {
                 throw new InvalidKeySetException("This key set can not be used for verifying signatures.");
             }
@@ -87,13 +87,13 @@ namespace Keyczar
         /// <exception cref="InvalidCryptoDataException">Signature missing header information.</exception>
         protected virtual IEnumerable<IVerifierKey> GetKeys( byte[] signature, out byte[] trimmedSignature)
         {
-            if(signature.Length < HEADER_LENGTH)
+            if(signature.Length < HeaderLength)
                 throw new InvalidCryptoDataException("Signature missing header information.");
 
             byte[] keyHash;
             Utility.ReadHeader(signature, out keyHash);
-            trimmedSignature = new byte[signature.Length - HEADER_LENGTH];
-            Array.Copy(signature, HEADER_LENGTH, trimmedSignature, 0, trimmedSignature.Length);
+            trimmedSignature = new byte[signature.Length - HeaderLength];
+            Array.Copy(signature, HeaderLength, trimmedSignature, 0, trimmedSignature.Length);
             var keys = GetKey(keyHash);
             return keys.Select(it=>it as IVerifierKey);
         }
@@ -125,7 +125,7 @@ namespace Keyczar
         /// <param name="extra">The extra data passed by postfixData</param>
         protected virtual void PostfixDataVerify(VerifyingStream verifyingStream, object extra)
         {
-            verifyingStream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
+            verifyingStream.Write(FormatBytes, 0, FormatBytes.Length);
         }
 
         /// <summary>
@@ -152,7 +152,7 @@ namespace Keyczar
                         PrefixDataVerify(verifyStream,prefixData);
                         while (reader.Peek() != -1)
                         {
-                            byte[] buffer = reader.ReadBytes(BUFFER_SIZE);
+                            byte[] buffer = reader.ReadBytes(BufferSize);
                             verifyStream.Write(buffer, 0, buffer.Length);
                         }
                             PostfixDataVerify(verifyStream,postfixData);

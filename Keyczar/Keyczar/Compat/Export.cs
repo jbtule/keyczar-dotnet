@@ -31,7 +31,7 @@ namespace Keyczar.Compat
         /// <exception cref="InvalidKeyTypeException">Non exportable key type.</exception>
         public static bool ExportPrimaryAsPkcs(this IKeySet keySet, string location, Func<string> passwordPrompt)
         {
-            var i =keySet.Metadata.Versions.First(it => it.Status == KeyStatus.PRIMARY).VersionNumber;
+            var i =keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
             using (var key = keySet.GetKey(i))
             {
                 if (!(key is IPrivateKey))
@@ -44,7 +44,7 @@ namespace Keyczar.Compat
                 {
                     var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);
                     AsymmetricKeyParameter writeKey;
-                    if (key.KeyType == KeyType.DSA_PRIV)
+                    if (key.KeyType == KeyType.DsaPriv)
                     {
                         var dsaKey = (DsaPrivateKey) key;
 						writeKey = new DsaPrivateKeyParameters(dsaKey.X.ToBouncyBigInteger(),
@@ -53,7 +53,7 @@ namespace Keyczar.Compat
 						                  						dsaKey.PublicKey.G.ToBouncyBigInteger()));
 
                     }
-                    else if (key.KeyType == KeyType.RSA_PRIV)
+                    else if (key.KeyType == KeyType.RsaPriv)
                     {
                         var rsaKey = (RsaPrivateKey) key;
                         writeKey = new RsaPrivateCrtKeyParameters(

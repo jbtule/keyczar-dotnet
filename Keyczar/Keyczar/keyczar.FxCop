@@ -364,18 +364,9 @@
              <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2012-11-28 19:57:15Z">
               <Issue>
                <Item>'Keyczar.Keyczar()'</Item>
-               <Item>'Keyczar.FORMAT_VERSION'</Item>
+               <Item>'Keyczar.FormatVersion'</Item>
                <Item>'byte'</Item>
                <Item>0</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#BUFFER_SIZE">
-            <Messages>
-             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'Keyczar.BUFFER_SIZE'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -408,54 +399,12 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#FORMAT_BYTES">
+           <Member Name="#FormatBytes">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'Keyczar.FORMAT_BYTES'</Item>
+               <Item>'Keyczar.FormatBytes'</Item>
                <Item>'ReadOnlyArray&lt;byte&gt;'</Item>
-              </Issue>
-             </Message>
-             <Message Id="BYTES" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>BYTES</Item>
-               <Item>'Keyczar.FORMAT_BYTES'</Item>
-               <Item>Bytes</Item>
-              </Issue>
-             </Message>
-             <Message Id="FORMAT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>FORMAT</Item>
-               <Item>'Keyczar.FORMAT_BYTES'</Item>
-               <Item>Format</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'Keyczar.FORMAT_BYTES'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#FORMAT_VERSION">
-            <Messages>
-             <Message Id="FORMAT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>FORMAT</Item>
-               <Item>'Keyczar.FORMAT_VERSION'</Item>
-               <Item>Format</Item>
-              </Issue>
-             </Message>
-             <Message Id="VERSION" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>VERSION</Item>
-               <Item>'Keyczar.FORMAT_VERSION'</Item>
-               <Item>Version</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'Keyczar.FORMAT_VERSION'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -478,59 +427,6 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#HEADER_LENGTH">
-            <Messages>
-             <Message Id="HEADER" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>HEADER</Item>
-               <Item>'Keyczar.HEADER_LENGTH'</Item>
-               <Item>Header</Item>
-              </Issue>
-             </Message>
-             <Message Id="LENGTH" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>LENGTH</Item>
-               <Item>'Keyczar.HEADER_LENGTH'</Item>
-               <Item>Length</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'Keyczar.HEADER_LENGTH'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#KEY_HASH_LENGTH">
-            <Messages>
-             <Message Id="HASH" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>HASH</Item>
-               <Item>'Keyczar.KEY_HASH_LENGTH'</Item>
-               <Item>Hash</Item>
-              </Issue>
-             </Message>
-             <Message Id="KEY" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>KEY</Item>
-               <Item>'Keyczar.KEY_HASH_LENGTH'</Item>
-               <Item>Key</Item>
-              </Issue>
-             </Message>
-             <Message Id="LENGTH" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>LENGTH</Item>
-               <Item>'Keyczar.KEY_HASH_LENGTH'</Item>
-               <Item>Length</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'Keyczar.KEY_HASH_LENGTH'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
           </Members>
          </Type>
          <Type Name="KeyMetadata">
@@ -548,55 +444,22 @@
          </Type>
          <Type Name="KeyPurpose">
           <Members>
-           <Member Name="#DECRYPT_AND_ENCRYPT">
+           <Member Name="#DecryptAndEncrypt">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
+               <Item>'KeyPurpose.DecryptAndEncrypt'</Item>
                <Item>'KeyPurpose'</Item>
-              </Issue>
-             </Message>
-             <Message Id="AND" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>AND</Item>
-               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
-               <Item>And</Item>
-              </Issue>
-             </Message>
-             <Message Id="DECRYPT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>DECRYPT</Item>
-               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
-               <Item>Decrypt</Item>
-              </Issue>
-             </Message>
-             <Message Id="ENCRYPT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>ENCRYPT</Item>
-               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
-               <Item>Encrypt</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'KeyPurpose.DECRYPT_AND_ENCRYPT'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#ENCRYPT">
+           <Member Name="#Encrypt">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyPurpose.ENCRYPT'</Item>
+               <Item>'KeyPurpose.Encrypt'</Item>
                <Item>'KeyPurpose'</Item>
-              </Issue>
-             </Message>
-             <Message Id="ENCRYPT" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>ENCRYPT</Item>
-               <Item>'KeyPurpose.ENCRYPT'</Item>
-               <Item>Encrypt</Item>
               </Issue>
              </Message>
             </Messages>
@@ -612,55 +475,22 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#SIGN_AND_VERIFY">
+           <Member Name="#SignAndVerify">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
+               <Item>'KeyPurpose.SignAndVerify'</Item>
                <Item>'KeyPurpose'</Item>
-              </Issue>
-             </Message>
-             <Message Id="AND" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>AND</Item>
-               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
-               <Item>And</Item>
-              </Issue>
-             </Message>
-             <Message Id="SIGN" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>SIGN</Item>
-               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
-               <Item>Sign</Item>
-              </Issue>
-             </Message>
-             <Message Id="VERIFY" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>VERIFY</Item>
-               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
-               <Item>Verify</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'KeyPurpose.SIGN_AND_VERIFY'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#VERIFY">
+           <Member Name="#Verify">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyPurpose.VERIFY'</Item>
+               <Item>'KeyPurpose.Verify'</Item>
                <Item>'KeyPurpose'</Item>
-              </Issue>
-             </Message>
-             <Message Id="VERIFY" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>VERIFY</Item>
-               <Item>'KeyPurpose.VERIFY'</Item>
-               <Item>Verify</Item>
               </Issue>
              </Message>
             </Messages>
@@ -702,36 +532,22 @@
          </Type>
          <Type Name="KeyStatus">
           <Members>
-           <Member Name="#ACTIVE">
+           <Member Name="#Active">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyStatus.ACTIVE'</Item>
+               <Item>'KeyStatus.Active'</Item>
                <Item>'KeyStatus'</Item>
-              </Issue>
-             </Message>
-             <Message Id="ACTIVE" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>ACTIVE</Item>
-               <Item>'KeyStatus.ACTIVE'</Item>
-               <Item>Active</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#INACTIVE">
+           <Member Name="#Inactive">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyStatus.INACTIVE'</Item>
+               <Item>'KeyStatus.Inactive'</Item>
                <Item>'KeyStatus'</Item>
-              </Issue>
-             </Message>
-             <Message Id="INACTIVE" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>INACTIVE</Item>
-               <Item>'KeyStatus.INACTIVE'</Item>
-               <Item>Inactive</Item>
               </Issue>
              </Message>
             </Messages>
@@ -747,19 +563,12 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#PRIMARY">
+           <Member Name="#Primary">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyStatus.PRIMARY'</Item>
+               <Item>'KeyStatus.Primary'</Item>
                <Item>'KeyStatus'</Item>
-              </Issue>
-             </Message>
-             <Message Id="PRIMARY" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>PRIMARY</Item>
-               <Item>'KeyStatus.PRIMARY'</Item>
-               <Item>Primary</Item>
               </Issue>
              </Message>
             </Messages>
@@ -777,135 +586,72 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#AES">
+           <Member Name="#Aes">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyType.AES'</Item>
+               <Item>'KeyType.Aes'</Item>
                <Item>'KeyType'</Item>
-              </Issue>
-             </Message>
-             <Message Id="AES" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>AES</Item>
-               <Item>'KeyType.AES'</Item>
-               <Item>Aes</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#AES_AEAD">
+           <Member Name="#AesAead">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyType.AES_AEAD'</Item>
+               <Item>'KeyType.AesAead'</Item>
                <Item>'KeyType'</Item>
               </Issue>
              </Message>
-             <Message Id="AEAD" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Aead" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
-               <Item>AEAD</Item>
-               <Item>'KeyType.AES_AEAD'</Item>
                <Item>Aead</Item>
-              </Issue>
-             </Message>
-             <Message Id="AES" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>AES</Item>
-               <Item>'KeyType.AES_AEAD'</Item>
-               <Item>Aes</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'KeyType.AES_AEAD'</Item>
+               <Item>'KeyType.AesAead'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#DSA_PRIV">
+           <Member Name="#DsaPriv">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyType.DSA_PRIV'</Item>
+               <Item>'KeyType.DsaPriv'</Item>
                <Item>'KeyType'</Item>
               </Issue>
              </Message>
-             <Message Id="DSA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Dsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
-               <Item>DSA</Item>
-               <Item>'KeyType.DSA_PRIV'</Item>
                <Item>Dsa</Item>
+               <Item>'KeyType.DsaPriv'</Item>
               </Issue>
              </Message>
-             <Message Id="PRIV" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Priv" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
-               <Item>PRIV</Item>
-               <Item>'KeyType.DSA_PRIV'</Item>
                <Item>Priv</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'KeyType.DSA_PRIV'</Item>
+               <Item>'KeyType.DsaPriv'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#DSA_PUB">
+           <Member Name="#HmacSha1">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyType.DSA_PUB'</Item>
+               <Item>'KeyType.HmacSha1'</Item>
                <Item>'KeyType'</Item>
               </Issue>
              </Message>
-             <Message Id="DSA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
-               <Item>DSA</Item>
-               <Item>'KeyType.DSA_PUB'</Item>
-               <Item>Dsa</Item>
-              </Issue>
-             </Message>
-             <Message Id="PUB" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>PUB</Item>
-               <Item>'KeyType.DSA_PUB'</Item>
-               <Item>Pub</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'KeyType.DSA_PUB'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#HMAC_SHA1">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'KeyType.HMAC_SHA1'</Item>
-               <Item>'KeyType'</Item>
-              </Issue>
-             </Message>
-             <Message Id="HMAC" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>HMAC</Item>
-               <Item>'KeyType.HMAC_SHA1'</Item>
                <Item>Hmac</Item>
+               <Item>'KeyType.HmacSha1'</Item>
               </Issue>
              </Message>
-             <Message Id="SHA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
-               <Item>SHA</Item>
-               <Item>'KeyType.HMAC_SHA1'</Item>
                <Item>Sha</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'KeyType.HMAC_SHA1'</Item>
+               <Item>'KeyType.HmacSha1'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -945,60 +691,40 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#RSA_PRIV">
+           <Member Name="#RsaPriv">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyType.RSA_PRIV'</Item>
+               <Item>'KeyType.RsaPriv'</Item>
                <Item>'KeyType'</Item>
               </Issue>
              </Message>
-             <Message Id="PRIV" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Priv" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
-               <Item>PRIV</Item>
-               <Item>'KeyType.RSA_PRIV'</Item>
                <Item>Priv</Item>
+               <Item>'KeyType.RsaPriv'</Item>
               </Issue>
              </Message>
-             <Message Id="RSA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Rsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
-               <Item>RSA</Item>
-               <Item>'KeyType.RSA_PRIV'</Item>
                <Item>Rsa</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'KeyType.RSA_PRIV'</Item>
+               <Item>'KeyType.RsaPriv'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#RSA_PUB">
+           <Member Name="#RsaPub">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
               <Issue>
-               <Item>'KeyType.RSA_PUB'</Item>
+               <Item>'KeyType.RsaPub'</Item>
                <Item>'KeyType'</Item>
               </Issue>
              </Message>
-             <Message Id="PUB" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Rsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
-               <Item>PUB</Item>
-               <Item>'KeyType.RSA_PUB'</Item>
-               <Item>Pub</Item>
-              </Issue>
-             </Message>
-             <Message Id="RSA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>RSA</Item>
-               <Item>'KeyType.RSA_PUB'</Item>
                <Item>Rsa</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'KeyType.RSA_PUB'</Item>
+               <Item>'KeyType.RsaPub'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1943,60 +1669,46 @@
            </Message>
           </Messages>
           <Members>
-           <Member Name="#HMAC_SHA1">
+           <Member Name="#HmacSha1">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:45:25Z">
               <Issue>
-               <Item>'PbeHashType.HMAC_SHA1'</Item>
+               <Item>'PbeHashType.HmacSha1'</Item>
                <Item>'PbeHashType'</Item>
               </Issue>
              </Message>
-             <Message Id="HMAC" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:45:25Z">
               <Issue Name="Member">
-               <Item>HMAC</Item>
-               <Item>'PbeHashType.HMAC_SHA1'</Item>
                <Item>Hmac</Item>
+               <Item>'PbeHashType.HmacSha1'</Item>
               </Issue>
              </Message>
-             <Message Id="SHA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:45:25Z">
               <Issue Name="Member">
-               <Item>SHA</Item>
-               <Item>'PbeHashType.HMAC_SHA1'</Item>
                <Item>Sha</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'PbeHashType.HMAC_SHA1'</Item>
+               <Item>'PbeHashType.HmacSha1'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#HMAC_SHA256">
+           <Member Name="#HmacSha256">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:45:25Z">
               <Issue>
-               <Item>'PbeHashType.HMAC_SHA256'</Item>
+               <Item>'PbeHashType.HmacSha256'</Item>
                <Item>'PbeHashType'</Item>
               </Issue>
              </Message>
-             <Message Id="HMAC" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:45:25Z">
               <Issue Name="Member">
-               <Item>HMAC</Item>
-               <Item>'PbeHashType.HMAC_SHA256'</Item>
                <Item>Hmac</Item>
+               <Item>'PbeHashType.HmacSha256'</Item>
               </Issue>
              </Message>
-             <Message Id="SHA" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
+             <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:45:25Z">
               <Issue Name="Member">
-               <Item>SHA</Item>
-               <Item>'PbeHashType.HMAC_SHA256'</Item>
                <Item>Sha</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'PbeHashType.HMAC_SHA256'</Item>
+               <Item>'PbeHashType.HmacSha256'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -2082,24 +1794,12 @@
            </Message>
           </Messages>
           <Members>
-           <Member Name="#AES_128">
+           <Member Name="#Aes128">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:45:25Z">
               <Issue>
-               <Item>'PbeKeyType.AES_128'</Item>
+               <Item>'PbeKeyType.Aes128'</Item>
                <Item>'PbeKeyType'</Item>
-              </Issue>
-             </Message>
-             <Message Id="AES" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>AES</Item>
-               <Item>'PbeKeyType.AES_128'</Item>
-               <Item>Aes</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>'PbeKeyType.AES_128'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -2575,9 +2275,6 @@
    <Rule TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004">
     <Resolution Name="Default">Consider a design where {0} doesn't require explicit type parameter {1} in any call to it.</Resolution>
    </Rule>
-   <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
-    <Resolution Name="Member">Correct the casing of '{0}' in member name {1} by changing it to '{2}'.</Resolution>
-   </Rule>
    <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
     <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
     <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
@@ -2589,9 +2286,6 @@
    </Rule>
    <Rule TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710">
     <Resolution Name="Default">Rename {0} to end in '{1}'.</Resolution>
-   </Rule>
-   <Rule TypeName="IdentifiersShouldNotContainUnderscores" Category="Microsoft.Naming" CheckId="CA1707">
-    <Resolution Name="Member">Remove the underscores from member name {0}.</Resolution>
    </Rule>
    <Rule TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063">
     <Resolution Name="DisposeImplementation">Modify {0} so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns.</Resolution>

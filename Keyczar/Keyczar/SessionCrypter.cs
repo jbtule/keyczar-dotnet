@@ -68,14 +68,14 @@ namespace Keyczar
         /// <exception cref="System.ArgumentException">Without a supplying a keypacker you may only use KeyType.AES;symmetricKeyType</exception>
         public SessionCrypter(Encrypter keyEncrypter, int? keySize=null, KeyType symmetricKeyType = null, ISessionKeyPacker keyPacker = null)
         {
-            symmetricKeyType = symmetricKeyType ?? KeyType.AES;
-            if (keyPacker == null && symmetricKeyType != KeyType.AES)
+            symmetricKeyType = symmetricKeyType ?? KeyType.Aes;
+            if (keyPacker == null && symmetricKeyType != KeyType.Aes)
             {
                 throw new ArgumentException("Without a supplying a keypacker you may only use KeyType.AES", "symmetricKeyType");
             }
             keyPacker = keyPacker ?? new SimpleAesHmacSha1KeyPacker();
             dynamic key = Key.Generate(symmetricKeyType, keySize?? symmetricKeyType.DefaultSize); 
-            _keyset = new ImportedKeySet(key,KeyPurpose.DECRYPT_AND_ENCRYPT);
+            _keyset = new ImportedKeySet(key,KeyPurpose.DecryptAndEncrypt);
             _crypter = new Crypter(_keyset);
             _sessionMaterial = WebBase64.FromBytes(keyEncrypter.Encrypt(keyPacker.Pack(key)));
 
@@ -93,7 +93,7 @@ namespace Keyczar
             keyPacker = keyPacker ?? new SimpleAesHmacSha1KeyPacker();
 			var packedBytes =keyDecrypter.Decrypt(sessionMaterial.ToBytes());
 			dynamic key =keyPacker.Unpack(packedBytes);
-            _keyset = new ImportedKeySet(key, KeyPurpose.DECRYPT_AND_ENCRYPT);
+            _keyset = new ImportedKeySet(key, KeyPurpose.DecryptAndEncrypt);
             _crypter = new Crypter(_keyset);
             _sessionMaterial = sessionMaterial;
         }

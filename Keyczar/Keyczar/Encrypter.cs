@@ -66,8 +66,8 @@ namespace Keyczar
         public Encrypter(IKeySet keySet) : base(keySet)
         {
 
-            if (keySet.Metadata.Purpose != KeyPurpose.ENCRYPT
-                && keySet.Metadata.Purpose != KeyPurpose.DECRYPT_AND_ENCRYPT)
+            if (keySet.Metadata.Purpose != KeyPurpose.Encrypt
+                && keySet.Metadata.Purpose != KeyPurpose.DecryptAndEncrypt)
             {
                 throw new InvalidKeySetException("This key set can not be used for encryption.");
             }
@@ -116,9 +116,9 @@ namespace Keyczar
         {
 
             var key = GetPrimaryKey();
-            var header = new byte[HEADER_LENGTH];
-            Array.Copy(FORMAT_BYTES,0,header,0,FORMAT_BYTES.Length);
-            Array.Copy(key.GetKeyHash(), 0, header, FORMAT_BYTES.Length, KEY_HASH_LENGTH);
+            var header = new byte[HeaderLength];
+            Array.Copy(FormatBytes,0,header,0,FormatBytes.Length);
+            Array.Copy(key.GetKeyHash(), 0, header, FormatBytes.Length, KeyHashLength);
            
             var cryptKey = key as IEncrypterKey;
             var pbeKey = key as IPbeKey;
@@ -167,7 +167,7 @@ namespace Keyczar
                 output.Seek(0, SeekOrigin.Begin);
                 while (outputReader.Peek() != -1)
                 {
-                    byte[] buffer = outputReader.ReadBytes(BUFFER_SIZE);
+                    byte[] buffer = outputReader.ReadBytes(BufferSize);
                     signingStream.Write(buffer, 0, buffer.Length);
                 }
                 signingStream.Finish();

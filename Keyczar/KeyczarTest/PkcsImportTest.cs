@@ -52,7 +52,7 @@ namespace KeyczarTest
              [Values("pem", "der")] string format)
           {
               using (var keystream = HelperOpenPkcsStream(keyType, format, "crypt"))
-              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.DECRYPT_AND_ENCRYPT, keystream, ()=>"pass"/* hard coding for test only!!!!*/))
+              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.DecryptAndEncrypt, keystream, ()=>"pass"/* hard coding for test only!!!!*/))
               using (var crypter = new Crypter(keyset))
               using (var encrypter = new Encrypter(Util.TestDataPath(TEST_DATA, "rsa-crypt")))
               {
@@ -69,7 +69,7 @@ namespace KeyczarTest
          {
              using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
              {
-                 Expect(()=> ImportedKeySet.Import.PkcsKey(KeyPurpose.DECRYPT_AND_ENCRYPT, keystream, () => "pass"/* hard coding for test only!!!!*/),Throws.InstanceOf<InvalidKeySetException>());
+                 Expect(()=> ImportedKeySet.Import.PkcsKey(KeyPurpose.DecryptAndEncrypt, keystream, () => "pass"/* hard coding for test only!!!!*/),Throws.InstanceOf<InvalidKeySetException>());
              }
             
          }
@@ -80,7 +80,7 @@ namespace KeyczarTest
              [Values("pem", "der")] string format)
           {
               using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
-              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.SIGN_AND_VERIFY, keystream, () => "pass"/* hard coding for test only!!!!*/))
+              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.SignAndVerify, keystream, () => "pass"/* hard coding for test only!!!!*/))
               using (var signer = new Signer(keyset))
           
               {

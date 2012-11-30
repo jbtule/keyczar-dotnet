@@ -49,7 +49,7 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KEY_HASH_LENGTH, HmacKeyBytes);
+            return Utility.HashKey(Keyczar.KeyHashLength, HmacKeyBytes);
         }
 
         /// <summary>

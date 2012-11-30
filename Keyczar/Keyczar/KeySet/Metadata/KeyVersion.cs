@@ -27,7 +27,7 @@ namespace Keyczar
         /// </summary>
         public KeyVersion()
         {
-            Status = KeyStatus.ACTIVE;
+            Status = KeyStatus.Active;
         }
 
         /// <summary>
@@ -76,11 +76,11 @@ namespace Keyczar
                 }
                 return 0;
             }
-            if (Status == KeyStatus.PRIMARY)
+            if (Status == KeyStatus.Primary)
             {
                 return -1;
             }
-            if (Status == KeyStatus.ACTIVE && other.Status != KeyStatus.PRIMARY)
+            if (Status == KeyStatus.Active && other.Status != KeyStatus.Primary)
             {
                 return -1;
             }

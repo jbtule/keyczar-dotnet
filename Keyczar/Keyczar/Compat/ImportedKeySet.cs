@@ -63,7 +63,7 @@ namespace Keyczar.Compat
                                       new KeyVersion
                                       {
                                           VersionNumber = 0,
-                                          Status = KeyStatus.PRIMARY,
+                                          Status = KeyStatus.Primary,
                                           Exportable = false
                                       }
                                   }
@@ -203,7 +203,7 @@ namespace Keyczar.Compat
                     else if (bouncyKey is DsaPrivateKeyParameters)
                     {
                         var keyParam = bouncyKey as DsaPrivateKeyParameters;
-                        if (KeyPurpose.DECRYPT_AND_ENCRYPT == purpose)
+                        if (KeyPurpose.DecryptAndEncrypt == purpose)
                         {
                             throw new InvalidKeySetException("DSA key cannot be used for encryption and decryption!");
                         }
@@ -277,7 +277,7 @@ namespace Keyczar.Compat
                 else if (bouncyKey is DsaPublicKeyParameters)
                 {
                     var keyParam = bouncyKey as DsaPublicKeyParameters;
-                    if (KeyPurpose.ENCRYPT == purpose)
+                    if (KeyPurpose.Encrypt == purpose)
                     {
                         throw new InvalidKeySetException("DSA key cannot be used for encryption!");
                     }

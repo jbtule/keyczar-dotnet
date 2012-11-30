@@ -155,8 +155,8 @@ namespace Keyczar
             {
                 var padData = (Tuple<long, long, Stream>) extra;
                 var key = GetPrimaryKey() as ISignerKey;
-                outputStream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
-                outputStream.Write(key.GetKeyHash(), 0, KEY_HASH_LENGTH);
+                outputStream.Write(FormatBytes, 0, FormatBytes.Length);
+                outputStream.Write(key.GetKeyHash(), 0, KeyHashLength);
                 var lengthBytes = Utility.GetBytes((int) (padData.Item1 - padData.Item2));
                 outputStream.Write(lengthBytes, 0, lengthBytes.Length);
                 padData.Item3.Seek(padData.Item2, SeekOrigin.Begin);
@@ -164,7 +164,7 @@ namespace Keyczar
                 {
                     while (reader.Peek() != -1)
                     {
-                        byte[] buffer = reader.ReadBytes(BUFFER_SIZE);
+                        byte[] buffer = reader.ReadBytes(BufferSize);
                         outputStream.Write(buffer, 0, buffer.Length);
                     }
                 }

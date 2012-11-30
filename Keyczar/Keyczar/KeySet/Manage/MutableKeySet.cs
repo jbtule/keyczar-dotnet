@@ -144,8 +144,8 @@ namespace Keyczar
             int lastVersion = 0;
             foreach (var version in _metadata.Versions)
             {
-                if (status == KeyStatus.PRIMARY && version.Status == KeyStatus.PRIMARY)
-                    version.Status = KeyStatus.ACTIVE;
+                if (status == KeyStatus.Primary && version.Status == KeyStatus.Primary)
+                    version.Status = KeyStatus.Active;
                 lastVersion = Math.Max(lastVersion, version.VersionNumber);
             }
             _metadata.Versions.Add(new KeyVersion() { Status = status, VersionNumber = ++lastVersion });
@@ -166,17 +166,17 @@ namespace Keyczar
            if (ver == null)
                return null;
 
-           if (ver.Status == KeyStatus.ACTIVE)
+           if (ver.Status == KeyStatus.Active)
            {
-               foreach (var verPrim in Metadata.Versions.Where(it=>it.Status == KeyStatus.PRIMARY))
+               foreach (var verPrim in Metadata.Versions.Where(it=>it.Status == KeyStatus.Primary))
                {
-                   verPrim.Status = KeyStatus.ACTIVE;
+                   verPrim.Status = KeyStatus.Active;
                }
-               ver.Status = KeyStatus.PRIMARY;
+               ver.Status = KeyStatus.Primary;
            }
-           else if (ver.Status == KeyStatus.INACTIVE)
+           else if (ver.Status == KeyStatus.Inactive)
            {
-               ver.Status = KeyStatus.ACTIVE;
+               ver.Status = KeyStatus.Active;
            }
 
            return ver.Status;
@@ -193,13 +193,13 @@ namespace Keyczar
             if (ver == null)
                 return null;
 
-            if (ver.Status == KeyStatus.PRIMARY)
+            if (ver.Status == KeyStatus.Primary)
             {
-                ver.Status = KeyStatus.ACTIVE;
+                ver.Status = KeyStatus.Active;
             }
-            else if (ver.Status == KeyStatus.ACTIVE)
+            else if (ver.Status == KeyStatus.Active)
             {
-                ver.Status = KeyStatus.INACTIVE;
+                ver.Status = KeyStatus.Inactive;
             }
 
             return ver.Status;
@@ -215,7 +215,7 @@ namespace Keyczar
             var ver = Metadata.Versions.FirstOrDefault(it => it.VersionNumber == version);
             if (ver == null)
                 return false;
-            if(ver.Status != KeyStatus.INACTIVE)
+            if(ver.Status != KeyStatus.Inactive)
                 return false;
             Metadata.Versions.Remove(ver);
             return true;
@@ -233,9 +233,9 @@ namespace Keyczar
             }
 
             var newMeta = new KeyMetadata(Metadata);
-            newMeta.Purpose = newMeta.Purpose == KeyPurpose.SIGN_AND_VERIFY
-                ? KeyPurpose.VERIFY 
-                : KeyPurpose.ENCRYPT;
+            newMeta.Purpose = newMeta.Purpose == KeyPurpose.SignAndVerify
+                ? KeyPurpose.Verify 
+                : KeyPurpose.Encrypt;
 
            var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
                 .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = Keyczar.DefaultEncoding.GetBytes(p.PublicKey.ToJson())})

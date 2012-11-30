@@ -37,25 +37,26 @@ namespace Keyczar
         /// <summary>
         /// Key hash length
         /// </summary>
-        public static readonly int KEY_HASH_LENGTH = 4;
+        public static readonly int KeyHashLength = 4;
+
         /// <summary>
         /// Keyczar format version
         /// </summary>
-        public static readonly byte FORMAT_VERSION = 0;
+        public static readonly byte FormatVersion = 0;
 
         /// <summary>
         /// Keyczar format version bytes for header
         /// </summary>
-        public static readonly ReadOnlyArray<byte> FORMAT_BYTES = ReadOnlyArray.Create(FORMAT_VERSION);
+        public static readonly ReadOnlyArray<byte> FormatBytes = ReadOnlyArray.Create(FormatVersion);
         /// <summary>
         /// Full keyczar format header length
         /// </summary>
-        public static readonly int HEADER_LENGTH = FORMAT_BYTES.Length + KEY_HASH_LENGTH;
+        public static readonly int HeaderLength = FormatBytes.Length + KeyHashLength;
 
         /// <summary>
         /// Buffer size used throughout
         /// </summary>
-        protected static int BUFFER_SIZE = 4096;
+        protected static readonly int BufferSize = 4096;
 
         private readonly Dictionary<int, SortedList<KeyVersion, Key>> _hashedKeys;
 		private readonly Dictionary<int, List<Key>> _hashedFallbackKeys;
@@ -104,7 +105,7 @@ namespace Keyczar
                             })
                 .ToList();
 
-            _primaryVersion = metadata.Versions.SingleOrDefault(it => it.Status == KeyStatus.PRIMARY);
+            _primaryVersion = metadata.Versions.SingleOrDefault(it => it.Status == KeyStatus.Primary);
 
             _versions = versions.ToDictionary(k => k.Version.VersionNumber, v => v.CryptKey);
 

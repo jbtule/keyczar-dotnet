@@ -42,7 +42,7 @@ namespace Keyczar.Crypto.Streams
         public HmacStream(HashAlgorithm algorithm)
         {
             _hmacAlg = algorithm;
-            _hashValue = new byte[(_hmacAlg.HashSize / 8) + Keyczar.HEADER_LENGTH];
+            _hashValue = new byte[(_hmacAlg.HashSize / 8) + Keyczar.HeaderLength];
         }
 
         /// <summary>

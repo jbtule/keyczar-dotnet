@@ -116,7 +116,7 @@ namespace KeyczarTest
             Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
 
             result = Util.KeyczarTool(demote: null, location: path, version: 1);
-            Expect(result, Is.StringContaining(String.Format(KeyczarTool.Localized.MsgDemotedVersion,1,KeyStatus.ACTIVE)));
+            Expect(result, Is.StringContaining(String.Format(KeyczarTool.Localized.MsgDemotedVersion,1,KeyStatus.Active)));
         }
 
 

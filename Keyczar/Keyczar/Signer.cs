@@ -45,7 +45,7 @@ namespace Keyczar
         /// <exception cref="InvalidKeySetException">This key set can not be used for signing and verifying.</exception>
         public Signer(IKeySet keySet) : base(keySet)
         {
-            if (keySet.Metadata.Purpose != KeyPurpose.SIGN_AND_VERIFY)
+            if (keySet.Metadata.Purpose != KeyPurpose.SignAndVerify)
             {
                 throw new InvalidKeySetException("This key set can not be used for signing and verifying.");
             }
@@ -107,7 +107,7 @@ namespace Keyczar
                     PrefixDataSign(signingStream, prefixData);
                     while (reader.Peek() != -1)
                     {
-                        byte[] buffer = reader.ReadBytes(BUFFER_SIZE);
+                        byte[] buffer = reader.ReadBytes(BufferSize);
                         signingStream.Write(buffer, 0, buffer.Length);
                     }
                     PostfixDataSign(signingStream, postfixData);
@@ -136,7 +136,7 @@ namespace Keyczar
         /// <param name="extra">The extra data passed by postfixData.</param>
         protected virtual void PostfixDataSign(HashingStream signingStream, object extra)
         {
-            signingStream.Write(FORMAT_BYTES, 0, FORMAT_BYTES.Length);
+            signingStream.Write(FormatBytes, 0, FormatBytes.Length);
         }
 
         /// <summary>
@@ -149,8 +149,8 @@ namespace Keyczar
         protected virtual void PadSignature(byte[] signature, Stream outputStream, object extra)
         {
             var key = GetPrimaryKey() as ISignerKey;
-			outputStream.Write(FORMAT_BYTES,0,FORMAT_BYTES.Length);
-			outputStream.Write(key.GetKeyHash(),0,KEY_HASH_LENGTH);
+			outputStream.Write(FormatBytes,0,FormatBytes.Length);
+			outputStream.Write(key.GetKeyHash(),0,KeyHashLength);
 			outputStream.Write(signature,0,signature.Length);
         }
 

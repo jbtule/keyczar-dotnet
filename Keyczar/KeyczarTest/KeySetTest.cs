@@ -96,9 +96,9 @@ namespace KeyczarTest
           [Test]
           public void TestOverwriteFalse()
           {
-              using (var ks = new MutableKeySet(new KeyMetadata { Name = "Don't Write", Purpose = KeyPurpose.DECRYPT_AND_ENCRYPT, KeyType = KeyType.AES }))
+              using (var ks = new MutableKeySet(new KeyMetadata { Name = "Don't Write", Purpose = KeyPurpose.DecryptAndEncrypt, KeyType = KeyType.Aes }))
               {
-                  ks.AddKey(KeyStatus.PRIMARY);
+                  ks.AddKey(KeyStatus.Primary);
                   var writer = new KeySetWriter(Util.TestDataPath(TEST_DATA, "pbe_json"),overwrite:false);
                   
                   Expect(() => ks.Save(writer), Is.False);
@@ -112,7 +112,7 @@ namespace KeyczarTest
 		{
 			using(var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"))){
 				var status =reader.Demote(1);
-				Expect(status, Is.EqualTo(KeyStatus.INACTIVE));
+				Expect(status, Is.EqualTo(KeyStatus.Inactive));
 				var re = reader.Revoke(1);
 				Expect(re,Is.True);
 				Expect(reader.Metadata.Versions.Any(),Is.False);
@@ -124,7 +124,7 @@ namespace KeyczarTest
 		{
 			using(var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"))){
 				var status =reader.Promote(1);
-				Expect(status, Is.EqualTo(KeyStatus.PRIMARY));
+				Expect(status, Is.EqualTo(KeyStatus.Primary));
 				Expect(() => new GetPrimary(reader).GetPrimaryExposed(), Is.Not.Null);
 			}
 		}
@@ -135,7 +135,7 @@ namespace KeyczarTest
             using (var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary")))
             {
               
-                Expect(() => reader.AddKey(KeyStatus.PRIMARY,options:new{FakeProp="BlahBlah"}), Throws.Nothing);
+                Expect(() => reader.AddKey(KeyStatus.Primary,options:new{FakeProp="BlahBlah"}), Throws.Nothing);
             }
         }
 
@@ -152,7 +152,7 @@ namespace KeyczarTest
           {
               using (var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary")))
               {
-                  Expect(() => reader.AddKey(KeyStatus.PRIMARY, keySize: 16), Throws.TypeOf<InvalidKeyTypeException>());
+                  Expect(() => reader.AddKey(KeyStatus.Primary, keySize: 16), Throws.TypeOf<InvalidKeyTypeException>());
               }
           }
 
