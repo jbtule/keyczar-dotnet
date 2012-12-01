@@ -41,6 +41,7 @@ namespace Keyczar.Util
         /// <summary>
         /// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly")]
         public override void Close()
         {
             this.Dispose(false);
@@ -58,6 +59,7 @@ namespace Keyczar.Util
                 _stream.Dispose();
             }
             _stream = null;
+            base.Dispose(disposing);
         }
 
         /// <summary>

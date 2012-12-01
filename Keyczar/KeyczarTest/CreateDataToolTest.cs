@@ -241,6 +241,39 @@ namespace KeyczarTest
 
         }
 
+        [Test]
+        public void CreateAndModifyPbeKeySet()
+        {
+            string result, outPath;
+
+            var path = Util.TestDataPath(WRITE_DATA, "pbe_scratch");
+
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+
+            result = Util.KeyczarTool(create: null, name: "Test", location: path, purpose: "crypt");
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+
+            result = Util.KeyczarTool("passwordo","passwordo",password: null, location: path);
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgAddedPasssword));
+
+            result = Util.KeyczarTool("passwordo", "changed",  "changed", password: null, location: path);
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgChangedPassword));
+
+            result = Util.KeyczarTool("changed", password: null, location: path, remove: null);
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgRemovedPassword));
+        
+        
+        }
+
 
       
     }

@@ -57,6 +57,8 @@ namespace Keyczar
         /// </summary>
         /// <param name="keyData">The key data.</param>
         /// <param name="version">The version.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Catching to throw later"), 
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public void Write(byte[] keyData, int version)
         {
             CreateDir();
@@ -90,6 +92,8 @@ namespace Keyczar
         /// Writes the specified metadata.
         /// </summary>
         /// <param name="metadata">The metadata.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Catching to throw later"),
+        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public void Write(KeyMetadata metadata)
         {
             CreateDir();

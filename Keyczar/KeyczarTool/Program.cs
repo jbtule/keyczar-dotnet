@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using KeyczarTool.Commands;
 using ManyConsole;
 
 namespace KeyczarTool
@@ -38,6 +39,7 @@ namespace KeyczarTool
                                    new ImportKey(),
 								   new Export(),
                                    new UseKey(), 
+                                   new Password(), 
                                };
 
             // run the command for the console input

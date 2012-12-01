@@ -162,7 +162,7 @@ namespace Keyczar
                 }
                 if (!verify)
                 {
-                    throw new InvalidCryptoDataException("Ciphertext was invalid!");
+                    throw new InvalidCryptoDataException("Cipher text was invalid!");
                 }
             }
         }

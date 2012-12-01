@@ -15,7 +15,6 @@ namespace KeyczarTool
         private string _importLocation;
         private KeyStatus _status;
         private string _crypterLocation;
-        private bool _passphrase;
         private bool _password;
 
         public ImportKey()

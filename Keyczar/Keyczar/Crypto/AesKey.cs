@@ -48,7 +48,7 @@ namespace Keyczar.Crypto
         /// Gets or sets the aes key bytes.
         /// </summary>
         /// <value>The aes key bytes.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
         [JsonProperty("AesKeyString")]
         public byte[] AesKeyBytes { get; set; }
 
@@ -142,7 +142,7 @@ namespace Keyczar.Crypto
             {
                 return CipherMode.CBC;
             }
-            throw new InvalidKeyTypeException("Unsupport AES Mode: " + Mode);
+            throw new InvalidKeyTypeException("Unsupported AES Mode: " + Mode);
         }
 
         /// <summary>

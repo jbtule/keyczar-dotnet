@@ -34,6 +34,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Keyczar.XML</DocumentationFile>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>True</SignAssembly>
@@ -73,6 +75,7 @@
     <Compile Include="Crypto\Streams\ICipherTextOnly.cs" />
     <Compile Include="Crypto\Streams\SymmetricStream.cs" />
     <Compile Include="Crypto\IKey.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="KeySet\Manage\IKeySetWriter.cs" />
     <Compile Include="KeySet\Manage\MutableKeySet.cs" />
     <Compile Include="KeySet\Manage\EncryptedKeySetWriter.cs" />
@@ -108,6 +111,7 @@
     <Compile Include="Crypto\Streams\HashingStream.cs" />
     <Compile Include="Unofficial\BlobKeySetWriter.cs" />
     <Compile Include="Unofficial\BsonSessionKeyPacker.cs" />
+    <Compile Include="Unofficial\WebKeySet.cs" />
     <Compile Include="Util\CachedPrompt.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveBinaryReader.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveCryptoStream.cs" />

@@ -72,7 +72,7 @@ namespace Keyczar.Unofficial
         /// Gets or sets the aes key bytes.
         /// </summary>
         /// <value>The aes key bytes.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
         [JsonProperty("AesKeyString")]
         public byte[] AesKeyBytes { get; set; }
 
@@ -162,6 +162,10 @@ namespace Keyczar.Unofficial
         }
 
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
             AesKeyBytes = AesKeyBytes.Clear(); 

@@ -30,6 +30,7 @@ namespace Keyczar.Crypto.Streams
         /// Gets the hash value.
         /// </summary>
         /// <value>The hash value.</value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         public abstract byte[] HashValue { get; }
     
     }

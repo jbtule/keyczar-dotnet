@@ -112,11 +112,28 @@ namespace Keyczar
         /// </summary>
         public void Dispose()
         {
+            Dispose(true);
+                    GC.SuppressFinalize(this);
+        }
 
-            _keyset = _keyset.SafeDispose(); 
-            _crypter = _crypter.SafeDispose(); 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="SessionCrypter" /> class.
+        /// </summary>
+        ~SessionCrypter()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_crypter")]
+        protected virtual void Dispose(bool disposing)
+        {
+            _keyset = _keyset.SafeDispose();
+            _crypter = _crypter.SafeDispose();
             _sessionMaterial = SessionMaterial.Clear(); 
-
         }
 
         /// <summary>

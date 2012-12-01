@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<FxCopProject Version="1.36" Name="My FxCop Project">
+<FxCopProject Version="10.0" Name="My FxCop Project">
  <ProjectOptions>
   <SharedProject>True</SharedProject>
-  <Stylesheet Apply="False">c:\program files (x86)\microsoft fxcop 1.36\Xml\FxCopReport.xsl</Stylesheet>
+  <Stylesheet Apply="False">$(ProjectDir)/../../../../../../../../../program files (x86)/microsoft fxcop 1.36/Xml/FxCopReport.xsl</Stylesheet>
   <SaveMessages>
    <Project Status="Active, Excluded" NewOnly="False" />
    <Report Status="Active" NewOnly="False" />
@@ -38,7 +38,7 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36">
+ <FxCopReport Version="10.0">
   <Namespaces>
    <Namespace Name="Keyczar">
     <Messages>
@@ -324,19 +324,22 @@
               </Issue>
              </Message>
              <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2012-11-28 19:57:15Z">
-              <Issue>
+              <Issue Name="IFormatProviderAlternateString">
                <Item>'string.Format(string, object)'</Item>
                <Item>'Key.Generate(KeyType, int)'</Item>
                <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+               <Item>'CultureInfo.CurrentCulture'</Item>
+               <Item>'CultureInfo.InvariantCulture'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
            <Member Name="#Random">
             <Messages>
-             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2012-11-28 20:17:55Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-30 16:34:06Z">
               <Issue>
                <Item>'Key.Random'</Item>
+               <Item>'SecureRandom'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -359,56 +362,6 @@
            </Message>
           </Messages>
           <Members>
-           <Member Name="#.cctor()">
-            <Messages>
-             <Message TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'Keyczar.Keyczar()'</Item>
-               <Item>'Keyczar.FormatVersion'</Item>
-               <Item>'byte'</Item>
-               <Item>0</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#DefaultEncoding">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'Keyczar.DefaultEncoding'</Item>
-               <Item>'Encoding'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'Keyczar.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'Keyczar.Dispose()'</Item>
-              </Issue>
-              <Issue Name="DisposeSignature">
-               <Item>'Keyczar.Dispose()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#FormatBytes">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'Keyczar.FormatBytes'</Item>
-               <Item>'ReadOnlyArray&lt;byte&gt;'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#GetAllKeys()">
             <Messages>
              <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2012-11-28 19:57:15Z">
@@ -429,74 +382,6 @@
            </Member>
           </Members>
          </Type>
-         <Type Name="KeyMetadata">
-          <Members>
-           <Member Name="#Versions">
-            <Messages>
-             <Message TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'KeyMetadata.Versions'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="KeyPurpose">
-          <Members>
-           <Member Name="#DecryptAndEncrypt">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyPurpose.DecryptAndEncrypt'</Item>
-               <Item>'KeyPurpose'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Encrypt">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyPurpose.Encrypt'</Item>
-               <Item>'KeyPurpose'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#op_Implicit(System.String):Keyczar.KeyPurpose">
-            <Messages>
-             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Multiple">
-               <Item>ToXXX</Item>
-               <Item>FromXXX</Item>
-               <Item>'KeyPurpose.implicit operator KeyPurpose(string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#SignAndVerify">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyPurpose.SignAndVerify'</Item>
-               <Item>'KeyPurpose'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Verify">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyPurpose.Verify'</Item>
-               <Item>'KeyPurpose'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="KeySetWriter">
           <Members>
            <Member Name="#.ctor(System.String,System.Boolean)">
@@ -504,71 +389,6 @@
              <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
               <Issue>
                <Item>'KeySetWriter.KeySetWriter(string, bool)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Write(Keyczar.KeyMetadata)">
-            <Messages>
-             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'KeySetWriter.Write(KeyMetadata)'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Write(System.Byte[],System.Int32)">
-            <Messages>
-             <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'KeySetWriter.Write(byte[], int)'</Item>
-               <Item>'Exception'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="KeyStatus">
-          <Members>
-           <Member Name="#Active">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyStatus.Active'</Item>
-               <Item>'KeyStatus'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Inactive">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyStatus.Inactive'</Item>
-               <Item>'KeyStatus'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#op_Implicit(System.String):Keyczar.KeyStatus">
-            <Messages>
-             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Multiple">
-               <Item>ToXXX</Item>
-               <Item>FromXXX</Item>
-               <Item>'KeyStatus.implicit operator KeyStatus(string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Primary">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyStatus.Primary'</Item>
-               <Item>'KeyStatus'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -586,24 +406,8 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#Aes">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyType.Aes'</Item>
-               <Item>'KeyType'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#AesAead">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyType.AesAead'</Item>
-               <Item>'KeyType'</Item>
-              </Issue>
-             </Message>
              <Message Id="Aead" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
                <Item>Aead</Item>
@@ -614,18 +418,6 @@
            </Member>
            <Member Name="#DsaPriv">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyType.DsaPriv'</Item>
-               <Item>'KeyType'</Item>
-              </Issue>
-             </Message>
-             <Message Id="Dsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
-              <Issue Name="Member">
-               <Item>Dsa</Item>
-               <Item>'KeyType.DsaPriv'</Item>
-              </Issue>
-             </Message>
              <Message Id="Priv" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
                <Item>Priv</Item>
@@ -636,18 +428,6 @@
            </Member>
            <Member Name="#HmacSha1">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyType.HmacSha1'</Item>
-               <Item>'KeyType'</Item>
-              </Issue>
-             </Message>
-             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
-              <Issue Name="Member">
-               <Item>Hmac</Item>
-               <Item>'KeyType.HmacSha1'</Item>
-              </Issue>
-             </Message>
              <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
                <Item>Sha</Item>
@@ -656,23 +436,8 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#KeySizeOptions">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'KeyType.KeySizeOptions'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#KeySizes`1(System.Int32[])">
             <Messages>
-             <Message TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'KeyType.KeySizes&lt;T&gt;(params int[])'</Item>
-               <Item>'T'</Item>
-              </Issue>
-             </Message>
              <Message Id="0#" TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719" Created="2012-11-28 19:57:15Z">
               <Issue>
                <Item>'keySizes'</Item>
@@ -680,51 +445,12 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#op_Implicit(System.String):Keyczar.KeyType">
-            <Messages>
-             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Multiple">
-               <Item>ToXXX</Item>
-               <Item>FromXXX</Item>
-               <Item>'KeyType.implicit operator KeyType(string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#RsaPriv">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyType.RsaPriv'</Item>
-               <Item>'KeyType'</Item>
-              </Issue>
-             </Message>
              <Message Id="Priv" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
               <Issue Name="Member">
                <Item>Priv</Item>
                <Item>'KeyType.RsaPriv'</Item>
-              </Issue>
-             </Message>
-             <Message Id="Rsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
-              <Issue Name="Member">
-               <Item>Rsa</Item>
-               <Item>'KeyType.RsaPriv'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RsaPub">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:43:35Z">
-              <Issue>
-               <Item>'KeyType.RsaPub'</Item>
-               <Item>'KeyType'</Item>
-              </Issue>
-             </Message>
-             <Message Id="Rsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:43:35Z">
-              <Issue Name="Member">
-               <Item>Rsa</Item>
-               <Item>'KeyType.RsaPub'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -739,26 +465,6 @@
             </Issue>
            </Message>
           </Messages>
-          <Members>
-           <Member Name="#DigestSizes">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'KeyType.KeyTypeSpec.DigestSizes'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#KeySizes">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'KeyType.KeyTypeSpec.KeySizes'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
          </Type>
          <Type Name="KeyVersion">
           <Members>
@@ -829,34 +535,12 @@
           </Members>
          </Type>
          <Type Name="MutableKeySet">
-          <Messages>
-           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-            <Issue Name="ProvideDisposeBool">
-             <Item>'MutableKeySet'</Item>
-            </Issue>
-           </Message>
-          </Messages>
           <Members>
            <Member Name="#AddKey(Keyczar.KeyStatus,System.Int32,System.Object)">
             <Messages>
              <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
               <Issue>
                <Item>'MutableKeySet.AddKey(KeyStatus, int, object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'MutableKeySet.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'MutableKeySet.Dispose()'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -871,40 +555,13 @@
              <Item>'PbeKeySet'</Item>
             </Issue>
            </Message>
-           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-            <Issue Name="ProvideDisposeBool">
-             <Item>'PbeKeySet'</Item>
-            </Issue>
-           </Message>
           </Messages>
-          <Members>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'PbeKeySet.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'PbeKeySet.Dispose()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
          </Type>
          <Type Name="PbeKeySetWriter">
           <Messages>
            <Message Id="Pbe" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
             <Issue Name="Type">
              <Item>Pbe</Item>
-             <Item>'PbeKeySetWriter'</Item>
-            </Issue>
-           </Message>
-           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-            <Issue Name="ProvideDisposeBool">
              <Item>'PbeKeySetWriter'</Item>
             </Issue>
            </Message>
@@ -919,21 +576,6 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'PbeKeySetWriter.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'PbeKeySetWriter.Dispose()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
           </Members>
          </Type>
          <Type Name="SessionCrypter">
@@ -941,11 +583,6 @@
            <Message Id="Crypter" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
             <Issue Name="Type">
              <Item>Crypter</Item>
-             <Item>'SessionCrypter'</Item>
-            </Issue>
-           </Message>
-           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-            <Issue Name="ProvideDisposeBool">
              <Item>'SessionCrypter'</Item>
             </Issue>
            </Message>
@@ -983,38 +620,10 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'SessionCrypter.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="_crypter" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'SessionCrypter'</Item>
-               <Item>'SessionCrypter._crypter'</Item>
-               <Item>'Crypter'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'SessionCrypter.Dispose()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
           </Members>
          </Type>
          <Type Name="SessionCrypter+SimpleAesHmacSha1KeyPacker">
           <Messages>
-           <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-            <Issue Name="Type">
-             <Item>Hmac</Item>
-             <Item>'SessionCrypter.SimpleAesHmacSha1KeyPacker'</Item>
-            </Issue>
-           </Message>
            <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
             <Issue Name="Type">
              <Item>Sha</Item>
@@ -1037,64 +646,6 @@
                <Item>'Signer.Sign(Stream, Stream, object, object, object)'</Item>
                <Item>outstream</Item>
                <Item>'outstream'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="TimeoutSigner">
-          <Members>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'TimeoutSigner.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="_signer" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'TimeoutSigner'</Item>
-               <Item>'TimeoutSigner._signer'</Item>
-               <Item>'TimeoutSigner.TimeoutSignerHelper'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'TimeoutSigner.Dispose()'</Item>
-              </Issue>
-              <Issue Name="DisposeSignature">
-               <Item>'TimeoutSigner.Dispose()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="TimeoutVerifier">
-          <Members>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'TimeoutVerifier.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="_verifier" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'TimeoutVerifier'</Item>
-               <Item>'TimeoutVerifier._verifier'</Item>
-               <Item>'Verifier'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'TimeoutVerifier.Dispose()'</Item>
-              </Issue>
-              <Issue Name="DisposeSignature">
-               <Item>'TimeoutVerifier.Dispose()'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1133,34 +684,12 @@
           </Members>
          </Type>
          <Type Name="ImportedKeySet">
-          <Messages>
-           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-            <Issue Name="ProvideDisposeBool">
-             <Item>'ImportedKeySet'</Item>
-            </Issue>
-           </Message>
-          </Messages>
           <Members>
            <Member Name="#.ctor(Keyczar.Key,Keyczar.KeyPurpose,System.String)">
             <Messages>
              <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Created="2012-11-28 19:57:15Z">
               <Issue>
                <Item>'ImportedKeySet.ImportedKeySet(Key, KeyPurpose, string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'ImportedKeySet.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'ImportedKeySet.Dispose()'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1264,15 +793,6 @@
         <Types>
          <Type Name="AesKey">
           <Members>
-           <Member Name="#AesKeyBytes">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'AesKey.AesKeyBytes'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#BlockLength">
             <Messages>
              <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2012-11-28 19:57:15Z">
@@ -1282,27 +802,9 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#HmacKey">
-            <Messages>
-             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>Hmac</Item>
-               <Item>'AesKey.HmacKey'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
           </Members>
          </Type>
          <Type Name="DsaPrivateKey">
-          <Messages>
-           <Message Id="Dsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-            <Issue Name="Type">
-             <Item>Dsa</Item>
-             <Item>'DsaPrivateKey'</Item>
-            </Issue>
-           </Message>
-          </Messages>
           <Members>
            <Member Name="#X">
             <Messages>
@@ -1316,14 +818,6 @@
           </Members>
          </Type>
          <Type Name="DsaPublicKey">
-          <Messages>
-           <Message Id="Dsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-            <Issue Name="Type">
-             <Item>Dsa</Item>
-             <Item>'DsaPublicKey'</Item>
-            </Issue>
-           </Message>
-          </Messages>
           <Members>
            <Member Name="#G">
             <Messages>
@@ -1365,12 +859,6 @@
          </Type>
          <Type Name="HmacSha1Key">
           <Messages>
-           <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-            <Issue Name="Type">
-             <Item>Hmac</Item>
-             <Item>'HmacSha1Key'</Item>
-            </Issue>
-           </Message>
            <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
             <Issue Name="Type">
              <Item>Sha</Item>
@@ -1384,21 +872,6 @@
              <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2012-11-28 19:57:15Z">
               <Issue>
                <Item>'HmacSha1Key.HashLength'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#HmacKeyBytes">
-            <Messages>
-             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>Hmac</Item>
-               <Item>'HmacSha1Key.HmacKeyBytes'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'HmacSha1Key.HmacKeyBytes'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1487,14 +960,6 @@
           </Members>
          </Type>
          <Type Name="RsaPrivateKey">
-          <Messages>
-           <Message Id="Rsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-            <Issue Name="Type">
-             <Item>Rsa</Item>
-             <Item>'RsaPrivateKey'</Item>
-            </Issue>
-           </Message>
-          </Messages>
           <Members>
            <Member Name="#GetTagLength(System.Byte[])">
             <Messages>
@@ -1514,14 +979,6 @@
           </Members>
          </Type>
          <Type Name="RsaPublicKey">
-          <Messages>
-           <Message Id="Rsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-            <Issue Name="Type">
-             <Item>Rsa</Item>
-             <Item>'RsaPublicKey'</Item>
-            </Issue>
-           </Message>
-          </Messages>
           <Members>
            <Member Name="#GetTagLength(System.Byte[])">
             <Messages>
@@ -1561,94 +1018,12 @@
            <Member Name="#UpdatePadding(Org.BouncyCastle.Crypto.IAsymmetricBlockCipher)">
             <Messages>
              <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2012-11-28 19:57:15Z">
-              <Issue>
+              <Issue Name="IFormatProviderAlternateString">
                <Item>'string.Format(string, object)'</Item>
                <Item>'RsaPublicKey.UpdatePadding(IAsymmetricBlockCipher)'</Item>
                <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Keyczar.Crypto.Streams">
-        <Types>
-         <Type Name="DigestStream">
-          <Members>
-           <Member Name="#.ctor(Org.BouncyCastle.Crypto.ISigner)">
-            <Messages>
-             <Message Id="dsa" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-              <Issue Name="MemberParameter">
-               <Item>'DigestStream.DigestStream(ISigner)'</Item>
-               <Item>dsa</Item>
-               <Item>'dsaDigestSigner'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DotNetSymmetricStream">
-          <Members>
-           <Member Name="#Dispose(System.Boolean)">
-            <Messages>
-             <Message Id="_output" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'DotNetSymmetricStream'</Item>
-               <Item>'DotNetSymmetricStream._output'</Item>
-               <Item>'CryptoStream'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="FinishingStream">
-          <Members>
-           <Member Name="#Close()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="OutsideDispose">
-               <Item>'FinishingStream.Close()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="HashingStream">
-          <Members>
-           <Member Name="#HashValue">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'HashingStream.HashValue'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="HmacStream">
-          <Messages>
-           <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-            <Issue Name="Type">
-             <Item>Hmac</Item>
-             <Item>'HmacStream'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-         <Type Name="ICipherTextOnly">
-          <Members>
-           <Member Name="#IV">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 21:20:02Z">
-              <Issue>
-               <Item>'ICipherTextOnly.IV'</Item>
+               <Item>'CultureInfo.CurrentCulture'</Item>
+               <Item>'CultureInfo.InvariantCulture'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1671,18 +1046,6 @@
           <Members>
            <Member Name="#HmacSha1">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:45:25Z">
-              <Issue>
-               <Item>'PbeHashType.HmacSha1'</Item>
-               <Item>'PbeHashType'</Item>
-              </Issue>
-             </Message>
-             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:45:25Z">
-              <Issue Name="Member">
-               <Item>Hmac</Item>
-               <Item>'PbeHashType.HmacSha1'</Item>
-              </Issue>
-             </Message>
              <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:45:25Z">
               <Issue Name="Member">
                <Item>Sha</Item>
@@ -1693,33 +1056,10 @@
            </Member>
            <Member Name="#HmacSha256">
             <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:45:25Z">
-              <Issue>
-               <Item>'PbeHashType.HmacSha256'</Item>
-               <Item>'PbeHashType'</Item>
-              </Issue>
-             </Message>
-             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:45:25Z">
-              <Issue Name="Member">
-               <Item>Hmac</Item>
-               <Item>'PbeHashType.HmacSha256'</Item>
-              </Issue>
-             </Message>
              <Message Id="Sha" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-29 20:45:25Z">
               <Issue Name="Member">
                <Item>Sha</Item>
                <Item>'PbeHashType.HmacSha256'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#op_Implicit(System.String):Keyczar.Pbe.PbeHashType">
-            <Messages>
-             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Multiple">
-               <Item>ToXXX</Item>
-               <Item>FromXXX</Item>
-               <Item>'PbeHashType.implicit operator PbeHashType(string)'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1736,48 +1076,12 @@
            </Message>
           </Messages>
           <Members>
-           <Member Name="#Hmac">
-            <Messages>
-             <Message Id="Hmac" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>Hmac</Item>
-               <Item>'PbeKeyStore.Hmac'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#IV">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'PbeKeyStore.IV'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Key">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'PbeKeyStore.Key'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#Random">
             <Messages>
-             <Message TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211" Created="2012-11-28 20:17:55Z">
+             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-30 16:34:06Z">
               <Issue>
                <Item>'PbeKeyStore.Random'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Salt">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'PbeKeyStore.Salt'</Item>
+               <Item>'SecureRandom'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -1793,29 +1097,6 @@
             </Issue>
            </Message>
           </Messages>
-          <Members>
-           <Member Name="#Aes128">
-            <Messages>
-             <Message TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104" Created="2012-11-29 20:45:25Z">
-              <Issue>
-               <Item>'PbeKeyType.Aes128'</Item>
-               <Item>'PbeKeyType'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#op_Implicit(System.String):Keyczar.Pbe.PbeKeyType">
-            <Messages>
-             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Multiple">
-               <Item>ToXXX</Item>
-               <Item>FromXXX</Item>
-               <Item>'PbeKeyType.implicit operator PbeKeyType(string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
          </Type>
         </Types>
        </Namespace>
@@ -1831,15 +1112,6 @@
            </Message>
           </Messages>
           <Members>
-           <Member Name="#AesKeyBytes">
-            <Messages>
-             <Message TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'AesAeadKey.AesKeyBytes'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#BlockLength">
             <Messages>
              <Message TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051" Created="2012-11-28 19:57:15Z">
@@ -1890,31 +1162,6 @@
            </Member>
           </Members>
          </Type>
-         <Type Name="BlobKeySetWriter">
-          <Members>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'BlobKeySetWriter.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Dispose(System.Boolean)">
-            <Messages>
-             <Message Id="_zipFile" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'BlobKeySetWriter'</Item>
-               <Item>'BlobKeySetWriter._zipFile'</Item>
-               <Item>'ZipFile'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="BsonSessionKeyPacker">
           <Messages>
            <Message Id="Bson" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
@@ -1938,46 +1185,6 @@
        </Namespace>
        <Namespace Name="Keyczar.Util">
         <Types>
-         <Type Name="CachedPrompt">
-          <Messages>
-           <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-            <Issue Name="ProvideDisposeBool">
-             <Item>'CachedPrompt'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-          <Members>
-           <Member Name="#Dispose()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="NotCalled">
-               <Item>'CachedPrompt.Dispose()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-             <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Created="2012-11-28 19:57:15Z">
-              <Issue Name="DisposeImplementation">
-               <Item>'CachedPrompt.Dispose()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="NondestructiveLengthLimitingStream">
-          <Members>
-           <Member Name="#Close()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 21:13:45Z">
-              <Issue Name="OutsideDispose">
-               <Item>'NondestructiveLengthLimitingStream.Close()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="NondestructiveZipFile">
           <Messages>
            <Message TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710" Created="2012-11-28 19:57:15Z">
@@ -1997,19 +1204,6 @@
             </Issue>
            </Message>
           </Messages>
-          <Members>
-           <Member Name="#op_Implicit(Keyczar.Util.ReadOnlyArray`1&lt;!0&gt;):!0[]">
-            <Messages>
-             <Message TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Multiple">
-               <Item>ToXXX</Item>
-               <Item>FromXXX</Item>
-               <Item>'ReadOnlyArray&lt;T&gt;.implicit operator T[](ReadOnlyArray&lt;T&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
          </Type>
          <Type Name="Secure">
           <Members>
@@ -2082,16 +1276,6 @@
            </Member>
           </Members>
          </Type>
-         <Type Name="StringTypeJsonConverter">
-          <Messages>
-           <Message Id="Json" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-            <Issue Name="Type">
-             <Item>Json</Item>
-             <Item>'StringTypeJsonConverter'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
          <Type Name="Utility">
           <Members>
            <Member Name="#ReadHeader(System.Byte[],System.Byte[]&amp;)">
@@ -2122,16 +1306,6 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#ToJson(System.Object)">
-            <Messages>
-             <Message Id="Json" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-11-28 19:57:15Z">
-              <Issue Name="Member">
-               <Item>Json</Item>
-               <Item>'Utility.ToJson(this object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
           </Members>
          </Type>
          <Type Name="WebSafeBase64">
@@ -2149,25 +1323,6 @@
          </Type>
          <Type Name="WebSafeBase64+Base64DecodingException">
           <Messages>
-           <Message TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032" Created="2012-11-28 19:57:15Z">
-            <Issue Name="MissingConstructor">
-             <Item>'WebSafeBase64.Base64DecodingException'</Item>
-             <Item>protected Base64DecodingException(SerializationInfo, StreamingContext)</Item>
-            </Issue>
-            <Issue Name="MissingConstructor">
-             <Item>'WebSafeBase64.Base64DecodingException'</Item>
-             <Item>public Base64DecodingException()</Item>
-            </Issue>
-            <Issue Name="MissingConstructor">
-             <Item>'WebSafeBase64.Base64DecodingException'</Item>
-             <Item>public Base64DecodingException(String, Exception)</Item>
-            </Issue>
-           </Message>
-           <Message TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237" Created="2012-11-28 19:57:15Z">
-            <Issue Certainty="95" Level="Error">
-             <Item>'WebSafeBase64.Base64DecodingException'</Item>
-            </Issue>
-           </Message>
            <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Created="2012-11-28 19:57:15Z">
             <Issue>
              <Item>'WebSafeBase64.Base64DecodingException'</Item>
@@ -2196,36 +1351,6 @@
             </Issue>
            </Message>
           </Messages>
-          <Members>
-           <Member Name="#Close()">
-            <Messages>
-             <Message TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816" Created="2012-11-28 19:57:15Z">
-              <Issue Name="OutsideDispose">
-               <Item>'WriteDecompressGzipStream.Close()'</Item>
-               <Item>'GC.SuppressFinalize(object)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Dispose(System.Boolean)">
-            <Messages>
-             <Message Id="_gzipread" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'WriteDecompressGzipStream'</Item>
-               <Item>'WriteDecompressGzipStream._gzipread'</Item>
-               <Item>'Stream'</Item>
-              </Issue>
-             </Message>
-             <Message Id="_tempStream" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Created="2012-11-28 19:57:15Z">
-              <Issue>
-               <Item>'WriteDecompressGzipStream'</Item>
-               <Item>'WriteDecompressGzipStream._tempStream'</Item>
-               <Item>'Stream'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
          </Type>
         </Types>
        </Namespace>
@@ -2244,36 +1369,17 @@
    <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
     <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
    </Rule>
-   <Rule TypeName="CallGCSuppressFinalizeCorrectly" Category="Microsoft.Usage" CheckId="CA1816">
-    <Resolution Name="NotCalled">Change {0} to call {1}. This will prevent unnecessary finalization of the object once it has been disposed and it has fallen out of scope.</Resolution>
-    <Resolution Name="OutsideDispose">{0} calls {1}, a method that is typically only called within an implementation of 'IDisposable.Dispose'. Refer to the IDisposable pattern for more information.</Resolution>
-   </Rule>
-   <Rule TypeName="CollectionPropertiesShouldBeReadOnly" Category="Microsoft.Usage" CheckId="CA2227">
-    <Resolution Name="Default">Change {0} to be read-only by removing the property setter.</Resolution>
-   </Rule>
    <Rule TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026">
     <Resolution Name="Default">Replace method {0} with an overload that supplies all default arguments.</Resolution>
    </Rule>
-   <Rule TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213">
-    <Resolution Name="Default">{0} contains field {1} that is of IDisposable type: {2}. Change the Dispose method on {0} to call Dispose or Close on this field.</Resolution>
-   </Rule>
    <Rule TypeName="DoNotCastUnnecessarily" Category="Microsoft.Performance" CheckId="CA1800">
     <Resolution Name="Local">{0}, a variable, is cast to type {1} multiple times in method {2}. Cache the result of the 'as' operator or direct cast in order to eliminate the redundant {3} instruction.</Resolution>
-   </Rule>
-   <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
-    <Resolution Name="Default">Modify {0} to catch a more specific exception than {1} or rethrow the exception.</Resolution>
    </Rule>
    <Rule TypeName="DoNotDeclareReadOnlyMutableReferenceTypes" Category="Microsoft.Security" CheckId="CA2104">
     <Resolution Name="Default">Remove the read-only designation from {0} or change the field to one that is an immutable reference type. If the reference type {1} is, in fact, immutable, exclude this message.</Resolution>
    </Rule>
    <Rule TypeName="DoNotDeclareVisibleInstanceFields" Category="Microsoft.Design" CheckId="CA1051">
     <Resolution Name="Default">Because field {0} is visible outside of its declaring type, change its accessibility to private and add a property, with the same accessibility as the field has currently, to provide access to it.</Resolution>
-   </Rule>
-   <Rule TypeName="DoNotInitializeUnnecessarily" Category="Microsoft.Performance" CheckId="CA1805">
-    <Resolution Name="Default">{0} initializes field {1} of type {2} to {3}. Remove this initialization because it will be done automatically by the runtime.</Resolution>
-   </Rule>
-   <Rule TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004">
-    <Resolution Name="Default">Consider a design where {0} doesn't require explicit type parameter {1} in any call to it.</Resolution>
    </Rule>
    <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
     <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
@@ -2287,19 +1393,8 @@
    <Rule TypeName="IdentifiersShouldHaveCorrectSuffix" Category="Microsoft.Naming" CheckId="CA1710">
     <Resolution Name="Default">Rename {0} to end in '{1}'.</Resolution>
    </Rule>
-   <Rule TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063">
-    <Resolution Name="DisposeImplementation">Modify {0} so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns.</Resolution>
-    <Resolution Name="DisposeSignature">Ensure that {0} is declared as public and sealed.</Resolution>
-    <Resolution Name="ProvideDisposeBool">Provide an overridable implementation of Dispose(bool) on {0} or mark the type as sealed. A call to Dispose(false) should only clean up native resources. A call to Dispose(true) should clean up both managed and native resources.</Resolution>
-   </Rule>
-   <Rule TypeName="ImplementStandardExceptionConstructors" Category="Microsoft.Design" CheckId="CA1032">
-    <Resolution Name="MissingConstructor">Add the following constructor to {0}: {1}.</Resolution>
-   </Rule>
    <Rule TypeName="InitializeReferenceTypeStaticFieldsInline" Category="Microsoft.Performance" CheckId="CA1810">
     <Resolution Name="Default">Initialize all static fields in {0} when those fields are declared and remove the explicit static constructor.</Resolution>
-   </Rule>
-   <Rule TypeName="MarkISerializableTypesWithSerializable" Category="Microsoft.Usage" CheckId="CA2237">
-    <Resolution Name="Default">Add [Serializable] to {0} as this type implements ISerializable.</Resolution>
    </Rule>
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
@@ -2310,20 +1405,14 @@
    <Rule TypeName="NonConstantFieldsShouldNotBeVisible" Category="Microsoft.Usage" CheckId="CA2211">
     <Resolution Name="Default">Consider making {0} non-public or a constant.</Resolution>
    </Rule>
-   <Rule TypeName="OperatorOverloadsHaveNamedAlternates" Category="Microsoft.Usage" CheckId="CA2225">
-    <Resolution Name="Multiple">Provide a method named '{0}' or '{1}' as an alternate for operator {2}.</Resolution>
-   </Rule>
    <Rule TypeName="ParameterNamesShouldNotMatchMemberNames" Category="Microsoft.Naming" CheckId="CA1719">
     <Resolution Name="Default">Change either member or parameter name {0} so that one differs from the other.</Resolution>
-   </Rule>
-   <Rule TypeName="PropertiesShouldNotReturnArrays" Category="Microsoft.Performance" CheckId="CA1819">
-    <Resolution Name="Default">Change {0} to return a collection or make it a method.</Resolution>
    </Rule>
    <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
     <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
    </Rule>
    <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
-    <Resolution Name="Default">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Resolution>
+    <Resolution Name="IFormatProviderAlternateString">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify {3} as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify {4}.</Resolution>
    </Rule>
    <Rule TypeName="TypeNamesShouldNotMatchNamespaces" Category="Microsoft.Naming" CheckId="CA1724">
     <Resolution Name="Default">The type name {0} conflicts in whole or in part with the namespace name '{1}'. Change either name to eliminate the conflict.</Resolution>

@@ -38,6 +38,7 @@ namespace Keyczar.Util
         /// </summary>
         /// <param name="array">The array.</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Linq Provides the alternative")]
         public static implicit operator T[](ReadOnlyArray<T> array)
         {
             return array.ToArray();

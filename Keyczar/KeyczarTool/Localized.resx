@@ -62,10 +62,10 @@
   <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
     <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
     <xsd:element name="root" msdata:IsDataSet="true">
-      <xsd:complexRepresentedType>
+      <xsd:complexType>
         <xsd:choice maxOccurs="unbounded">
           <xsd:element name="metadata">
-            <xsd:complexRepresentedType>
+            <xsd:complexType>
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" />
               </xsd:sequence>
@@ -73,16 +73,16 @@
               <xsd:attribute name="type" type="xsd:string" />
               <xsd:attribute name="mimetype" type="xsd:string" />
               <xsd:attribute ref="xml:space" />
-            </xsd:complexRepresentedType>
+            </xsd:complexType>
           </xsd:element>
           <xsd:element name="assembly">
-            <xsd:complexRepresentedType>
+            <xsd:complexType>
               <xsd:attribute name="alias" type="xsd:string" />
               <xsd:attribute name="name" type="xsd:string" />
-            </xsd:complexRepresentedType>
+            </xsd:complexType>
           </xsd:element>
           <xsd:element name="data">
-            <xsd:complexRepresentedType>
+            <xsd:complexType>
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
                 <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
@@ -91,18 +91,18 @@
               <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
               <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
               <xsd:attribute ref="xml:space" />
-            </xsd:complexRepresentedType>
+            </xsd:complexType>
           </xsd:element>
           <xsd:element name="resheader">
-            <xsd:complexRepresentedType>
+            <xsd:complexType>
               <xsd:sequence>
                 <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
               </xsd:sequence>
               <xsd:attribute name="name" type="xsd:string" use="required" />
-            </xsd:complexRepresentedType>
+            </xsd:complexType>
           </xsd:element>
         </xsd:choice>
-      </xsd:complexRepresentedType>
+      </xsd:complexType>
     </xsd:element>
   </xsd:schema>
   <resheader name="resmimetype">
@@ -320,5 +320,30 @@
   <data name="MsgForExport" xml:space="preserve">
     <value>For your export file,</value>
     <comment>msg to describe password input type</comment>
+  </data>
+  <data name="PasswordCommand" xml:space="preserve">
+    <value>Adds, changes, or removes password from PBE keyset.</value>
+    <comment>Password command description</comment>
+  </data>
+  <data name="MsgRemovedPassword" xml:space="preserve">
+    <value>Removed the password from the keyset.</value>
+    <comment>Success message</comment>
+  </data>
+  <data name="PasswordPromptOldPassword" xml:space="preserve">
+    <value>--Old Password--</value>
+    <comment>Prompt as Old before password</comment>
+  </data>
+  <data name="PasswordPromptNewPassword" xml:space="preserve">
+    <value>--New Password--</value>
+    <comment>Prompt before new password prompt</comment>
+  </data>
+  <data name="MsgAddedPasssword" xml:space="preserve">
+    <value>Added Password to PBE Keyset.</value>
+    <comment>sucess message
+</comment>
+  </data>
+  <data name="MsgChangedPassword" xml:space="preserve">
+    <value>Changed Password for PBE Keyset.</value>
+    <comment>success message</comment>
   </data>
 </root>

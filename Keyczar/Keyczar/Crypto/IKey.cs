@@ -31,6 +31,10 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         byte[] GetKeyHash();
 
+        /// <summary>
+        /// Gets the fallback key hash.
+        /// </summary>
+        /// <returns></returns>
 		IEnumerable<byte[]> GetFallbackKeyHash();
 
     }

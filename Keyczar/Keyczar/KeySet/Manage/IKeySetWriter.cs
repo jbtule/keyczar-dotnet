@@ -41,6 +41,14 @@ namespace Keyczar
 
 
     /// <summary>
+    /// KeyWriter that always needs to rewrite out it's key data even there is only a meta data change
+    /// </summary>
+    public interface INonSeparatedMetadataAndKey
+    {
+        
+    }
+
+    /// <summary>
     /// Interface for mechanisms to store keysets
     /// </summary>
     public interface IKeySetWriter 

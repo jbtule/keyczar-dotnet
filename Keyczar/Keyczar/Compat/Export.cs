@@ -29,6 +29,7 @@ namespace Keyczar.Compat
         /// <returns></returns>
         /// <exception cref="InvalidKeyTypeException">Needs to be a private key.</exception>
         /// <exception cref="InvalidKeyTypeException">Non exportable key type.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public static bool ExportPrimaryAsPkcs(this IKeySet keySet, string location, Func<string> passwordPrompt)
         {
             var i =keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;

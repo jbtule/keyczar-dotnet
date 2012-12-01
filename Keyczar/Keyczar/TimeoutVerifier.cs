@@ -66,10 +66,11 @@ namespace Keyczar
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
-        public override void Dispose()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_verifier")]
+        protected override void Dispose(bool disposing)
         {
-            _verifier = _verifier.SafeDispose(); 
-            base.Dispose();
+            _verifier = _verifier.SafeDispose();
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -104,6 +105,7 @@ namespace Keyczar
         /// <param name="data">The data.</param>
         /// <param name="signature">The signature.</param>
         /// <returns></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public bool Verify(Stream data, byte[] signature)
         {
             var milliseconds = FromDateTime(DateTime.Now);
