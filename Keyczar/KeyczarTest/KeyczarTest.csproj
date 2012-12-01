@@ -69,6 +69,7 @@
     <Compile Include="SignerTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SignerTimeoutTest.cs" />
+    <Compile Include="Unofficial\WebKeySetTest.cs" />
     <Compile Include="Util.cs" />
     <Compile Include="CreateDataManageTest.cs" />
     <Compile Include="ToolTest.cs" />

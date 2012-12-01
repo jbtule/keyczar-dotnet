@@ -34,6 +34,7 @@ namespace Keyczar.Crypto.Streams
         /// Gets or sets the IV.
         /// </summary>
         /// <value>The IV.</value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
         byte[] IV { get; set; }
     }
 

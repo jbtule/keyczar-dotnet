@@ -32,6 +32,7 @@ namespace Keyczar
         /// <summary>
         /// Default encoding used through out (UTF8)
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly Encoding DefaultEncoding = Encoding.UTF8;
 
         /// <summary>
@@ -47,6 +48,7 @@ namespace Keyczar
         /// <summary>
         /// Keyczar format version bytes for header
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly ReadOnlyArray<byte> FormatBytes = ReadOnlyArray.Create(FormatVersion);
         /// <summary>
         /// Full keyczar format header length
@@ -67,7 +69,24 @@ namespace Keyczar
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public virtual void Dispose()
+        public void Dispose()
+        {
+           Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="Keyczar" /> class.
+        /// </summary>
+        ~Keyczar()
+        {
+            Dispose(false);
+        }
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
         {
             foreach (var key in _hashedKeys.SelectMany(it => it.Value).Select(it => it.Value))
             {
@@ -75,7 +94,7 @@ namespace Keyczar
             }
             _versions.Clear();
             _hashedKeys.Clear();
-			_hashedFallbackKeys.Clear();
+            _hashedFallbackKeys.Clear();
         }
 
         /// <summary>
@@ -101,15 +120,31 @@ namespace Keyczar
                 .Select(v =>
                             {
                                 var key = keySet.GetKey(v.VersionNumber);
-                                return new {Hash = key.GetKeyHash(), Version = v, CryptKey = key};
+                                return Tuple.Create(key.GetKeyHash(), v, key);
                             })
                 .ToList();
 
             _primaryVersion = metadata.Versions.SingleOrDefault(it => it.Status == KeyStatus.Primary);
 
-            _versions = versions.ToDictionary(k => k.Version.VersionNumber, v => v.CryptKey);
+            _versions = versions.ToDictionary(k => k.Item2.VersionNumber, v => v.Item3);
 
-            _hashedKeys = versions
+            _hashedKeys = HashKeys(versions);
+			_hashedFallbackKeys = HashedFallbackKeys(versions);
+        }
+
+        private static Dictionary<int, List<Key>> HashedFallbackKeys(IList<Tuple<byte[], KeyVersion, Key>> versions)
+        {
+            return versions   
+                .Select(t=>new {Hash =t.Item1, Version=t.Item2, CryptKey =t.Item3})
+                .SelectMany(k=> k.CryptKey.GetFallbackKeyHash().Select(h=>new{ Hash = h, CryptKey = k.CryptKey}))
+                .ToLookup(k=> Utility.ToInt32(k.Hash), v=>v.CryptKey)
+                .ToDictionary(k=>k.Key,v=>v.ToList());
+        }
+
+        private static Dictionary<int, SortedList<KeyVersion, Key>> HashKeys(IList<Tuple<byte[],KeyVersion,Key>> versions)
+        {
+            return versions
+                .Select(t=>new {Hash =t.Item1, Version=t.Item2, CryptKey =t.Item3})
                 .ToLookup(k => Utility.ToInt32(k.Hash), v => v)
                 .ToDictionary(k => k.Key, v =>
                                               {
@@ -120,10 +155,6 @@ namespace Keyczar
                                                   }
                                                   return list;
                                               });
-			_hashedFallbackKeys = versions
-				.SelectMany(k=> k.CryptKey.GetFallbackKeyHash().Select(h=>new{ Hash = h, CryptKey = k.CryptKey}))
-				.ToLookup(k=> Utility.ToInt32(k.Hash), v=>v.CryptKey)
-				.ToDictionary(k=>k.Key,v=>v.ToList());
         }
 
         /// <summary>

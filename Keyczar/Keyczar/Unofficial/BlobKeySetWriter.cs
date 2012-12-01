@@ -26,7 +26,7 @@ namespace Keyczar.Unofficial
     /// <summary>
     /// Writes keyset to a single zipped up blob
     /// </summary>
-    public class BlobKeySetWriter:IKeySetWriter, IDisposable
+    public class BlobKeySetWriter : IKeySetWriter, IDisposable, INonSeparatedMetadataAndKey
     {
         private Stream _writeStream;
         ZipFile _zipFile = new NondestructiveZipFile();
@@ -76,12 +76,22 @@ namespace Keyczar.Unofficial
         public void Dispose()
         {
             Dispose(false);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="BlobKeySetWriter" /> class.
+        /// </summary>
+        ~BlobKeySetWriter()
+        {
+            Dispose(false);
         }
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_zipFile")]
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)

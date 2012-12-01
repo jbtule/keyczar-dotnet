@@ -108,6 +108,7 @@ namespace Keyczar
             /// <param name="hidden">The hidden data used to generate the digest signature.</param>
             /// <returns></returns>
             /// <exception cref="InvalidCryptoDataException">Data doesn't appear to have signatures attached!</exception>
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
             public bool VerifyHidden(Stream signedMessage, byte[] hidden)
             {
         

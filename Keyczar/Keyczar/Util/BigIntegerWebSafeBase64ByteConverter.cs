@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
@@ -195,6 +196,7 @@ namespace Keyczar.Util
         /// <summary>
         /// Decoding exception
         /// </summary>
+        [Serializable]
         public class Base64DecodingException : Exception
         {
             /// <summary>
@@ -205,6 +207,40 @@ namespace Keyczar.Util
             {
 
             }
+
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Base64DecodingException" /> class.
+            /// </summary>
+          public Base64DecodingException():base()
+        {
+            
+        }
+
+
+
+          /// <summary>
+          /// Initializes a new instance of the <see cref="Base64DecodingException" /> class.
+          /// </summary>
+          /// <param name="message">The message.</param>
+          /// <param name="innerException">The inner exception.</param>
+        public Base64DecodingException(string message, Exception innerException)
+            : base(message,innerException)
+        {
+
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Base64DecodingException" /> class.
+        /// </summary>
+        /// <param name="info">The info.</param>
+        /// <param name="context">The context.</param>
+        protected Base64DecodingException(SerializationInfo info,
+                    StreamingContext context):base(info,context)
+        {
+
+        }
+
         }
 
         private static bool IsWhiteSpace(int i)

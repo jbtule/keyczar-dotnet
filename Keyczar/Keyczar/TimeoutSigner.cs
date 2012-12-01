@@ -50,10 +50,11 @@ namespace Keyczar
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
-        public override void Dispose()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_signer")]
+        protected override void Dispose(bool disposing)
         {
             _signer = _signer.SafeDispose(); 
-            base.Dispose();
+            base.Dispose(disposing);
         }
 
         /// <summary>

@@ -39,7 +39,7 @@ namespace Keyczar.Pbe
         /// <summary>
         /// Random number generator
         /// </summary>
-        protected static SecureRandom Random = new SecureRandom();
+        protected static readonly SecureRandom Random = new SecureRandom();
 
         /// <summary>
         /// Encrypts the key data.
@@ -99,21 +99,21 @@ namespace Keyczar.Pbe
         /// Gets or sets the IV.
         /// </summary>
         /// <value>The IV.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
         public byte[] IV { get; set; }
 
         /// <summary>
         /// Gets or sets the encrypted key.
         /// </summary>
         /// <value>The key.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
         public byte[] Key { get; set; }
 
         /// <summary>
         /// Gets or sets the salt.
         /// </summary>
         /// <value>The salt.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
         public byte[] Salt { get; set; }
 
 

@@ -38,7 +38,7 @@ namespace Keyczar.Crypto
         /// Gets or sets the hmac key bytes.
         /// </summary>
         /// <value>The hmac key bytes.</value>
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
         [JsonProperty("HmacKeyString")]
         public byte[] HmacKeyBytes { get; set; }
 

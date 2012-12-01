@@ -89,6 +89,11 @@ namespace Keyczar.Util
             }
         }
 
+        /// <summary>
+        /// To the system standard big integer.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
 		public static BigInteger ToSystemBigInteger(this Org.BouncyCastle.Math.BigInteger value){
 			var bytes = value.ToByteArray();
 			if(BitConverter.IsLittleEndian){
@@ -98,6 +103,11 @@ namespace Keyczar.Util
 			return bigint;
 		}
 
+        /// <summary>
+        /// To the bouncy castle big integer.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        /// <returns></returns>
 		public static Org.BouncyCastle.Math.BigInteger ToBouncyBigInteger(this BigInteger value){
 			var bytes = Utility.GetBytes(value);
 			var bigint = new Org.BouncyCastle.Math.BigInteger(bytes);

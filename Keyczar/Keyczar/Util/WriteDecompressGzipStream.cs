@@ -42,7 +42,8 @@ namespace Keyczar.Util
 		/// <summary>
 		/// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
 		/// </summary>
-		public override void Close()
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA1816:CallGCSuppressFinalizeCorrectly")]
+        public override void Close()
 		{
 			this.Dispose(false);
 			GC.SuppressFinalize(this);
@@ -52,7 +53,8 @@ namespace Keyczar.Util
         /// Releases the unmanaged resources used by the <see cref="T:System.IO.Stream"/> and optionally releases the managed resources.
         /// </summary>
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
-		protected override void Dispose (bool disposing)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_tempStream"), System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_gzipread")]
+        protected override void Dispose (bool disposing)
 		{
 		    _tempStream.Seek(0, SeekOrigin.Begin);
             _gzipread.CopyTo(_stream);
@@ -64,6 +66,7 @@ namespace Keyczar.Util
 				_stream.Dispose();
 			}
 			_stream =null;
+            base.Dispose(disposing);
 		}
 
         /// <summary>

@@ -92,7 +92,7 @@ namespace Keyczar
         /// Gets or sets the versions.
         /// </summary>
         /// <value>The versions.</value>
-        public IList<KeyVersion> Versions { get; set; }
+        public IList<KeyVersion> Versions { get; internal set; }
 
         
     }

@@ -112,6 +112,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public void Encrypt(Stream input, Stream output)
         {
 

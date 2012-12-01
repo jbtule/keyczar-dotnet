@@ -79,6 +79,7 @@ namespace Keyczar.Crypto.Streams
         /// Releases the unmanaged resources used by the <see cref="T:System.IO.Stream"/> and optionally releases the managed resources.
         /// </summary>
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_output")]
         protected override void Dispose(bool disposing)
         {
             _output = _output.SafeDispose();

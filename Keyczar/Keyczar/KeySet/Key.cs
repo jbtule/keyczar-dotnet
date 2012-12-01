@@ -35,7 +35,7 @@ namespace Keyczar
         /// <summary>
         /// Random byte generator
         /// </summary>
-        protected static SecureRandom Random = new SecureRandom();
+        protected static readonly SecureRandom Random = new SecureRandom();
 
         /// <summary>
         /// Gets the key hash.

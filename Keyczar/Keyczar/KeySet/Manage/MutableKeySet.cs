@@ -93,7 +93,9 @@ namespace Keyczar
         public bool Save(IKeySetWriter writer)
         {
             writer.Write(_metadata);
-            if (!onlyMetaChanged) { 
+
+            if (!onlyMetaChanged || writer is INonSeparatedMetadataAndKey)
+            { 
                 for (int i = 1; i <= _keys.Count; i++)
                 {
                     var key = _keys[i];
@@ -183,6 +185,14 @@ namespace Keyczar
         }
 
         /// <summary>
+        /// Forces the flag for the says the key data has change.
+        /// </summary>
+        public void ForceKeyDataChange()
+        {
+            onlyMetaChanged = false;
+        }
+
+        /// <summary>
         /// Demotes the specified version.
         /// </summary>
         /// <param name="version">The version.</param>
@@ -269,6 +279,24 @@ namespace Keyczar
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="MutableKeySet" /> class.
+        /// </summary>
+        ~MutableKeySet()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
         {
             foreach (var keyPair in _keys)
             {

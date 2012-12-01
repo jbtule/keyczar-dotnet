@@ -12,6 +12,7 @@ namespace Keyczar.Pbe
         /// <summary>
         /// AES 128
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly PbeKeyType Aes128 = "AES128";
 
 
@@ -20,6 +21,7 @@ namespace Keyczar.Pbe
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The result of the conversion.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates",Justification = "Contructor is the alternative.")]
         public static implicit operator PbeKeyType(string identifier)
         {
             return new PbeKeyType(identifier);

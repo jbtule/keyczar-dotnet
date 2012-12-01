@@ -86,6 +86,25 @@ namespace Keyczar
         /// </summary>
         public void Dispose()
         {
+             Dispose(true);
+               GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="PbeKeySet" /> class.
+        /// </summary>
+        ~PbeKeySet()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+
             _keySet = null;
             _password = _password.SafeDispose();
         }

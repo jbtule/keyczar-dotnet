@@ -24,7 +24,7 @@ namespace Keyczar
     /// <summary>
     /// Password Based Encrypted Key Set
     /// </summary>
-    public class PbeKeySetWriter:IKeySetWriter,IDisposable
+    public class PbeKeySetWriter : IKeySetWriter, IDisposable
     {
     
         private IKeySetWriter _writer;
@@ -81,6 +81,24 @@ namespace Keyczar
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         public void Dispose()
+        {
+            Dispose(true);
+                  GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="PbeKeySetWriter" /> class.
+        /// </summary>
+        ~PbeKeySetWriter()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
         {
             _writer = null;
             _password = _password.SafeDispose();

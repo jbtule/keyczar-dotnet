@@ -95,6 +95,24 @@ namespace Keyczar.Compat
         /// </summary>
         public void Dispose()
         {
+           Dispose(true);
+           GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="ImportedKeySet" /> class.
+        /// </summary>
+        ~ImportedKeySet()
+        {
+            Dispose(false);
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
             _key = _key.SafeDispose();
         }
 

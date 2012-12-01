@@ -26,14 +26,17 @@ namespace Keyczar
         /// <summary>
         /// Primary
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly KeyStatus Primary = "PRIMARY";
         /// <summary>
         /// Active
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly KeyStatus Active = "ACTIVE";
         /// <summary>
         /// Inactive
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly KeyStatus Inactive = "INACTIVE";
 
         /// <summary>
@@ -41,6 +44,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="identifier">The identifer.</param>
         /// <returns>The result of the conversion.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Constructor Is Alternative")]
         public static  implicit operator KeyStatus(string identifier)
         {
             return new KeyStatus(identifier);
