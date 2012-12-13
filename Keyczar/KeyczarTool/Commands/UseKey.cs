@@ -98,7 +98,7 @@ namespace KeyczarTool
                         inStream = File.OpenRead(_message);
                     }else
                     {
-                        inStream = new MemoryStream(Keyczar.Keyczar.DefaultEncoding.GetBytes(_message));
+                        inStream = new MemoryStream(Keyczar.Keyczar.RawStringEncoding.GetBytes(_message));
                     }
 
 

@@ -248,7 +248,7 @@ namespace Keyczar
                 : KeyPurpose.Encrypt;
 
            var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
-                .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = Keyczar.DefaultEncoding.GetBytes(p.PublicKey.ToJson())})
+                .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = Keyczar.RawStringEncoding.GetBytes(p.PublicKey.ToJson())})
                 .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value)});
 
             newMeta.KeyType = copiedKeys.Select(it => it.Value.KeyType).First();
@@ -263,7 +263,7 @@ namespace Keyczar
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.DefaultEncoding.GetBytes(_keys[version].ToJson());
+            return Keyczar.RawStringEncoding.GetBytes(_keys[version].ToJson());
         }
 
         /// <summary>

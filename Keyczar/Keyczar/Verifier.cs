@@ -61,7 +61,7 @@ namespace Keyczar
         /// <returns></returns>
         public bool Verify(string rawData, WebBase64 signature)
         {
-			return Verify(DefaultEncoding.GetBytes(rawData), signature.ToBytes());
+			return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
         }
 
         /// <summary>
@@ -101,12 +101,13 @@ namespace Keyczar
         /// <summary>
         /// Verifies the specified data.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="input">The input.</param>
         /// <param name="signature">The signature.</param>
+        /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
-        public bool Verify(Stream data, byte[] signature)
+        public bool Verify(Stream input, byte[] signature, long inputLength = -1)
         {
-            return Verify(data, signature, prefixData: null, postfixData:null);
+            return Verify(input, signature, inputLength:inputLength, prefixData: null, postfixData: null);
         }
 
         /// <summary>
@@ -131,28 +132,30 @@ namespace Keyczar
         /// <summary>
         /// Verifies the specified data.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="input">The input.</param>
         /// <param name="signature">The signature.</param>
         /// <param name="prefixData">The prefix data.</param>
         /// <param name="postfixData">The postfix data.</param>
+        /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
-        protected virtual bool Verify(Stream data, byte[] signature, object prefixData, object postfixData)
+        protected virtual bool Verify(Stream input, byte[] signature, object prefixData, object postfixData, long inputLength)
         {
-
-            using (var reader = new NondestructiveBinaryReader(data))
+            var stopLength = inputLength < 0 ? long.MaxValue : input.Position + inputLength;
+            using (var reader = new NondestructiveBinaryReader(input))
             {
                 byte[] trimmedSig;
-                var startPosition = data.Position;
+                var resetData = Utility.ResetStreamWhenFinished(input);
                 foreach (var key in GetKeys(signature, out trimmedSig))
                 {
-                    data.Seek(startPosition, SeekOrigin.Begin);
+                    resetData.Reset();
                     //in case there aren't any keys that match that hash we are going to fake verify.
                     using (var verifyStream = key.Maybe(m => m.GetVerifyingStream(), () => new DummyStream()))
                     {
                         PrefixDataVerify(verifyStream,prefixData);
-                        while (reader.Peek() != -1)
+                        while (reader.Peek() != -1 && input.Position < stopLength)
                         {
-                            byte[] buffer = reader.ReadBytes(BufferSize);
+                            var adjustedBufferSize = (int)Math.Min(BufferSize, (stopLength - input.Position));
+                            byte[] buffer = reader.ReadBytes(adjustedBufferSize);
                             verifyStream.Write(buffer, 0, buffer.Length);
                         }
                             PostfixDataVerify(verifyStream,postfixData);

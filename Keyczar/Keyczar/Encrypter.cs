@@ -89,7 +89,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Encrypt(string rawData)
         {
-			return WebBase64.FromBytes(Encrypt(DefaultEncoding.GetBytes(rawData)));
+			return WebBase64.FromBytes(Encrypt(RawStringEncoding.GetBytes(rawData)));
         }
 
         /// <summary>
@@ -112,10 +112,11 @@ namespace Keyczar
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
+        /// <param name="inputLength">(optional) Length of the input.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        public void Encrypt(Stream input, Stream output)
+        public void Encrypt(Stream input, Stream output, long inputLength= -1)
         {
-
+            var stopLength = inputLength < 0 ? long.MaxValue : input.Position + inputLength;
             var key = GetPrimaryKey();
             var header = new byte[HeaderLength];
             Array.Copy(FormatBytes,0,header,0,FormatBytes.Length);
@@ -124,39 +125,40 @@ namespace Keyczar
             var cryptKey = key as IEncrypterKey;
             var pbeKey = key as IPbeKey;
 
-
-				using (var reader = new NondestructiveBinaryReader(input))
+            var resetStream = Utility.ResetStreamWhenFinished(output);
+			using (var reader = new NondestructiveBinaryReader(input))
+	        {
+	            FinishingStream encryptingStream; 
+	            if (pbeKey == null)
 	            {
-	                FinishingStream encryptingStream; 
-	                if (pbeKey == null)
-	                {
-	                    output.Write(header, 0, header.Length);
-	                    encryptingStream = cryptKey.GetEncryptingStream(output);
-	                }else
-	                {
-	                    encryptingStream = pbeKey.GetRawEncryptingStream(output);
-	                }
-
-					Stream wrapper = encryptingStream;
-					if(Compression == CompressionType.Gzip){
-						wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
-					}else if(Compression == CompressionType.Zlib){
-						wrapper = new ZlibStream(encryptingStream,CompressionMode.Compress,true);
-					}
-
-	                using (encryptingStream)
-	                {
-	                    encryptingStream.GetTagLength(header);
-						using(Compression == CompressionType.None ? null : wrapper){
-		                    while (reader.Peek() != -1)
-		                    {
-		                        byte[] buffer = reader.ReadBytes(4096);
-								wrapper.Write(buffer, 0, buffer.Length);
-		                    }
-						}
-	                    encryptingStream.Finish();
-	                }
+	                output.Write(header, 0, header.Length);
+	                encryptingStream = cryptKey.GetEncryptingStream(output);
+	            }else
+	            {
+	                encryptingStream = pbeKey.GetRawEncryptingStream(output);
 	            }
+
+				Stream wrapper = encryptingStream;
+				if(Compression == CompressionType.Gzip){
+					wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
+				}else if(Compression == CompressionType.Zlib){
+					wrapper = new ZlibStream(encryptingStream,CompressionMode.Compress,true);
+				}
+
+	            using (encryptingStream)
+	            {
+	                encryptingStream.GetTagLength(header);
+					using(Compression == CompressionType.None ? null : wrapper){
+                        while (reader.Peek() != -1 && input.Position < stopLength)
+		                {
+                            var adjustedBufferSize = (int)Math.Min(BufferSize, (stopLength - input.Position));
+                            byte[] buffer = reader.ReadBytes(adjustedBufferSize);
+							wrapper.Write(buffer, 0, buffer.Length);
+		                }
+					}
+	                encryptingStream.Finish();
+	            }
+	        }
 
            
             byte[] hash;
@@ -165,7 +167,7 @@ namespace Keyczar
             {
                 if (signingStream == null || signingStream.GetTagLength(header) ==0)
                     return;
-                output.Seek(0, SeekOrigin.Begin);
+                resetStream.Reset();
                 while (outputReader.Peek() != -1)
                 {
                     byte[] buffer = outputReader.ReadBytes(BufferSize);

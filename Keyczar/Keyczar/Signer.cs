@@ -58,18 +58,18 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Sign(String rawData)
         {
-			return WebBase64.FromBytes(Sign(DefaultEncoding.GetBytes(rawData)));
+			return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData)));
            
         }
 
         /// <summary>
         /// Signs the specified raw data.
         /// </summary>
-        /// <param name="rawData">The raw data.</param>
+        /// <param name="data">The data.</param>
         /// <returns></returns>
-        public byte[] Sign(byte[] rawData)
+        public byte[] Sign(byte[] data)
         {
-            using (var memstream = new MemoryStream(rawData))
+            using (var memstream = new MemoryStream(data))
             {
                 return Sign(memstream);
             }
@@ -78,12 +78,13 @@ namespace Keyczar
         /// <summary>
         /// Signs the specified data.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="input">The input.</param>
+        /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
-        public byte[] Sign(Stream data)
+        public byte[] Sign(Stream input, long inputLength=-1)
         {
 			using(var stream = new MemoryStream()){
-            	Sign(data, stream, prefixData: null, postfixData: null, signatureData: null);
+                Sign(input, stream, prefixData: null, postfixData: null, signatureData: null, inputLength:inputLength);
 				stream.Flush();
 				return stream.ToArray();
 			}
@@ -92,22 +93,25 @@ namespace Keyczar
         /// <summary>
         /// Signs the specified data.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="input">The input.</param>
         /// <param name="outstream">The outstream.</param>
         /// <param name="prefixData">The prefix data.</param>
         /// <param name="postfixData">The postfix data.</param>
         /// <param name="signatureData">The sig data.</param>
-        protected void Sign(Stream data, Stream outstream, object prefixData, object postfixData, object signatureData)
+        /// <param name="inputLength"> Length of the input.</param>
+        protected void Sign(Stream input, Stream outstream, object prefixData, object postfixData, object signatureData, long inputLength)
         {
+            var stopLength = inputLength < 0 ? long.MaxValue : input.Position + inputLength;
             var key = GetPrimaryKey() as ISignerKey;
-            using (var reader = new NondestructiveBinaryReader(data))
+            using (var reader = new NondestructiveBinaryReader(input))
             {
                 using (var signingStream = key.GetSigningStream())
                 {
                     PrefixDataSign(signingStream, prefixData);
-                    while (reader.Peek() != -1)
+                    while (reader.Peek() != -1 && input.Position < stopLength)
                     {
-                        byte[] buffer = reader.ReadBytes(BufferSize);
+                        var adjustedBufferSize = (int)Math.Min(BufferSize, (stopLength - input.Position));
+                        byte[] buffer = reader.ReadBytes(adjustedBufferSize);
                         signingStream.Write(buffer, 0, buffer.Length);
                     }
                     PostfixDataSign(signingStream, postfixData);

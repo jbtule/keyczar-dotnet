@@ -24,18 +24,19 @@ namespace Keyczar.Util
     /// <summary>
     /// Wraps a stream to limit it's length
     /// </summary>
-    public class NondestructiveLengthLimitingStream:Stream
+    public class NondestructivePositionLengthLimitingStream:Stream
     {
         private  Stream _stream;
         private long _length;
-
+        private long _initialPosition;
         /// <summary>
-        /// Initializes a new instance of the <see cref="NondestructiveLengthLimitingStream"/> class.
+        /// Initializes a new instance of the <see cref="NondestructivePositionLengthLimitingStream"/> class.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public NondestructiveLengthLimitingStream(Stream stream)
+        public NondestructivePositionLengthLimitingStream(Stream stream)
         {
             _stream = stream;
+            _initialPosition = stream.Position;
         }
 
         /// <summary>
@@ -97,6 +98,7 @@ namespace Keyczar.Util
         public override void SetLength(long value)
         {
             _length = value;
+            
         }
 
         /// <summary>
@@ -118,9 +120,9 @@ namespace Keyczar.Util
         /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (Position + count > Length)
+            if (Position + count > (Length + InitialPosition))
             {
-                count = (int)(Length - Position);
+                count = (int)((Length + InitialPosition) - Position);
             }
             return _stream.Read(buffer, offset, count);
         }
@@ -184,6 +186,11 @@ namespace Keyczar.Util
         public override long Length
         {
             get { return _length; }
+        }
+
+        public virtual long InitialPosition
+        {
+            get { return _initialPosition; }
         }
 
         /// <summary>

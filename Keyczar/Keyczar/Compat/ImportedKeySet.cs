@@ -78,7 +78,7 @@ namespace Keyczar.Compat
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.DefaultEncoding.GetBytes(_key.ToJson());
+            return Keyczar.RawStringEncoding.GetBytes(_key.ToJson());
         }
 
         /// <summary>
@@ -178,7 +178,7 @@ namespace Keyczar.Compat
                 using (var password = CachedPrompt.Password(passwordPrompt))
                 {
                     AsymmetricKeyParameter bouncyKey;
-                    var position = input.Position;
+                    var resetStream = Utility.ResetStreamWhenFinished(input);
                     using (var streamReader = new NondestructiveStreamReader(input))
                     {
                         bouncyKey =
@@ -188,7 +188,7 @@ namespace Keyczar.Compat
 
                     if (bouncyKey == null)
                     {
-                        input.Seek(position, SeekOrigin.Begin);
+                        resetStream.Reset();
                         bouncyKey = passwordPrompt == null
                                         ? PrivateKeyFactory.CreateKey(input)
                                         : PrivateKeyFactory.DecryptKey(

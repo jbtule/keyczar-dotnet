@@ -82,7 +82,7 @@ namespace Keyczar
         public bool Verify(string rawData, WebBase64 signature)
         {
 
-			return Verify(DefaultEncoding.GetBytes(rawData), signature.ToBytes());
+			return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
         }
 
         /// <summary>
@@ -102,15 +102,16 @@ namespace Keyczar
         /// <summary>
         /// Verifies the specified data.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="input">The input.</param>
         /// <param name="signature">The signature.</param>
+        /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        public bool Verify(Stream data, byte[] signature)
+        public bool Verify(Stream input, byte[] signature, long inputLength =-1)
         {
             var milliseconds = FromDateTime(DateTime.Now);
 
-            if(!_verifier.Verify(data, signature))
+            if (!_verifier.Verify(input, signature, inputLength))
                 return false; 
             using(var stream = new MemoryStream(signature))
             using (var reader = new NondestructiveBinaryReader(stream))
@@ -147,12 +148,13 @@ namespace Keyczar
             /// <summary>
             /// Verifies the specified data.
             /// </summary>
-            /// <param name="data">The data.</param>
+            /// <param name="input">The input.</param>
             /// <param name="signature">The signature.</param>
             /// <param name="prefixData">The prefix data.</param>
             /// <param name="postfixData">The post fix data.</param>
+            /// <param name="inputLength">(optional) Length of the input.</param>
             /// <returns></returns>
-            protected override bool Verify(Stream data, byte[] signature, object prefixData, object postfixData)
+            protected override bool Verify(Stream input, byte[] signature, object prefixData, object postfixData, long inputLength)
             {
                 var newsig = new byte[signature.Length - TimeoutLength];
                 Array.Copy(signature,0,newsig,0,HeaderLength);
@@ -160,7 +162,7 @@ namespace Keyczar
                 var expireBytes = new byte[TimeoutLength];
                 Array.Copy(signature,HeaderLength, expireBytes,0,TimeoutLength);
 
-                return base.Verify(data, newsig, expireBytes, postfixData);
+                return base.Verify(input, newsig, expireBytes, postfixData, inputLength);
             }
 
 

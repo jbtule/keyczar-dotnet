@@ -13,8 +13,10 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(OS) == 'Windows_NT'">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile Condition="$(OS) == 'Windows_NT'">Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -60,6 +62,7 @@
     <Compile Include="ExportTest.cs" />
     <Compile Include="PkcsImportTest.cs" />
     <Compile Include="SignerVanillaTest.cs" />
+    <Compile Include="StreamBehaviorTest.cs" />
     <Compile Include="Unofficial\BlobKeySetTest.cs" />
     <Compile Include="CrossCompatibilityTest.cs" />
     <Compile Include="CrypterTest.cs" />

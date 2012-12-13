@@ -91,6 +91,19 @@ namespace KeyczarTest
                byte[] bigPlaintext = sessionCrypter.Decrypt(bigCiphertext);
                Expect(bigPlaintext, Is.EqualTo(bigInput));
            }
+
+
+            //If you close the session and start again, you'd get a different crypter key
+            WebBase64 ciphertext2;
+           using (var sessionCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
+           {
+              ciphertext2 = sessionCrypter.Encrypt(input);
+           }
+
+            using (var sessionCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
+            {
+                Expect(()=> sessionCrypter.Decrypt(ciphertext2),Throws.InstanceOf<InvalidCryptoDataException>());
+            }
        }
 
         [TestCase("")]
