@@ -38,22 +38,167 @@ namespace KeyczarTest
         [TestCase("rsa-sign")]
         public void TestSignAndVerify(String subDir)
         {
-            using (var signer = new AttachedSigner(Path.Combine(TEST_DATA, subDir)))
-            using (var verifier = new AttachedVerifier(Path.Combine(TEST_DATA, subDir)))
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            using (var signer = new AttachedSigner(subPath))
+            using (var verifier = new AttachedVerifier(subPath))
             {
                 var signedoutput = signer.Sign(input);
-				var badoutput = signedoutput.ToBytes();
+                var badoutput = signedoutput.ToBytes();
                 badoutput[10] ^= 9;
                 var badlength = new byte[12];
                 Array.Copy(badoutput, badlength, badlength.Length);
 
                 Expect(signer.Verify(signedoutput), Is.True);
-                Expect(signer.Verify(badoutput), Is.False);
-                Expect(()=>signer.Verify(badlength), Throws.InstanceOf<InvalidCryptoDataException>());
-
                 Expect(verifier.Verify(signedoutput), Is.True);
+            }
+        }
+
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestSignAndVerifyBad(String subDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            using (var signer = new AttachedSigner(subPath))
+            using (var verifier = new AttachedVerifier(subPath))
+            {
+                var signedoutput = signer.Sign(input);
+				var badoutput = signedoutput.ToBytes();
+                badoutput[10] ^= 9;
+     
+                Expect(signer.Verify(badoutput), Is.False);
                 Expect(verifier.Verify(badoutput), Is.False);
+
+            }
+        }
+
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestSignAndVerifyShort(String subDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            using (var signer = new AttachedSigner(subPath))
+            using (var verifier = new AttachedVerifier(subPath))
+            {
+                var signedoutput = signer.Sign(input);
+                var badoutput = signedoutput.ToBytes();
+                badoutput[10] ^= 9;
+                var badlength = new byte[12];
+                Array.Copy(badoutput, badlength, badlength.Length);
+
+                Expect(() => signer.Verify(badlength), Throws.InstanceOf<InvalidCryptoDataException>());
                 Expect(() => verifier.Verify(badlength), Throws.InstanceOf<InvalidCryptoDataException>());
+
+            }
+        }
+
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestSignAndVerifyMessage(String subDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            using (var signer = new AttachedSigner(subPath))
+            using (var verifier = new AttachedVerifier(subPath))
+            {
+                var signedoutput = signer.Sign(input);
+     
+                Expect(signer.VerifiedMessage(signedoutput), Is.EqualTo(input));
+
+                Expect(verifier.VerifiedMessage(signedoutput), Is.EqualTo(input));
+
+            }
+        }
+
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestSignAndTryVerifyMessage(String subDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            using (var signer = new AttachedSigner(subPath))
+            using (var verifier = new AttachedVerifier(subPath))
+            {
+                var signedoutput = signer.Sign(input);
+                string verifiedOutput; 
+                string verifiedOutput2;
+
+                Expect(signer.TryGetVerifiedMessage(signedoutput, out verifiedOutput), Is.True);
+
+                Expect(verifier.TryGetVerifiedMessage(signedoutput, out verifiedOutput2), Is.True);
+
+                Expect(verifiedOutput, Is.EqualTo(input)); 
+                
+                Expect(verifiedOutput2, Is.EqualTo(input));
+            }
+        }
+
+
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestSignAndVerifyMessageBad(String subDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            using (var signer = new AttachedSigner(subPath))
+            using (var verifier = new AttachedVerifier(subPath))
+            {
+                var signedoutput = signer.Sign(input);
+                var badoutput = signedoutput.ToBytes();
+                badoutput[10] ^= 9;
+ 
+                Expect(() => signer.VerifiedMessage(badoutput), Throws.InstanceOf<InvalidCryptoDataException>());
+                Expect(() => verifier.VerifiedMessage(badoutput), Throws.InstanceOf<InvalidCryptoDataException>());
+
+            }
+        }
+
+
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestSignAndTryVerifyMessageBad(String subDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            using (var signer = new AttachedSigner(subPath))
+            using (var verifier = new AttachedVerifier(subPath))
+            {
+                var signedoutput = signer.Sign(input);
+                byte[] verifiedOutput;
+                byte[] verifiedOutput2;
+                var badoutput = signedoutput.ToBytes();
+                badoutput[10] ^= 9;
+
+                Expect(signer.TryGetVerifiedMessage(badoutput, out verifiedOutput), Is.False);
+
+                Expect(verifier.TryGetVerifiedMessage(badoutput, out verifiedOutput2), Is.False);
+
+            }
+        }
+
+
+        [TestCase("hmac")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
+        public void TestSignAndTryVerifyMessageShort(String subDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            using (var signer = new AttachedSigner(subPath))
+            using (var verifier = new AttachedVerifier(subPath))
+            {
+                var signedoutput = signer.Sign(input);
+                byte[] verifiedOutput;
+                byte[] verifiedOutput2;
+                var badoutput = signedoutput.ToBytes();
+                badoutput[10] ^= 9;
+                var badlength = new byte[12];
+                Array.Copy(badoutput, badlength, badlength.Length);
+
+                Expect(signer.TryGetVerifiedMessage(badlength, out verifiedOutput), Is.False);
+
+                Expect(verifier.TryGetVerifiedMessage(badlength, out verifiedOutput2), Is.False);
+
             }
         }
     }

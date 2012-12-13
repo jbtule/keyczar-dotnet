@@ -173,10 +173,11 @@ namespace Keyczar
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
-        public void Decrypt(Stream input, Stream output)
+        /// <param name="inputLength">(optional) Length of the input.</param>
+        public void Decrypt(Stream input, Stream output, long inputLength =-1)
         {
             _crypter.Compression = Compression;
-            _crypter.Decrypt(input, output);
+            _crypter.Decrypt(input, output, inputLength);
         }
 
         /// <summary>
@@ -206,10 +207,11 @@ namespace Keyczar
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
-        public void Encrypt(Stream input, Stream output)
+        /// <param name="inputLength">(optional) Length of the input.</param>
+        public void Encrypt(Stream input, Stream output, long inputLength = -1)
         {
             _crypter.Compression = Compression;
-            _crypter.Encrypt(input, output);
+            _crypter.Encrypt(input, output, inputLength);
         }
 
         /// <summary>

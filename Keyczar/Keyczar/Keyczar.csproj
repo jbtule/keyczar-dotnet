@@ -13,8 +13,10 @@
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition="$(OS) == 'Windows_NT'">
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile Condition="$(OS) == 'Windows_NT'">Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>True</DebugSymbols>
@@ -115,8 +117,9 @@
     <Compile Include="Util\CachedPrompt.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveBinaryReader.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveCryptoStream.cs" />
-    <Compile Include="Util\Nondestructive\NondestructiveLengthLimitingStream.cs" />
+    <Compile Include="Util\Nondestructive\NondestructivePositionLengthLimitingStream.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveStreamReader.cs" />
+    <Compile Include="Util\Nondestructive\NondestructiveStreamReset.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveZipFile.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveBinaryWriter.cs" />
     <Compile Include="Util\ReadOnlyArray.cs" />

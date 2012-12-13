@@ -112,8 +112,9 @@ namespace KeyczarTest
          [TestCase("dsa")]
          [TestCase("rsa-sign")]
         public void TestSignAndVerify(String subDir)
-        {
-            using (var signer = new Signer(Path.Combine(TEST_DATA, subDir)))
+         {
+             var subPath = Util.TestDataPath(TEST_DATA, subDir);
+             using (var signer = new Signer(subPath))
             {
                 var sig = signer.Sign(input);
 

@@ -66,7 +66,7 @@ namespace Keyczar
                 return cipherData;
             }
 
-            var cipherString = Keyczar.DefaultEncoding.GetString(cipherData);
+            var cipherString = Keyczar.RawStringEncoding.GetString(cipherData);
             var store = JsonConvert.DeserializeObject<PbeKeyStore>(cipherString);
 
             return store.DecryptKeyData(_password.Prompt);

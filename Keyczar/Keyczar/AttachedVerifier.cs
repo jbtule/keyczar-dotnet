@@ -56,7 +56,7 @@ namespace Keyczar
         /// Verifies the specified message.
         /// </summary>
         /// <param name="signedMessage">The signed message.</param>
-        /// <param name="hidden">The hidden.</param>
+        /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
         /// <returns></returns>
 		public bool Verify(WebBase64 signedMessage, byte[] hidden =null){
 
@@ -67,7 +67,7 @@ namespace Keyczar
         /// Verifies the specified message.
         /// </summary>
         /// <param name="signedMessage">The signed message.</param>
-        /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+        /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
         /// <returns></returns>
 		public bool Verify(byte[] signedMessage, byte[] hidden =null){
             using (var memstream = new MemoryStream(signedMessage))
@@ -79,12 +79,115 @@ namespace Keyczar
         /// <summary>
         /// Verifies the specified message.
         /// </summary>
-        /// <param name="signedMessage">The signed message.</param>
-        /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+        /// <param name="input">The input.</param>
+        /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
+        /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
-		public bool Verify(Stream signedMessage, byte[] hidden =null)
+		public bool Verify(Stream input, byte[] hidden =null, long inputLength=-1)
         {
-			return _verifier.VerifyHidden(signedMessage, hidden);
+            return _verifier.VerifyHidden(input, null, hidden, inputLength);
+        }
+
+
+        /// <summary>
+        /// Gets Verified message from signed message
+        /// </summary>
+        /// <param name="rawData">The raw data.</param>
+        /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
+        /// <returns></returns>
+        /// <exception cref="InvalidCryptoDataException">Data Doesn't Match Signature!</exception>
+         public string VerifiedMessage(WebBase64 rawData, byte[] hidden = null)
+         {
+             return RawStringEncoding.GetString(VerifiedMessage(rawData.ToBytes(), hidden));
+         }
+
+
+         /// <summary>
+         /// Gets Verified message from signed message
+         /// </summary>
+         /// <param name="data">The data.</param>
+         /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
+         /// <returns></returns>
+         /// <exception cref="InvalidCryptoDataException">Data Doesn't Match Signature!</exception>
+        public byte[] VerifiedMessage(byte[] data, byte[] hidden = null)
+        {
+            using (var output = new MemoryStream())
+            using (var memstream = new MemoryStream(data))
+            {
+                VerifiedMessage(memstream,output, hidden);
+                return output.ToArray();
+            }
+        }
+
+        /// <summary>
+        /// Gets Verified message from signed message
+        /// </summary>
+        /// <param name="signedMessage">The signed message.</param>
+        /// <param name="verifiedMessage">The output message.</param>
+        /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
+        /// <exception cref="InvalidCryptoDataException">Data Doesn't Match Signature!</exception>
+        public void VerifiedMessage(Stream input, Stream verifiedMessage, byte[] hiddden = null, long inputLength=-1)
+        {
+            if (!TryGetVerifiedMessage(input, verifiedMessage, hiddden, inputLength))
+            {
+                throw new InvalidCryptoDataException("Data Doesn't Match Signature!");
+            }
+        }
+
+        /// <summary>
+        /// Tries to get the verified message.
+        /// </summary>
+        /// <param name="signedMessage">The signed message.</param>
+        /// <param name="verifiedMessage">The verified message.</param>
+        /// <param name="hidden">The hidden.</param>
+        /// <returns>false if signature is not correct</returns>
+        public bool TryGetVerifiedMessage(WebBase64 signedMessage, out string verifiedMessage, byte[] hidden = null)
+        {
+            byte[] output;
+            var verified = TryGetVerifiedMessage(signedMessage.ToBytes(), out output, hidden);
+            verifiedMessage = RawStringEncoding.GetString(output);
+            return verified;
+        }
+
+        /// <summary>
+        /// Tries to get the verified message.
+        /// </summary>
+        /// <param name="signedMessage">The signed message.</param>
+        /// <param name="verifiedMessage">The verified message.</param>
+        /// <param name="hidden">The hidden.</param>
+        /// <returns>false if signature is not correct</returns>
+        public bool TryGetVerifiedMessage(byte[] signedMessage, out byte[] verifiedMessage, byte[] hidden = null)
+        {
+            try
+            {
+                using (var output = new MemoryStream())
+                using (var memstream = new MemoryStream(signedMessage))
+                {
+                    var verified = TryGetVerifiedMessage(memstream, output, hidden);
+                    verifiedMessage = output.ToArray();
+                    return verified;
+                }
+            }
+            catch (InvalidCryptoDataException)
+            {
+                verifiedMessage = null;
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Tries to get the verified message.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <param name="verifiedMessage">The verified message.</param>
+        /// <param name="hiddden">The hiddden.</param>
+        /// <param name="inputLength">(optional) Length of the input.</param>
+        /// <returns>
+        /// false if signature is not correct
+        /// </returns>
+        public bool TryGetVerifiedMessage(Stream input, Stream verifiedMessage, byte[] hiddden = null, long inputLength=-1)
+        {
+            return _verifier.VerifyHidden(input, verifiedMessage, hiddden, inputLength);
         }
 
         /// <summary>
@@ -104,40 +207,53 @@ namespace Keyczar
             /// <summary>
             /// Verifies the specified signed message.
             /// </summary>
-            /// <param name="signedMessage">The signed message.</param>
+            /// <param name="input">The signed message.</param>
+            /// <param name="verifiedMessage">The verified message.</param>
             /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+            /// <param name="inputLength">(optional) Length of the input.</param>
             /// <returns></returns>
             /// <exception cref="InvalidCryptoDataException">Data doesn't appear to have signatures attached!</exception>
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-            public bool VerifyHidden(Stream signedMessage, byte[] hidden)
+            public bool VerifyHidden(Stream input, Stream verifiedMessage, byte[] hidden, long inputLength)
             {
-        
-                using (var reader = new NondestructiveBinaryReader(signedMessage))
+                var fullLength = inputLength < 0 ? input.Length : inputLength + input.Position;
+                using (var reader = new NondestructiveBinaryReader(input))
                 {
                     var header = reader.ReadBytes(HeaderLength);
                     var length = Utility.ToInt32(reader.ReadBytes(4));
-                    var position = signedMessage.Position;
 
-                    if (signedMessage.Length < position + length)
+                    if (fullLength < input.Position + length)
                     {
                         throw new InvalidCryptoDataException("Data doesn't appear to have signatures attached!");
                     }
 
-                    signedMessage.Seek(length, SeekOrigin.Current);
                     using(var sigStream = new MemoryStream())
                     {
-                        sigStream.Write(header,0,header.Length);
-                        while (reader.Peek() != -1)
+                        using (Utility.ResetStreamWhenFinished(input))
                         {
-                           var buffer = reader.ReadBytes(BufferSize);
-                           sigStream.Write(buffer, 0, buffer.Length);
-                        }
-                        using (var signedMessage2 = new NondestructiveLengthLimitingStream(signedMessage))
-                        {
-                            signedMessage.Seek(position, SeekOrigin.Begin);
-                            signedMessage2.SetLength(position + length);
+                            sigStream.Write(header, 0, header.Length);
+                            input.Seek(length, SeekOrigin.Current);
+                            while (reader.Peek() != -1 && input.Position < fullLength)
+                            {
+                                var adjustedBufferSize = (int)Math.Min(BufferSize, (fullLength - input.Position));
+                                var buffer = reader.ReadBytes(adjustedBufferSize);
+                                sigStream.Write(buffer, 0, buffer.Length);
+                            } 
                             sigStream.Flush();
-                            return Verify(signedMessage2, sigStream.ToArray(), prefixData: null, postfixData: hidden);
+                        }
+                        using (var signedMessageLimtedLength = new NondestructivePositionLengthLimitingStream(input))
+                        {
+                            signedMessageLimtedLength.SetLength(length);
+                            if (verifiedMessage != null)
+                            {
+                                using (Utility.ResetStreamWhenFinished(input))
+                                {
+                                    signedMessageLimtedLength.CopyTo(verifiedMessage);
+                                }
+                            }
+                            var verified= Verify(signedMessageLimtedLength, sigStream.ToArray(), prefixData: null, postfixData: hidden, inputLength: inputLength);
+                            input.Seek(fullLength, SeekOrigin.Begin);
+                            return verified;
                         }
                     }
                 }

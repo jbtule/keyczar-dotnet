@@ -65,7 +65,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Sign(String rawData, DateTime expiration)
         {
-			return WebBase64.FromBytes(Sign(DefaultEncoding.GetBytes(rawData), expiration));
+			return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
 
         }
 
@@ -86,12 +86,13 @@ namespace Keyczar
         /// <summary>
         /// Signs the specified data.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="input">The input.</param>
         /// <param name="expiration">The expiration.</param>
+        /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
-        public byte[] Sign(Stream data, DateTime expiration)
+        public byte[] Sign(Stream input, DateTime expiration, long inputLength =-1)
         {
-            return _signer.Sign(data, expiration);
+            return _signer.Sign(input, expiration,inputLength);
         }
 
         /// <summary>
@@ -123,13 +124,14 @@ namespace Keyczar
             /// <summary>
             /// Signs the specified data.
             /// </summary>
-            /// <param name="data">The data.</param>
+            /// <param name="input">The input.</param>
             /// <param name="expiration">The expiration.</param>
+            /// <param name="inputLength">(optional) Length of the input.</param>
             /// <returns></returns>
-            public byte[] Sign(Stream data, DateTime expiration)
+            public byte[] Sign(Stream input, DateTime expiration, long inputLength)
             {
 				using(var stream = new MemoryStream()){
-					Sign(data,stream, prefixData:expiration, postfixData: null, signatureData: expiration);
+                    Sign(input, stream, prefixData: expiration, postfixData: null, signatureData: expiration, inputLength:inputLength);
 					stream.Flush();
 					return stream.ToArray();
 				}

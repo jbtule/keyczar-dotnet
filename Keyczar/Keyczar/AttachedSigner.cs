@@ -48,26 +48,26 @@ namespace Keyczar
         /// <summary>
         /// Signs the specified raw data.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="rawData">The raw data.</param>
         /// <param name="hidden">The hidden data used to generate the digest signature.</param>
         /// <returns></returns>
-		public WebBase64 Sign(String message,Byte[] hidden =null)
+		public WebBase64 Sign(String rawData,Byte[] hidden =null)
 		{
-			return WebBase64.FromBytes(Sign(DefaultEncoding.GetBytes(message), hidden));
+            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), hidden));
 
 		}
 
 
         /// <summary>
-        /// Signs the specified raw data.
+        /// Signs the specified data.
         /// </summary>
-        /// <param name="message">The message.</param>
+        /// <param name="data">The data.</param>
         /// <param name="hidden">The hidden data used to generate the digest signature.</param>
         /// <returns></returns>
-		public byte[] Sign(byte[] message, Byte[] hidden =null)
+		public byte[] Sign(byte[] data, Byte[] hidden =null)
 		{
             using (var outstream = new MemoryStream())
-            using (var memstream = new MemoryStream(message))
+            using (var memstream = new MemoryStream(data))
             {
                 Sign(memstream,outstream, hidden);
                 outstream.Flush();
@@ -76,14 +76,15 @@ namespace Keyczar
 		}
 
         /// <summary>
-        /// Signs the specified data.
+        /// Signs the specified input.
         /// </summary>
-        /// <param name="data">The data.</param>
+        /// <param name="input">The input.</param>
         /// <param name="signedData">The stream to write the data with attached signature.</param>
         /// <param name="hidden">The hidden data that can be used to generate the signature.</param>
-		public void Sign(Stream data, Stream signedData, Byte[] hidden =null)
+        /// <param name="inputLength">(optional) Length of the input.</param>
+		public void Sign(Stream input, Stream signedData, Byte[] hidden =null, long inputLength =-1)
 		{
-		    _signer.Sign(data, signedData, hidden);
+            _signer.Sign(input, signedData, hidden, inputLength);
 		}
 
         /// <summary>
@@ -104,27 +105,28 @@ namespace Keyczar
             /// <summary>
             /// Signs the specified data.
             /// </summary>
-            /// <param name="data">The data.</param>
+            /// <param name="input">The input.</param>
             /// <param name="signedData">The signed data.</param>
             /// <param name="hidden">The hidden data used to generate the digest signature.</param>
+            /// <param name="inputLength">(optional) Length of the input.</param>
             /// <exception cref="System.ArgumentException">Stream must be able to seek.;data</exception>
-            /// <exception cref="System.ArgumentException">Data is too large to attach signature.;data</exception>
-            public void Sign(Stream data, Stream signedData, Byte[] hidden = null)
+            /// <exception cref="System.ArgumentException">Stream must be able to seek.;data</exception>
+            public void Sign(Stream input, Stream signedData, Byte[] hidden, long inputLength)
             {
-                if(!data.CanSeek)
+                if (!input.CanSeek)
                 {
                     throw new ArgumentException("Stream must be able to seek.", "data");
                 }
 
-                long position = data.Position;
-                long fulllength = data.Length;
+                long position = input.Position;
+                var fullLength = inputLength < 0 ? input.Length : inputLength + input.Position;
 
-                if (Int32.MaxValue < fulllength - position)
+                if (Int32.MaxValue < fullLength - position)
                 {
                     throw new ArgumentException("Data is too large to attach signature.", "data");
                 }
 
-                base.Sign(data, signedData, prefixData: null, postfixData: hidden, signatureData: Tuple.Create(fulllength,position,data));
+                base.Sign(input, signedData, prefixData: null, postfixData: hidden, signatureData: Tuple.Create(fullLength, position, input), inputLength: inputLength);
             }
 
 
@@ -153,18 +155,24 @@ namespace Keyczar
             /// <param name="extra">The extra data passed by sigData.</param>
             protected override void PadSignature(byte[] signature, Stream outputStream, object extra)
             {
-                var padData = (Tuple<long, long, Stream>) extra;
+                var padData = (Tuple<long, long, Stream>)extra; 
+                var stopLength = padData.Item1;
+                var position = padData.Item2;
+                var input = padData.Item3;
+
                 var key = GetPrimaryKey() as ISignerKey;
                 outputStream.Write(FormatBytes, 0, FormatBytes.Length);
                 outputStream.Write(key.GetKeyHash(), 0, KeyHashLength);
-                var lengthBytes = Utility.GetBytes((int) (padData.Item1 - padData.Item2));
+
+                var lengthBytes = Utility.GetBytes((int)(stopLength - position));
                 outputStream.Write(lengthBytes, 0, lengthBytes.Length);
-                padData.Item3.Seek(padData.Item2, SeekOrigin.Begin);
-                using (var reader = new NondestructiveBinaryReader(padData.Item3))
+                padData.Item3.Seek(position, SeekOrigin.Begin);
+                using (var reader = new NondestructiveBinaryReader(input))
                 {
-                    while (reader.Peek() != -1)
+                    var adjustedBufferSize = (int)Math.Min(BufferSize, (stopLength - input.Position));
+                    while (reader.Peek() != -1 && input.Position < stopLength)
                     {
-                        byte[] buffer = reader.ReadBytes(BufferSize);
+                        byte[] buffer = reader.ReadBytes(adjustedBufferSize);
                         outputStream.Write(buffer, 0, buffer.Length);
                     }
                 }

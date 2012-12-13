@@ -32,6 +32,17 @@ namespace Keyczar.Util
     /// </summary>
     public static class Utility
     {
+
+        /// <summary>
+        /// Resets the stream poisition when Closed or Disposed.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
+        /// <returns></returns>
+        public static NondestructiveStreamReset ResetStreamWhenFinished(Stream stream)
+        {
+            return new NondestructiveStreamReset(stream);
+        }
+
         /// <summary>
         /// Copies string/object dictionary to the destnation objects properties.
         /// </summary>

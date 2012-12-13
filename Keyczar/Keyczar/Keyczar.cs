@@ -29,11 +29,22 @@ namespace Keyczar
     /// </summary>
     public abstract class Keyczar:IDisposable
     {
+        private static Encoding _rawStringEncoding;
         /// <summary>
         /// Default encoding used through out (UTF8)
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly Encoding DefaultEncoding = Encoding.UTF8;
+        public static Encoding RawStringEncoding
+        {
+            get { return _rawStringEncoding ?? (_rawStringEncoding = Encoding.UTF8); }
+            set
+            {
+                   if (_rawStringEncoding != null)
+                   {
+                      throw new ReadOnlyException("Once the encoding has been set or called, it cannot be changed. Defaults to UTF-8");
+                   }
+                _rawStringEncoding = value;
+            }
+        }
 
         /// <summary>
         /// Key hash length
