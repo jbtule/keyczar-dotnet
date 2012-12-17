@@ -122,13 +122,14 @@ namespace Keyczar
         /// <summary>
         /// Gets Verified message from signed message
         /// </summary>
-        /// <param name="signedMessage">The signed message.</param>
+        /// <param name="input">The input.</param>
         /// <param name="verifiedMessage">The output message.</param>
-        /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
+        /// <param name="hidden">The hidden.</param>
+        /// <param name="inputLength">Length of the input.</param>
         /// <exception cref="InvalidCryptoDataException">Data Doesn't Match Signature!</exception>
-        public void VerifiedMessage(Stream input, Stream verifiedMessage, byte[] hiddden = null, long inputLength=-1)
+        public void VerifiedMessage(Stream input, Stream verifiedMessage, byte[] hidden = null, long inputLength=-1)
         {
-            if (!TryGetVerifiedMessage(input, verifiedMessage, hiddden, inputLength))
+            if (!TryGetVerifiedMessage(input, verifiedMessage, hidden, inputLength))
             {
                 throw new InvalidCryptoDataException("Data Doesn't Match Signature!");
             }

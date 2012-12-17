@@ -29,7 +29,7 @@
     <WarningLevel>4</WarningLevel>
     <CustomCommands>
       <CustomCommands>
-        <Command type="AfterBuild" command="mono &quot;${SolutionDir}/packages/DiminishDependencies.Tool.1.1.2/tools/DiminishDependencies.exe&quot; -o &quot;$(SolutionDir)/KeyczarTool.Minified/Diminish/refs&quot; &quot;$(TargetDir)/KeyczarTool.exe&quot; &quot;$(TargetDir)/*.dll&quot;&#xA;" />
+        <Command type="AfterBuild" command="mono &quot;${SolutionDir}/packages/DiminishDependencies.Tool.1.1.3/tools/DiminishDependencies.exe&quot; -o &quot;$(SolutionDir)/KeyczarTool.Minified/Diminish/refs&quot; &quot;$(TargetDir)/KeyczarTool.exe&quot; &quot;$(TargetDir)/*.dll&quot;&#xA;" />
       </CustomCommands>
     </CustomCommands>
   </PropertyGroup>
@@ -96,7 +96,7 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <PropertyGroup>
-    <PostBuildEvent>"$(SolutionDir)packages\DiminishDependencies.Tool.1.1.2\tools\DiminishDependencies.exe" -o "$(SolutionDir)KeyczarTool.Minified\Diminish\refs" "$(TargetDir)KeyczarTool.exe" "$(TargetDir)*.dll"</PostBuildEvent>
+    <PostBuildEvent>"$(SolutionDir)packages\DiminishDependencies.Tool.1.1.3\tools\DiminishDependencies.exe" -o "$(SolutionDir)KeyczarTool.Minified\Diminish\refs" "$(TargetDir)KeyczarTool.exe" "$(TargetDir)*.dll"</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -188,6 +188,12 @@ namespace Keyczar.Util
             get { return _length; }
         }
 
+        /// <summary>
+        /// Gets the initial position.
+        /// </summary>
+        /// <value>
+        /// The initial position.
+        /// </value>
         public virtual long InitialPosition
         {
             get { return _initialPosition; }
