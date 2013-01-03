@@ -41,7 +41,6 @@ Run `MonoRestoreNugetPackages.sh` script first to restore nuget dependency then 
  - All unofficial/incompatible api changes are under the unofficial names space to be clear what won't interoperate with java/python/c++
  - Currently the only unofficial algorithm is *AES-GCM* (`KeyType=C#_AES_AEAD`) using the unofficial flag on the KeyczarTool will use it to replace *AES-Then-HmacSha1*
  - `VanillaSigner` and `VanillaVerifier` are feature identical to `UnversionedSigner` and `UnversionVerifer`
- - Since `SessionEncrypter` and `SessionDecrypter` are marked as deprecated in the java version they were not implemented.
- - Also `SignedSessionEncrypter` and `SignedSessionDecrypter` have not been implemented (But `SessionCrypter` does provide authenticated encryption on it's session data).
+ - The Functionality of `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by `SessionCrypter` via constructor arguments.
 
 

@@ -34,8 +34,7 @@ namespace Keyczar.Unofficial
     /// </summary>
     public class AesAeadKey:Key,ICrypterKey
     {
-        private static readonly SecureRandom RANDOM = new SecureRandom();
-
+     
         /// <summary>
         /// Uses 128bit block size
         /// </summary>
@@ -83,7 +82,7 @@ namespace Keyczar.Unofficial
         protected override void GenerateKey(int size)
         {
             AesKeyBytes = new byte[size / 8];
-            Random.NextBytes(AesKeyBytes);
+            Secure.Random.NextBytes(AesKeyBytes);
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace Keyczar.Unofficial
 
 
             var randomNonce = new byte[NonceLength];
-            RANDOM.NextBytes(randomNonce, 0, randomNonce.Length);
+            Secure.Random.NextBytes(randomNonce);
             return new AesAeadStream(
                          GetMode(),
                          output,
