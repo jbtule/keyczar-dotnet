@@ -30,11 +30,22 @@
         <section id="main-content">
           <h1>Keyczar dotnet</h1>
 
-<p>Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features and will interoperate with them by default. Uses BouncyCastle as backend for most encryption. Official keyczar site: <a href="http://keyczar.org">http://keyczar.org</a></p>
+<p>Implemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features and will interoperate with them by default. Uses BouncyCastle as backend for most encryption. Official keyczar site: <a href="http://keyczar.org">http://keyczar.org</a></p>
+
+<h2>Binary Release</h2>
+
+<p><code>Keyczar.dll</code> and <code>KeyczarTool.exe</code> can be added to your project using <a href="http://nuget.org">NuGet</a></p>
+
+<pre><code>PM&gt; Install-Package Keyczar -Pre
+</code></pre>
+
+<p>Although it's currently listed as pre-release in NuGet, Keyczar-dotnet currently has over <strong>400</strong> unit tests providing <strong>90%</strong> code coverage and is tested against java Keyczar produced data as well. Because it is a security framework I'm going to keep it conservatively listed under pre-release until more eyes have been on the code.</p>
+
+<p>Source Code for debugging NuGet provided binaries can be downloaded automatically in Visual Studio by configuring <a href="http://www.symbolsource.org/Public/Home/VisualStudio">SymbolSource.org</a>.</p>
 
 <h2>Usage</h2>
 
-<p><code>KeyczarTool.exe</code> provides the primary mechanism for creating and managing keysets. Calling <code>KeyczarTool.exe</code> from the commandline without flags will display usage. Use it to create your key set first and use it to rotate your keys latter.</p>
+<p><code>KeyczarTool.exe</code> provides the primary mechanism for creating and managing keysets. Calling <code>KeyczarTool.exe</code> from the command line without flags will display usage. Use it to create your key set first and use it to rotate your keys latter.</p>
 
 <p>Once you have your key set the basic api is very simple to use for encryption:</p>
 
@@ -67,9 +78,9 @@
 <span class="p">}</span>
 </pre></div>
 
-<p>See more usage examples in the <a href="http://github.com/jbtule/keyczar-dotnet/wiki">Wiki</a>.</p>
+<p>See more usage and documentation in the <a href="http://github.com/jbtule/keyczar-dotnet/wiki">Wiki</a>.</p>
 
-<h2>Dependancies</h2>
+<h2>Dependencies</h2>
 
 <ul>
 <li>.net 4.0 or mono v2.10</li>
@@ -84,7 +95,7 @@
 <ul>
 <li><a href="https://github.com/fschwiet/ManyConsole">ManyConsole 0.4.2.8 or later</a></li>
 <li><a href="http://www.ndesk.org/Options">NDesk.Options 0.2.1 or later</a></li>
-<li><a href="https://github.com/jbtule/diminish-dependencies">DiminishDependencies 1.1.2 or later</a></li>
+<li><a href="https://github.com/jbtule/diminish-dependencies">DiminishDependencies 1.1.3 or later</a></li>
 </ul><h4>KeyczarTest.dll</h4>
 
 <ul>
@@ -93,11 +104,15 @@
 
 <h4>Visual Studio 2010 or Later</h4>
 
-<p>Dependencies should be downloaded automaticially with <a href="http://nuget.org">nuget</a> which is integrated into the solution. Build all triggers nuget.</p>
+<p>Dependencies should be downloaded automaticially with <a href="http://nuget.org">NuGet</a> which is integrated into the solution. Build all triggers nuget.</p>
 
 <h4>MonoDevelop v3.0.4 or later</h4>
 
-<p>Run <code>MonoRestoreNugetPackages.sh</code> script first to restore nuget dependency then builds fine from monodevelop. Sometimes nuget.exe under mono has weird null exceptions, repeating running the script usually fixes this issue.</p>
+<p>Run <code>MonoRestoreNugetPackages.sh</code> script first to restore NuGet dependency then builds fine from monodevelop. Sometimes nuget.exe under mono has weird null exceptions, repeating running the script usually fixes this issue.</p>
+
+<h2>Contribute</h2>
+
+<p>Code contribution, reported issues or code reviews welcome!</p>
 
 <h2>Compatibility</h2>
 
@@ -107,10 +122,9 @@
 <li>Currently the only unofficial algorithm is <em>AES-GCM</em> (<code>KeyType=C#_AES_AEAD</code>) using the unofficial flag on the KeyczarTool will use it to replace <em>AES-Then-HmacSha1</em>
 </li>
 <li>
-<code>VanillaSigner</code> and <code>VanillaVerifier</code> are feature identical to <code>UnversionedSigner</code> and <code>UnversionVerifer</code>
+<code>VanillaSigner</code> and <code>VanillaVerifier</code> are feature identical to java/python/c++ <code>UnversionedSigner</code> and <code>UnversionedVerifer</code>
 </li>
-<li>Since <code>SessionEncrypter</code> and <code>SessionDecrypter</code> are marked as deprecated in the java version they were not implemented.</li>
-<li>Also <code>SignedSessionEncrypter</code> and <code>SignedSessionDecrypter</code> have not been implemented (But <code>SessionCrypter</code> does provide authenticated encryption on it's session data).</li>
+<li>The Functionality of java/python/c++ <code>SessionEncrypter</code>, <code>SessionDecrypter</code>, <code>SignedSessionEncrypter</code>, and <code>SignedSessionDecrypter</code> are provided by the C# <code>SessionCrypter</code> via constructor arguments.</li>
 </ul>
         </section>
 
