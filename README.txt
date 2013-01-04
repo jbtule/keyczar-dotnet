@@ -1,11 +1,14 @@
 = Keyczar dotnet =
-Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features and will interoperate with them by default. Uses BouncyCastle as backend for most encryption. Official keyczar site: http://keyczar.org
+Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
+
+Keyczar-dotnet: http://jbtule.github.com/keyczar-dotnet
+Official keyczar site: http://keyczar.org
 
 == Usage ==
 
 `KeyczarTool.exe` provides the primary mechanism for creating and managing keysets. Calling `KeyczarTool.exe` from the commandline without flags will display usage.
 
-== Dependancies ==
+== Dependencies==
 
  - .net 4.0 or mono v2.10
 
@@ -40,7 +43,7 @@ Run `MonoRestoreNugetPackages.sh` script first to restore nuget dependency then 
  - Should interoperate with java/python/c++ with standard api
  - All unofficial/incompatible api changes are under the unofficial names space to be clear what won't interoperate with java/python/c++
  - Currently the only unofficial algorithm is *AES-GCM* (`KeyType=C#_AES_AEAD`) using the unofficial flag on the KeyczarTool will use it to replace *AES-Then-HmacSha1*
- - `VanillaSigner` and `VanillaVerifier` are feature identical to `UnversionedSigner` and `UnversionVerifer`
- - The Functionality of `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by `SessionCrypter` via constructor arguments.
+ - `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionVerifer`
+ - The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
 
 
