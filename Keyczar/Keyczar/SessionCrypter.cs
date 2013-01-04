@@ -128,6 +128,8 @@ namespace Keyczar
             var sessionMaterialBytes = sessionMaterial.ToBytes();
             var sessionPacker = keyPacker as IInteroperableSessionMaterialPacker;
 
+            _verifier = verifier;
+
             if (sessionPacker ==null && _verifier != null)
             {
                 sessionMaterialBytes = _verifier.VerifiedMessage(sessionMaterialBytes);
@@ -149,7 +151,7 @@ namespace Keyczar
             _keyset = new ImportedKeySet(key, KeyPurpose.DecryptAndEncrypt);
             _crypter = new Crypter(_keyset);
             _sessionMaterial = sessionMaterial;
-            _verifier = verifier;
+         
 
         
 
@@ -195,7 +197,7 @@ namespace Keyczar
             _signer = _signer.SafeDispose();
             _verifier = _verifier.SafeDispose();
             _nonce = _nonce.Clear();
-            _sessionMaterial = SessionMaterial.Clear(); 
+            _sessionMaterial = _sessionMaterial.Clear(); 
         }
 
         /// <summary>
@@ -239,11 +241,12 @@ namespace Keyczar
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
+        /// <exception cref="InvalidCryptoDataException">Can't decrypted, when in signer is provided</exception>
         public void Decrypt(Stream input, Stream output, long inputLength =-1)
         {
             if (_signer != null)
             {
-                throw new InvalidKeySetException("Can't decrypted, when in signer is provided");
+                throw new InvalidCryptoDataException("Can't decrypted, when in signer is provided");
             }
             var finalinput = input;
             if (_verifier != null)
@@ -288,11 +291,12 @@ namespace Keyczar
         /// <param name="input">The input.</param>
         /// <param name="output">The output.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
+        /// <exception cref="InvalidCryptoDataException">Can't encrypt, when verifier is provided</exception>
         public void Encrypt(Stream input, Stream output, long inputLength = -1)
         {
             if (_verifier != null)
             {
-                throw new InvalidKeySetException("Can't encrypt, when verifier is provided");
+                throw new InvalidCryptoDataException("Can't encrypt, when verifier is provided");
             }
             _crypter.Compression = Compression;
 
@@ -407,7 +411,8 @@ namespace Keyczar
             /// <returns></returns>
             public byte[] PackMaterial(NonceSessionMaterial material)
             {
-                return Keyczar.RawStringEncoding.GetBytes(material.ToJson());
+                string json = material.ToJson();
+                return Keyczar.RawStringEncoding.GetBytes(json);
             }
 
             /// <summary>

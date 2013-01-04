@@ -280,6 +280,42 @@ namespace KeyczarTest
             }
         }
 
+
+
+
+        [TestCase("rsa",                "",             "",         "",     "session.material.out", "session.ciphertext.out", Category = "SecondRun")]
+        [TestCase("signedsession",      "",             "signed",   "",     "signed.session.out",   "signed.ciphertext.out",  Category = "SecondRun")]
+        [TestCase("bson_session", "unofficial", "", "bson", "session.out", "ciphertext.out", Category = "Unofficial,SecondRun")]
+        [TestCase("signed_bson_session", "unofficial", "signed", "bson", "session.out", "ciphertext.out", Category = "Unofficial,SecondRun")]
+        public void TestCreateSessions(string topDir, string subDir, string signed, string packer, string sessionFilename, string ciphertextFilename)
+        {
+            var kspath = Util.TestDataPath(WRITE_DATA, topDir, subDir);
+            Directory.CreateDirectory(kspath);
+
+            ISessionKeyPacker keyPacker = null;
+            int? keySize =null;
+            KeyType keyType = null;
+            if (!String.IsNullOrWhiteSpace(packer))
+            {
+               keyPacker = new BsonSessionKeyPacker();
+               keySize = 256;
+               keyType = KeyType.AesAead;
+            }
+            using(var encrypter = new Encrypter(Util.TestDataPath(WRITE_DATA, "rsa.public")))
+            using(var signer =  String.IsNullOrWhiteSpace(signed) 
+                    ? null
+                    :  new AttachedSigner(Util.TestDataPath(WRITE_DATA, "dsa")))
+            using (var session = new SessionCrypter(encrypter, signer, keySize,keyType,keyPacker))
+            {
+               var material = session.SessionMaterial;
+
+               var ciphertext = session.Encrypt(input);
+
+               File.WriteAllText(Path.Combine(kspath,sessionFilename),material);
+               File.WriteAllText(Path.Combine(kspath, ciphertextFilename), ciphertext);
+            }
+        }
+
         [Test]
         [Category("Create")]
         [Category("Unofficial")]
@@ -323,7 +359,7 @@ namespace KeyczarTest
 
                         using (var signer = new Signer(keySet2))
                         {
-                            File.WriteAllText(Path.Combine(WRITE_DATA, "sign.out"), signer.Sign(input));
+                            File.WriteAllText(Path.Combine(WRITE_DATA, "unofficial", "sign.out"), signer.Sign(input));
                         }
                     }
                 }

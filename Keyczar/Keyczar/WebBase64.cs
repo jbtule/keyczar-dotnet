@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Keyczar.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
@@ -24,7 +25,8 @@ namespace Keyczar{
 
     /// <summary>
     /// WebBased64 forced type of string
-    /// </summary>
+    /// </summary> 
+     [JsonConverter(typeof(WebBase64JsonConverter))]
 	public class WebBase64{
 
         /// <summary>
