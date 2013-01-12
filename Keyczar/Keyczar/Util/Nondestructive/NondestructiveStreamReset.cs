@@ -25,12 +25,19 @@ namespace Keyczar.Util
     {
         private Stream _stream;
         private long _position;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NondestructiveStreamReset" /> class.
+        /// </summary>
+        /// <param name="stream">The stream.</param>
         public NondestructiveStreamReset(Stream stream)
         {
             _stream = stream;
             _position = stream.Position;
         }
 
+        /// <summary>
+        /// Finalizes an instance of the <see cref="NondestructiveStreamReset" /> class.
+        /// </summary>
         ~NondestructiveStreamReset()
         {
             Dispose(false);

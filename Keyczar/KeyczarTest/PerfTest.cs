@@ -13,7 +13,7 @@
  *  limitations under the License.
  */
 using System;
-
+using Keyczar.Util;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
 using Org.BouncyCastle.Crypto.Parameters;
@@ -105,7 +105,7 @@ namespace KeyczarTest
 		{
 
 			 var ivarr = new byte[BlockLength];
-			 Random.NextBytes(ivarr);
+			 Secure.Random.NextBytes(ivarr);
 			 return new SymmetricStream(
 			 new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
 			 output,

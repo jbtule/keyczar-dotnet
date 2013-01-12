@@ -244,7 +244,7 @@ namespace KeyczarTest
         [Test]
         public void CreateAndModifyPbeKeySet()
         {
-            string result, outPath;
+            string result;
 
             var path = Util.TestDataPath(WRITE_DATA, "pbe_scratch");
 

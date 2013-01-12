@@ -99,7 +99,7 @@ namespace Keyczar.Crypto
         protected override void GenerateKey(int size)
         {
             AesKeyBytes= new byte[size/8];
-            Random.NextBytes(AesKeyBytes);
+            Secure.Random.NextBytes(AesKeyBytes);
             HmacKey = (HmacSha1Key) Generate(KeyType.HmacSha1, 0/*uses default size*/);
         }
 

@@ -85,7 +85,7 @@ namespace Keyczar.Crypto
         protected override void GenerateKey(int size)
         {
             HmacKeyBytes = new byte[size / 8];
-            Random.NextBytes(HmacKeyBytes);
+            Secure.Random.NextBytes(HmacKeyBytes);
         }
 
     }

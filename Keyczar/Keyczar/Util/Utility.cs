@@ -24,6 +24,7 @@ using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Serialization;
+using Org.BouncyCastle.Security;
 
 namespace Keyczar.Util
 {
@@ -32,7 +33,6 @@ namespace Keyczar.Util
     /// </summary>
     public static class Utility
     {
-
         /// <summary>
         /// Resets the stream poisition when Closed or Disposed.
         /// </summary>

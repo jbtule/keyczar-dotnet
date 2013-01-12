@@ -37,11 +37,6 @@ namespace Keyczar.Pbe
     {
 
         /// <summary>
-        /// Random number generator
-        /// </summary>
-        protected static readonly SecureRandom Random = new SecureRandom();
-
-        /// <summary>
         /// Encrypts the key data.
         /// </summary>
         /// <param name="key">The key.</param>
@@ -60,7 +55,7 @@ namespace Keyczar.Pbe
                               Salt = new byte[16]
                           };
 
-            Random.NextBytes(pks.Salt);
+            Secure.Random.NextBytes(pks.Salt);
 
             var pbeKey = new PbeAesKey(){Size = 128};
             pbeKey.AesKeyBytes = pks.GetDerivedBytes(pbeKey.Size / 8, passwordPrompt);
@@ -198,7 +193,7 @@ namespace Keyczar.Pbe
             internal PbeAesKey()
             {
                 IV = new byte[16];
-                Random.NextBytes(IV);
+                Secure.Random.NextBytes(IV);
             }
 
 			KeyType _keyType =new HardcodedKeyType("PBE_AES",typeof(PbeAesKey));

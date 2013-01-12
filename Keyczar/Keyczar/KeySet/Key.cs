@@ -32,10 +32,7 @@ namespace Keyczar
     /// </summary>
     public abstract class Key : IDisposable, IKey
     {
-        /// <summary>
-        /// Random byte generator
-        /// </summary>
-        protected static readonly SecureRandom Random = new SecureRandom();
+   
 
         /// <summary>
         /// Gets the key hash.

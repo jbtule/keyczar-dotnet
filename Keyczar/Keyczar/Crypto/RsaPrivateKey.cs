@@ -114,7 +114,7 @@ namespace Keyczar.Crypto
         {
             
             var rsaparam = new RsaKeyPairGenerator();
-            rsaparam.Init(new KeyGenerationParameters(Random,size));
+            rsaparam.Init(new KeyGenerationParameters(Secure.Random, size));
             var pair =rsaparam.GenerateKeyPair();
             var priv =(RsaPrivateCrtKeyParameters) pair.Private;
 			PrivateExponent = priv.Exponent.ToSystemBigInteger();

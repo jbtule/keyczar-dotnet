@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Keyczar</id>
-        <version>0.7.2</version>
+        <version>0.7.5-beta1</version>
         <title>Keyczar</title>
         <authors>Jay Tuley,Google</authors>
         <owners>Jay Tuley</owners>
@@ -11,6 +11,7 @@
         <iconUrl>http://www.keyczar.org/keyczar_logo.jpg</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>
+		This is a C# implementation of the Keyczar API.
 Keyczar is an open source cryptographic toolkit designed to make it easier and safer for devlopers to use cryptography in their applications. Keyczar supports authentication and encryption with both symmetric and asymmetric keys. Some features of Keyczar include:
 
  - A simple API
@@ -22,8 +23,8 @@ Keyczar is an open source cryptographic toolkit designed to make it easier and s
 </description>
         <summary>Toolkit for safe and simple cryptography</summary>
         <releaseNotes>Initial Release</releaseNotes>
-        <copyright>Copyright 2012</copyright>
-        <tags>cryptography crypto security encryption aes asymmetric</tags>
+        <copyright>Copyright 2012-2013</copyright>
+        <tags>cryptography crypto security encryption symmetric asymmetric mac aes rsa dsa hmac</tags>
         <dependencies>
             <dependency id="BouncyCastle" version="1.7.0" />
             <dependency id="DotNetZip" version="1.9.1.8" />
@@ -32,7 +33,7 @@ Keyczar is an open source cryptographic toolkit designed to make it easier and s
     </metadata>
     <files>
 	<file src="..\..\*.txt" target=""/>
-    <file src="..\Keyczar\bin\Release\Keyczar.*" target="lib\net40\" />
+    <file src="..\Keyczar\bin\Release\Keyczar.*" target="lib\net40-client\" />
 	<file src="..\Keyczar\**\*.cs" target="src" />
 	<file src="..\KeyczarTool.Minified\bin\Release\KeyczarTool.Minified.exe" target="tools\KeyczarTool.exe"/>
     </files>

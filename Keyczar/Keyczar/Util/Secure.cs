@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Security.Cryptography;
+using Org.BouncyCastle.Security;
 
 namespace Keyczar.Util
 {
@@ -27,6 +28,11 @@ namespace Keyczar.Util
     /// </summary>
     public static class Secure
     {
+        /// <summary>
+        /// Random byte generator
+        /// </summary>
+        public static readonly SecureRandom Random = new SecureRandom();
+
 
         /// <summary>
         /// Disposes if not null and returns null to empty variables in one line

@@ -18,8 +18,7 @@ namespace Keyczar.Compat
     /// </summary>
     public static class Export
     {
-        static readonly SecureRandom Random = new SecureRandom();
-
+       
         /// <summary>
         /// Exports the primary key as PKCS.
         /// </summary>
@@ -75,7 +74,7 @@ namespace Keyczar.Compat
                     pemWriter.WriteObject(new Pkcs8Generator(writeKey, Pkcs8Generator.PbeSha1_RC2_128)
                                               {
                                                   Password = (passwordPrompt() ?? String.Empty).ToCharArray(),
-                                                  SecureRandom = Random,
+                                                  SecureRandom = Secure.Random,
                                                   IterationCount = 4096
                                               });
 

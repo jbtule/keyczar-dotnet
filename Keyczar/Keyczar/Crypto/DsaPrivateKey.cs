@@ -76,10 +76,10 @@ namespace Keyczar.Crypto
         protected override void GenerateKey(int size)
         {
             var paramgen = new DsaParametersGenerator();
-            paramgen.Init(size,100,Random);
+            paramgen.Init(size, 100, Secure.Random);
 
             var keygen = new DsaKeyPairGenerator();
-            keygen.Init(new DsaKeyGenerationParameters(Random, paramgen.GenerateParameters()));
+            keygen.Init(new DsaKeyGenerationParameters(Secure.Random, paramgen.GenerateParameters()));
             var pair =keygen.GenerateKeyPair();
             var priv =(DsaPrivateKeyParameters) pair.Private;
 			X = priv.X.ToSystemBigInteger();
