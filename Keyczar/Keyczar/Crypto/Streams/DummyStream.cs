@@ -14,6 +14,7 @@
  */
 
 
+using System.Security.Cryptography;
 using Keyczar.Util;
 
 namespace Keyczar.Crypto.Streams
@@ -21,72 +22,22 @@ namespace Keyczar.Crypto.Streams
     /// <summary>
     /// A Dummy Stream to fake verification if the key hash doesn't match
     /// </summary>
-    public class DummyStream : VerifyingStream
+    public class DummyStream : HmacStream
     {
         /// <summary>
-        /// When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+        /// Initializes a new instance of the <see cref="DummyStream" /> class.
         /// </summary>
-        /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception><filterpriority>2</filterpriority>
-        public override void Flush()
+        public DummyStream() : base(new HMACSHA1())
         {
-          
         }
-
         /// <summary>
-        /// When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
+        /// Returns Blank Hash Value because this is a dummy operation
         /// </summary>
-        /// <param name="buffer">An array of bytes. This method copies <paramref name="count"/> bytes from <paramref name="buffer"/> to the current stream.</param>
-        /// <param name="offset">The zero-based byte offset in <paramref name="buffer"/> at which to begin copying bytes to the current stream.</param>
-        /// <param name="count">The number of bytes to be written to the current stream.</param>
-        /// <exception cref="T:System.ArgumentException">The sum of <paramref name="offset"/> and <paramref name="count"/> is greater than the buffer length. </exception>
-        /// <exception cref="T:System.ArgumentNullException">
-        /// 	<paramref name="buffer"/> is null. </exception>
-        /// <exception cref="T:System.ArgumentOutOfRangeException">
-        /// 	<paramref name="offset"/> or <paramref name="count"/> is negative. </exception>
-        /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
-        /// <exception cref="T:System.NotSupportedException">The stream does not support writing. </exception>
-        /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
-        public override void Write(byte[] buffer, int offset, int count)
-        {
-        
-        }
-
-        /// <summary>
-        /// Gets the hash value.
-        /// </summary>
-        /// <value>The hash value.</value>
+        /// <value>The blank shash value.</value>
         public override byte[] HashValue
         {
-            get { return null; }
+            get { return new byte[]{}; }
         }
-
-        /// <summary>
-        /// Gets the length of the tag.
-        /// </summary>
-        /// <param name="header">The header.</param>
-        /// <returns></returns>
-        public override int GetTagLength(byte[] header)
-        {
-            return 20;
-        }
-
-        /// <summary>
-        /// Finishes this instance.
-        /// </summary>
-        public override void Finish()
-        {
-            
-        }
-
-        /// <summary>
-        /// Verifies the signature.
-        /// </summary>
-        /// <param name="signature">The signature.</param>
-        /// <returns></returns>
-        public override bool VerifySignature(byte[] signature)
-        {
-            Finish();
-            return Secure.Equals(HashValue, signature);
-        }
+      
     }
 }

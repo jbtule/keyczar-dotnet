@@ -346,4 +346,8 @@
     <value>Changed Password for PBE Keyset.</value>
     <comment>success message</comment>
   </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove password from keyset.</value>
+    <comment>Remove Flag description</comment>
+  </data>
 </root>

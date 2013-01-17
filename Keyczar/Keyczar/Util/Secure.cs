@@ -80,7 +80,10 @@ namespace Keyczar.Util
 
 
 
-
+        /// <summary>
+        /// The _dummy array for fake comparison that will return false
+        /// </summary>
+        private static readonly byte[] DummyArray = new byte[] { 1, 2 };
         /// <summary>
         /// Compares the arrays in a conservative way.
         /// </summary>
@@ -100,6 +103,7 @@ namespace Keyczar.Util
             if (b == null)
                 b = new object[] { };
             var length = Math.Max(a.Length, b.Length);
+
             var compare = true;
             
             //We don't ever want to use this function to compare zero length arrays
@@ -113,10 +117,12 @@ namespace Keyczar.Util
                 if(i < startIndex)
                     continue;
 
-                if (a.GetLength(0) <= i || b.GetLength(0) <= i)
-                    compare = false && 1 == 2;
+                //This first case is used to try and not leak when a key matching a keyhash couldn't be found.
+                if (a.GetLength(0) <= i | b.GetLength(0) <= i) //uses non short ciruit "or (|)"
+                    //always returns false
+                    compare = DummyArray.GetValue(0).Equals(DummyArray.GetValue(1)) & compare;  //uses non short ciruit "and (&)"
                 else
-                    compare = compare && a.GetValue(i).Equals(b.GetValue(i));
+                    compare = a.GetValue(i).Equals(b.GetValue(i)) & compare; //uses non short ciruit "and (&)"
             }
             return compare;
         }

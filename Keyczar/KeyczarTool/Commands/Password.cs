@@ -16,7 +16,7 @@ namespace KeyczarTool.Commands
         {
             this.IsCommand("password", Localized.PasswordCommand);
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
-            this.HasOption("r|remove", Localized.Location, v => { _remove = true; });
+            this.HasOption("r|remove", Localized.Remove, v => { _remove = true; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
