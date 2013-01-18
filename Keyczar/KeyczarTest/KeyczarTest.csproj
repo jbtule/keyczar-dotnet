@@ -56,6 +56,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interop\Aes.cs" />
+    <Compile Include="Interop\Aes256.cs" />
+    <Compile Include="Interop\AesCrypted.cs" />
+    <Compile Include="Interop\AesNoPrimary.cs" />
+    <Compile Include="Interop\Dsa.cs" />
+    <Compile Include="Interop\Hmac.cs" />
+    <Compile Include="Interop\Rsa.cs" />
+    <Compile Include="Interop\RsaSign.cs" />
     <Compile Include="SessionDecryptTest.cs" />
     <Compile Include="SignerAttachedTest.cs" />
     <Compile Include="CertificateImportTest.cs" />
@@ -79,15 +87,9 @@
     <Compile Include="CreateDataManageTest.cs" />
     <Compile Include="ToolTest.cs" />
     <Compile Include="PerfTest.cs" />
-    <Compile Include="Interop\Aes.cs" />
     <Compile Include="Interop\Interop.cs" />
-    <Compile Include="Interop\Aes256.cs" />
     <Compile Include="Interop\CrypterInterop.cs" />
-    <Compile Include="Interop\Rsa.cs" />
     <Compile Include="Interop\VerifierInterop.cs" />
-    <Compile Include="Interop\Dsa.cs" />
-    <Compile Include="Interop\RsaSign.cs" />
-    <Compile Include="Interop\Hmac.cs" />
     <Compile Include="Interop\PublicVerifierInterop.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -845,8 +847,5 @@
   </Target>
   -->
   <ItemGroup />
-  <ItemGroup>
-    <Folder Include="interop-data\" />
-    <Folder Include="Interop\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

@@ -137,8 +137,7 @@
     <Compile Include="AttachedVerifier.cs" />
     <Compile Include="Util\WriteDecompressGzipStream.cs" />
     <Compile Include="WebBase64.cs" />
-    <Compile Include="Util\BigIntegerWebSafeBase64ByteConverter.cs" />
-    <Compile Include="Util\WebBase64JsonConverter.cs" />
+    <Compile Include="Util\WebBase64Converter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

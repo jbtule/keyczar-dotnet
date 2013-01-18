@@ -24,9 +24,6 @@ namespace KeyczarTest.Interop
 	{
 		protected string Location;
 
-		protected static String Input = "This is some test data";
-
-
 		public VerifierInterop (string imp):base(imp)
 		{
 		}

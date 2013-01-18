@@ -13,9 +13,11 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 using System;
+using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
+    [TestFixture]
 	public class Dsa:PublicVerifierInterop
 	{
 		public Dsa (string imp):base(imp)

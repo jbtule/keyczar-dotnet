@@ -78,11 +78,12 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawData">The raw data.</param>
         /// <param name="signature">The signature.</param>
+        /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
-        public bool Verify(string rawData, WebBase64 signature)
+        public bool Verify(string rawData, WebBase64 signature, DateTime? currentDateTime=null)
         {
 
-			return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
+            return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes(), currentDateTime);
         }
 
         /// <summary>
@@ -90,12 +91,13 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawData">The raw data.</param>
         /// <param name="signature">The signature.</param>
+        /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
-        public bool Verify(byte[] rawData, byte[] signature)
+        public bool Verify(byte[] rawData, byte[] signature, DateTime? currentDateTime = null)
         {
             using (var memstream = new MemoryStream(rawData))
             {
-                return Verify(memstream, signature);
+                return Verify(memstream, signature, currentDateTime: currentDateTime);
             }
         }
 
@@ -105,12 +107,15 @@ namespace Keyczar
         /// <param name="input">The input.</param>
         /// <param name="signature">The signature.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
+        /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        public bool Verify(Stream input, byte[] signature, long inputLength =-1)
+        public bool Verify(Stream input, byte[] signature, long inputLength = -1, DateTime? currentDateTime = null)
         {
-            var milliseconds = FromDateTime(DateTime.Now);
+            var dateTimeNow = currentDateTime ?? DateTime.Now;
 
+            var milliseconds = FromDateTime(dateTimeNow);
+            
             if (!_verifier.Verify(input, signature, inputLength))
                 return false; 
             using(var stream = new MemoryStream(signature))
