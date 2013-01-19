@@ -92,8 +92,5 @@ namespace KeyczarTest
               }
           }
 
-
-
-     
     }
 }

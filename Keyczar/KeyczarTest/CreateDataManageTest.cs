@@ -254,9 +254,9 @@ namespace KeyczarTest
             KeyType kt = keyType;
 
             var path = Util.TestDataPath(WRITE_DATA, topDir, "certificates");
-            var pubPath = path + "-pub";
+            var pubPath = path + ".public";
             var exportPath = path + "-pkcs8.pem";
-
+            var exportPubPath = path + "-public.pem";
 
             var writer = new KeySetWriter(path, overwrite: true);
             var pubWriter = new KeySetWriter(pubPath, overwrite: true);
@@ -268,6 +268,9 @@ namespace KeyczarTest
                 using (var pubks = ks.PublicKey())
                 {
                     var pubsuccess = pubks.Save(pubWriter);
+                    Expect(pubsuccess, Is.True);
+
+                    pubsuccess = pubks.ExportPrimaryAsPkcs(exportPubPath, () => null);
                     Expect(pubsuccess, Is.True);
                 }
                 Func<string> password = () => "pass";//Hardcoding because this is a test

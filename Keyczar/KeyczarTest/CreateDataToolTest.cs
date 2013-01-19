@@ -199,11 +199,14 @@ namespace KeyczarTest
 
             if (!string.IsNullOrWhiteSpace(asymmetric))
             {
+                var exportpubpath = Util.TestDataPath(WRITE_DATA, topDir + "-public.pem", "certificates");
                 var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public", "certificates");
                 if(Directory.Exists(pubpath))
 				    Directory.Delete(pubpath,true);
                 result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
                 Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
+                result = Util.KeyczarTool(export: null, location: pubpath, destination: exportpubpath);
+                Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
             }
         }
 

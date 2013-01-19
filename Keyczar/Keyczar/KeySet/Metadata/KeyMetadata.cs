@@ -46,6 +46,7 @@ namespace Keyczar
         /// </summary>
         public KeyMetadata()
         {
+            Name = String.Empty;
             Versions= new List<KeyVersion>();
         }
 
@@ -55,7 +56,7 @@ namespace Keyczar
         /// <param name="metadata">The metadata.</param>
         public KeyMetadata(KeyMetadata metadata)
         {
-            Name = metadata.Name;
+            Name = metadata.Name ?? String.Empty;
             Purpose = metadata.Purpose;
             KeyType = metadata.KeyType;
             Encrypted = metadata.Encrypted;
@@ -67,7 +68,6 @@ namespace Keyczar
         /// Gets or sets the name.
         /// </summary>
         /// <value>The name.</value>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Name { get; set; }
         /// <summary>
         /// Gets or sets the purpose.

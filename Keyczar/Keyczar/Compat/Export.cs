@@ -34,49 +34,78 @@ namespace Keyczar.Compat
             var i =keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
             using (var key = keySet.GetKey(i))
             {
-                if (!(key is IPrivateKey))
-                {
-                    throw new InvalidKeyTypeException("Needs to be a private key.");
-                }
-
                 using (var stream = new FileStream(location, FileMode.Create))
                 using (var writer = new StreamWriter(stream))
                 {
-                    var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);
-                    AsymmetricKeyParameter writeKey;
-                    if (key.KeyType == KeyType.DsaPriv)
-                    {
-                        var dsaKey = (DsaPrivateKey) key;
-						writeKey = new DsaPrivateKeyParameters(dsaKey.X.ToBouncyBigInteger(),
-						                                       new DsaParameters(dsaKey.PublicKey.P.ToBouncyBigInteger(),
-						                  						dsaKey.PublicKey.Q.ToBouncyBigInteger(),
-						                  						dsaKey.PublicKey.G.ToBouncyBigInteger()));
 
-                    }
-                    else if (key.KeyType == KeyType.RsaPriv)
+                    var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);
+
+                    AsymmetricKeyParameter writeKey;
+                    if (!(key is IPrivateKey))
                     {
-                        var rsaKey = (RsaPrivateKey) key;
-                        writeKey = new RsaPrivateCrtKeyParameters(
-							rsaKey.PublicKey.Modulus.ToBouncyBigInteger(),
-							rsaKey.PublicKey.PublicExponent.ToBouncyBigInteger(),
-							rsaKey.PrivateExponent.ToBouncyBigInteger(),
-							rsaKey.PrimeP.ToBouncyBigInteger(),
-							rsaKey.PrimeQ.ToBouncyBigInteger(),
-							rsaKey.PrimeExponentP.ToBouncyBigInteger(),
-							rsaKey.PrimeExponentQ.ToBouncyBigInteger(),
-							rsaKey.CrtCoefficient.ToBouncyBigInteger());
+                     
+                        if (key.KeyType == KeyType.DsaPub)
+                        {
+                            var dsaKey = (DsaPublicKey) key;
+                            writeKey = new DsaPublicKeyParameters(dsaKey.Y.ToBouncyBigInteger(),
+                                                                   new DsaParameters(
+                                                                       dsaKey.P.ToBouncyBigInteger(),
+                                                                       dsaKey.Q.ToBouncyBigInteger(),
+                                                                       dsaKey.G.ToBouncyBigInteger()));
+
+                        }
+                        else if (key.KeyType == KeyType.RsaPub)
+                        {
+                            var rsaKey = (RsaPublicKey) key;
+                            writeKey = new RsaKeyParameters(false,
+                                                            rsaKey.Modulus.ToBouncyBigInteger(),
+                                                            rsaKey.PublicExponent.ToBouncyBigInteger());
+                        }
+                        else
+                        {
+                            throw new InvalidKeyTypeException("Non exportable key type.");
+                        }
+
+                        pemWriter.WriteObject(new MiscPemGenerator(writeKey));
                     }
                     else
                     {
-                        throw new InvalidKeyTypeException("Non exportable key type.");
-                    }
+                        if (key.KeyType == KeyType.DsaPriv)
+                        {
+                            var dsaKey = (DsaPrivateKey) key;
+                            writeKey = new DsaPrivateKeyParameters(dsaKey.X.ToBouncyBigInteger(),
+                                                                   new DsaParameters(
+                                                                       dsaKey.PublicKey.P.ToBouncyBigInteger(),
+                                                                       dsaKey.PublicKey.Q.ToBouncyBigInteger(),
+                                                                       dsaKey.PublicKey.G.ToBouncyBigInteger()));
 
-                    pemWriter.WriteObject(new Pkcs8Generator(writeKey, Pkcs8Generator.PbeSha1_RC2_128)
-                                              {
-                                                  Password = (passwordPrompt() ?? String.Empty).ToCharArray(),
-                                                  SecureRandom = Secure.Random,
-                                                  IterationCount = 4096
-                                              });
+                        }
+                        else if (key.KeyType == KeyType.RsaPriv)
+                        {
+                            var rsaKey = (RsaPrivateKey) key;
+                            writeKey = new RsaPrivateCrtKeyParameters(
+                                rsaKey.PublicKey.Modulus.ToBouncyBigInteger(),
+                                rsaKey.PublicKey.PublicExponent.ToBouncyBigInteger(),
+                                rsaKey.PrivateExponent.ToBouncyBigInteger(),
+                                rsaKey.PrimeP.ToBouncyBigInteger(),
+                                rsaKey.PrimeQ.ToBouncyBigInteger(),
+                                rsaKey.PrimeExponentP.ToBouncyBigInteger(),
+                                rsaKey.PrimeExponentQ.ToBouncyBigInteger(),
+                                rsaKey.CrtCoefficient.ToBouncyBigInteger());
+                        }
+                        else
+                        {
+                            throw new InvalidKeyTypeException("Non exportable key type.");
+                        }
+
+                        pemWriter.WriteObject(new Pkcs8Generator(writeKey, Pkcs8Generator.PbeSha1_RC2_128)
+                                                  {
+                                                      Password = (passwordPrompt() ?? String.Empty).ToCharArray(),
+                                                      SecureRandom = Secure.Random,
+                                                      IterationCount = 4096
+                                                  });
+
+                    }
 
                 }
             }
