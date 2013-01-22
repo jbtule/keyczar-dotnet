@@ -115,6 +115,15 @@ namespace KeyczarTool {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The location of the crypter key set to crypt the 2nd key set..
+        /// </summary>
+        internal static string Crypter2 {
+            get {
+                return ResourceManager.GetString("Crypter2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Demote a given key version from the key set..
         /// </summary>
         internal static string Demote {
@@ -133,6 +142,15 @@ namespace KeyczarTool {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The second destination location of the operation..
+        /// </summary>
+        internal static string Destination2 {
+            get {
+                return ResourceManager.GetString("Destination2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exports primary private key to a PKCS Pem file..
         /// </summary>
         internal static string Export {
@@ -147,6 +165,15 @@ namespace KeyczarTool {
         internal static string File {
             get {
                 return ResourceManager.GetString("File", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Output usage for key (crypt|sign|sign-timeout|sign-vanilla|sign-attached|crypt-session|crypt-signedsession)..
+        /// </summary>
+        internal static string Format {
+            get {
+                return ResourceManager.GetString("Format", resourceCulture);
             }
         }
         
@@ -183,6 +210,15 @@ namespace KeyczarTool {
         internal static string Location {
             get {
                 return ResourceManager.GetString("Location", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The locatione of the 2nd key set..
+        /// </summary>
+        internal static string Location2 {
+            get {
+                return ResourceManager.GetString("Location2", resourceCulture);
             }
         }
         
@@ -331,7 +367,16 @@ namespace KeyczarTool {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to &apos;--message&apos; flag required with password..
+        ///   Looks up a localized string similar to If format is crypt-session or crypt-signedsession &apos;message&apos; required..
+        /// </summary>
+        internal static string MsgMessageFlagSession {
+            get {
+                return ResourceManager.GetString("MsgMessageFlagSession", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;message&apos; param required with password flag..
         /// </summary>
         internal static string MsgMessageFlagWithPassword {
             get {
@@ -403,6 +448,24 @@ namespace KeyczarTool {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to crypt-session or crypt-signedsession requires destination2..
+        /// </summary>
+        internal static string MsgRequiresDestination2 {
+            get {
+                return ResourceManager.GetString("MsgRequiresDestination2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to crypt-signedsession requires location2..
+        /// </summary>
+        internal static string MsgRequiresLocation2 {
+            get {
+                return ResourceManager.GetString("MsgRequiresLocation2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Revoked Version..
         /// </summary>
         internal static string MsgRevokedVersion {
@@ -417,6 +480,15 @@ namespace KeyczarTool {
         internal static string MsgUnknownCompression {
             get {
                 return ResourceManager.GetString("MsgUnknownCompression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unknown Format: {0}.
+        /// </summary>
+        internal static string MsgUnknownFormat {
+            get {
+                return ResourceManager.GetString("MsgUnknownFormat", resourceCulture);
             }
         }
         
@@ -462,6 +534,15 @@ namespace KeyczarTool {
         internal static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Password for crypting the 2nd key set or 2nd crypter key set..
+        /// </summary>
+        internal static string Password2 {
+            get {
+                return ResourceManager.GetString("Password2", resourceCulture);
             }
         }
         

@@ -314,7 +314,7 @@
     <comment>error message</comment>
   </data>
   <data name="MsgMessageFlagWithPassword" xml:space="preserve">
-    <value>'--message' flag required with password.</value>
+    <value>'message' param required with password flag.</value>
     <comment>error message</comment>
   </data>
   <data name="MsgForExport" xml:space="preserve">
@@ -346,8 +346,35 @@
     <value>Changed Password for PBE Keyset.</value>
     <comment>success message</comment>
   </data>
+  <data name="Crypter2" xml:space="preserve">
+    <value>The location of the crypter key set to crypt the 2nd key set.</value>
+  </data>
+  <data name="Destination2" xml:space="preserve">
+    <value>The second destination location of the operation.</value>
+  </data>
+  <data name="Format" xml:space="preserve">
+    <value>Output usage for key (crypt|sign|sign-timeout|sign-vanilla|sign-attached|crypt-session|crypt-signedsession).</value>
+  </data>
+  <data name="Location2" xml:space="preserve">
+    <value>The locatione of the 2nd key set.</value>
+  </data>
+  <data name="Password2" xml:space="preserve">
+    <value>Password for crypting the 2nd key set or 2nd crypter key set.</value>
+  </data>
   <data name="Remove" xml:space="preserve">
     <value>Remove password from keyset.</value>
     <comment>Remove Flag description</comment>
+  </data>
+  <data name="MsgMessageFlagSession" xml:space="preserve">
+    <value>If format is crypt-session or crypt-signedsession 'message' required.</value>
+  </data>
+  <data name="MsgRequiresDestination2" xml:space="preserve">
+    <value>crypt-session or crypt-signedsession requires destination2.</value>
+  </data>
+  <data name="MsgRequiresLocation2" xml:space="preserve">
+    <value>crypt-signedsession requires location2.</value>
+  </data>
+  <data name="MsgUnknownFormat" xml:space="preserve">
+    <value>Unknown Format: {0}</value>
   </data>
 </root>

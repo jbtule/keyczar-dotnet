@@ -11,14 +11,14 @@
         <iconUrl>http://www.keyczar.org/keyczar_logo.jpg</iconUrl>
         <requireLicenseAcceptance>true</requireLicenseAcceptance>
         <description>
-		This is a C# implementation of the Keyczar API.
+		This is a C# implementation of the Full Keyczar API.
 Keyczar is an open source cryptographic toolkit designed to make it easier and safer for devlopers to use cryptography in their applications. Keyczar supports authentication and encryption with both symmetric and asymmetric keys. Some features of Keyczar include:
 
  - A simple API
  - Key rotation and versioning
  - Safe default algorithms, modes, and key length
  - Automated generation of initialization vectors and ciphertext signatures
- - Java, Python, and C++ implementations also exist.
+ - Java, Python, Go, and C++ w/swig (swig supported languages like Perl) implementations also exist.
 
 </description>
         <summary>Toolkit for safe and simple cryptography</summary>

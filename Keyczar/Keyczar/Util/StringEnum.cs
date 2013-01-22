@@ -81,8 +81,6 @@ namespace Keyczar.Util
         /// <param name="identifier">The identifer.</param>
         public StringType(string identifier)
         {
-            if(String.IsNullOrWhiteSpace(identifier))
-                throw new ArgumentException("Invalid identifier","identifier");
             _identifier = identifier.ToUpperInvariant();
         }
 
@@ -95,6 +93,11 @@ namespace Keyczar.Util
         public string Identifier
         {
             get { return _identifier; }
+        }
+
+        public bool IsEmpty
+        {
+           get { return String.IsNullOrWhiteSpace(_identifier); }
         }
 
         /// <summary>

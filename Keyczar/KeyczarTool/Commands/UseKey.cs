@@ -26,62 +26,89 @@ namespace KeyczarTool
     public class UseKey : ConsoleCommand
     {
         private string _location;
+        private string _location2;
         private string _crypterLocation;
+        private string _crypterLocation2;
+        private WireFormat _format;
         private string _message;
         private bool _file;
         private string _destination;
+        private string _destination2;
         private bool _binary;
         private bool _password;
+        private bool _password2;
 		private bool _usecompression;
 		string _compression;
+        private DateTime? _expires;
+        private string _attachedHidden;
+
+
 
         public UseKey()
         {
             this.IsCommand("usekey", Localized.UseKey);
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
-            this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
-            this.HasOption("p|password", Localized.Password, v => { _password = true; });
-            this.HasOption("m|message=", Localized.Message, v => { _message = v; });
+            this.HasOption("location2=", Localized.Location2, v => { _location2 = v; });
+            this.HasOption("format=", Localized.Format, v => { _format = v; });
             this.HasOption("d|destination=", Localized.Destination, v => { _destination = v; });
-            this.HasOption("f|file", Localized.File, v => { _file = true; });
-            this.HasOption("b|binary", Localized.Binary, v => { _binary = true; });
-			this.HasOption("z|compression:", Localized.Compression, v => {_usecompression = true; _compression = v; });
+            this.HasOption("destination2=", Localized.Destination2, v => { _destination2 = v; });
+            this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
+            this.HasOption("crypter2=", Localized.Crypter2, v => { _crypterLocation2 = v; });
+            this.HasOption("p|password", Localized.Password, v => { _password = true; });
+            this.HasOption("password2", Localized.Password2, v => { _password2 = true; });
+            this.HasOption("file", Localized.File, v => { _file = true; });
+            this.HasOption("binary", Localized.Binary, v => { _binary = true; });
+			this.HasOption("compression:", Localized.Compression, v => {_usecompression = true; _compression = v; });
+            this.AllowsAnyAdditionalArguments("message [extra-parameters...]");
             this.SkipsCommandSummaryBeforeRunning();
         }  
 
+     
 
         public override int Run(string[] remainingArguments)
         {
 
-            Crypter crypter = null;
-            IKeySet ks = new KeySet(_location);
-            Func<string> prompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
-
-            IDisposable dks = null;
-            if (!String.IsNullOrWhiteSpace(_crypterLocation))
+            if (remainingArguments.Length > 0)
             {
-                if (_password)
+                _message = remainingArguments[0];
+
+                if (_format == WireFormat.SignTimeout)
+                {  
+                    DateTime outDate;
+                    if (remainingArguments.Length > 1 && DateTime.TryParse(remainingArguments[1], out outDate))
+                    {
+                        _expires = outDate;
+                    }
+                    else
+                    {
+                        throw new ConsoleHelpAsException("Missing or wrong format extra-parameter (expiration-datetime, ISO 8601 for sign-timeout)");
+                    }
+                }else if (_format == WireFormat.SignAttached)
                 {
-                    var cks = new PbeKeySet(_crypterLocation, prompt);
-                    crypter = new Crypter(cks);
-                    dks = cks;
+                    if (remainingArguments.Length > 1)
+                    {
+                        _attachedHidden = remainingArguments[1];
+                    }
                 }
-                else
-                {
-                    crypter = new Crypter(_crypterLocation);
-                }
-                ks = new EncryptedKeySet(ks, crypter);
             }
-            else if (_password)
+
+            IDisposable d1 = null;
+            IDisposable d2 = null;
+            IDisposable d3 = null;
+            IDisposable d4 = null;
+            IDisposable d5 = null;
+            IDisposable d6 = null;
+
+            IKeySet ks = ProduceKeySet(_location, _crypterLocation, _password, out d1, out d2, out d3);
+            IKeySet ks2 = ProduceKeySet(_location2, _crypterLocation2, _password2, out d4, out d5, out d6);
+
+            using (d1)
+            using (d2)
+            using (d3)
+            using (d4)
+            using (d5)
+            using (d6)
             {
-                ks = new PbeKeySet(ks, prompt);
-            }
-            var d2ks = ks as IDisposable;
-
-
-            using (crypter)
-            using (dks)
-            using (d2ks){
 
                     Stream inStream;
                     if (String.IsNullOrWhiteSpace(_message))
@@ -89,6 +116,12 @@ namespace KeyczarTool
                         if (_password)
                         {
                             Console.WriteLine(Localized.MsgMessageFlagWithPassword);
+                            return -1;
+                        }
+
+                         if (_format == WireFormat.CryptSession || _format == WireFormat.CryptSignedSession)
+                        {
+                            Console.WriteLine(Localized.MsgMessageFlagSession);
                             return -1;
                         }
 
@@ -100,9 +133,7 @@ namespace KeyczarTool
                     {
                         inStream = new MemoryStream(Keyczar.Keyczar.RawStringEncoding.GetBytes(_message));
                     }
-
-
-
+          
                 Stream outstream;
                 if (_binary)
                     {
@@ -118,67 +149,240 @@ namespace KeyczarTool
                     outstream = new MemoryStream();
                 }
 
+                Stream outstream2 = null;
+                if ((_format == WireFormat.CryptSession || _format == WireFormat.CryptSignedSession) &&
+                    String.IsNullOrWhiteSpace(_destination2))
+                {
+                    Console.WriteLine(Localized.MsgRequiresDestination2);
+                    return -1;
+                }
+                else if (_binary)
+                {
+                    outstream2 = File.Open(_destination2, FileMode.CreateNew);
+                }
+                else
+                {
+                    outstream2 = new MemoryStream();
+                }
 
 
                 using(inStream)
                 using(outstream)
+                using(outstream2)
                 {
-                    if(ks.Metadata.Purpose == KeyPurpose.DecryptAndEncrypt
-                        || ks.Metadata.Purpose == KeyPurpose.Encrypt )
-                    {
-                        using (var ucrypter =  new Crypter(ks))
-                        {
-							if(_usecompression){
-
-                                if (string.IsNullOrWhiteSpace(_compression)
-                                    || _compression.Equals("zlib", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    ucrypter.Compression = CompressionType.Zlib;
-                                }
-                                else if (_compression.Equals("gzip", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    ucrypter.Compression = CompressionType.Gzip;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("{0} {1}.", Localized.MsgUnknownCompression, _compression);
-                                    return -1;
-                                }
-					
-							}
-
-                            ucrypter.Encrypt(inStream, outstream);
-                        }
-                    }else
-                    {
-                        using (var signer = new Signer(ks))
-                        {
-                            var sig = signer.Sign(inStream);
-                            outstream.Write(sig,0,sig.Length);
-                        }
-                    }
-
+                    var err = TakeAction(ks, inStream, outstream, outstream2, ks2 );
+                    if (err != 0)
+                        return err;
                     if (!_binary)
                     {
-                        var memstream = (MemoryStream) outstream;
-                        outstream.Flush();
-                        var encodedOutput = WebSafeBase64.Encode(memstream.ToArray());
-                        
-                        if (String.IsNullOrWhiteSpace(_destination))
-                        {
-                            Console.Write(encodedOutput);
-                        }
-                        else
-                        {
-                            if(File.Exists(_destination))
-                                throw new Exception("File already Exists!!");
-                            File.WriteAllText(_destination, new string(encodedOutput));
-                        }
+                        EncodeData(outstream, _destination);
+                        EncodeData(outstream2, _destination2);
                     }
                 }
             }
 
             return 0;
+        }
+
+        private void EncodeData(Stream outstream, string destination)
+        {
+            var memstream = (MemoryStream) outstream;
+            outstream.Flush();
+            var encodedOutput = WebSafeBase64.Encode(memstream.ToArray());
+
+            if (String.IsNullOrWhiteSpace(destination))
+            {
+                Console.Write(encodedOutput);
+            }
+            else
+            {
+                if (File.Exists(destination))
+                    throw new Exception("File already Exists!!");
+           
+                File.WriteAllText(destination, new string(encodedOutput));
+            }
+        }
+
+        protected IKeySet ProduceKeySet(string location, string crypterLocation, bool password, out IDisposable d1, out IDisposable d2, out IDisposable d3)
+        {
+            if (String.IsNullOrWhiteSpace(location))
+            {
+                d1 = null;
+                d2 = null;
+                d3 = null;
+               return null;
+            }
+           
+            Crypter crypter = null;
+            IKeySet ks = new KeySet(location);
+            Func<string> prompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
+
+            IDisposable dks =null;
+            if (!String.IsNullOrWhiteSpace(crypterLocation))
+            {
+                if (password)
+                {
+                    var cks = new PbeKeySet(crypterLocation, prompt);
+                    crypter = new Crypter(cks);
+                    dks = cks;
+                }
+                else
+                {
+                    crypter = new Crypter(crypterLocation);
+                }
+                ks = new EncryptedKeySet(ks, crypter);
+            }
+            else if (_password)
+            {
+                ks = new PbeKeySet(ks, prompt);
+            }
+       
+            d1 = crypter;
+            d2 = dks;
+            d3 = ks as IDisposable;
+            return ks;
+        }
+        
+        protected int UseCompression(dynamic compression)
+        {
+          
+                    if (_usecompression)
+                    {
+                        if (string.IsNullOrWhiteSpace(_compression)
+                            || _compression.Equals("zlib", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            compression.Compression = CompressionType.Zlib;
+                        }
+                        else if (_compression.Equals("gzip", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            compression.Compression = CompressionType.Gzip;
+                        }
+                        else
+                        {
+                            Console.WriteLine("{0} {1}.", Localized.MsgUnknownCompression, _compression);
+                            return -1;
+                        }
+                    }
+            return 0;
+        }
+
+        protected int TakeAction(IKeySet keyset, Stream inStream, Stream outStream, Stream outStream2, IKeySet keyset2)
+        {
+            if (_format == WireFormat.Crypt 
+                || (_format.IsEmpty
+                        && (keyset.Metadata.Purpose == KeyPurpose.DecryptAndEncrypt
+                                || keyset.Metadata.Purpose == KeyPurpose.Encrypt)))
+            {
+                using (var ucrypter = new Encrypter(keyset))
+                {
+                    
+                    var err =UseCompression(ucrypter);
+                    if (err != 0)
+                        return err;
+                    ucrypter.Encrypt(inStream, outStream);
+                }
+            }
+            else if (_format == WireFormat.Sign || _format.IsEmpty)
+            {
+                using (var signer = new Signer(keyset))
+                    {
+                        var sig = signer.Sign(inStream);
+                        outStream.Write(sig, 0, sig.Length);
+                    }
+            }
+            else if (_format == WireFormat.SignTimeout)
+            {
+                using (var signer = new TimeoutSigner(keyset))
+                {
+                    var sig = signer.Sign(inStream,_expires.GetValueOrDefault());
+                    outStream.Write(sig, 0, sig.Length);
+                }
+            }
+            else if (_format == WireFormat.SignAttached)
+            {
+                using (var signer = new AttachedSigner(keyset))
+                {
+                    byte[] hidden = null;
+                    if (!String.IsNullOrWhiteSpace(_attachedHidden))
+                        hidden = Keyczar.Keyczar.RawStringEncoding.GetBytes(_attachedHidden);
+                    signer.Sign(inStream, outStream, hidden);
+                }
+            }
+            else if (_format == WireFormat.SignVanilla || _format == WireFormat.SignUnversioned)
+            {
+                using (var signer = new Keyczar.Compat.VanillaSigner(keyset))
+                {
+                    var sig = signer.Sign(inStream);
+                    outStream.Write(sig, 0, sig.Length);
+                }
+            } 
+            else if (_format == WireFormat.CryptSession)
+            {
+                using (var crypter = new Encrypter(keyset))
+                using (var sessionCrypter = new SessionCrypter(crypter))
+                {
+                    var err = UseCompression(sessionCrypter);
+                    if (err != 0)
+                        return err;
+                    var materials = sessionCrypter.SessionMaterial.ToBytes();
+                    outStream.Write(materials, 0, materials.Length);
+
+                    sessionCrypter.Encrypt(inStream, outStream2);
+                }
+            }
+            else if (_format == WireFormat.CryptSignedSession)
+            {
+                if (keyset2 == null)
+                {
+                    Console.WriteLine(Localized.MsgRequiresLocation2);
+                    return -1;
+                }
+
+                using (var crypter = new Encrypter(keyset))
+                using (var signer = new AttachedSigner(keyset2))
+                using (var sessionCrypter = new SessionCrypter(crypter, signer))
+                {
+                    var err = UseCompression(sessionCrypter);
+                    if (err != 0)
+                        return err;
+                    var materials = sessionCrypter.SessionMaterial.ToBytes();
+                    outStream.Write(materials, 0, materials.Length);
+
+                    sessionCrypter.Encrypt(inStream, outStream2);
+                }
+            }
+            else
+            {
+                Console.WriteLine(Localized.MsgUnknownFormat,_format);
+                return -1;
+            }
+            return 0;
+        }
+
+        
+
+
+        protected class WireFormat : Keyczar.Util.StringType
+        {
+
+            public static readonly WireFormat Crypt = "CRYPT";
+            public static readonly WireFormat Sign = "SIGN";
+            public static readonly WireFormat SignTimeout = "SIGN-TIMEOUT";
+            public static readonly WireFormat SignVanilla = "SIGN-VANILLA";
+            public static readonly WireFormat SignUnversioned = "SIGN-UNVERSIONED"; 
+            public static readonly WireFormat SignAttached = "SIGN-ATTACHED";
+            public static readonly WireFormat CryptSession = "CRYPT-SESSION";
+            public static readonly WireFormat CryptSignedSession = "CRYPT-SIGNEDSESSION";
+
+            public static implicit operator WireFormat(string identifier)
+            {
+                return new WireFormat(identifier);
+            }
+
+            public WireFormat(string identifier)
+                : base(identifier)
+            {
+            }
         }
     }
 }
