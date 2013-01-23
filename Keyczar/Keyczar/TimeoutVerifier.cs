@@ -41,7 +41,7 @@ namespace Keyczar
         /// <returns></returns>
         protected static long FromDateTime(DateTime date)
         {
-            return (long)((date.ToUniversalTime() - new DateTime(1970, 1, 1).ToUniversalTime()).TotalMilliseconds);
+            return (long)((date.ToUniversalTime() - new DateTime(1970, 1, 1,0,0,0,DateTimeKind.Utc)).TotalMilliseconds);
         }
 
         private Verifier _verifier;
@@ -80,7 +80,7 @@ namespace Keyczar
         /// <param name="signature">The signature.</param>
         /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
-        public bool Verify(string rawData, WebBase64 signature, DateTime? currentDateTime=null)
+        public bool Verify(string rawData, WebBase64 signature, Func<DateTime> currentDateTime=null)
         {
 
             return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes(), currentDateTime);
@@ -93,7 +93,7 @@ namespace Keyczar
         /// <param name="signature">The signature.</param>
         /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
-        public bool Verify(byte[] rawData, byte[] signature, DateTime? currentDateTime = null)
+        public bool Verify(byte[] rawData, byte[] signature, Func<DateTime> currentDateTime = null)
         {
             using (var memstream = new MemoryStream(rawData))
             {
@@ -110,11 +110,11 @@ namespace Keyczar
         /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        public bool Verify(Stream input, byte[] signature, long inputLength = -1, DateTime? currentDateTime = null)
+        public bool Verify(Stream input, byte[] signature, long inputLength = -1, Func<DateTime> currentDateTime = null)
         {
-            var dateTimeNow = currentDateTime ?? DateTime.Now;
+            var dateTimeNow = currentDateTime ?? (() => DateTime.Now);
 
-            var milliseconds = FromDateTime(dateTimeNow);
+            var milliseconds = FromDateTime(dateTimeNow());
             
             if (!_verifier.Verify(input, signature, inputLength))
                 return false; 

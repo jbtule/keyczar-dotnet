@@ -156,7 +156,7 @@ namespace KeyczarTool
                     Console.WriteLine(Localized.MsgRequiresDestination2);
                     return -1;
                 }
-                else if (_binary)
+                else if (_binary & !String.IsNullOrWhiteSpace(_destination2))
                 {
                     outstream2 = File.Open(_destination2, FileMode.CreateNew);
                 }
@@ -268,10 +268,11 @@ namespace KeyczarTool
 
         protected int TakeAction(IKeySet keyset, Stream inStream, Stream outStream, Stream outStream2, IKeySet keyset2)
         {
-            if (_format == WireFormat.Crypt 
-                || (_format.IsEmpty
+            if ((WireFormat.IsNullOrEmpty(_format)
                         && (keyset.Metadata.Purpose == KeyPurpose.DecryptAndEncrypt
-                                || keyset.Metadata.Purpose == KeyPurpose.Encrypt)))
+                                || keyset.Metadata.Purpose == KeyPurpose.Encrypt))
+                || _format == WireFormat.Crypt 
+                )
             {
                 using (var ucrypter = new Encrypter(keyset))
                 {
@@ -282,7 +283,7 @@ namespace KeyczarTool
                     ucrypter.Encrypt(inStream, outStream);
                 }
             }
-            else if (_format == WireFormat.Sign || _format.IsEmpty)
+            else if (WireFormat.IsNullOrEmpty(_format) || _format == WireFormat.Sign)
             {
                 using (var signer = new Signer(keyset))
                     {

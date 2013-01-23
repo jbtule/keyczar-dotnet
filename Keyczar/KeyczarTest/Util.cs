@@ -121,11 +121,14 @@ namespace KeyczarTest
                 var count = 0;
                 var separateArgs = binder.CallInfo.ArgumentNames.Zip(processArgs,
                                                                      (n, p) =>
+
                                                                      count++ == 0
                                                                          ? n
                                                                          : p == null
                                                                                ? String.Format("--{0}", n)
-                                                                               : string.Format("--{0}=\"{1}\"", n, p));
+                                                                               : n.Equals("additionalArgs")
+                                                                               ? String.Join(" ", ((string[])p).Select(i=>string.Format("\"{0}\"", i)))
+                                                                               : string.Format("--{0}=\"{1}\"", n, p)).ToList();
 
 
                 RunTool(out result, stdInArgs.ToList(), separateArgs.ToList());

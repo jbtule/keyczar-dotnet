@@ -17,13 +17,30 @@ using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-	[TestFixture]
-	public class Hmac:VerifierInterop
+    [TestFixture]
+    public class RsaSignBasic : PublicVerifierBasicInterop
 	{
-		public Hmac (string imp):base(imp)
+		public RsaSignBasic (string imp):base(imp)
 		{
-			Location="hmac";
+			Location = "rsa-sign";
 		}
+
+        [TestCase("1024")]
+        [TestCase("2048")]
+        [TestCase("4096")]
+        public void VerifyVariousSizes(string size)
+        {
+            HelperVerifyVariousSizes(size);
+        }
+
+        [TestCase("1024")]
+        [TestCase("2048")]
+        [TestCase("4096")]
+        public void PublicVerifyVariousSizes(string size)
+        {
+            HelperPublicVerifyVariousSizes(size);
+        }
+
 	}
 }
 

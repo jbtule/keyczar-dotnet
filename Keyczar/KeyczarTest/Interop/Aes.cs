@@ -21,12 +21,20 @@ using System.Linq;
 namespace KeyczarTest.Interop
 {
 	[TestFixture]
-	public class Aes: CrypterInterop
+	public class Aes: CrypterBasicInterop
 	{
 		public Aes (string imp):base(imp)
 		{
 			Location="aes";
 		}
+
+        [TestCase("128")]
+        [TestCase("192")]
+        [TestCase("256")]
+        public void DecryptVariousSizes(string size)
+        {
+            HelperDecryptVariousSizes(size);
+        }
 	}
 }
 

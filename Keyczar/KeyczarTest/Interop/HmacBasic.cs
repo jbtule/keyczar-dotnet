@@ -13,14 +13,16 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 using System;
+using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-	public class Rsa:CrypterInterop
+	[TestFixture]
+	public class HmacBasic:VerifierBasicInterop
 	{
-		public Rsa (string imp):base(imp)
+		public HmacBasic (string imp):base(imp)
 		{
-			Location ="rsa";
+			Location="hmac";
 		}
 	}
 }

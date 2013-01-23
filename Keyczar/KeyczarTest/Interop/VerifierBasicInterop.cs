@@ -12,7 +12,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
-using System;
+
 using NUnit.Framework;
 using Keyczar;
 using System.IO;
@@ -20,13 +20,25 @@ using System.Linq;
 
 namespace KeyczarTest.Interop
 {
-	public abstract class VerifierInterop:Interop
+    public abstract class VerifierBasicInterop : BasicInterop
 	{
 		protected string Location;
 
-		public VerifierInterop (string imp):base(imp)
+		public VerifierBasicInterop (string imp):base(imp)
 		{
 		}
+
+
+        protected void HelperVerifyVariousSizes(string size)
+        {
+            var path = TestData(Location) + "-size";
+            using (var verifier = new Verifier(path))
+            {
+                var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(path, size+ ".out")).First();
+                Expect(verifier.Verify(Input, activeSignature), Is.True);
+            }
+        }
+
 
 		[Test]
 		public void Verify(){

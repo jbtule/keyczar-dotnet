@@ -54,7 +54,7 @@ namespace KeyczarTest
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             var outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
+            Util.KeyczarTool(usekey: null, location: path, destination: outPath, additionalArgs:new[]{input});
 
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
@@ -63,7 +63,7 @@ namespace KeyczarTest
 
             outPath = Path.Combine(path, "2.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
+            Util.KeyczarTool(usekey: null, location: path, destination: outPath, additionalArgs: new[] { input });
 
 
             /*Encrypted Keysets*/
@@ -84,7 +84,7 @@ namespace KeyczarTest
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath, crypter: crypterpath);
+            Util.KeyczarTool(usekey: null, location: path, destination: outPath, crypter: crypterpath, additionalArgs: new[] { input });
 
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath);
@@ -93,7 +93,7 @@ namespace KeyczarTest
 
             outPath = Path.Combine(path, "2.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath, crypter: crypterpath);
+            Util.KeyczarTool(usekey: null, location: path, destination: outPath, crypter: crypterpath, additionalArgs:new[]{input});
         }
 
         [TestCase("aes-noprimary")]
@@ -113,7 +113,7 @@ namespace KeyczarTest
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             var outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
+            Util.KeyczarTool(usekey: null, location: path, destination: outPath, additionalArgs: new[] { input });
 
             result = Util.KeyczarTool(demote: null, location: path, version: 1);
             Expect(result, Is.StringContaining(String.Format(KeyczarTool.Localized.MsgDemotedVersion,1,KeyStatus.Active)));
@@ -145,7 +145,7 @@ namespace KeyczarTest
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             var outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
+            Util.KeyczarTool(usekey: null, location: path, destination: outPath, additionalArgs:new []{input});
 
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
@@ -154,7 +154,7 @@ namespace KeyczarTest
 
             outPath = Path.Combine(path, "2.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool(usekey: null, location: path, message: input, destination: outPath);
+            Util.KeyczarTool(usekey: null, location: path, destination: outPath, additionalArgs: new[] { input });
 
   
             if (!string.IsNullOrWhiteSpace(asymmetric))
@@ -231,7 +231,7 @@ namespace KeyczarTest
 
             outPath = Path.Combine(path, "1.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool("cartman", usekey: null, location: path, message: input, destination: outPath, password: null);
+            Util.KeyczarTool("cartman", usekey: null, location: path, destination: outPath, password: null, additionalArgs: new[] { input });
 
 
             result = Util.KeyczarTool("cartman", addkey: null, location: path, status: "primary", password: null);
@@ -240,7 +240,7 @@ namespace KeyczarTest
 
             outPath = Path.Combine(path, "2.out");
             File.Delete(outPath);//Delete if already exists
-            Util.KeyczarTool("cartman",  usekey: null, location: path, message: input, destination: outPath, password: null);
+            Util.KeyczarTool("cartman", usekey: null, location: path, destination: outPath, password: null, additionalArgs: new[] { input });
 
         }
 

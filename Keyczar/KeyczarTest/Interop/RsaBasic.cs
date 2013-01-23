@@ -13,15 +13,38 @@
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
 using System;
+using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-	public class RsaSign:PublicVerifierInterop
+    [TestFixture]
+	public class RsaBasic:CrypterBasicInterop
 	{
-		public RsaSign (string imp):base(imp)
+        public RsaBasic(string imp)
+            : base(imp)
 		{
-			Location = "rsa-sign";
+			Location ="rsa";
 		}
+
+        [TestCase("1024")]
+        [TestCase("2048")]
+        [TestCase("4096")]
+        public void DecryptVariousSizes(string size)
+        {
+            HelperDecryptVariousSizes(size);
+        }
 	}
+
+    [TestFixture]
+    public class RsaFull : CrypterFullInterop
+    {
+        public RsaFull(string imp)
+            : base(imp)
+        {
+            Location = "rsa";
+            SignLocation = "dsa.public";
+        }
+
+    }
 }
 

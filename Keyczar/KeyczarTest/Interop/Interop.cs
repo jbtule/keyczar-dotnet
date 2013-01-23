@@ -19,30 +19,42 @@ using System.IO;
 
 namespace KeyczarTest.Interop
 {
+    [Category("Iterop")]
+    [TestFixture("j")]
+    public abstract class BasicInterop : Interop
+    {
+        public BasicInterop (string implementation):base(implementation)
+		{
+			
+		}
+    }
 
 	[TestFixture("cs")]
-	[TestFixture("j")]
 	[TestFixture("py")]
-	[Category("Iterop")]
 	public abstract class Interop:AssertionHelper
 	{
-		private string _implementation;
 
-		public  String Input{
-			get{
-				return "This is some test data";
-			}
-		}
+        private string _implementation;
+
+        public String Input
+        {
+            get
+            {
+                return "This is some test data";
+            }
+        }
 
 
-		public Interop (string implementation)
-		{
-			_implementation = implementation;
-		}
+        public Interop(string implementation)
+        {
+            _implementation = implementation;
+        }
 
-		public string TestData(string dir){
-			return Path.Combine("interop-data", _implementation + "_data",dir);
-		}
+        public string TestData(string dir)
+        {
+            return Path.Combine("interop-data", _implementation + "_data", dir);
+        }
+
 	}
 }
 

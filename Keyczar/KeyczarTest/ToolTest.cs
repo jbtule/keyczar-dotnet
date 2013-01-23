@@ -66,11 +66,11 @@ namespace KeyczarTest
             result = Util.KeyczarTool(
                                   usekey: null,
                                   location: subPath,
-                                  message: ptext,
                                   file:null,
                                   destination: ctext,
                                   compression: compress,
-                                  binary:null
+                                  binary:null,
+                                  additionalArgs: new[] { ptext }
                                   );
 
 
@@ -205,8 +205,8 @@ namespace KeyczarTest
                                   usekey: null,
                                   location: pathc,
                                   crypter: path,
-                                  message: input,
-                                  destination: patho
+                                  destination: patho,
+                                  additionalArgs: new[]{input}
                                   );
 
 
@@ -297,8 +297,8 @@ namespace KeyczarTest
                                   location: pathc,
                                   crypter: path,
                                   password: null,
-                                  message: input,
-                                  destination: patho
+                                  destination: patho,
+                                  additionalArgs: new[]{input}
                                   );
 
             using(var pks =new PbeKeySet(path, () => "cartman"/*hardcoding because this is a test*/))
@@ -375,8 +375,8 @@ namespace KeyczarTest
                                   usekey: null,
                                   location: pathc,
                                   password: null,
-                                  message: input,
-                                  destination: patho
+                                  destination: patho,
+                                  additionalArgs: new[]{input}
                                   );
             using(var pks =new PbeKeySet(pathc, ()=>"cartman"/*hardcoding because this is a test*/))
             using (var crypter = new Crypter(pks))

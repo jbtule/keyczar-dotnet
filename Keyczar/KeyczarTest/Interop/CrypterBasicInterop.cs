@@ -22,13 +22,27 @@ namespace KeyczarTest.Interop
 {
 
 	[TestFixture]
-	public abstract class CrypterInterop:Interop
+    public abstract class CrypterBasicInterop : BasicInterop
 	{
 		protected string Location;
 
-		public CrypterInterop (string imp):base(imp)
+		public CrypterBasicInterop (string imp):base(imp)
 		{
 		}
+
+
+        protected void HelperDecryptVariousSizes(string size)
+        {
+            var path = TestData(Location) + "-size";
+
+            var activeCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(path, size + ".out")).First();
+
+            using (var crypter = new Crypter(path))
+            {
+                var activeDecrypted = crypter.Decrypt(activeCiphertext);
+                Expect(activeDecrypted, Is.EqualTo(Input));
+            }
+        }
 
 		[Test]
 		public void Decrypt(){

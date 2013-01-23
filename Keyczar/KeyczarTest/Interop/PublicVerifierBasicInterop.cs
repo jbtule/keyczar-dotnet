@@ -21,11 +21,24 @@ using System.Linq;
 namespace KeyczarTest.Interop
 {
 	[TestFixture]
-	public abstract class PublicVerifierInterop:VerifierInterop
+    public abstract class PublicVerifierBasicInterop : VerifierBasicInterop
 	{
-		public PublicVerifierInterop (string imp):base(imp)
+        public PublicVerifierBasicInterop(string imp)
+            : base(imp)
 		{
 		}
+
+
+        protected void HelperPublicVerifyVariousSizes(string size)
+        {
+            var path = TestData(Location) + "-size";
+            using (var verifier = new Verifier(path+".public"))
+            {
+                var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(path, size + ".out")).First();
+                Expect(verifier.Verify(Input, activeSignature), Is.True);
+            }
+        }
+
 
 		[Test]
 		public void PublicVerify(){

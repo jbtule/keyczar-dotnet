@@ -95,9 +95,27 @@ namespace Keyczar.Util
             get { return _identifier; }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is empty.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is empty; otherwise, <c>false</c>.
+        /// </value>
         public bool IsEmpty
         {
            get { return String.IsNullOrWhiteSpace(_identifier); }
+        }
+
+        /// <summary>
+        /// Determines whether [is null or empty] [the specified type].
+        /// </summary>
+        /// <param name="type">The type.</param>
+        /// <returns>
+        ///   <c>true</c> if [is null or empty] [the specified type]; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool IsNullOrEmpty(StringType type)
+        {
+            return type == null || type.IsEmpty;
         }
 
         /// <summary>

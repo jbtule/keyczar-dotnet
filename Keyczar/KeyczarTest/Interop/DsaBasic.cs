@@ -17,15 +17,13 @@ using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-	[TestFixture]
-	public class Aes256 : CrypterInterop
+    [TestFixture]
+	public class DsaBasic:PublicVerifierBasicInterop
 	{
-		public Aes256 ( string imp):base(imp)
+		public DsaBasic (string imp):base(imp)
 		{
-			Location="aes-256";
-
+			Location = "dsa";
 		}
-
 	}
 }
 
