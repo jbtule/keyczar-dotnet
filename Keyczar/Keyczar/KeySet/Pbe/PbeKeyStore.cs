@@ -17,8 +17,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
 using Keyczar.Compat;
 
 
@@ -26,7 +24,9 @@ using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Generators;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Keyczar.Pbe
 {
@@ -121,10 +121,12 @@ namespace Keyczar.Pbe
         /// <exception cref="InvalidKeySetException">Hmac_Sha256 not supported.</exception>
         protected byte[] GetDerivedBytes(int length, Func<string> passwordPrompt)
         {
-            Rfc2898DeriveBytes pdb;
+            PbeParametersGenerator pdb;
             if (Hmac == PbeHashType.HmacSha1)
             {
-                pdb = new Rfc2898DeriveBytes(passwordPrompt(), Salt, IterationCount);
+
+                pdb = new Pkcs5S2ParametersGenerator();
+                pdb.Init(PbeParametersGenerator.Pkcs5PasswordToBytes(passwordPrompt().ToCharArray()), Salt, IterationCount);
             }
             else if (Hmac == PbeHashType.HmacSha256)
             {
@@ -134,10 +136,9 @@ namespace Keyczar.Pbe
             {
                 throw new InvalidKeySetException("Unknown Pbe Cipher");
             }
-            using (pdb)
-            {
-                return pdb.GetBytes(length);
-            }
+            
+            var key = (KeyParameter)pdb.GenerateDerivedMacParameters(length * 8);
+            return key.GetKey();
         }
 
         /// <summary>

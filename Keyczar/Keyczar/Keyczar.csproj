@@ -73,7 +73,6 @@
     <Compile Include="Crypto\Streams\DigestStream.cs" />
     <Compile Include="Crypto\Streams\DummyStream.cs" />
     <Compile Include="Crypto\Streams\HmacStream.cs" />
-    <Compile Include="Crypto\Streams\DotNetSymmetricStream.cs" />
     <Compile Include="Crypto\Streams\ICipherTextOnly.cs" />
     <Compile Include="Crypto\Streams\SymmetricStream.cs" />
     <Compile Include="Crypto\IKey.cs" />
@@ -116,7 +115,6 @@
     <Compile Include="Unofficial\WebKeySet.cs" />
     <Compile Include="Util\CachedPrompt.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveBinaryReader.cs" />
-    <Compile Include="Util\Nondestructive\NondestructiveCryptoStream.cs" />
     <Compile Include="Util\Nondestructive\NondestructivePositionLengthLimitingStream.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveStreamReader.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveStreamReset.cs" />

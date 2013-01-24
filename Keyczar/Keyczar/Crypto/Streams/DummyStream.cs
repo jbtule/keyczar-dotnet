@@ -14,8 +14,10 @@
  */
 
 
-using System.Security.Cryptography;
+
 using Keyczar.Util;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Macs;
 
 namespace Keyczar.Crypto.Streams
 {
@@ -27,7 +29,7 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// Initializes a new instance of the <see cref="DummyStream" /> class.
         /// </summary>
-        public DummyStream() : base(new HMACSHA1())
+        public DummyStream() : base(new HMac(new Sha1Digest()))
         {
         }
         /// <summary>

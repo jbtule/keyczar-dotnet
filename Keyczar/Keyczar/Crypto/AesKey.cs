@@ -15,13 +15,15 @@
  * 
  */
 
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Engines;
+using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Paddings;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Keyczar.Crypto
 {
@@ -131,51 +133,26 @@ namespace Keyczar.Crypto
 			return HmacKey.Maybe(h=>h.GetVerifyingStream(),()=> null);
         }
 
-        /// <summary>
-        /// Gets the mode.
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="InvalidKeyTypeException">Unsupport AES Mode: </exception>
-        private CipherMode GetMode()
-        {
-            if (Mode == "CBC")
-            {
-                return CipherMode.CBC;
-            }
-            throw new InvalidKeyTypeException("Unsupported AES Mode: " + Mode);
-        }
+    
+
 
         /// <summary>
         /// Gets the encrypting stream.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-		public virtual FinishingStream GetEncryptingStream(Stream output)
+        public virtual FinishingStream GetEncryptingStream(Stream output)
         {
-            var alg = new AesManaged
-                          {
-                              Mode = GetMode(),
-                              Key = AesKeyBytes,
-                              Padding = PaddingMode.PKCS7,
-                              BlockSize = BlockLength * 8
-                          };
-            alg.GenerateIV();
-		
 
-			int hashlength =HmacKey.Maybe(h=>h.HashLength,()=>0);
-			return new DotNetSymmetricStream(alg, output,hashlength , encrypt: true);
-
-
-            //Bouncy Castle Version-->
-            // var ivarr = new byte[BlockLength];
-            //Random.NextBytes(ivarr);
-            // return new SymmetricStream(
-            // new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
-            // output,
-            // ivarr,
-            // HmacKey.HashLength,
-            // (iv, cipher, encrypt) => cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
-            // encrypt: true);
+            var ivarr = new byte[BlockLength];
+            Secure.Random.NextBytes(ivarr);
+            return new SymmetricStream(
+            new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
+            output,
+            ivarr,
+            HmacKey.Maybe(it=>it.HashLength, ()=>0),
+            (iv, cipher, encrypt) => cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
+            encrypt: true);
 
         }
 
@@ -184,25 +161,16 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-		public virtual FinishingStream GetDecryptingStream(Stream output)
+        public virtual FinishingStream GetDecryptingStream(Stream output)
         {
-            var alg = new AesManaged
-                          {
-                              Mode = GetMode(),
-                              Key = AesKeyBytes,
-                              Padding = PaddingMode.PKCS7,
-                              BlockSize = BlockLength * 8
-                          };
-            return new DotNetSymmetricStream(alg, output, HmacKey.Maybe(h=>h.HashLength,()=>0), encrypt: false);
 
-               //Bouncy Castle Version-->
-               //return new SymmetricStream(
-               //     new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
-               //     output, 
-               //     new byte[BlockLength],
-               //     HmacKey.HashLength,
-               //     (iv, cipher, encrypt) => cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
-               //     encrypt:false);
+            return new SymmetricStream(
+                 new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
+                 output,
+                 new byte[BlockLength],
+                 HmacKey.Maybe(it => it.HashLength, () => 0),
+                 (iv, cipher, encrypt) => cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
+                 encrypt: false);
         }
 
     }

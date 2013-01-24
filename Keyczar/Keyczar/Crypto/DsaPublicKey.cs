@@ -14,16 +14,12 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
 using System.Numerics;
 
 namespace Keyczar.Crypto

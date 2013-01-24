@@ -18,13 +18,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Numerics;
-using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Serialization;
-using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto.Digests;
 
 namespace Keyczar.Util
 {
@@ -256,17 +254,19 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static byte[] HashKey(int size, params byte[][] components)
         {
-            using (var sha1 = new SHA1Managed())
-            {
-                foreach (var data in components)
-                {
-                    sha1.TransformBlock(data, 0, data.Length, null, 0);
-                }
-                sha1.TransformFinalBlock(new byte[] { }, 0, 0);
-                var outBytes = new byte[size];
-                Array.Copy(sha1.Hash, 0, outBytes, 0, outBytes.Length);
-                return outBytes;
-            }
+           var sha1 = new Sha1Digest();
+            
+           foreach (var data in components)
+           {
+               sha1.BlockUpdate(data,0, data.Length);
+           }
+
+           var hash = new byte[sha1.GetDigestSize()];
+           sha1.DoFinal(hash, 0);
+           sha1.Reset();
+           var outBytes = new byte[size];
+           Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
+           return outBytes;
         }
 
         /// <summary>
@@ -277,19 +277,20 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static byte[] HashKeyLengthPrefix(int size, params byte[][] components)
         {
-            using (var sha1 = new SHA1Managed())
+             var sha1 = new Sha1Digest();
+            
+            foreach (var data in components)
             {
-                foreach (var data in components)
-                {
-                    byte[] length = GetBytes(data.Length);
-                    sha1.TransformBlock(length, 0, length.Length, null, 0);
-                    sha1.TransformBlock(data, 0, data.Length, null, 0);
-                }
-                sha1.TransformFinalBlock(new byte[] { }, 0, 0);
-                var outBytes = new byte[size];
-                Array.Copy(sha1.Hash, 0, outBytes, 0, outBytes.Length);
-                return outBytes;
+                byte[] length = GetBytes(data.Length);
+                sha1.BlockUpdate(length,0, length.Length);
+                sha1.BlockUpdate(data,0, data.Length);
             }
+            var hash = new byte[sha1.GetDigestSize()];
+            sha1.DoFinal(hash, 0);
+            sha1.Reset();
+            var outBytes = new byte[size];
+            Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
+            return outBytes;
         }
 
 

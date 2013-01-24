@@ -14,8 +14,8 @@
  */
 
 using System;
-using System.Security.Cryptography;
 using Keyczar.Util;
+using Org.BouncyCastle.Crypto.Macs;
 
 namespace Keyczar.Crypto.Streams
 {
@@ -31,18 +31,18 @@ namespace Keyczar.Crypto.Streams
         /// <returns></returns>
         public override int GetTagLength(byte[] header)
         {
-            return _hmacAlg.HashSize / 8;
+            return _hmacAlg.GetMacSize();
         }
 
-        private HashAlgorithm _hmacAlg;
+        private HMac _hmacAlg;
         /// <summary>
         /// Initializes a new instance of the <see cref="HmacStream"/> class.
         /// </summary>
         /// <param name="algorithm">The algorithm.</param>
-        public HmacStream(HashAlgorithm algorithm)
+        public HmacStream(HMac algorithm)
         {
             _hmacAlg = algorithm;
-            _hashValue = new byte[(_hmacAlg.HashSize / 8) + Keyczar.HeaderLength];
+            _hashValue = new byte[(_hmacAlg.GetMacSize())];
         }
 
         /// <summary>
@@ -55,8 +55,7 @@ namespace Keyczar.Crypto.Streams
 
             if (disposing)
             {
-                var alg = _hmacAlg as IDisposable;
-                alg.SafeDispose();
+                _hmacAlg.Reset();
             }
             _hmacAlg = null;
 
@@ -88,7 +87,7 @@ namespace Keyczar.Crypto.Streams
         /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            _hmacAlg.TransformBlock(buffer, offset, count, null, 0);
+            _hmacAlg.BlockUpdate(buffer,offset, count);
         }
 
         private byte[] _hashValue;
@@ -112,8 +111,8 @@ namespace Keyczar.Crypto.Streams
         {
             if (!_final)
             {
-                _hmacAlg.TransformFinalBlock(new byte[] {}, 0, 0);
-                _hashValue = _hmacAlg.Hash;
+                _hmacAlg.DoFinal(_hashValue, 0);
+                
                 _final = true;
             }
         }

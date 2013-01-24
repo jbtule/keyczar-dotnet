@@ -15,11 +15,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Linq;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Crypto.Macs;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Keyczar.Crypto
 {
@@ -75,7 +77,9 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public VerifyingStream GetVerifyingStream()
         {
-            return new HmacStream(new HMACSHA1(HmacKeyBytes));
+            var hmac = new HMac(new Sha1Digest());
+            hmac.Init(new KeyParameter(HmacKeyBytes));
+            return new HmacStream(hmac);
         }
 
         /// <summary>
