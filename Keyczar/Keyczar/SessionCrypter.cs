@@ -83,7 +83,7 @@ namespace Keyczar
             }
             keyPacker = keyPacker ?? new SimpleAesHmacSha1KeyPacker();
 
-            dynamic key = Key.Generate(symmetricKeyType, keySize?? symmetricKeyType.DefaultSize); 
+            var key = Key.Generate(symmetricKeyType, keySize?? symmetricKeyType.DefaultSize); 
             _keyset = new ImportedKeySet(key,KeyPurpose.DecryptAndEncrypt);
             _crypter = new Crypter(_keyset);
             _signer = signer;
@@ -98,7 +98,7 @@ namespace Keyczar
             }
             else
             {
-                var nonceSession = new NonceSessionMaterial(key);
+                var nonceSession = new NonceSessionMaterial((AesKey)key);
                 packedKey = sessionPacker.PackMaterial(nonceSession);
                 _nonce = nonceSession.Nonce.ToBytes();
             }
@@ -136,7 +136,7 @@ namespace Keyczar
             }
             var packedBytes = keyDecrypter.Decrypt(sessionMaterialBytes);
 
-            dynamic key;
+            Key key;
             if (sessionPacker == null)
             {
                 key = keyPacker.Unpack(packedBytes);

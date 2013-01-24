@@ -56,7 +56,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DotNetSymmetricStream.cs" />
+    <Compile Include="Support\DotNetSymmetricStream.cs" />
     <Compile Include="Interop\Aes.cs" />
     <Compile Include="Interop\AesCrypted.cs" />
     <Compile Include="Interop\AesNoPrimary.cs" />
@@ -70,7 +70,7 @@
     <Compile Include="Interop\RsaSignBasic.cs" />
     <Compile Include="Interop\RsaSignFull.cs" />
     <Compile Include="Interop\VerifierFullInterop.cs" />
-    <Compile Include="NonDestructiveCryptoStream.cs" />
+    <Compile Include="Support\NonDestructiveCryptoStream.cs" />
     <Compile Include="SessionDecryptTest.cs" />
     <Compile Include="SignerAttachedTest.cs" />
     <Compile Include="CertificateImportTest.cs" />
@@ -90,7 +90,7 @@
     <Compile Include="SignerTimeoutTest.cs" />
     <Compile Include="Unofficial\BsonSessionDecryptTest.cs" />
     <Compile Include="Unofficial\WebKeySetTest.cs" />
-    <Compile Include="Util.cs" />
+    <Compile Include="Support\Util.cs" />
     <Compile Include="CreateDataManageTest.cs" />
     <Compile Include="ToolTest.cs" />
     <Compile Include="PerfTest.cs" />

@@ -121,7 +121,11 @@ namespace Keyczar
             	key = Key.Generate(_metadata.KeyType, keySize);
 	            if (options != null)
 	            {
-	                Utility.CopyProperties((dynamic) options, key);
+	                var dict = options as IDictionary<string, object>;
+                    if(dict ==null)
+	                    Utility.CopyProperties(options, key);
+                    else
+                        Utility.CopyProperties(dict,key);
 	            }
 				foreach(var existingkey in _keys){
 					var newhash =Util.Utility.ToInt32(key.GetKeyHash());
