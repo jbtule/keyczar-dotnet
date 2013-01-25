@@ -71,7 +71,8 @@ namespace Keyczar.Unofficial
         /// Gets or sets the aes key bytes.
         /// </summary>
         /// <value>The aes key bytes.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
         [JsonProperty("AesKeyString")]
         public byte[] AesKeyBytes { get; set; }
 

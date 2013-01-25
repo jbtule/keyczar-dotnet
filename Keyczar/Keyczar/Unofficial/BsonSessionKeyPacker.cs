@@ -34,14 +34,13 @@ namespace Keyczar.Unofficial
         /// <summary>
         /// Format for packing the key in bson
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public class KeyPack<T> where T : Key
+        public class KeyPack
         {
             /// <summary>
-            /// Initializes a new instance of the <see cref="KeyPack&lt;T&gt;"/> class.
+            /// Initializes a new instance of the <see cref="KeyPack" /> class.
             /// </summary>
             /// <param name="key">The key.</param>
-            public KeyPack(T key)
+            public KeyPack(Key key)
             {
                 KeyType = key.KeyType;
                 Key = key;
@@ -58,13 +57,13 @@ namespace Keyczar.Unofficial
             /// Gets or sets the key.
             /// </summary>
             /// <value>The key.</value>
-            public T Key { get; set; }
+            public Key Key { get; set; }
 
         }
 
-        private static KeyPack<T> PackIt<T>(T key) where T : Key
+        private static KeyPack PackIt(Key key)
         {
-            return new KeyPack<T>(key);
+            return new KeyPack(key);
         }
 
         /// <summary>
@@ -75,7 +74,7 @@ namespace Keyczar.Unofficial
         public byte[] Pack(Key key)
         {
 
-            return Utility.ToBson(PackIt((dynamic) key));
+            return Utility.ToBson(PackIt(key));
           
         }
 
@@ -87,15 +86,17 @@ namespace Keyczar.Unofficial
         public Key Unpack(byte[] data)
         {
             using (var input = new MemoryStream(data)) 
-            using (var input2 = new MemoryStream(data)) 
             {
                 var reader = new BsonReader(input);
-                var serializer = new JsonSerializer ();
                 var val = JToken.ReadFrom(reader);
-                reader = new BsonReader(input2);
                 var keyType = (KeyType)(string)val["type"];
-                var pack = (dynamic)serializer.Deserialize(reader, typeof(KeyPack<>).MakeGenericType(keyType.RepresentedType));
-                return pack.Key;
+                var keyString = val["key"].ToString();
+                using (var stringReader = new StringReader(keyString))
+                {
+                    var jsonSerializer = JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+                    return (Key) jsonSerializer.Deserialize(new WebSafeBase64ByteConverter.RawJsonReader(stringReader), keyType.RepresentedType);
+
+                }
             }
         }
     }

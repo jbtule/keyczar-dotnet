@@ -81,6 +81,7 @@ namespace Keyczar.Util
                 new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
         }
 
+
         /// <summary>
         /// Bson Serializes the object.
         /// </summary>
@@ -90,7 +91,7 @@ namespace Keyczar.Util
         {
             using (var output = new MemoryStream())
             {
-                var serializer = new JsonSerializer {ContractResolver = new CamelCasePropertyNamesContractResolver()};
+                var serializer = new JsonSerializer {ContractResolver = new CamelCasePropertyNamesContractResolver(), };
                 var writer = new BsonWriter(output);
                 serializer.Serialize(writer, value);
                 output.Flush();

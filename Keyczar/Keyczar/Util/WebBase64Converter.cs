@@ -23,6 +23,7 @@
  */
 
 using System;
+using System.IO;
 using System.Numerics;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
@@ -398,7 +399,7 @@ namespace Keyczar.Util
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
         {
             byte[] final;
-            if (reader is BsonReader)
+            if (reader is BsonReader || reader is RawJsonReader)
             {
                 final = serializer.Deserialize<byte[]>(reader);
             }
@@ -410,6 +411,14 @@ namespace Keyczar.Util
 
             }
             return final;
+        }
+
+        public class RawJsonReader : JsonTextReader
+        {
+            public RawJsonReader(TextReader reader)
+                : base(reader)
+            {
+            }
         }
 
         /// <summary>
