@@ -48,7 +48,7 @@ namespace Keyczar
         /// <exception cref="InvalidKeySetException">Only empty key sets can be created using just the KeyMetadata.</exception>
         public MutableKeySet(KeyMetadata emptyKeySet)
         {
-            _metadata = emptyKeySet;
+            _metadata = new KeyMetadata(emptyKeySet);
             if (_metadata.Versions.Any())
             {
                 throw new InvalidKeySetException("Only empty key sets can be created using just the KeyMetadata.");
@@ -61,13 +61,14 @@ namespace Keyczar
         /// <param name="keySet">The key set.</param>
         public MutableKeySet(IKeySet keySet)
         {
-            _metadata = keySet.Metadata;
+            _metadata = new KeyMetadata(keySet.Metadata);
 
             foreach (var version in keySet.Metadata.Versions)
             {
                 //Easy way to deep copy keys
                 var keyData = keySet.GetKeyData(version.VersionNumber);
-                var key = Key.Read(_metadata.KeyType, keyData);
+                var keyType = _metadata.GetKeyType(version.VersionNumber);
+                var key = Key.Read(keyType, keyData);
                 keyData.Clear();
                 _keys.Add(version.VersionNumber, key);
             }
@@ -110,15 +111,21 @@ namespace Keyczar
         /// </summary>
         /// <param name="status">The status.</param>
         /// <param name="keySize">Size of the key.</param>
+        /// <param name="type">The Key type.</param>
         /// <param name="options">The options. dictionary or annoymous type of properties to set</param>
         /// <returns></returns>
-        public int AddKey(KeyStatus status, int keySize =0, object options=null)
+        public int AddKey(KeyStatus status, int keySize =0, KeyType type =null,object options=null)
         {
+            if (type != null && type.Kind != Metadata.Kind)
+            {
+                throw new InvalidKeyTypeException(String.Format("Keyset only supports {0} keys", Metadata.Kind));
+            }
+
 			Key key;
 			bool loop;
 			do{
 				loop = false;
-            	key = Key.Generate(_metadata.KeyType, keySize);
+                key = Key.Generate(type??_metadata.DefaultKeyType, keySize);
 	            if (options != null)
 	            {
 	                var dict = options as IDictionary<string, object>;
@@ -147,6 +154,11 @@ namespace Keyczar
         /// <returns></returns>
         public int AddKey(KeyStatus status, Key key)
         {
+            if (key.KeyType.Kind != Metadata.Kind)
+            {
+                throw new InvalidKeyTypeException(String.Format("Keyset only supports {0} keys", Metadata.Kind));
+            }
+
             int lastVersion = 0;
             foreach (var version in _metadata.Versions)
             {
@@ -154,7 +166,7 @@ namespace Keyczar
                     version.Status = KeyStatus.Active;
                 lastVersion = Math.Max(lastVersion, version.VersionNumber);
             }
-            _metadata.Versions.Add(new KeyVersion() { Status = status, VersionNumber = ++lastVersion });
+            _metadata.Versions.Add(new KeyVersion() { Status = status, VersionNumber = ++lastVersion, KeyType = key.KeyType});
      
             _keys.Add(lastVersion, key);
             onlyMetaChanged = false;
@@ -241,7 +253,7 @@ namespace Keyczar
         /// <returns></returns>
         public MutableKeySet PublicKey()
         {
-            if(!typeof(IPrivateKey).IsAssignableFrom(Metadata.KeyType.RepresentedType))
+            if(Metadata.Kind != KeyKind.Private)
             {
                 return null;
             }
@@ -251,11 +263,18 @@ namespace Keyczar
                 ? KeyPurpose.Verify 
                 : KeyPurpose.Encrypt;
 
+            newMeta.Kind = KeyKind.Public;
+
            var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
                 .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = Keyczar.RawStringEncoding.GetBytes(p.PublicKey.ToJson())})
-                .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value)});
+                .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value)}).ToList();
 
-            newMeta.KeyType = copiedKeys.Select(it => it.Value.KeyType).First();
+            //Update versions to public key type
+            foreach (var key in copiedKeys)
+            {
+               var newVersion = newMeta.Versions.Single(it => it.VersionNumber == key.Key);
+                newVersion.KeyType = key.Value.KeyType;
+            }
 
            return new MutableKeySet(newMeta, copiedKeys.ToDictionary(k => k.Key, v => v.Value));
         }

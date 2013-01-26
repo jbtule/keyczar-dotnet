@@ -43,13 +43,14 @@ namespace KeyczarTest
             if(Directory.Exists(path))
                 Directory.Delete(path,recursive:true);
 
-            result = !unofficial
-                ? Util.KeyczarTool(create: null, location: path, purpose: "crypt")
-                : Util.KeyczarTool(create: null, location: path, purpose: "crypt", unofficial: null);
+            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
+            var type = !unofficial
+                           ? "AES_HMAC_SHA1"
+                           : "AES_GCM";
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
-            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type:type);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             var outPath = Path.Combine(path, "1.out");
@@ -57,7 +58,7 @@ namespace KeyczarTest
             Util.KeyczarTool(usekey: null, location: path, destination: outPath, additionalArgs:new[]{input});
 
 
-            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type:type);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
@@ -73,13 +74,11 @@ namespace KeyczarTest
             if (Directory.Exists(path))
                 Directory.Delete(path, recursive: true);
 
-            result = !unofficial
-                ? Util.KeyczarTool(create: null, location: path, purpose: "crypt")
-             : Util.KeyczarTool(create: null, location: path, purpose: "crypt", unofficial: null);
-
+            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
+             
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
-            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath);
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath, type:type);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             outPath = Path.Combine(path, "1.out");
@@ -87,7 +86,7 @@ namespace KeyczarTest
             Util.KeyczarTool(usekey: null, location: path, destination: outPath, crypter: crypterpath, additionalArgs: new[] { input });
 
 
-            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath);
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath, type:type);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
@@ -132,15 +131,28 @@ namespace KeyczarTest
 
             if(Directory.Exists(path))
                 Directory.Delete(path,recursive:true);
+            string type;
+            if (String.IsNullOrWhiteSpace(asymmetric))
+            {
+                type = "HMAC_SHA1";
+            }
+            else if (asymmetric == "rsa")
+            {
+                type = "RSA_SHA1";
+            }
+            else
+            {
+                type = "DSA_SHA1";
+            }
 
             result = String.IsNullOrWhiteSpace(asymmetric)
                 ? Util.KeyczarTool(create: null, name:"Test", location: path, purpose: purpose)
-                 : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric);
+                : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric:null);
 
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
-            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type: type);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
             var outPath = Path.Combine(path, "1.out");
@@ -148,7 +160,7 @@ namespace KeyczarTest
             Util.KeyczarTool(usekey: null, location: path, destination: outPath, additionalArgs:new []{input});
 
 
-            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type: type);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
@@ -175,6 +187,21 @@ namespace KeyczarTest
         {
             string result;
 
+
+            string type;
+            if (String.IsNullOrWhiteSpace(asymmetric))
+            {
+                type = "HMAC_SHA1";
+            }
+            else if (asymmetric == "rsa")
+            {
+                type = "RSA_SHA1";
+            }
+            else
+            {
+                type = "DSA_SHA1";
+            }
+
             var path = Util.TestDataPath(WRITE_DATA, topDir,"certificates");
             
             if(Directory.Exists(path))
@@ -186,7 +213,7 @@ namespace KeyczarTest
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
-            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type: type);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
            

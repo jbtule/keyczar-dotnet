@@ -15,13 +15,9 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Keyczar;
 using Keyczar.Compat;
-using Keyczar.Crypto;
 using Keyczar.Unofficial;
 using NUnit.Framework;
 
@@ -33,13 +29,13 @@ namespace KeyczarTest
         private static string WRITE_DATA = "cstestdata";
         private static String input = "This is some test data";
 
-        private MutableKeySet CreateNewKeySet(KeyType type, KeyPurpose purpose)
+        private MutableKeySet CreateNewKeySet(KeyKind type, KeyPurpose purpose)
         {
             return new MutableKeySet(new KeyMetadata
                 {
                     Name = "Test",
                     Purpose = purpose,
-                    KeyType = type
+                    Kind = type
                 });
         }
 
@@ -51,19 +47,19 @@ namespace KeyczarTest
             var kspath = Util.TestDataPath(WRITE_DATA, topDir, subDir);
             var writer =new KeySetWriter(kspath, overwrite: true);
 
-            using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
+            using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
             {
                 var success = ks.Save(writer);
                 Expect(success, Is.True);
             }
 
-            HelperCryptCreate(writer, new KeySet(kspath),  kspath);
+            HelperCryptCreate(writer, new KeySet(kspath),  kspath, type);
 
             var kscryptpath = Util.TestDataPath(WRITE_DATA, topDir+"-crypted", subDir);
 
 
             var baseWriter = new KeySetWriter(kscryptpath, overwrite: true);
-            using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
+            using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
             {
                 var success = ks.Save(baseWriter);
                 Expect(success, Is.True);
@@ -72,7 +68,7 @@ namespace KeyczarTest
             using(var encrypter = new Crypter(kspath))
             {
                 var cryptedwriter = new EncryptedKeySetWriter(baseWriter, encrypter);
-                HelperCryptCreate(cryptedwriter, new EncryptedKeySet(kscryptpath,encrypter), kscryptpath, new KeySet(kscryptpath),baseWriter);
+                HelperCryptCreate(cryptedwriter, new EncryptedKeySet(kscryptpath,encrypter), kscryptpath,type, new KeySet(kscryptpath),baseWriter);
             }
 
         }
@@ -87,14 +83,14 @@ namespace KeyczarTest
             using (var encwriter = new PbeKeySetWriter(writer, passPrompt))
             {
 
-                using (var ks = CreateNewKeySet(KeyType.Aes, KeyPurpose.DecryptAndEncrypt))
+                using (var ks = CreateNewKeySet(KeyKind.Symmetric, KeyPurpose.DecryptAndEncrypt))
                 {
                     var success = ks.Save(writer);
                     Expect(success, Is.True);
                 }
                 using (var eks = new PbeKeySet(kspath, passPrompt))
                 {
-                    HelperCryptCreate(encwriter, eks, kspath);
+                    HelperCryptCreate(encwriter, eks, kspath, KeyType.Aes);
                 }
             }
 
@@ -108,9 +104,9 @@ namespace KeyczarTest
 			var kspath = Util.TestDataPath(WRITE_DATA, topDir);
 			var writer =new KeySetWriter(kspath, overwrite: true);
 			
-			using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
+			using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
 			{
-				int ver = ks.AddKey(KeyStatus.Primary);
+				int ver = ks.AddKey(KeyStatus.Primary,type:type);
 				Expect(ver, Is.EqualTo(1));
 
 				var success = ks.Save(writer);
@@ -143,9 +139,9 @@ namespace KeyczarTest
             var kspath = Util.TestDataPath(WRITE_DATA, topDir);
             var writer = new KeySetWriter(kspath, overwrite: true);
 
-            using (var ks = CreateNewKeySet(type, KeyPurpose.SignAndVerify))
+            using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.SignAndVerify))
             {
-                var ver = ks.AddKey(KeyStatus.Primary);
+                var ver = ks.AddKey(KeyStatus.Primary, type: type);
 				Expect(ver, Is.EqualTo(1));
 			
                 var success = ks.Save(writer);
@@ -160,7 +156,7 @@ namespace KeyczarTest
 
             using (var ks = new MutableKeySet(kspath))
             {
-                var ver = ks.AddKey(KeyStatus.Primary);
+                var ver = ks.AddKey(KeyStatus.Primary, type: type);
 				Expect(ver, Is.EqualTo(2));
 
                 var success = ks.Save(writer);
@@ -198,9 +194,9 @@ namespace KeyczarTest
             var kspath = Util.TestDataPath(WRITE_DATA, topDir);
             var writer = new KeySetWriter(kspath, overwrite: true);
 
-            using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
+            using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
             {
-                var ver = ks.AddKey(KeyStatus.Primary);
+                var ver = ks.AddKey(KeyStatus.Primary, type:type);
                 Expect(ver, Is.EqualTo(1));
 
                 var success = ks.Save(writer);
@@ -215,7 +211,7 @@ namespace KeyczarTest
 
             using (var ks = new MutableKeySet(kspath))
             {
-                var ver = ks.AddKey(KeyStatus.Primary);
+                var ver = ks.AddKey(KeyStatus.Primary, type: type);
                 Expect(ver, Is.EqualTo(2));
 
                 var success = ks.Save(writer);
@@ -260,9 +256,9 @@ namespace KeyczarTest
 
             var writer = new KeySetWriter(path, overwrite: true);
             var pubWriter = new KeySetWriter(pubPath, overwrite: true);
-            using (var ks = CreateNewKeySet(kt, p))
+            using (var ks = CreateNewKeySet(kt.Kind, p))
             {
-                var ver =ks.AddKey(KeyStatus.Primary);
+                var ver = ks.AddKey(KeyStatus.Primary, type: kt);
                 Expect(ver, Is.EqualTo(1));
 
                 using (var pubks = ks.PublicKey())
@@ -330,7 +326,7 @@ namespace KeyczarTest
             {
                 Name = "Blob",
                 Purpose = KeyPurpose.DecryptAndEncrypt,
-                KeyType = KeyType.Aes
+                Kind = KeyKind.Symmetric
             };
             using (var keySet = new MutableKeySet(keyMetaData))
             {
@@ -349,7 +345,7 @@ namespace KeyczarTest
                     {
                         Name = "Blob",
                         Purpose = KeyPurpose.SignAndVerify,
-                        KeyType = KeyType.RsaPriv
+                        Kind = KeyKind.Private
                     };
                     using (var keySet2 = new MutableKeySet(keyMetaData2))
                     {
@@ -374,11 +370,11 @@ namespace KeyczarTest
         }
 
 
-        private void HelperCryptCreate(IKeySetWriter writer, IKeySet keySet, string kspath, IKeySet nonEncryptedKS= null, IKeySetWriter nonEncryptedWriter=null)
+        private void HelperCryptCreate(IKeySetWriter writer, IKeySet keySet, string kspath, KeyType keyType, IKeySet nonEncryptedKS= null, IKeySetWriter nonEncryptedWriter=null)
         {
             using (var ks = new MutableKeySet(nonEncryptedKS ?? keySet))
             {
-                var ver = ks.AddKey(KeyStatus.Primary);
+                var ver = ks.AddKey(KeyStatus.Primary, type: keyType);
 				Expect(ver, Is.EqualTo(1));
 
                 var success = ks.Save(nonEncryptedWriter ?? writer);
@@ -393,7 +389,7 @@ namespace KeyczarTest
 
             using (var ks = new MutableKeySet(keySet))
             {
-				var ver = ks.AddKey(KeyStatus.Primary);
+                var ver = ks.AddKey(KeyStatus.Primary, type: keyType);
 				Expect(ver, Is.EqualTo(2));
                 var success = ks.Save(writer);
                 Expect(success, Is.True);

@@ -377,4 +377,13 @@
   <data name="MsgUnknownFormat" xml:space="preserve">
     <value>Unknown Format: {0}</value>
   </data>
+  <data name="KeyType" xml:space="preserve">
+    <value>The override for the default type of key (use keytypes to list keytypes).</value>
+  </data>
+  <data name="MsgInvalidType" xml:space="preserve">
+    <value>Specified invalid type: {0}.</value>
+  </data>
+  <data name="MsgMismatchedKind" xml:space="preserve">
+    <value>Kind of key, {0}, does not match key set kind, {1}.</value>
+  </data>
 </root>

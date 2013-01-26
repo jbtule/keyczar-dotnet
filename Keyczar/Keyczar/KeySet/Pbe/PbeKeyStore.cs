@@ -174,9 +174,19 @@ namespace Keyczar.Pbe
 		[JsonConverter(typeof(JsonConverter))]
 		internal class HardcodedKeyType:KeyType{
 			Type _representedType;
-			internal HardcodedKeyType(String identifier,Type representedType):base(identifier){
+		    private KeyKind _kind;
+			internal HardcodedKeyType(String identifier,Type representedType, KeyKind kind):base(identifier){
 				_representedType =representedType;
+			    _kind = kind;
 			}
+
+            public override KeyKind Kind
+            {
+                get
+                {
+                    return _kind;
+                }
+            }
 
 			public override Type RepresentedType{
 				get{
@@ -197,7 +207,7 @@ namespace Keyczar.Pbe
                 Secure.Random.NextBytes(IV);
             }
 
-			KeyType _keyType =new HardcodedKeyType("PBE_AES",typeof(PbeAesKey));
+			KeyType _keyType =new HardcodedKeyType("PBE_AES",typeof(PbeAesKey), KeyKind.Symmetric);
 
 			[JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
 			public override KeyType KeyType {

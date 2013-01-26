@@ -57,12 +57,13 @@ namespace Keyczar.Compat
             {
                 Name = description ?? "Imported" + key.KeyType.Identifier,
                 Purpose = purpose,
-                KeyType = keyType,
+                Kind = key.KeyType.Kind,
                 Versions = new List<KeyVersion>
                                   {
                                       new KeyVersion
                                       {
-                                          VersionNumber = 0,
+                                          KeyType = keyType,
+                                          VersionNumber = 1,
                                           Status = KeyStatus.Primary,
                                           Exportable = false
                                       }

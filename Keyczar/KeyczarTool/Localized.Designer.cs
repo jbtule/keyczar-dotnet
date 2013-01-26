@@ -205,6 +205,15 @@ namespace KeyczarTool {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The override for the default type of key (use keytypes to list keytypes)..
+        /// </summary>
+        internal static string KeyType {
+            get {
+                return ResourceManager.GetString("KeyType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The location of the key set..
         /// </summary>
         internal static string Location {
@@ -367,6 +376,15 @@ namespace KeyczarTool {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Specified invalid type: {0}..
+        /// </summary>
+        internal static string MsgInvalidType {
+            get {
+                return ResourceManager.GetString("MsgInvalidType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to If format is crypt-session or crypt-signedsession &apos;message&apos; required..
         /// </summary>
         internal static string MsgMessageFlagSession {
@@ -381,6 +399,15 @@ namespace KeyczarTool {
         internal static string MsgMessageFlagWithPassword {
             get {
                 return ResourceManager.GetString("MsgMessageFlagWithPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Kind of key, {0}, does not match key set kind, {1}..
+        /// </summary>
+        internal static string MsgMismatchedKind {
+            get {
+                return ResourceManager.GetString("MsgMismatchedKind", resourceCulture);
             }
         }
         

@@ -29,9 +29,6 @@ namespace KeyczarTool
         private string _pupose;
         private string _name;
         private bool _asymm;
-        private string _asymmAlg;
-        private bool _unofficial;
-        private string _unoffAlg;
 
         public Create()
         {
@@ -39,14 +36,7 @@ namespace KeyczarTool
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
             this.HasRequiredOption("o|purpose=", Localized.Purpose, v => { _pupose = v; });
             this.HasOption("n|name=", Localized.Name, v => { _name = v; });
-            this.HasOption("a|asymmetric:", Localized.Asymmetric, v => { _asymm = true;
-                                                                                           _asymmAlg = v;
-            });
-            this.HasOption("u|unofficial:", Localized.UnofficialCreate, v =>
-                                                                                      {
-                                                                                          _unofficial = true;
-                                                                                           _unoffAlg = v;
-                                                                                      });
+            this.HasOption("a|asymmetric:", Localized.Asymmetric, v => { _asymm = true;});
             this.SkipsCommandSummaryBeforeRunning();
         }
         
@@ -54,14 +44,11 @@ namespace KeyczarTool
         {
             KeyPurpose purpose = _pupose == "sign" ? KeyPurpose.SignAndVerify : KeyPurpose.DecryptAndEncrypt;
 
-            KeyType type = PickKeyType(purpose);
-
-
             var meta =new KeyMetadata()
                 {
                     Name = _name,
                     Purpose = purpose,
-                    KeyType = type,
+                    Kind = _asymm ? KeyKind.Private : KeyKind.Symmetric,
                 };
             using (var keySet = new MutableKeySet(meta))
             {
@@ -77,43 +64,6 @@ namespace KeyczarTool
             return -1;
         }
 
-        private KeyType PickKeyType(KeyPurpose purpose)
-        {
-            KeyType type;
-            if (_asymm)
-            {
-                if (_asymmAlg == "rsa")
-                {
-                    type = KeyType.RsaPriv;
-                }
-                else
-                {
-                    if (purpose == KeyPurpose.DecryptAndEncrypt)
-                    {
-                        type = KeyType.RsaPriv;
-                    }
-                    else
-                    {
-                        type = KeyType.DsaPriv;
-                    }
-                }
-            }
-            else if (purpose == KeyPurpose.DecryptAndEncrypt)
-            {
-                if (_unofficial)
-                {
-                    type = KeyType.AesAead;
-                }
-                else
-                {
-                    type = KeyType.Aes;
-                }
-            }
-            else
-            {
-                type = KeyType.HmacSha1;
-            }
-            return type;
-        }
+     
     }
 }

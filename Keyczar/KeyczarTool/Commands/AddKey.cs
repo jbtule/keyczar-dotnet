@@ -31,20 +31,43 @@ namespace KeyczarTool
         private string _crypterLocation;
         private string _padding;
         private bool _password;
+        private string _type;
 
         public AddKey()
         {
             this.IsCommand("addkey", Localized.AddKey);
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
 			this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
-            this.HasOption<int>("b|size=", Localized.Size, v => { _size = v; });
+            this.HasOption<int>("b|size=", Localized.Size, v => { _size = v; }); 
+            this.HasOption("t|type=", Localized.KeyType, v => { _type = v; });
             this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
             this.HasOption("p|password", Localized.Password, v => { _password = true; });
             this.HasOption("g|padding=", Localized.Padding, v => { _padding = v; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
-
+        private KeyType KeyTypeForString(string type)
+        {
+            if (String.IsNullOrWhiteSpace(type))
+                return null;
+            switch (type)
+            {
+                case "AES_HMAC_SHA1":
+                    return KeyType.Aes;
+                case "RSA_SHA1":
+                case "RSA":
+                    return KeyType.RsaPriv;
+                case "DSA":
+                case "DSA_SHA1":
+                    return KeyType.DsaPriv;
+                case "HMAC_SHA1":
+                    return KeyType.HmacSha1;
+                case "AES_GCM":
+                    return KeyType.AesAead;
+                default:
+                    throw new ConsoleHelpAsException(string.Format(Localized.MsgInvalidType, type));
+            }
+        }
         public override int Run(string[] remainingArguments)
         {
             var ret = 0;
@@ -95,8 +118,18 @@ namespace KeyczarTool
                      options = new {Padding = _padding};
                  }
 
-                 var ver = keySet.AddKey(_status, _size, options);
-               
+                int ver;
+                var type = KeyTypeForString(_type);
+                try
+                {
+                    
+                    ver = keySet.AddKey(_status, _size, type, options);
+                }
+                catch (InvalidKeyTypeException e)
+                {
+                    throw new ConsoleHelpAsException(String.Format(Localized.MsgMismatchedKind, type.Kind, keySet.Metadata.Kind));
+                }
+
 
                 IKeySetWriter writer = new KeySetWriter(_location, overwrite:true);
                

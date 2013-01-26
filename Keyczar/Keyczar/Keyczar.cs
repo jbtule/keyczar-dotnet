@@ -46,6 +46,12 @@ namespace Keyczar
             }
         }
 
+
+        /// <summary>
+        /// The meta data format
+        /// </summary>
+        public static readonly string MetaDataFormat = "1";
+
         /// <summary>
         /// Key hash length
         /// </summary>

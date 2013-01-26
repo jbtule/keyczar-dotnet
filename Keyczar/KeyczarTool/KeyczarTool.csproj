@@ -62,6 +62,7 @@
     <Compile Include="Commands\Create.cs" />
     <Compile Include="Commands\Demote.cs" />
     <Compile Include="Commands\ImportKey.cs" />
+    <Compile Include="Commands\KeyTypes.cs" />
     <Compile Include="Commands\Promote.cs" />
     <Compile Include="Commands\Password.cs" />
     <Compile Include="Commands\Revoke.cs" />

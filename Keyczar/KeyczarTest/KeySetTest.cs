@@ -96,7 +96,7 @@ namespace KeyczarTest
           [Test]
           public void TestOverwriteFalse()
           {
-              using (var ks = new MutableKeySet(new KeyMetadata { Name = "Don't Write", Purpose = KeyPurpose.DecryptAndEncrypt, KeyType = KeyType.Aes }))
+              using (var ks = new MutableKeySet(new KeyMetadata { Name = "Don't Write", Purpose = KeyPurpose.DecryptAndEncrypt, Kind = KeyKind.Symmetric }))
               {
                   ks.AddKey(KeyStatus.Primary);
                   var writer = new KeySetWriter(Util.TestDataPath(TEST_DATA, "pbe_json"),overwrite:false);

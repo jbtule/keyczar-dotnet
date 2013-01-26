@@ -14,6 +14,7 @@
  */
 
 using System;
+using Newtonsoft.Json;
 
 namespace Keyczar
 {
@@ -39,7 +40,17 @@ namespace Keyczar
             VersionNumber = keyVersion.VersionNumber;
             Exportable = keyVersion.Exportable;
             Status = keyVersion.Status;
+            KeyType = keyVersion.KeyType;
         }
+
+        /// <summary>
+        /// Gets or sets the type of the key.
+        /// </summary>
+        /// <value>
+        /// The type of the key.
+        /// </value>
+        [JsonProperty(PropertyName = "Type", NullValueHandling = NullValueHandling.Ignore)]
+        public KeyType KeyType { get; set; }
 
         /// <summary>
         /// Gets or sets the version number.

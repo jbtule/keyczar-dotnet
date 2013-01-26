@@ -83,6 +83,7 @@
     <Compile Include="KeySet\Manage\KeySetWriter.cs" />
     <Compile Include="Compat\ImportedKeySet.cs" />
     <Compile Include="KeySet\Manage\PbeKeySetWriter.cs" />
+    <Compile Include="KeySet\Metadata\KeyKind.cs" />
     <Compile Include="KeySet\Pbe\PbeHashType.cs" />
     <Compile Include="KeySet\Pbe\PbeKeyStore.cs" />
     <Compile Include="KeySet\PbeKeySet.cs" />

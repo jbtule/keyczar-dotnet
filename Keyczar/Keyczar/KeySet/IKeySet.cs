@@ -34,7 +34,8 @@ namespace Keyczar
         public static Key GetKey(this IKeySet keySet, int version)
         {
             var keyData = keySet.GetKeyData(version);
-            var key = Key.Read(keySet.Metadata.KeyType, keyData);
+            var keyType = keySet.Metadata.GetKeyType(version);
+            var key = Key.Read(keyType, keyData);
             keyData.Clear();
             return key;
         }

@@ -39,7 +39,8 @@ namespace KeyczarTool
                                    new ImportKey(),
 								   new Export(),
                                    new UseKey(), 
-                                   new Password(), 
+                                   new Password(),
+                                   new KeyTypes(), 
                                };
 
             // run the command for the console input

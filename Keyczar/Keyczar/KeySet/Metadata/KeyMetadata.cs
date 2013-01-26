@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -48,7 +49,10 @@ namespace Keyczar
         {
             Name = String.Empty;
             Versions= new List<KeyVersion>();
+            Format = Keyczar.MetaDataFormat;
         }
+
+      
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyMetadata"/> class.
@@ -58,11 +62,48 @@ namespace Keyczar
         {
             Name = metadata.Name ?? String.Empty;
             Purpose = metadata.Purpose;
-            KeyType = metadata.KeyType;
             Encrypted = metadata.Encrypted;
             Versions = metadata.Versions.Select(it => new KeyVersion(it)).ToList();
+            if (metadata.Format == "0") //Version 0
+            {
+#pragma warning disable 612,618
+                var keyType = metadata.KeyType;
+#pragma warning restore 612,618
+                Kind = keyType.Kind;
+                foreach (var version in Versions)
+                {
+                    version.KeyType = keyType;
+                }
+            }
+            else
+            {
+                Kind = metadata.Kind;
+            }
+
+            Format = Keyczar.MetaDataFormat;
+
         }
 
+        /// <summary>
+        /// Gets or sets the metadata format version.
+        /// </summary>
+        /// <value>
+        /// The format version.
+        /// </value>
+        [DefaultValue("0")]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, 
+            DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        public string Format { get; set; }
+
+
+        /// <summary>
+        /// Gets or sets the kind.
+        /// </summary>
+        /// <value>
+        /// The kind.
+        /// </value>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public KeyKind Kind { get; set; }
 
         /// <summary>
         /// Gets or sets the name.
@@ -76,11 +117,67 @@ namespace Keyczar
         public KeyPurpose Purpose { get; set; }
 
         /// <summary>
-        /// Gets or sets the key type.
+        /// Gets or sets the key type. for version 0 format only
         /// </summary>
         /// <value>The key type.</value>
-        [JsonProperty("Type")]
+        [Obsolete("Use GetKeyType Instead")] 
+        [JsonProperty(PropertyName = "Type", NullValueHandling = NullValueHandling.Ignore)]
         public KeyType KeyType { get; set; }
+
+
+        /// <summary>
+        /// Gets the default type of the key.
+        /// </summary>
+        /// <value>
+        /// The default type of the key.
+        /// </value>
+        /// <exception cref="InvalidKeySetException">No default type for public keysets</exception>
+        
+        [JsonIgnore]
+        public KeyType DefaultKeyType
+        {
+            get
+            {
+                if (KeyKind.IsNullOrEmpty(Kind))
+                {
+#pragma warning disable 612,618
+                    return KeyType;
+#pragma warning restore 612,618
+                }else if (Kind == KeyKind.Symmetric && Purpose == KeyPurpose.DecryptAndEncrypt)
+                {
+                    return KeyType.Aes;
+                }
+                else if (Kind == KeyKind.Symmetric && Purpose == KeyPurpose.SignAndVerify)
+                {
+                    return KeyType.HmacSha1;
+                }
+                else if (Kind == KeyKind.Private && Purpose == KeyPurpose.DecryptAndEncrypt)
+                {
+                    return KeyType.RsaPriv;
+                }
+                else if (Kind == KeyKind.Private && Purpose == KeyPurpose.SignAndVerify)
+                {
+                    return KeyType.DsaPriv;
+                }
+                else
+                {
+                    throw new InvalidKeySetException("No default type for public keysets");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the type of the key.
+        /// </summary>
+        /// <param name="version">The version.</param>
+        /// <returns></returns>
+        public KeyType GetKeyType(int version)
+        {
+           
+#pragma warning disable 612,618
+            return Versions.Where(it => it.VersionNumber == version).Select(it => it.KeyType).FirstOrDefault() ?? KeyType;
+#pragma warning restore 612,618
+        }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="KeyMetadata"/> is encrypted.
