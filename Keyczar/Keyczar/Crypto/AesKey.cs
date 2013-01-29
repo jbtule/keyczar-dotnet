@@ -76,12 +76,13 @@ namespace Keyczar.Crypto
 		/// <returns></returns>
 		public override IEnumerable<byte[]> GetFallbackKeyHash ()
 		{
+		    var trimmedKeyBytes = Utility.StripLeadingZeros(AesKeyBytes);
 			return new byte[][]{
 				//Java keyczar uses block length instead of keylength for hash
 				Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
 				                HmacKey.HmacKeyBytes),
 				//c++ keyczar used to strip leading zeros from key bytes
-				Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Utility.StripLeadingZeros(AesKeyBytes),
+				Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(trimmedKeyBytes.Length), trimmedKeyBytes,
 				                HmacKey.HmacKeyBytes),
 			};
 		}
