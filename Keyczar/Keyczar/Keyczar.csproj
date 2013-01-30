@@ -114,12 +114,24 @@
     <Compile Include="Unofficial\BsonSessionKeyPacker.cs" />
     <Compile Include="Unofficial\WebKeySet.cs" />
     <Compile Include="Util\CachedPrompt.cs" />
-    <Compile Include="Util\Nondestructive\NondestructiveBinaryReader.cs" />
-    <Compile Include="Util\Nondestructive\NondestructivePositionLengthLimitingStream.cs" />
-    <Compile Include="Util\Nondestructive\NondestructiveStreamReader.cs" />
-    <Compile Include="Util\Nondestructive\NondestructiveStreamReset.cs" />
-    <Compile Include="Util\Nondestructive\NondestructiveZipFile.cs" />
-    <Compile Include="Util\Nondestructive\NondestructiveBinaryWriter.cs" />
+    <Compile Include="Util\Nondestructive\NondestructiveBinaryReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\Nondestructive\NondestructiveBinaryWriter.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\Nondestructive\NondestructivePositionLengthLimitingStream.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\Nondestructive\NondestructiveStreamReader.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\Nondestructive\NondestructiveStreamReset.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Util\Nondestructive\NondestructiveZipFile.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Util\ReadOnlyArray.cs" />
     <Compile Include="Util\Secure.cs" />
     <Compile Include="Util\Utility.cs" />
