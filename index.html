@@ -39,13 +39,13 @@
 <pre><code>PM&gt; Install-Package Keyczar -Pre
 </code></pre>
 
-<p>Although it's currently listed as pre-release in NuGet, Keyczar-dotnet currently has over <strong>400</strong> unit tests providing <strong>90%</strong> code coverage and is tested against java Keyczar produced data as well. Because it is a security framework I'm going to keep it conservatively listed under pre-release until more eyes have been on the code.</p>
+<p>Although it's currently listed as pre-release in NuGet, Keyczar-dotnet currently has over <strong>500</strong> unit tests providing <strong>90%</strong> code coverage and is tested against python and java Keyczar produced data as well. Because it is a security framework I'm going to keep it conservatively listed under pre-release until more eyes have been on the code.</p>
 
 <p>Source Code for debugging NuGet provided binaries can be downloaded automatically in Visual Studio by configuring <a href="http://www.symbolsource.org/Public/Home/VisualStudio">SymbolSource.org</a>.</p>
 
 <h2>Usage</h2>
 
-<p><code>KeyczarTool.exe</code> provides the primary mechanism for creating and managing keysets. Calling <code>KeyczarTool.exe</code> from the command line without flags will display usage. Use it to create your key set first and use it to rotate your keys latter.</p>
+<p><code>KeyczarTool.exe</code> provides the primary mechanism for creating and managing keysets. Calling <code>KeyczarTool.exe</code> from the command line without flags will display usage. Use it to create your key set first and use it to rotate your keys later.</p>
 
 <p>Once you have your key set the basic api is very simple to use for encryption:</p>
 
@@ -102,17 +102,32 @@
 <li><a href="http://www.nunit.org/">NUnit 2.6.1 or later</a></li>
 </ul><h2>Build</h2>
 
-<h4>Visual Studio 2010 or Later</h4>
+<h4>Visual Studio 2010 or Later / MSBuild</h4>
 
-<p>Dependencies should be downloaded automaticially with <a href="http://nuget.org">NuGet</a> which is integrated into the solution. Build all should trigger nuget to download all dependencies. </p>
+<p>Dependencies should be downloaded automaticially with <a href="http://nuget.org">NuGet</a> which is integrated into the solution. Build all should trigger nuget to download all dependencies from Visual Studio or MSBuild. </p>
 
-<h4>MonoDevelop v3.0.4 or later</h4>
+<h4>MonoDevelop 3.04 or Later / xbuild</h4>
 
-<p>Run <code>MonoRestoreNugetPackages.sh</code> script first to restore NuGet dependency then you may build from MonoDevelop with <code>Build All</code>. Current Nuget.exe version, included, now restores reliably on mono.</p>
+<p>Run <code>MonoRestoreNugetPackages.sh</code> script first to restore NuGet dependency then you may build from MonoDevelop with <code>Build All</code> or with just xbuild run <code>xbuild Keyczar.sln</code>.</p>
+
+<ul>
+<li>Keyczar
+
+<ul>
+<li>Mono 2.10 
+
+<ul>
+<li>master <a href="https://travis-ci.org/jbtule/keyczar-dotnet"><img src="https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master" alt="Build Status"></a>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><p>See more in <a href="http://github.com/jbtule/keyczar-dotnet/wiki/Building-or-Testing-Keyczar-dotnet-in-Depth">Building in Depth</a>.</p>
 
 <h2>Contribute</h2>
 
-<p>Code contribution, reported issues or code reviews welcome!</p>
+<p>Code contribution, reported issues or code reviews welcome! Pull requests are automatically built and tested with <a href="https://travis-ci.org/jbtule/keyczar-dotnet">Travis CI</a>.</p>
 
 <h2>Compatibility</h2>
 
