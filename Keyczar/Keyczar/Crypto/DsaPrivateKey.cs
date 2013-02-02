@@ -109,9 +109,14 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public HashingStream GetSigningStream()
         {
-            var signer = new DsaDigestSigner(new DsaSigner(), new Sha1Digest());
-            signer.Init(forSigning:true, parameters:new DsaPrivateKeyParameters(X.ToBouncyBigInteger(),
-			                                                                    new DsaParameters(PublicKey.P.ToBouncyBigInteger(), PublicKey.Q.ToBouncyBigInteger(), PublicKey.G.ToBouncyBigInteger())));
+
+            var signer = new DsaDigestSigner(new DsaSigner(), PublicKey.GetDigest());
+            var param = new DsaPrivateKeyParameters(X.ToBouncyBigInteger(),
+                                                    new DsaParameters(PublicKey.P.ToBouncyBigInteger(),
+                                                                      PublicKey.Q.ToBouncyBigInteger(),
+                                                                      PublicKey.G.ToBouncyBigInteger()));
+            signer.Init(forSigning:true, parameters:new ParametersWithRandom(param,Secure.Random));
+
             return new DigestStream(signer);
         }
 

@@ -17,6 +17,7 @@ using System;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
@@ -100,7 +101,25 @@ namespace Keyczar.Crypto
             Size = 0;
         }
 
+        /// <summary>
+        /// Gets the digest.
+        /// </summary>
+        /// <returns></returns>
+        internal IDigest GetDigest()
+        {
+            var qSize = Q.ToBouncyBigInteger().BitLength;
+            if(qSize <= 160)
+                return new Sha1Digest();  //80 Bits of security
+            if (qSize <= 224)
+                return new Sha224Digest();  //112 Bits of security
+            if (qSize <= 256)
+                return new Sha256Digest();  //128 Bits of security
 
+            //No keys should fall here or below with DSA2
+            if (qSize <= 384) 
+                return new Sha384Digest();  //192 Bits of security
+            return new Sha512Digest();  //256 Bits of security
+        }
         /// <summary>
         /// Gets the verifying stream.
         /// </summary>
@@ -110,7 +129,7 @@ namespace Keyczar.Crypto
             var tSigner = new DsaSigner();
             tSigner.Init(forSigning: false, parameters: new DsaPublicKeyParameters(Y.ToBouncyBigInteger(), 
                 new DsaParameters(P.ToBouncyBigInteger(),Q.ToBouncyBigInteger(), G.ToBouncyBigInteger() ) ));
-            return new DigestStream(new DsaDigestSigner(tSigner, new Sha1Digest()));
+            return new DigestStream(new DsaDigestSigner(tSigner, GetDigest()));
         }
     }
 }
