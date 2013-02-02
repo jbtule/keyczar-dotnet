@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Keyczar</id>
-        <version>0.7.5-beta3</version>
+        <version>0.7.5-beta4</version>
         <title>Keyczar</title>
         <authors>Jay Tuley,Google</authors>
         <owners>Jay Tuley</owners>
@@ -37,6 +37,7 @@ Keyczar is an open source cryptographic toolkit designed to make it easier and s
     </metadata>
     <files>
 	<file src="..\..\*.txt" target=""/>
+	<file src="tmp\*.txt" target=""/>
     <file src="..\Keyczar\bin\Release\Keyczar.*" target="lib\net40-client\" />
 	<file src="..\Keyczar\**\*.cs" target="src" />
 	<file src="..\KeyczarTool.Minified\bin\Release\KeyczarTool.Minified.exe" target="tools\KeyczarTool.exe"/>

@@ -1,7 +1,7 @@
-== Supported Cryptographic Algorithms  ==
+## Supported Cryptographic Algorithms
 
 
-==== Encryption: ====
+#### Encryption:
 
 - AES 128 + HMAC 256 SHA1
 - AES 192 + HMAC 256 SHA1
@@ -13,24 +13,24 @@
 - AES GCM 192 w/ 128 bit MAC
 - AES GCM 128 w/ 128 bit MAC
 
-==== Digital signature: ====
+#### Digital signature:
 
 - DSA 1024 + SHA1
 - RSA 1024 + SHA1
 - RSA 2048 + SHA1
 - RSA 4096 + SHA1
 
-==== Message Authentication ====
+#### Message Authentication
 
 - HMAC 256 SHA1
 
-==== Default Algorithms: ====
+#### Default Algorithms:
 
 - HMAC SHA1
 - AES 128
 - DSA 1048
 - RSA 2048
 
-==== Unofficial Default Algorithms: ====
+#### Unofficial Default Algorithms:
 
 - AES GCM 256
