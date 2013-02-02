@@ -27,13 +27,13 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
 using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
 using Org.BouncyCastle.Security;
-using System.Numerics;
+
 namespace Keyczar.Crypto
 {
     /// <summary>
     /// The RSA public key
     /// </summary>
-    public class RsaPublicKey : Key,IEncrypterKey,IVerifierKey
+    public class RsaPublicKey : RsaPublicSignKeyBase,IEncrypterKey, IRsaPublicKey
     {
         /// <summary>
         /// PkcsPadding identifier
@@ -45,103 +45,11 @@ namespace Keyczar.Crypto
         public static readonly string OaepPadding = "OAEP";
 
         /// <summary>
-        /// Gets or sets the modulus.
-        /// </summary>
-        /// <value>The modulus.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
-        public BigInteger Modulus { get; set; }
-        /// <summary>
-        /// Gets or sets the public exponent.
-        /// </summary>
-        /// <value>The public exponent.</value>
-		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
-		public BigInteger PublicExponent { get; set; }
-
-        /// <summary>
         /// Gets or sets the padding.
         /// </summary>
         /// <value>The padding. If not set uses OEAP padding</value>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public string Padding { get; set; }
-
-        /// <summary>
-        /// Gets the key hash.
-        /// </summary>
-        /// <returns></returns>
-        public override byte[] GetKeyHash()
-        {      
-			var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
-			var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
-            if (Padding == PkcsPadding)
-            {
-				magModulus = Utility.GetBytes(Modulus); 
-				magPublicExponent = Utility.GetBytes(PublicExponent); 
-            }
-
-            var hash = Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, magModulus, magPublicExponent);
-            magModulus.Clear();
-            magPublicExponent.Clear();
-            return hash;
-        }
-
-		/// <summary>
-		/// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
-		/// </summary>
-		/// <returns></returns>
-		public override IEnumerable<byte[]> GetFallbackKeyHash ()
-		{
-			var list =new List<byte[]>();
-
-			if(Padding == PkcsPadding){
-				//C++ version would always append zeros whether they were needed or not to byte reps of big integers
-				var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
-				var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
-				var destModulus = new byte[magModulus.Length+1];
-				var destPublicExponent = new byte[magPublicExponent.Length+1];
-				Array.Copy(magModulus,0,destModulus,1, magModulus.Length);
-				Array.Copy(magPublicExponent,0,destPublicExponent,1, magPublicExponent.Length);
-				list.Add(Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, destModulus, destPublicExponent));
-				magModulus.Clear();
-				magPublicExponent.Clear();
-				destModulus.Clear();
-				destPublicExponent.Clear();
-			}
-
-			return list;
-		}
-
-        /// <summary>
-        /// Generates the key.
-        /// </summary>
-        /// <param name="size">The size.</param>
-        /// <exception cref="System.NotSupportedException"></exception>
-        protected override void GenerateKey(int size)
-        {
-            throw new NotSupportedException();
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-			Modulus = default(BigInteger);
-			PublicExponent = default(BigInteger);
-            Size = 0;
-        }
-
-        /// <summary>
-        /// Gets the verifying stream.
-        /// </summary>
-        /// <returns></returns>
-        public VerifyingStream GetVerifyingStream()
-        {
-            var signer = new RsaDigestSigner(new Sha1Digest());
-            signer.Init(forSigning:false,parameters:new RsaKeyParameters(false,
-			                                                             Modulus.ToBouncyBigInteger(),
-			                                                             PublicExponent.ToBouncyBigInteger()));
-            return new DigestStream(signer);
-        }
 
         /// <summary>
         /// Gets the length of the tag.
@@ -151,6 +59,53 @@ namespace Keyczar.Crypto
         public int GetTagLength(byte[] header)
         {
             return 0;
+        }
+
+        public override byte[] GetKeyHash()
+        {
+            var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
+            var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
+            if (Padding == RsaPublicKey.PkcsPadding)
+            {
+                magModulus = Utility.GetBytes(Modulus);
+                magPublicExponent = Utility.GetBytes(PublicExponent);
+            }
+
+            var hash = Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, magModulus, magPublicExponent);
+            magModulus.Clear();
+            magPublicExponent.Clear();
+            return hash;
+        }
+
+
+
+        internal override ISigner GetSigner()
+        {
+            return new RsaDigestSigner(new Sha1Digest());
+        }
+      
+
+        public override IEnumerable<byte[]> GetFallbackKeyHash()
+        {
+            var list = new List<byte[]>();
+
+            if (Padding == RsaPublicKey.PkcsPadding)
+            {
+                //C++ version would always append zeros whether they were needed or not to byte reps of big integers
+                var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
+                var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
+                var destModulus = new byte[magModulus.Length + 1];
+                var destPublicExponent = new byte[magPublicExponent.Length + 1];
+                Array.Copy(magModulus, 0, destModulus, 1, magModulus.Length);
+                Array.Copy(magPublicExponent, 0, destPublicExponent, 1, magPublicExponent.Length);
+                list.Add(Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, destModulus, destPublicExponent));
+                magModulus.Clear();
+                magPublicExponent.Clear();
+                destModulus.Clear();
+                destPublicExponent.Clear();
+            }
+
+            return list;
         }
 
         /// <summary>

@@ -58,7 +58,7 @@ namespace KeyczarTest
                 return new SessionCrypter(encrypter);
             }else
             {
-                return new SessionCrypter(encrypter, symmetricKeyType: KeyType.AesAead, keyPacker: new BsonSessionKeyPacker());
+                return new SessionCrypter(encrypter, symmetricKeyType: UnofficialKeyType.AesAead, keyPacker: new BsonSessionKeyPacker());
             }
         }
 

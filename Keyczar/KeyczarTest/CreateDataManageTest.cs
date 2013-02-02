@@ -134,13 +134,14 @@ namespace KeyczarTest
 
 		}
 
-        [TestCase("hmac_sha1", "hmac")]
-        [TestCase("dsa_priv", "dsa")]
-        [TestCase("rsa_priv", "rsa-sign")]
-        public void CreateSignAndPublic(string keyType, string topDir)
+        [TestCase("hmac_sha1", "hmac", "")]
+        [TestCase("dsa_priv", "dsa", "")]
+        [TestCase("rsa_priv", "rsa-sign", "")]
+        [TestCase("c#_rsa_sign_priv", "rsa-sign", "unofficial", Category = "Unofficial")]
+        public void CreateSignAndPublic(string keyType, string topDir, string nestDir)
         {
             KeyType type = keyType;
-            var kspath = Util.TestDataPath(WRITE_DATA, topDir);
+            var kspath = Util.TestDataPath(WRITE_DATA, topDir, nestDir);
             var writer = new KeySetWriter(kspath, overwrite: true);
 
             using (var ks = CreateNewKeySet(type, KeyPurpose.SignAndVerify))
@@ -248,6 +249,7 @@ namespace KeyczarTest
         [TestCase("dsa_priv","SIGN_AND_VERIFY", "dsa-sign")]
         [TestCase("rsa_priv", "SIGN_AND_VERIFY", "rsa-sign")]
         [TestCase("rsa_priv", "DECRYPT_AND_ENCRYPT", "rsa-crypt")]
+        [TestCase("c#_rsa_sign_priv", "SIGN_AND_VERIFY", "rsa-sign-unofficial",Category = "Unofficial")]
         public void TestExportPem(string keyType,string purpose, string topDir)
         {
             KeyPurpose p = purpose;
@@ -302,7 +304,7 @@ namespace KeyczarTest
             {
                keyPacker = new BsonSessionKeyPacker();
                keySize = 256;
-               keyType = KeyType.AesAead;
+               keyType = UnofficialKeyType.AesAead;
             }
             using(var encrypter = new Encrypter(Util.TestDataPath(WRITE_DATA, "rsa.public")))
             using(var signer =  String.IsNullOrWhiteSpace(signed) 

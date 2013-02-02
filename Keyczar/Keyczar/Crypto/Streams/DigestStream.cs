@@ -27,10 +27,10 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// Initializes a new instance of the <see cref="DigestStream"/> class.
         /// </summary>
-        /// <param name="dsaDigestSigner">The DSA digest signer.</param>
-        public DigestStream(ISigner dsaDigestSigner)
+        /// <param name="digestSigner">The digest signer.</param>
+        public DigestStream(ISigner digestSigner)
         {
-            _digestSigner = dsaDigestSigner;
+            _digestSigner = digestSigner;
         }
 
         /// <summary>

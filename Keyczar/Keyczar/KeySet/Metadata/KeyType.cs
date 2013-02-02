@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Keyczar.Crypto;
+using Keyczar.Unofficial;
 
 namespace Keyczar
 {
@@ -59,13 +60,8 @@ namespace Keyczar
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
         public static readonly KeyType RsaPub = "RSA_PUB";
 
-        //Unofficial
-        /// <summary>
-        /// Unofficial type AES Authenticated Encryption with Associated Data
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType AesAead = "C#_AES_AEAD";
 
+ 
 
         /// <summary>
         /// Get KeyType for the clr type.
@@ -96,8 +92,11 @@ namespace Keyczar
 			DsaPub.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
 			RsaPriv.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
 			RsaPub.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
-			//Unofficial
-			AesAead.KeySizes<Unofficial.AesAeadKey>(256,192,128).IsUnofficial().DefineSpec();
+
+		    KeyType see;
+		    see = UnofficialKeyType.AesAead;
+		    see = UnofficialKeyType.RSAPrivSign;
+		    see = UnofficialKeyType.RSAPubSign;
 		}
 
 		private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();

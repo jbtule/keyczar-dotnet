@@ -120,22 +120,31 @@ namespace KeyczarTest
         }
 
 
-        [TestCase(null,  "hmac", "sign")]
-        [TestCase("dsa", "dsa", "sign")]
-        [TestCase("rsa", "rsa-sign", "sign")]
-        [TestCase("rsa", "rsa", "crypt")]
-        public void CreateUseAndPublic(string asymmetric, string topDir, string purpose)
+        [TestCase(null, "hmac", "sign", false)]
+        [TestCase("dsa", "dsa", "sign", false)]
+        [TestCase("rsa", "rsa-sign", "sign", false)]
+        [TestCase("rsa", "rsa", "crypt", false)]
+        [TestCase("rsa", "rsa-sign", "sign", true)]
+        public void CreateUseAndPublic(string asymmetric, string topDir, string purpose, bool unofficial)
         {
             string result;
+            string subDir = "";
+            if (unofficial)
+                subDir = "unofficial";
 
-            var path = Util.TestDataPath(WRITE_DATA, topDir);
+            var path = Util.TestDataPath(WRITE_DATA, topDir, subDir);
 
             if(Directory.Exists(path))
                 Directory.Delete(path,recursive:true);
 
             result = String.IsNullOrWhiteSpace(asymmetric)
-                ? Util.KeyczarTool(create: null, name:"Test", location: path, purpose: purpose)
-                 : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric);
+                ? !unofficial
+                   ? Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose)
+                   : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, unofficial: null)
+                : !unofficial
+                   ? Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric)
+                   : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric, unofficial: null);
+                
 
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
@@ -159,19 +168,20 @@ namespace KeyczarTest
   
             if (!string.IsNullOrWhiteSpace(asymmetric))
             {
-                var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public");
+                var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public", subDir);
                 if(Directory.Exists(pubpath))
 				    Directory.Delete(pubpath,true);
-                result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
+                result = Util.KeyczarTool(pubkey: null, location: path, destination: pubpath);
                 Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
             }
         }
 
 
-        [TestCase("dsa", "dsa-sign", "sign")]
-        [TestCase("rsa", "rsa-sign", "sign")]
-        [TestCase("rsa", "rsa-crypt", "crypt")]
-        public void CreateAndExport(string asymmetric, string topDir, string purpose)
+        [TestCase("dsa", "dsa-sign", "sign", false)]
+        [TestCase("rsa", "rsa-sign", "sign", false)]
+        [TestCase("rsa", "rsa-crypt", "crypt", false)]
+        [TestCase("rsa", "rsa-sign-unofficial", "sign", true)]
+        public void CreateAndExport(string asymmetric, string topDir, string purpose, bool unofficial)
         {
             string result;
 
@@ -181,8 +191,12 @@ namespace KeyczarTest
                 Directory.Delete(path,recursive:true);
 
             result = String.IsNullOrWhiteSpace(asymmetric)
-                 ? Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose)
-                 : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric);
+                 ? !unofficial 
+                    ? Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose)
+                    : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, unofficial:null)
+                 : !unofficial 
+                    ? Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric)
+                    :  Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose, asymmetric: asymmetric, unofficial:null);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 

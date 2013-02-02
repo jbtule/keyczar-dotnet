@@ -69,6 +69,10 @@
     <Compile Include="Compat\VanillaSigner.cs" />
     <Compile Include="Compat\VanillaVerifier.cs" />
     <Compile Include="Crypter.cs" />
+    <Compile Include="Crypto\IRsaPrivateKey.cs" />
+    <Compile Include="Crypto\IRsaPublicKey.cs" />
+    <Compile Include="Crypto\RsaPrivateSignKeyBase.cs" />
+    <Compile Include="Crypto\RsaPublicSignKeyBase.cs" />
     <Compile Include="Crypto\Streams\AsymmetricStream.cs" />
     <Compile Include="Crypto\Streams\DigestStream.cs" />
     <Compile Include="Crypto\Streams\DummyStream.cs" />
@@ -112,6 +116,9 @@
     <Compile Include="Crypto\Streams\HashingStream.cs" />
     <Compile Include="Unofficial\BlobKeySetWriter.cs" />
     <Compile Include="Unofficial\BsonSessionKeyPacker.cs" />
+    <Compile Include="Unofficial\UnofficialKeyType.cs" />
+    <Compile Include="Unofficial\RsaPrivateSignKey.cs" />
+    <Compile Include="Unofficial\RsaPublicSignKey.cs" />
     <Compile Include="Unofficial\WebKeySet.cs" />
     <Compile Include="Util\CachedPrompt.cs" />
     <Compile Include="Util\Nondestructive\NondestructiveBinaryReader.cs">

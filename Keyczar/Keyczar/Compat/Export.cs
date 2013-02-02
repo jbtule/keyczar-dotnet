@@ -54,9 +54,9 @@ namespace Keyczar.Compat
                                                                        dsaKey.G.ToBouncyBigInteger()));
 
                         }
-                        else if (key.KeyType == KeyType.RsaPub)
+                        else if (key is IRsaPublicKey)
                         {
-                            var rsaKey = (RsaPublicKey) key;
+                            var rsaKey = (IRsaPublicKey)key;
                             writeKey = new RsaKeyParameters(false,
                                                             rsaKey.Modulus.ToBouncyBigInteger(),
                                                             rsaKey.PublicExponent.ToBouncyBigInteger());
@@ -80,9 +80,9 @@ namespace Keyczar.Compat
                                                                        dsaKey.PublicKey.G.ToBouncyBigInteger()));
 
                         }
-                        else if (key.KeyType == KeyType.RsaPriv)
+                        else if (key is IRsaPrivateKey)
                         {
-                            var rsaKey = (RsaPrivateKey) key;
+                            var rsaKey = (IRsaPrivateKey)key;
                             writeKey = new RsaPrivateCrtKeyParameters(
                                 rsaKey.PublicKey.Modulus.ToBouncyBigInteger(),
                                 rsaKey.PublicKey.PublicExponent.ToBouncyBigInteger(),

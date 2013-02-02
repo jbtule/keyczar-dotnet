@@ -17,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Keyczar.Unofficial;
 using ManyConsole;
 using NDesk.Options;
 using Keyczar;
@@ -82,13 +83,17 @@ namespace KeyczarTool
             KeyType type;
             if (_asymm)
             {
-                if (_asymmAlg == "rsa")
+                if (purpose == KeyPurpose.DecryptAndEncrypt)
                 {
                     type = KeyType.RsaPriv;
                 }
                 else
                 {
-                    if (purpose == KeyPurpose.DecryptAndEncrypt)
+                    if (_unofficial)
+                    {
+                        type = UnofficialKeyType.RSAPrivSign;
+
+                    } else if (_asymmAlg == "rsa")
                     {
                         type = KeyType.RsaPriv;
                     }
@@ -96,13 +101,18 @@ namespace KeyczarTool
                     {
                         type = KeyType.DsaPriv;
                     }
+
+                 
                 }
+
+
+               
             }
             else if (purpose == KeyPurpose.DecryptAndEncrypt)
             {
                 if (_unofficial)
                 {
-                    type = KeyType.AesAead;
+                    type = UnofficialKeyType.AesAead;
                 }
                 else
                 {
