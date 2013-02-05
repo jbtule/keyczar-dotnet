@@ -81,6 +81,29 @@ namespace KeyczarTest
             }
          }
 
+
+        [TestCase("dsa-sizes", "")]
+        [TestCase("rsa-sign-sizes", "")]
+        [TestCase("rsa-sign-sizes", "unofficial")]
+        public void TestPublicVerifySizes(String subDir, string nestDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
+            var ks = new KeySet(subPath);
+            using (var verifier = new Verifier(subPath))
+            using (var publicVerifier = new Verifier(subPath + ".public"))
+            {
+                foreach (var size in ks.Metadata.KeyType.KeySizeOptions)
+                {
+                    var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, String.Format("{0}.out", size))).First();
+
+                    Expect(verifier.Verify(input, activeSignature), Is.True);
+                    Expect(publicVerifier.Verify(input, activeSignature), Is.True);
+                }
+              
+            }
+        }
+
+
          [TestCase("hmac", "")]
          [TestCase("dsa", "")]
          [TestCase("rsa-sign", "")]

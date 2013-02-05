@@ -40,8 +40,8 @@ namespace Keyczar.Unofficial
         {
             //Unofficial
             AesAead.KeySizes<AesAeadKey>(256, 192, 128).IsUnofficial().DefineSpec();
-            RSAPrivSign.KeySizes<RsaPrivateSignKey>(2048, 3072, 4096, 1024).WithDigestSizes(256, 384, 512, 128).IsAsymmetric().DefineSpec();
-            RSAPubSign.KeySizes<RsaPublicSignKey>(2048, 3072, 4096, 1024).WithDigestSizes(256, 384, 512, 128).IsAsymmetric().DefineSpec();
+            RSAPrivSign.KeySizes<RsaPrivateSignKey>(2048, 3072, 4096, 1024).WithDigestSizes(256, 384, 512, 128).IsAsymmetric().IsUnofficial().DefineSpec();
+            RSAPubSign.KeySizes<RsaPublicSignKey>(2048, 3072, 4096, 1024).WithDigestSizes(256, 384, 512, 128).IsAsymmetric().IsUnofficial().DefineSpec();
         }
     }
 }

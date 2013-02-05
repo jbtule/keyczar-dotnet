@@ -191,6 +191,62 @@ namespace KeyczarTest
         }
 
 
+        [TestCase("hmac_sha1", "hmac", "")]
+        [TestCase("dsa_priv", "dsa", "")]
+        [TestCase("rsa_priv", "rsa-sign", "")]
+        [TestCase("c#_rsa_sign_priv", "rsa-sign", "unofficial", Category = "Unofficial")]
+        public void CreateSignAndPublicSized(string keyType, string topDir, string nestDir)
+        {
+            KeyType type = keyType;
+            topDir += "-sizes";
+            var kspath = Util.TestDataPath(WRITE_DATA, topDir, nestDir);
+            var writer = new KeySetWriter(kspath, overwrite: true);
+
+
+            using (var ks = CreateNewKeySet(type, KeyPurpose.SignAndVerify))
+            {
+                var success = ks.Save(writer);
+                Expect(success, Is.True);
+            }
+
+            int i = 0;
+            foreach (int size in type.KeySizeOptions)
+            {
+                i++;
+                using (var ks = new MutableKeySet(kspath))
+                {
+                    var ver = ks.AddKey(KeyStatus.Primary, size);
+                    Expect(ver, Is.EqualTo(i));
+
+                    var success = ks.Save(writer);
+                    Expect(success, Is.True);
+                }
+
+                using (var encrypter = new Signer(kspath))
+                {
+                    var ciphertext = encrypter.Sign(input);
+                    File.WriteAllText(Path.Combine(kspath, String.Format("{0}.out", size)), ciphertext);
+                }
+
+            }
+
+            if (type.Asymmetric)
+            {
+                var kspath2 = Util.TestDataPath(WRITE_DATA, topDir + ".public", nestDir);
+                var writer2 = new KeySetWriter(kspath2, overwrite: true);
+                using (var ks = new MutableKeySet(kspath))
+                {
+
+
+                    var pubKs = ks.PublicKey();
+                    var success = pubKs.Save(writer2);
+                    Expect(success, Is.True);
+                }
+            }
+
+        }
+
+
 
         [TestCase("rsa_priv", "rsa")]
         public void CreateEncryptAndPublic(string keyType, string topDir)

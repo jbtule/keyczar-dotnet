@@ -29,17 +29,50 @@ namespace Keyczar.Unofficial
     /// </summary>
     public class RsaPublicSignKey:RsaPublicSignKeyBase
     {
+        /// <summary>
+        /// The sha1 digest
+        /// </summary>
         public static readonly string Sha1Digest = "SHA1";
 
+        /// <summary>
+        /// The sha224 digest
+        /// </summary>
         public static readonly string Sha224Digest = "SHA224";
 
+        /// <summary>
+        /// The sha256 digest
+        /// </summary>
         public static readonly string Sha256Digest = "SHA256";
 
+        /// <summary>
+        /// The sha384 digest
+        /// </summary>
         public static readonly string Sha384Digest = "SHA384";
 
+        /// <summary>
+        /// The sha512 digest
+        /// </summary>
         public static readonly string Sha512Digest = "SHA512";
 
-  
+
+        /// <summary>
+        /// Pss Padding identifer
+        /// </summary>
+        public static readonly string PssPadding = "PSS";
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RsaPublicSignKey" /> class.
+        /// </summary>
+        public RsaPublicSignKey()
+        {
+            Padding = PssPadding;
+        }
+
+        /// <summary>
+        /// Gets or sets the Padding (Only PSS is supported).
+        /// </summary>
+        /// <value>The Padding.</value>
+        public string Padding { get; set; }
 
         /// <summary>
         /// Gets or sets the digest.
@@ -48,6 +81,7 @@ namespace Keyczar.Unofficial
         /// The digest.
         /// </value>
         public string Digest { get; set; }
+        
 
         internal override ISigner GetSigner()
         {
@@ -76,8 +110,11 @@ namespace Keyczar.Unofficial
             {
                 throw new InvalidKeyTypeException(string.Format("Unknown digest type :{0}", Digest));
             }
-
-            return new PssSigner(new RsaBlindedEngine(), digest);
+            if (Padding == PssPadding)
+            {
+                return new PssSigner(new RsaBlindedEngine(), digest);
+            }
+            throw new InvalidKeyTypeException(string.Format("Unknown padding type :{0}", Padding));
         }
 
         public override byte[] GetKeyHash()
@@ -89,7 +126,9 @@ namespace Keyczar.Unofficial
                 Keyczar.KeyHashLength,
                 magModulus,
                 magPublicExponent,
-                Encoding.UTF8.GetBytes(Digest));
+                Encoding.UTF8.GetBytes(Padding),
+                Encoding.UTF8.GetBytes(Digest)
+                );
             magModulus.Clear();
             magPublicExponent.Clear();
             return hash;
