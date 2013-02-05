@@ -48,7 +48,7 @@ namespace Keyczar.Unofficial
         /// <param name="tagLength">Length of the tag.</param>
         /// <param name="initFunc">The init func.</param>
         /// <param name="encrypt">if set to <c>true</c> [encrypt].</param>
-        public AesAeadStream(Func<IBlockCipher, IAeadBlockCipher> makeCipher,
+        public AesAeadStream(Func<IAeadBlockCipher> makeCipher,
                              Stream outStream, 
                              byte[] nonce, 
                              int tagLength,
@@ -61,7 +61,7 @@ namespace Keyczar.Unofficial
             _tagLength = tagLength;
             _initFunc = initFunc;
             _encrypt = encrypt;
-            _cipher = makeCipher(new AesEngine());
+            _cipher = makeCipher();
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Keyczar.Unofficial
             _nonce = null;
             Secure.Clear(_header);
             _header = null;
-            _cipher.Reset();
+            //_cipher.Reset();
             _cipher = null;
             _initFunc = null;
             _output = null;

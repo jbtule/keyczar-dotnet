@@ -22,7 +22,9 @@ using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Modes;
+using Org.BouncyCastle.Crypto.Modes.Gcm;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 
@@ -95,15 +97,30 @@ namespace Keyczar.Unofficial
             return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Encoding.UTF8.GetBytes(Mode), AesKeyBytes);
         }
 
-        private Func<IBlockCipher, IAeadBlockCipher> GetMode()
+        private Func<IAeadBlockCipher> GetMode()
         {
             if (Mode == "GCM")
             {
-                return cipher => new GcmBlockCipher(cipher);
+                return () => _cipher;
 
             }
             throw new InvalidKeyTypeException("Unsupported AES AEAD Mode: " + Mode);
         }
+
+        private KeyParameter _keyParm;
+        private KeyParameter GetKeyParameters()
+        {
+            if (_keyParm == null)
+            {
+                _keyParm = new KeyParameter(AesKeyBytes);
+            }
+
+            return _keyParm;
+        }
+
+       
+
+        private readonly GcmBlockCipher _cipher = new GcmBlockCipher(new AesFastEngine(), new Tables8kGcmMultiplier());
 
         /// <summary>
         /// Gets the encrypting stream.
@@ -121,7 +138,7 @@ namespace Keyczar.Unofficial
                          output,
                          randomNonce,
                          TagLength,
-                         (nonce, cipher, authdata, encrypt) => cipher.Init(encrypt, new AeadParameters(new KeyParameter(AesKeyBytes), TagLength * 8, nonce, authdata)),
+                         (nonce, cipher, authdata, encrypt) => cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength * 8, nonce, authdata)),
                          encrypt: true
                          );
         }
@@ -156,7 +173,7 @@ namespace Keyczar.Unofficial
                 output,
                 new byte[NonceLength], 
                 TagLength,
-                (nonce, cipher, additionalData, encrypt) => cipher.Init(encrypt, new AeadParameters(new KeyParameter(AesKeyBytes), TagLength * 8, nonce, additionalData)),
+                (nonce, cipher, additionalData, encrypt) => cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength * 8, nonce, additionalData)),
                 encrypt:false
                 );
         }
@@ -168,7 +185,9 @@ namespace Keyczar.Unofficial
         /// <param name="disposing"></param>
         protected override void Dispose(bool disposing)
         {
-            AesKeyBytes = AesKeyBytes.Clear(); 
+            _keyParm = null;
+            _cipher.Reset();
+            AesKeyBytes = AesKeyBytes.Clear();
         }
       
     }
