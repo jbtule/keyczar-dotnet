@@ -50,7 +50,7 @@ namespace KeyczarTest
         [TestCase("hmac")]
         public void TestSignerVerify(String subDir)
         {
-            var subPath = Path.Combine(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var verifier = new Signer(subPath))
             {
                 var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
@@ -61,11 +61,12 @@ namespace KeyczarTest
         }
 
 
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-         public void TestPublicVerify(String subDir)
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+         public void TestPublicVerify(String subDir, string nestDir)
          {
-            var subPath = Path.Combine(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
 
             using (var verifier = new Verifier(subPath))
             using (var publicVerifier = new Verifier(subPath + ".public"))
@@ -80,12 +81,13 @@ namespace KeyczarTest
             }
          }
 
-         [TestCase("hmac")]
-         [TestCase("dsa")]
-         [TestCase("rsa-sign")]
-         public void TestBadVerify(String subDir)
+         [TestCase("hmac", "")]
+         [TestCase("dsa", "")]
+         [TestCase("rsa-sign", "")]
+         [TestCase("rsa-sign", "unofficial")]
+         public void TestBadVerify(String subDir, string nestDir)
          {
-             var subPath = Path.Combine(TEST_DATA, subDir);
+             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
              using (var verifier = new Signer(subPath))
              {
                  var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
@@ -108,12 +110,13 @@ namespace KeyczarTest
 
          }
 
-         [TestCase("hmac")]
-         [TestCase("dsa")]
-         [TestCase("rsa-sign")]
-        public void TestSignAndVerify(String subDir)
+         [TestCase("hmac", "")]
+         [TestCase("dsa", "")]
+         [TestCase("rsa-sign", "")]
+         [TestCase("rsa-sign", "unofficial")]
+         public void TestSignAndVerify(String subDir, string nestDir)
          {
-             var subPath = Util.TestDataPath(TEST_DATA, subDir);
+             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
              using (var signer = new Signer(subPath))
             {
                 var sig = signer.Sign(input);
@@ -123,16 +126,17 @@ namespace KeyczarTest
             }
         }
 
-   
-  
 
-       
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestHmacBadSigs(String subDir)
+
+
+
+         [TestCase("hmac", "")]
+         [TestCase("dsa", "")]
+         [TestCase("rsa-sign", "")]
+         [TestCase("rsa-sign", "unofficial")]
+        public void TestBadSigs(String subDir, string nestDir)
         {
-            using (var signer = new Signer(Path.Combine(TEST_DATA, subDir)))
+            using (var signer = new Signer(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
             {
                 byte[] sig = signer.Sign(inputBytes);
 

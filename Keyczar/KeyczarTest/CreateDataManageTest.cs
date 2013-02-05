@@ -176,7 +176,7 @@ namespace KeyczarTest
 
             if (type.Asymmetric)
             {
-                var kspath2 = Util.TestDataPath(WRITE_DATA, topDir + ".public");
+                var kspath2 = Util.TestDataPath(WRITE_DATA, topDir + ".public", nestDir);
                 var writer2 = new KeySetWriter(kspath2, overwrite: true);
                 using (var ks = new MutableKeySet(kspath))
                 {

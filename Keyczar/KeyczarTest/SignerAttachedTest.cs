@@ -33,32 +33,31 @@ namespace KeyczarTest
 
         }
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndVerify(String subDir)
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndVerify(String subDir, string nestDir)
         {
-            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
             using (var signer = new AttachedSigner(subPath))
             using (var verifier = new AttachedVerifier(subPath))
             {
                 var signedoutput = signer.Sign(input);
-                var badoutput = signedoutput.ToBytes();
-                badoutput[10] ^= 9;
-                var badlength = new byte[12];
-                Array.Copy(badoutput, badlength, badlength.Length);
 
                 Expect(signer.Verify(signedoutput), Is.True);
                 Expect(verifier.Verify(signedoutput), Is.True);
             }
         }
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndVerifyBad(String subDir)
+
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndVerifyBad(String subDir, string nestDir)
         {
-            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
             using (var signer = new AttachedSigner(subPath))
             using (var verifier = new AttachedVerifier(subPath))
             {
@@ -72,12 +71,13 @@ namespace KeyczarTest
             }
         }
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndVerifyShort(String subDir)
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndVerifyShort(String subDir, string nestDir)
         {
-            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
             using (var signer = new AttachedSigner(subPath))
             using (var verifier = new AttachedVerifier(subPath))
             {
@@ -93,12 +93,13 @@ namespace KeyczarTest
             }
         }
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndVerifyMessage(String subDir)
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndVerifyMessage(String subDir, string nestDir)
         {
-            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
             using (var signer = new AttachedSigner(subPath))
             using (var verifier = new AttachedVerifier(subPath))
             {
@@ -111,12 +112,13 @@ namespace KeyczarTest
             }
         }
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndTryVerifyMessage(String subDir)
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndTryVerifyMessage(String subDir, string nestDir)
         {
-            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
             using (var signer = new AttachedSigner(subPath))
             using (var verifier = new AttachedVerifier(subPath))
             {
@@ -135,12 +137,13 @@ namespace KeyczarTest
         }
 
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndVerifyMessageBad(String subDir)
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndVerifyMessageBad(String subDir, string nestDir)
         {
-            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
             using (var signer = new AttachedSigner(subPath))
             using (var verifier = new AttachedVerifier(subPath))
             {
@@ -154,13 +157,13 @@ namespace KeyczarTest
             }
         }
 
-
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndTryVerifyMessageBad(String subDir)
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndTryVerifyMessageBad(String subDir, string nestDir)
         {
-            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
             using (var signer = new AttachedSigner(subPath))
             using (var verifier = new AttachedVerifier(subPath))
             {
@@ -178,12 +181,14 @@ namespace KeyczarTest
         }
 
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndTryVerifyMessageShort(String subDir)
+
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndTryVerifyMessageShort(String subDir, string nestDir)
         {
-            var subPath = Util.TestDataPath(TEST_DATA, subDir);
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
             using (var signer = new AttachedSigner(subPath))
             using (var verifier = new AttachedVerifier(subPath))
             {

@@ -53,13 +53,15 @@ namespace KeyczarTest
         }
 
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-          public void TestTimeoutSignAndVerify(string subPath){
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign","")]
+        [TestCase("rsa-sign", "unofficial")]
+          public void TestTimeoutSignAndVerify(string subPath, string nestDir){
 
-            using(var signer = new TimeoutSigner(Util.TestDataPath(TEST_DATA , subPath)))
-            using(var verifier = new TimeoutVerifier(Util.TestDataPath(TEST_DATA , subPath))){
+              using (var signer = new TimeoutSigner(Util.TestDataPath(TEST_DATA, subPath, nestDir)))
+              using (var verifier = new TimeoutVerifier(Util.TestDataPath(TEST_DATA, subPath, nestDir)))
+              {
  
                 // Create a signature that will be valid for a long time
                 var sig = signer.Sign(input, DateTime.Now.AddDays(365));

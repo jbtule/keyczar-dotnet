@@ -33,13 +33,14 @@ namespace KeyczarTest
 
         }
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndVerify(String subDir)
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndVerify(String subDir, string nestDir)
         {
-            using (var signer = new VanillaSigner(Path.Combine(TEST_DATA, subDir)))
-            using (var verifier = new VanillaVerifier(Path.Combine(TEST_DATA, subDir)))
+            using (var signer = new VanillaSigner(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
+            using (var verifier = new VanillaVerifier(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
             {
                 var sig = signer.Sign(input);
 
