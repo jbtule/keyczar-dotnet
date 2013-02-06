@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using Keyczar;
-/* 
+﻿/* 
  * Copyright 2013 James Tuley (jay+code@tuley.name)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +15,12 @@ using Keyczar;
  * 
  */
 
-
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using Keyczar;
 
 using NUnit.Framework;
 

@@ -23,6 +23,7 @@ using Keyczar;
 using Keyczar.Compat;
 using Keyczar.Crypto;
 using Keyczar.Unofficial;
+using Keyczar.Util;
 using NUnit.Framework;
 
 namespace KeyczarTest
@@ -33,11 +34,11 @@ namespace KeyczarTest
         private static string WRITE_DATA = "cstestdata";
         private static String input = "This is some test data";
 
-        private MutableKeySet CreateNewKeySet(KeyType type, KeyPurpose purpose)
+        private MutableKeySet CreateNewKeySet(KeyType type, KeyPurpose purpose, string name =null)
         {
             return new MutableKeySet(new KeyMetadata
                 {
-                    Name = "Test",
+                    Name = name ?? "Test",
                     Purpose = purpose,
                     KeyType = type
                 });
@@ -76,7 +77,107 @@ namespace KeyczarTest
             }
 
         }
-        
+
+
+
+        [TestCase("aes", "aes", "128", "crypt")]
+        [TestCase("hmac_sha1", "hmac", "256", "sign")]
+     //   [TestCase("rsa_priv", "rsa", "1024", "crypt")]
+      //  [TestCase("rsa_priv", "rsa-sign", "1024", "sign")]
+     //   [TestCase("dsa_priv", "dsa", "1024", "sign")]
+        public void CreateKeyCollision(string key, string dir, string sizeString, string purpose)
+        {
+
+            ////if(key=="rsa_priv" || key=="dsa_priv")
+            ////    Assert.Ignore("assymentric key generation too slow");
+
+            var crypt = purpose == "crypt";
+            var purp = crypt ? KeyPurpose.DecryptAndEncrypt : KeyPurpose.SignAndVerify;
+            KeyType ktype = key;
+            int size = int.Parse(sizeString);
+
+            IDictionary<int, Key> keys = new Dictionary<int, Key>();
+            var kspath = Util.TestDataPath(WRITE_DATA, dir, "key-collision");
+            var writer = new KeySetWriter(kspath, overwrite: true);
+      
+            using (var ks = CreateNewKeySet(ktype, purp))
+            {
+                var success = ks.Save(writer);
+                Expect(success, Is.True);
+            }
+
+         
+            long count = 0;
+            Key newKey2;
+            using (var ks = new MutableKeySet(kspath))
+            {
+                Key newKey1;
+                while(true)
+                {
+                    newKey1 = Key.Generate(ktype, size);
+                    int newHash = Utility.ToInt32(newKey1.GetKeyHash());
+                    count++;
+                    if (keys.TryGetValue(newHash, out newKey2))
+                    {
+                        break;
+                    }
+                    keys.Add(newHash, newKey1);
+                }
+                Console.WriteLine("Created {1} collision after {0} iterations", count, dir);
+
+                var ver = ks.AddKey(KeyStatus.Primary, newKey1);
+
+                Expect(ver, Is.EqualTo(1));
+
+                var success = ks.Save(writer);
+                Expect(success, Is.True);
+     
+            }
+
+            if (crypt)
+            {
+                using (var encrypter = new Encrypter(kspath))
+                {
+                    var ciphertext = encrypter.Encrypt(input);
+                    File.WriteAllText(Path.Combine(kspath, "1.out"), ciphertext);
+                }
+
+            }
+            else
+            {
+                using (var signer = new Signer(kspath))
+                {
+                    var ciphertext = signer.Sign(input);
+                    File.WriteAllText(Path.Combine(kspath, "1.out"), ciphertext);
+                }
+            }
+
+            using (var ks = new MutableKeySet(kspath))
+            {
+                var ver = ks.AddKey(KeyStatus.Primary, newKey2);
+                Expect(ver, Is.EqualTo(2));
+
+                var success = ks.Save(writer);
+                Expect(success, Is.True);
+            }
+            if (crypt)
+            {
+                using (var encrypter = new Encrypter(kspath))
+                {
+                    var ciphertext = encrypter.Encrypt(input);
+                    File.WriteAllText(Path.Combine(kspath, "2.out"), ciphertext);
+                }
+
+            }
+            else
+            {
+                using (var signer = new Signer(kspath))
+                {
+                    var ciphertext = signer.Sign(input);
+                    File.WriteAllText(Path.Combine(kspath, "2.out"), ciphertext);
+                }
+            }
+        }
 
 		[Test]
 		public void CreatePbeKeySet(){
