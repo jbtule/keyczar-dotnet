@@ -146,21 +146,26 @@ namespace Keyczar
 	                        input.Seek(HeaderLength, SeekOrigin.Current);
 							crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper), () => new DummyStream());
 	                    }
-
-	                    using (crypterStream)
-	                    {
-	                        var tagLength = crypterStream.GetTagLength(header);
-	                        while (input.Position < fullLength - tagLength)
-	                        {
-	                            byte[] buffer =
-                                    reader.ReadBytes((int)Math.Min(BufferSize, fullLength - tagLength - input.Position));
-	                                crypterStream.Write(buffer, 0, buffer.Length);
-	                        }
-                            crypterStream.Finish(); 
-                            input.Seek(tagLength, SeekOrigin.Current);
-	                    }
-				
-	                    return;
+					    try
+					    {
+					        using (crypterStream)
+					        {
+					            var tagLength = crypterStream.GetTagLength(header);
+					            while (input.Position < fullLength - tagLength)
+					            {
+					                byte[] buffer =
+					                    reader.ReadBytes((int) Math.Min(BufferSize, fullLength - tagLength - input.Position));
+					                crypterStream.Write(buffer, 0, buffer.Length);
+					            }
+					            crypterStream.Finish();
+					            input.Seek(tagLength, SeekOrigin.Current);
+					        }
+					        return;
+					    }
+					    catch (InvalidCryptoDataException)
+					    {
+					        verify = false;
+					    }
 					}
 
                 }
