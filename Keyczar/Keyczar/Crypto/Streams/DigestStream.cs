@@ -109,8 +109,8 @@ namespace Keyczar.Crypto.Streams
         /// <returns></returns>
         public override bool VerifySignature(byte[] signature)
         {
-
-            return _digestSigner.VerifySignature(signature);
+          
+                return _digestSigner.VerifySignature(signature);
         }
     }
 }

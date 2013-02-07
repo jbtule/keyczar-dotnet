@@ -39,17 +39,19 @@ namespace KeyczarTest
         [TestCase("rsa-sign", "unofficial")]
         public void TestSignAndVerify(String subDir, string nestDir)
         {
-            using (var signer = new VanillaSigner(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
-            using (var verifier = new VanillaVerifier(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
-            {
-                var sig = signer.Sign(input);
+           
+                using (var signer = new VanillaSigner(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
+                using (var verifier = new VanillaVerifier(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
+                {
+                    var sig = signer.Sign(input);
 
-                Expect(signer.Verify(input, sig), Is.True);
-                Expect(signer.Verify("Wrong string", sig), Is.False);
+                    Expect(signer.Verify(input, sig), Is.True);
+                    Expect(signer.Verify("Wrong string", sig), Is.False);
 
-                Expect(verifier.Verify(input, sig), Is.True);
-                Expect(verifier.Verify("Wrong string", sig), Is.False);
-            }
+                    Expect(verifier.Verify(input, sig), Is.True);
+                    Expect(verifier.Verify("Wrong string", sig), Is.False);
+                }
+            
         }
     }
 }

@@ -123,20 +123,16 @@ namespace Keyczar
             Array.Copy(key.GetKeyHash(), 0, header, FormatBytes.Length, KeyHashLength);
            
             var cryptKey = key as IEncrypterKey;
-            var pbeKey = key as IPbeKey;
 
             var resetStream = Utility.ResetStreamWhenFinished(output);
 			using (var reader = new NondestructiveBinaryReader(input))
 	        {
-	            FinishingStream encryptingStream; 
-	            if (pbeKey == null)
-	            {
-	                output.Write(header, 0, header.Length);
-	                encryptingStream = cryptKey.GetEncryptingStream(output);
-	            }else
-	            {
-	                encryptingStream = pbeKey.GetRawEncryptingStream(output);
-	            }
+	            FinishingStream encryptingStream;
+
+             
+	            output.Write(header, 0, header.Length);
+	            encryptingStream = cryptKey.GetEncryptingStream(output);
+	           
 
 				Stream wrapper = encryptingStream;
 				if(Compression == CompressionType.Gzip){

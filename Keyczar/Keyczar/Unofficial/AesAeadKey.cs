@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
 using Keyczar.Crypto;
@@ -50,10 +51,17 @@ namespace Keyczar.Unofficial
         public readonly int TagLength = 16;
 
         /// <summary>
-        /// Uses an 128bit random nonce
+        /// Gets or sets the length of the IV.
         /// </summary>
-        [JsonIgnore]
-        public readonly int NonceLength = 16;
+        /// <value>
+        /// The length of the IV.
+        /// </value>
+        
+       
+        [DefaultValue(16)] 
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, 
+           DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        public int IVLength { get; set; }
 
         /// <summary>
         /// Gets or sets the mode (Only GCM is supported).
@@ -61,12 +69,16 @@ namespace Keyczar.Unofficial
         /// <value>The mode.</value>
         public string Mode { get; set; }
 
+
+        public static readonly string GcmMode = "GCM";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AesAeadKey"/> class.
         /// </summary>
         public AesAeadKey()
         {
-            Mode = "GCM";//Default Mode
+            Mode = GcmMode;//Default Mode
+            IVLength = 12;
         }
 
         /// <summary>
@@ -94,12 +106,27 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Encoding.UTF8.GetBytes(Mode), AesKeyBytes);
+            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Encoding.UTF8.GetBytes(Mode), Utility.GetBytes(IVLength), AesKeyBytes);
+        }
+
+        /// <summary>
+        /// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerable<byte[]> GetFallbackKeyHash()
+        {
+            var list = new List<byte[]>();
+            if (IVLength == 16 && Mode == GcmMode)
+            {
+                //Pre IVLength property existing key hash
+                list.Add(Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Encoding.UTF8.GetBytes(Mode), AesKeyBytes));
+            }
+            return list;
         }
 
         private Func<IAeadBlockCipher> GetMode()
         {
-            if (Mode == "GCM")
+            if (Mode == GcmMode)
             {
                 return () => _cipher;
 
@@ -131,7 +158,7 @@ namespace Keyczar.Unofficial
         {
 
 
-            var randomNonce = new byte[NonceLength];
+            var randomNonce = new byte[IVLength];
             Secure.Random.NextBytes(randomNonce);
             return new AesAeadStream(
                          GetMode(),
@@ -171,7 +198,7 @@ namespace Keyczar.Unofficial
             return new AesAeadStream(
                 GetMode(),
                 output,
-                new byte[NonceLength], 
+                new byte[IVLength], 
                 TagLength,
                 (nonce, cipher, additionalData, encrypt) => cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength * 8, nonce, additionalData)),
                 encrypt:false

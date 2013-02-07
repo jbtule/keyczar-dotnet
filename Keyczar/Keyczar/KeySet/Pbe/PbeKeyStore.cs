@@ -65,7 +65,10 @@ namespace Keyczar.Pbe
             using (var ks = new ImportedKeySet(pbeKey, KeyPurpose.DecryptAndEncrypt, "Pbe key"))
             using (var crypter = new Crypter(ks))
             {
-                pks.Key = crypter.Encrypt(key);
+                var data = crypter.Encrypt(key);
+                byte[] justciphertext = new byte[data.Length - Keyczar.HeaderLength];
+                Array.Copy(data,Keyczar.HeaderLength,justciphertext,0,justciphertext.Length);
+                pks.Key = justciphertext;
             }
 
             return pks;
@@ -95,6 +98,7 @@ namespace Keyczar.Pbe
         /// </summary>
         /// <value>The IV.</value>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        
         public byte[] IV { get; set; }
 
         /// <summary>
@@ -164,8 +168,12 @@ namespace Keyczar.Pbe
                 using (key)
                 using(var ks = new ImportedKeySet(key,KeyPurpose.DecryptAndEncrypt,"Pbe key"))
                 using(var crypter = new Crypter(ks))
+                using(var memstream = new MemoryStream())
                 {
-                     return crypter.Decrypt(Key);
+                    memstream.Write(Keyczar.FormatBytes, 0, Keyczar.FormatBytes.Length);
+                    memstream.Write(new byte[Keyczar.KeyHashLength], 0, Keyczar.KeyHashLength);
+                    memstream.Write(Key, 0, Key.Length);
+                    return crypter.Decrypt(memstream.ToArray());
                 }
             
 
@@ -220,17 +228,17 @@ namespace Keyczar.Pbe
 
             public byte[] IV { get; set; }
 
-            public CipherTextOnlyFinishingStream GetRawEncryptingStream(Stream output)
+            public override FinishingStream GetEncryptingStream(Stream output)
             {
-                var stream = (CipherTextOnlyFinishingStream)GetEncryptingStream(output);
+                var stream = (CipherTextOnlyFinishingStream)base.GetEncryptingStream(output);
                 stream.CipherTextOnly = true;
                 stream.IV = IV;
                 return stream;
             }
 
-            public CipherTextOnlyFinishingStream GetRawDecryptingStream(Stream output)
+            public override FinishingStream GetDecryptingStream(Stream output)
             {
-                var stream = (CipherTextOnlyFinishingStream)GetDecryptingStream(output);
+                var stream = (CipherTextOnlyFinishingStream)base.GetDecryptingStream(output);
                 stream.CipherTextOnly = true;
                 stream.IV = IV;
                 return stream;

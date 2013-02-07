@@ -90,26 +90,26 @@ namespace Keyczar
             var fullLength = inputLength < 0 ? input.Length : inputLength + input.Position;
             using (var reader = new NondestructiveBinaryReader(input))
             {
-                byte[] keyHash;
+                byte[] keyHash; 
                 var resetStream = Utility.ResetStreamWhenFinished(input);
                 var header = Utility.ReadHeader(input, out keyHash);
-                var verify = true;
-
+                var verify = false;
                 foreach (var key in GetKey(keyHash))
                 {
 
                     var cryptKey = key as ICrypterKey;
-                    var pbeKey = cryptKey as IPbeKey;
                     resetStream.Reset();
-                
 
 
+                    bool ciphertextIsPreverified = false;
                     //in case there aren't any keys that match that hash we are going to fake verify.
                     using (var verifyStream = cryptKey.Maybe(m => m.GetAuthVerifyingStream(), () => new DummyStream()))
                     {
                         //If we verify in once pass like with AEAD verify stream will be null;
                         if (verifyStream != null)
                         {
+                            //Perform ciphertext verification
+                            ciphertextIsPreverified = true;
                             var tagLength = verifyStream.GetTagLength(header);
                             while (input.Position < fullLength - tagLength)
                             {
@@ -119,33 +119,46 @@ namespace Keyczar
                             }
                             var signature = reader.ReadBytes(tagLength);
 
-                            verify = verifyStream.VerifySignature(signature);
+                            try
+                            {
+
+                                verify = verifyStream.VerifySignature(signature);
+                            }
+                            catch (Exception e)
+                            {
+                                System.Diagnostics.Debug.WriteLine(e.Message);
+                                System.Diagnostics.Debug.WriteLine(e.StackTrace);
+                                //We don't want exceptions to keep us from trying different keys
+                                verify = false;
+                            }
                         }
                     }
 
-                    if (!verify || input.Length == 0)
+                    if ((!verify && ciphertextIsPreverified) || input.Length == 0)
                     {
                         continue;
                     }
 
-					Stream wrapper = output;
+                    //
+                    Stream baseStream = ciphertextIsPreverified
+                        ? output
+                        : new MemoryStream();
+                    Stream wrapper = baseStream;
+                    bool success = false;
 					if(Compression == CompressionType.Gzip){
-						wrapper = new WriteDecompressGzipStream(output);
+                        wrapper = new WriteDecompressGzipStream(baseStream);
 					}else if(Compression == CompressionType.Zlib){
-						wrapper = new ZlibStream(output,CompressionMode.Decompress,true);
+                        wrapper = new ZlibStream(baseStream, CompressionMode.Decompress, true);
 					}
+
+                    //Perform Decryption
 					using(Compression == CompressionType.None ? null : wrapper){
                         FinishingStream crypterStream; 
                         resetStream.Reset();
-	                    if (pbeKey != null)
-	                    {
-							crypterStream = pbeKey.GetRawDecryptingStream(wrapper);
-	                    }
-	                    else
-	                    {
-	                        input.Seek(HeaderLength, SeekOrigin.Current);
-							crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper), () => new DummyStream());
-	                    }
+	                   
+	                    input.Seek(HeaderLength, SeekOrigin.Current);
+						crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper), () => new DummyStream());
+	                    
 					    try
 					    {
 					        using (crypterStream)
@@ -158,21 +171,37 @@ namespace Keyczar
 					                crypterStream.Write(buffer, 0, buffer.Length);
 					            }
 					            crypterStream.Finish();
-					            input.Seek(tagLength, SeekOrigin.Current);
+                                input.Seek(tagLength, SeekOrigin.Current); 
+                                success = true;
 					        }
-					        return;
 					    }
-					    catch (InvalidCryptoDataException)
+					    catch (Exception e)
 					    {
-					        verify = false;
+                            //We don't want exceptions to keep us from trying different keys
+                            //particularly ones that aren't pre verified
+                            System.Diagnostics.Debug.WriteLine(e.Message);
+                            System.Diagnostics.Debug.WriteLine(e.StackTrace);
 					    }
+                     
 					}
+                    if (success)
+                    {
+                        if (!ciphertextIsPreverified)
+                        {
+                            //If the ciphertext is verified in one pass, 
+                            //we have to make sure that verification was successful before copying it to output.
+                            baseStream.Seek(0, SeekOrigin.Begin);
+                            baseStream.CopyTo(output);
+                        }
+
+                        return;
+                    }
+
 
                 }
-                if (!verify)
-                {
-                    throw new InvalidCryptoDataException("Cipher text was invalid!");
-                }
+               
+                throw new InvalidCryptoDataException("Cipher text was invalid!");
+                
             }
         }
     }

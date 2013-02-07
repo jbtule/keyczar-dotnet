@@ -824,6 +824,21 @@
     <Content Include="testdata\key-collision\hmac\meta">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="testdata\key-collision\rsa\1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\key-collision\rsa\1.out">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\key-collision\rsa\2">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\key-collision\rsa\2.out">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="testdata\key-collision\rsa\meta">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="testdata\pbe_json\password.txt" />
     <Content Include="testdata\pbe_json\meta">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

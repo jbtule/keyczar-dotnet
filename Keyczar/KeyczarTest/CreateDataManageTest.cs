@@ -82,14 +82,14 @@ namespace KeyczarTest
 
         [TestCase("aes", "aes", "128", "crypt")]
         [TestCase("hmac_sha1", "hmac", "256", "sign")]
-     //   [TestCase("rsa_priv", "rsa", "1024", "crypt")]
-      //  [TestCase("rsa_priv", "rsa-sign", "1024", "sign")]
-     //   [TestCase("dsa_priv", "dsa", "1024", "sign")]
+       // [TestCase("rsa_priv", "rsa", "1024", "crypt")]
+        [TestCase("rsa_priv", "rsa-sign", "1024", "sign")]
+        [TestCase("dsa_priv", "dsa", "1024", "sign")]
         public void CreateKeyCollision(string key, string dir, string sizeString, string purpose)
         {
 
-            ////if(key=="rsa_priv" || key=="dsa_priv")
-            ////    Assert.Ignore("assymentric key generation too slow");
+            if(key=="rsa_priv" || key=="dsa_priv")
+                Assert.Ignore("assymentric key generation too slow");
 
             var crypt = purpose == "crypt";
             var purp = crypt ? KeyPurpose.DecryptAndEncrypt : KeyPurpose.SignAndVerify;

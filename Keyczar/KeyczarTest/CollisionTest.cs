@@ -31,7 +31,7 @@ namespace KeyczarTest
         private readonly String TEST_DATA = Path.Combine("testdata", "key-collision");
 
         [TestCase("aes")]
-     //   [TestCase("rsa")]
+        [TestCase("rsa")]
         public void TwoKeysWithSameHashDecrypt(string dir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, dir);

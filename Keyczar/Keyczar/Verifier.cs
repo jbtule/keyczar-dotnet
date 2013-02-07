@@ -160,9 +160,18 @@ namespace Keyczar
                         }
                             PostfixDataVerify(verifyStream,postfixData);
 
-                        if (verifyStream.VerifySignature(trimmedSig))
+                        try
                         {
-                            return true;
+                            if (verifyStream.VerifySignature(trimmedSig))
+                            {
+                                return true;
+                            }
+                        }
+                        catch (Exception e)
+                        {      
+                            //We don't want exceptions to keep us from trying different keys
+                            System.Diagnostics.Debug.WriteLine(e.Message);
+                            System.Diagnostics.Debug.WriteLine(e.StackTrace);
                         }
                     }
 

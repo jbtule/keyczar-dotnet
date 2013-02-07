@@ -44,8 +44,7 @@ namespace Keyczar.Crypto
     /// </summary>
     internal interface IPbeKey
     {
-        CipherTextOnlyFinishingStream GetRawEncryptingStream(Stream output);
-        CipherTextOnlyFinishingStream GetRawDecryptingStream(Stream output);
+     
     }
 
     /// <summary>

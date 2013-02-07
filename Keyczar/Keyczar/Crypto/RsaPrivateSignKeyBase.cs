@@ -24,7 +24,8 @@ using Org.BouncyCastle.Crypto.Signers;
 
 namespace Keyczar.Crypto
 {
-    public abstract class RsaPrivateSignKeyBase<TPublicKey> : Key, ISignerKey, IPrivateKey, IRsaPrivateKey where TPublicKey : RsaPublicSignKeyBase, IVerifierKey, IRsaPublicKey
+    public abstract class RsaPrivateSignKeyBase<TPublicKey> : Key, ISignerKey, IPrivateKey, IRsaPrivateKey
+        where TPublicKey : RsaPublicSignKeyBase, IVerifierKey, IRsaPublicKey
     {
 
 
