@@ -174,7 +174,7 @@ namespace Keyczar.Crypto
                                               PrimeExponentQ.ToBouncyBigInteger(),
                                               CrtCoefficient.ToBouncyBigInteger()));
 
-            return new DigestStream(signer);
+            return new DigestStream(signer, Size / 8);
         }
     }
 }

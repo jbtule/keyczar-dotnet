@@ -66,7 +66,7 @@ namespace Keyczar.Crypto
         }
 
 
-        internal abstract ISigner GetSigner();
+		internal abstract ISigner GetSigner();
 
         /// <summary>
         /// Gets the verifying stream.
@@ -78,7 +78,7 @@ namespace Keyczar.Crypto
             signer.Init(forSigning:false,parameters:new RsaKeyParameters(false,
                                                                          Modulus.ToBouncyBigInteger(),
                                                                          PublicExponent.ToBouncyBigInteger()));
-            return new DigestStream(signer);
+            return new DigestStream(signer,  Size / 8);
         }
     }
 }

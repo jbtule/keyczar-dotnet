@@ -14,6 +14,7 @@
  */
 
 using Org.BouncyCastle.Crypto;
+using System;
 
 namespace Keyczar.Crypto.Streams
 {
@@ -23,14 +24,16 @@ namespace Keyczar.Crypto.Streams
     public class DigestStream:VerifyingStream
     {
         private ISigner _digestSigner;
+		private int _outputSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DigestStream"/> class.
         /// </summary>
         /// <param name="digestSigner">The digest signer.</param>
-        public DigestStream(ISigner digestSigner)
+        public DigestStream(ISigner digestSigner, int outputSize=-1)
         {
             _digestSigner = digestSigner;
+			_outputSize = outputSize;
         }
 
         /// <summary>
@@ -109,8 +112,13 @@ namespace Keyczar.Crypto.Streams
         /// <returns></returns>
         public override bool VerifySignature(byte[] signature)
         {
-          
-                return _digestSigner.VerifySignature(signature);
+		
+			if(signature.Length > _outputSize && _outputSize > 0){
+				byte[] trimmedSig = new byte[_outputSize];
+				Array.Copy(signature, trimmedSig, _outputSize);
+			    signature = trimmedSig;
+			}
+             return _digestSigner.VerifySignature(signature);
         }
     }
 }

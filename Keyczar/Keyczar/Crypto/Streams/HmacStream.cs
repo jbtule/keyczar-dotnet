@@ -125,7 +125,7 @@ namespace Keyczar.Crypto.Streams
         public override bool VerifySignature(byte[] signature)
         {
             Finish();
-            return Secure.Equals(signature, HashValue);
+            return Secure.Equals(signature, HashValue, maxCount:_hmacAlg.GetMacSize());
         }
     }
 }

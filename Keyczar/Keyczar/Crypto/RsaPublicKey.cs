@@ -81,7 +81,9 @@ namespace Keyczar.Crypto
 
         internal override ISigner GetSigner()
         {
-            return new RsaDigestSigner(new Sha1Digest());
+			var digest =new Sha1Digest();
+
+			return new RsaDigestSigner(digest);
         }
       
 

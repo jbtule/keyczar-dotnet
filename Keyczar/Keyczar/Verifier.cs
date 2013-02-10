@@ -162,6 +162,8 @@ namespace Keyczar
 
                         try
                         {
+
+
                             if (verifyStream.VerifySignature(trimmedSig))
                             {
                                 return true;

@@ -87,7 +87,7 @@ namespace Keyczar.Util
         /// <param name="b">Array b.</param>
         /// <param name="startIndex">The start index.</param>
         /// <returns></returns>
-        public static bool Equals(Array a, Array b, int startIndex =0)
+        public static bool Equals(Array a, Array b, int startIndex =0, int maxCount=-1)
         {
             //We don't ever want to use this function to compare two nulls
             //so conservatively returning false;
@@ -112,6 +112,8 @@ namespace Keyczar.Util
             {
                 if(i < startIndex)
                     continue;
+				if(maxCount >=0 && i >= maxCount)
+					continue;
 
                 //This first case is used to try and not leak when a key matching a keyhash couldn't be found.
                 if (a.GetLength(0) <= i | b.GetLength(0) <= i) //uses non short ciruit "or (|)"

@@ -20,7 +20,6 @@ using System.IO;
 namespace KeyczarTest.Interop
 {
     [Category("Iterop")]
-    [TestFixture("j")]
     public abstract class BasicInterop : Interop
     {
         public BasicInterop (string implementation):base(implementation)
@@ -31,6 +30,7 @@ namespace KeyczarTest.Interop
 
 	[TestFixture("cs")]
 	[TestFixture("py")]
+	[TestFixture("j")]
 	public abstract class Interop:AssertionHelper
 	{
 

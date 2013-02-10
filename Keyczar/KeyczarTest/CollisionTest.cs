@@ -52,8 +52,8 @@ namespace KeyczarTest
 
      
         [TestCase("hmac")]
-      //  [TestCase("dsa")]
-      //  [TestCase("rsa-sign")]
+        [TestCase("dsa")]
+        [TestCase("rsa-sign")]
         public void TwoKeysWithSameHashVerify(string dir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, dir);

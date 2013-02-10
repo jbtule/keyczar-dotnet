@@ -129,7 +129,8 @@ namespace Keyczar.Crypto
             var tSigner = new DsaSigner();
             tSigner.Init(forSigning: false, parameters: new DsaPublicKeyParameters(Y.ToBouncyBigInteger(), 
                 new DsaParameters(P.ToBouncyBigInteger(),Q.ToBouncyBigInteger(), G.ToBouncyBigInteger() ) ));
-            return new DigestStream(new DsaDigestSigner(tSigner, GetDigest()));
+			var digest = GetDigest();
+			return new DigestStream(new DsaDigestSigner(tSigner, digest));
         }
     }
 }

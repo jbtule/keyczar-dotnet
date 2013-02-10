@@ -109,15 +109,15 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public HashingStream GetSigningStream()
         {
-
-            var signer = new DsaDigestSigner(new DsaSigner(), PublicKey.GetDigest());
+			var digest =PublicKey.GetDigest();
+			var signer = new DsaDigestSigner(new DsaSigner(), digest);
             var param = new DsaPrivateKeyParameters(X.ToBouncyBigInteger(),
                                                     new DsaParameters(PublicKey.P.ToBouncyBigInteger(),
                                                                       PublicKey.Q.ToBouncyBigInteger(),
                                                                       PublicKey.G.ToBouncyBigInteger()));
             signer.Init(forSigning:true, parameters:new ParametersWithRandom(param,Secure.Random));
 
-            return new DigestStream(signer);
+			return new DigestStream(signer);
         }
 
         /// <summary>
