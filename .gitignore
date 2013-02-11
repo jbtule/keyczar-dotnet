@@ -28,3 +28,6 @@ test-results
 _ReSharper*
 #compressed dll
 *.dep-lzma
+
+#Temp files
+tmp/

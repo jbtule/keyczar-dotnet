@@ -23,9 +23,14 @@ Keyczar is an open source cryptographic toolkit designed to make it easier and s
 </description>
         <summary>Toolkit for safe and simple cryptography</summary>
         <releaseNotes>
-		  * Fixed TimeoutSigner compatibilty with other keyczar.
-		  * Keyczar tool updated 'usekey' to produce all keyczar wire formats.
-		  * TimeoutVerifier now has optional call back for current time.
+		  - Added Unofficial RSA-PSS signing implementation with appropriate strength digest hash algorithms.		 
+		  - Made changes to AES-GCM implementation to improve performance when next Bouncy Castle is released.
+		  - Better implementation for handling key hash collisions.
+		  - Added missing test check against version number for future ciphetext formats.
+		  - Removed dependencies on System.Security.Cryptography.
+		  - No longer uses dynamic invocation, more likely to be AOT compile compatible.
+		  - Works when encountering a buggy cpp key hash.
+		  - Works when encountering a buggy java signature.
 		</releaseNotes>
         <copyright>Copyright 2012-2013</copyright>
         <tags>cryptography crypto security encryption symmetric asymmetric mac aes rsa dsa hmac</tags>

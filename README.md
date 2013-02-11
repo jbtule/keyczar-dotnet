@@ -1,12 +1,16 @@
 # Keyczar dotnet 
-Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
+Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features
+and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
 
-Keyczar-dotnet: http://jbtule.github.com/keyczar-dotnet
-Official keyczar site: http://keyczar.org
+ - Keyczar-dotnet: http://jbtule.github.com/keyczar-dotnet
+ - Official keyczar site: http://keyczar.org
 
 ## Usage 
 
-`KeyczarTool.exe` provides the primary mechanism for creating and managing keysets. Calling `KeyczarTool.exe` from the commandline without flags will display usage.
+`KeyczarTool.exe` provides the primary mechanism for creating and managing keysets.
+Calling `KeyczarTool.exe` from the commandline without flags will display usage.
+
+See [Wiki](http://github.com/jbtule/keyczar-dotnet/wiki) for more info.
 
 ## Dependencies
 
@@ -22,27 +26,17 @@ Official keyczar site: http://keyczar.org
 
  - [ManyConsole 0.4.2.8 or later](https://github.com/fschwiet/ManyConsole)
  - [NDesk.Options 0.2.1 or later](http://www.ndesk.org/Options)
+ 
+## Source & Build
 
-#### KeyczarTest.dll
-
- - [NUnit 2.6.1 or later](http://www.nunit.org/)
-
-
-## Build 
-
-#### Visual Studio 2010 or Later 
-
-Dependencies should be downloaded automaticially with [nuget](http://nuget.org) which is integrated into the solution. Build all triggers nuget.
-
-#### MonoDevelop v3.0.4 or later 
-
-Run `MonoRestoreNugetPackages.sh` script first to restore nuget dependency then builds fine from monodevelop. Sometimes nuget.exe under mono has weird null exceptions, repeating running the script usually fixes this issue.
+Source code can be found on [github](http://github.com/jbtule/keyczar-dotnet/tree/master/dotnet).
+More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
 
 ## Compatibility
 
  - Should interoperate with java/python/c++ with standard api
- - All unofficial/incompatible api changes are under the unofficial names space to be clear what won't interoperate with java/python/c++
- - Currently the only unofficial algorithm is *AES-GCM* (`KeyType=C#_AES_AEAD`) using the unofficial flag on the KeyczarTool will use it to replace *AES-Then-HmacSha1*
+ - All unofficial/incompatible api changes are under the unofficial names space to be clear what is provided that won't interoperate with java/python/c++.
+ - Unofficial algorithms included are *AES-GCM* (`KeyType=C#_AES_AEAD`) and RSA-PSS (`KeyType="C#_RSA_SIGN_PRIV") use the unofficial flag on the KeyczarTool.
  - `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionVerifer`
  - The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
 
