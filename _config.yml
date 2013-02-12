@@ -1,7 +1,4 @@
 markdown: redcarpet
 
 redcarpet:
-    extensions: []
-    render_options:
-        - with_toc_data # add HTML anchors to each header in the output HTML for hyper linking
-        - hard_wrap      # translate \n to <br>
+    extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
