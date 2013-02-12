@@ -71,11 +71,9 @@ See more usage and documentation in the [Wiki](http://github.com/jbtule/keyczar-
  - [NDesk.Options 0.2.1 or later](http://www.ndesk.org/Options)
  - [DiminishDependencies 1.1.3 or later](https://github.com/jbtule/diminish-dependencies)
 
-
 #### KeyczarTest.dll ####
 
  - [NUnit 2.6.1 or later](http://www.nunit.org/)
-
 
 ## Build ##
 
@@ -88,9 +86,9 @@ Dependencies should be downloaded automaticially with [NuGet](http://nuget.org) 
 Run `MonoRestoreNugetPackages.sh` script first to restore NuGet dependency then you may build from MonoDevelop with `Build All` or with just xbuild run `xbuild Keyczar.sln`.
 
  - Keyczar
-     - master 
-       - Mono 2.10 [![Build Status](https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master)](https://travis-ci.org/jbtule/keyczar-dotnet)
-	   - Win .Net 4.0 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon)](http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1)
+   - master 
+     - .Net 4.0 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon)](http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1)
+     - Mono 2.10 [![Build Status](https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master)](https://travis-ci.org/jbtule/keyczar-dotnet)
 
 See more in [Building in Depth](http://github.com/jbtule/keyczar-dotnet/wiki/Building-or-Testing-Keyczar-dotnet-in-Depth).
 
@@ -100,8 +98,8 @@ Code contribution, reported issues or code reviews welcome! Pull requests are au
 
 ## Compatibility ##
 
-- Should interoperate with java/python/c++ with standard api
-- All unofficial/incompatible api changes are under the unofficial names space to be clear what won't interoperate with java/python/c++
-- Currently the only unofficial algorithm is *AES-GCM* (`KeyType=C#_AES_AEAD`) using the unofficial flag on the KeyczarTool will use it to replace *AES-Then-HmacSha1*
-- `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionedVerifer`
-- The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
+ - Should interoperate with java/python/c++ with standard api
+ - All unofficial/incompatible api changes are under the unofficial names space to be clear what won't interoperate with java/python/c++
+ - Unofficial algorithms included are *AES-GCM* (`KeyType=C#_AES_AEAD`) and RSA-PSS (`KeyType="C#_RSA_SIGN_PRIV") use the unofficial flag on the KeyczarTool.
+ - `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionedVerifer`
+ - The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
