@@ -20,7 +20,8 @@ Source Code for debugging NuGet provided binaries can be downloaded automaticall
 `KeyczarTool.exe` provides the primary mechanism for creating and managing keysets. Calling `KeyczarTool.exe` from the command line without flags will display usage. Use it to create your key set first and use it to rotate your keys later.
 
 Once you have your key set the basic api is very simple to use for encryption:
-```csharp
+
+{% highlight csharp %}
 string plaintext = "Secret Message"
 WebBase64 ciphertext;
 //encrypting
@@ -32,9 +33,11 @@ using (var encrypter = new Encrypter("path_to_keyset"))
 using (var crypter = new Crypter("path_to_keyset")){
     var plaintext2 = crypter.Decrypt(ciphertext)
 }
-```
+{% endhighlight %}
+
 and for signatures:
-```csharp
+
+{% highlight csharp %}
 string plaintext = "A Message"
 WebBase64 signature;
 //signing
@@ -47,7 +50,7 @@ using (var verifier = new Verifier("path_to_keyset"))
 {
     var isVerified = verifier.Verify(plaintext, signature);
 }
-```
+{% endhighlight %}
 
 See more usage and documentation in the [Wiki](http://github.com/jbtule/keyczar-dotnet/wiki).
 
