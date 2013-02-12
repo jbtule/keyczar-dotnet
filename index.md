@@ -8,11 +8,9 @@ Implemented in C# 4 to match up with the Java/Python/C++ Keyczar standard featur
 
 ## Binary Release ##
 `Keyczar.dll` and `KeyczarTool.exe` can be added to your project using [NuGet](http://nuget.org)
-
 ```
 PM> Install-Package Keyczar -Pre
 ```
-
 Although it's currently listed as pre-release in NuGet, Keyczar-dotnet currently has over **600** unit tests providing **90%** code coverage and is tested against python and java Keyczar produced data as well. Because it is a security framework I'm going to keep it conservatively listed under pre-release until more eyes have been on the code.
 
 Source Code for debugging NuGet provided binaries can be downloaded automatically in Visual Studio by configuring [SymbolSource.org](http://www.symbolsource.org/Public/Home/VisualStudio).
@@ -22,7 +20,6 @@ Source Code for debugging NuGet provided binaries can be downloaded automaticall
 `KeyczarTool.exe` provides the primary mechanism for creating and managing keysets. Calling `KeyczarTool.exe` from the command line without flags will display usage. Use it to create your key set first and use it to rotate your keys later.
 
 Once you have your key set the basic api is very simple to use for encryption:
-
 ```csharp
 string plaintext = "Secret Message"
 WebBase64 ciphertext;
@@ -37,7 +34,6 @@ using (var crypter = new Crypter("path_to_keyset")){
 }
 ```
 and for signatures:
-
 ```csharp
 string plaintext = "A Message"
 WebBase64 signature;
@@ -87,7 +83,7 @@ Run `MonoRestoreNugetPackages.sh` script first to restore NuGet dependency then 
 
  - Keyczar
    - master 
-     - .Net 4.0 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon)](http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1)
+     - .Net 4.0 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon)](http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1) - Thanks Codeb
      - Mono 2.10 [![Build Status](https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master)](https://travis-ci.org/jbtule/keyczar-dotnet)
 
 See more in [Building in Depth](http://github.com/jbtule/keyczar-dotnet/wiki/Building-or-Testing-Keyczar-dotnet-in-Depth).
