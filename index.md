@@ -8,9 +8,11 @@ Implemented in C# 4 to match up with the Java/Python/C++ Keyczar standard featur
 
 ## Binary Release ##
 `Keyczar.dll` and `KeyczarTool.exe` can be added to your project using [NuGet](http://nuget.org)
-```shell
+
+```
 PM> Install-Package Keyczar -Pre
 ```
+
 Although it's currently listed as pre-release in NuGet, Keyczar-dotnet currently has over **600** unit tests providing **90%** code coverage and is tested against python and java Keyczar produced data as well. Because it is a security framework I'm going to keep it conservatively listed under pre-release until more eyes have been on the code.
 
 Source Code for debugging NuGet provided binaries can be downloaded automatically in Visual Studio by configuring [SymbolSource.org](http://www.symbolsource.org/Public/Home/VisualStudio).
@@ -88,7 +90,7 @@ Run `MonoRestoreNugetPackages.sh` script first to restore NuGet dependency then 
  - Keyczar
      - master 
        - Mono 2.10 [![Build Status](https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master)](https://travis-ci.org/jbtule/keyczar-dotnet)
-	   - Win .Net 4.0 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon)](http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished)
+	   - Win .Net 4.0 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon)](http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1)
 
 See more in [Building in Depth](http://github.com/jbtule/keyczar-dotnet/wiki/Building-or-Testing-Keyczar-dotnet-in-Depth).
 
