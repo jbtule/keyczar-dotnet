@@ -11,7 +11,7 @@ Implemented in C# 4 to match up with the Java/Python/C++ Keyczar standard featur
 ```
 PM> Install-Package Keyczar -Pre
 ```
-Although it's currently listed as pre-release in NuGet, Keyczar-dotnet currently has over **500** unit tests providing **90%** code coverage and is tested against python and java Keyczar produced data as well. Because it is a security framework I'm going to keep it conservatively listed under pre-release until more eyes have been on the code.
+Although it's currently listed as pre-release in NuGet, Keyczar-dotnet currently has over **600** unit tests providing **90%** code coverage and is tested against python and java Keyczar produced data as well. Because it is a security framework I'm going to keep it conservatively listed under pre-release until more eyes have been on the code.
 
 Source Code for debugging NuGet provided binaries can be downloaded automatically in Visual Studio by configuring [SymbolSource.org](http://www.symbolsource.org/Public/Home/VisualStudio).
 
@@ -21,7 +21,7 @@ Source Code for debugging NuGet provided binaries can be downloaded automaticall
 
 Once you have your key set the basic api is very simple to use for encryption:
 
-{% highlight csharp %}
+```csharp
 string plaintext = "Secret Message"
 WebBase64 ciphertext;
 //encrypting
@@ -33,11 +33,10 @@ using (var encrypter = new Encrypter("path_to_keyset"))
 using (var crypter = new Crypter("path_to_keyset")){
     var plaintext2 = crypter.Decrypt(ciphertext)
 }
-{% endhighlight %}
-
+```
 and for signatures:
 
-{% highlight csharp %}
+```csharp
 string plaintext = "A Message"
 WebBase64 signature;
 //signing
@@ -50,7 +49,7 @@ using (var verifier = new Verifier("path_to_keyset"))
 {
     var isVerified = verifier.Verify(plaintext, signature);
 }
-{% endhighlight %}
+```
 
 See more usage and documentation in the [Wiki](http://github.com/jbtule/keyczar-dotnet/wiki).
 
@@ -87,8 +86,9 @@ Dependencies should be downloaded automaticially with [NuGet](http://nuget.org) 
 Run `MonoRestoreNugetPackages.sh` script first to restore NuGet dependency then you may build from MonoDevelop with `Build All` or with just xbuild run `xbuild Keyczar.sln`.
 
  - Keyczar
-   - Mono 2.10 </td>
-     - master [![Build Status](https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master)](https://travis-ci.org/jbtule/keyczar-dotnet)
+     - master 
+       - Mono 2.10 [![Build Status](https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master)](https://travis-ci.org/jbtule/keyczar-dotnet)
+	   - Win .Net 4.0 [![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:(id:bt922)/statusIcon)]()
 
 See more in [Building in Depth](http://github.com/jbtule/keyczar-dotnet/wiki/Building-or-Testing-Keyczar-dotnet-in-Depth).
 
