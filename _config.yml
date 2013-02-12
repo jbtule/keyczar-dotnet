@@ -1,6 +1,7 @@
 markdown: redcarpet
 
 redcarpet:
-  render_options:
-    - with_toc_data # add HTML anchors to each header in the output HTML for hyper linking
-    - hard_wrap      # translate \n to <br>
+    extensions: []
+    render_options:
+        - with_toc_data # add HTML anchors to each header in the output HTML for hyper linking
+        - hard_wrap      # translate \n to <br>
