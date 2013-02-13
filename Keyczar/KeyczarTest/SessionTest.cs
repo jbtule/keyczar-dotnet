@@ -47,8 +47,8 @@ namespace KeyczarTest
         [SetUp]
         public void Setup()
         {
-            publicKeyEncrypter = new Encrypter(Path.Combine(TEST_DATA, "rsa.public"));
-            privateKeyDecrypter = new Crypter(Path.Combine(TEST_DATA, "rsa"));
+            publicKeyEncrypter = new Encrypter(Util.TestDataPath(TEST_DATA, "rsa.public"));
+            privateKeyDecrypter = new Crypter(Util.TestDataPath(TEST_DATA, "rsa"));
         }
 
         private SessionCrypter HelperSessionCrypter(Encrypter encrypter,string unoffical)

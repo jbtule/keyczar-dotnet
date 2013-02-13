@@ -126,7 +126,7 @@ namespace KeyczarTest{
        [TestCase("rsa-sign")]
        public void TestVanillaSignAndVerify(String subDir)
        {
-           using (var signer = new VanillaSigner(Path.Combine(TEST_DATA, subDir)))
+           using (var signer = new VanillaSigner(Util.TestDataPath(TEST_DATA, subDir)))
            {
                var streamInput = new MemoryStream();
                streamInput.Write(new byte[ExtraDataLength], 0, ExtraDataLength);

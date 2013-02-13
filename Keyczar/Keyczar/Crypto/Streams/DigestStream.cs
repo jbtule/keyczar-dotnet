@@ -27,9 +27,10 @@ namespace Keyczar.Crypto.Streams
 		private int _outputSize;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DigestStream"/> class.
+        /// Initializes a new instance of the <see cref="DigestStream" /> class.
         /// </summary>
         /// <param name="digestSigner">The digest signer.</param>
+        /// <param name="outputSize">Size of the output.</param>
         public DigestStream(ISigner digestSigner, int outputSize=-1)
         {
             _digestSigner = digestSigner;

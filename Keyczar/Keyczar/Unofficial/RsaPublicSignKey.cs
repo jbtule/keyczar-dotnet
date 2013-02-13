@@ -118,6 +118,10 @@ namespace Keyczar.Unofficial
             throw new InvalidKeyTypeException(string.Format("Unknown padding type :{0}", Padding));
         }
 
+        /// <summary>
+        /// Gets the key hash.
+        /// </summary>
+        /// <returns></returns>
         public override byte[] GetKeyHash()
         {
             var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));

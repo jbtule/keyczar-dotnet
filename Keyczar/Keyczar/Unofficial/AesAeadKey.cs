@@ -70,6 +70,9 @@ namespace Keyczar.Unofficial
         public string Mode { get; set; }
 
 
+        /// <summary>
+        /// The GCM mode
+        /// </summary>
         public static readonly string GcmMode = "GCM";
 
         /// <summary>

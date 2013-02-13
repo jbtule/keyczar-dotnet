@@ -44,9 +44,9 @@ namespace KeyczarTest
           public void TestCryptImport([Values("rsa")]String keyType, [Values("pem", "der")]String fileFormat)
           {
 
-            using(var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.Encrypt,Path.Combine(TEST_DATA , keyType+"-crypt-crt." +fileFormat)))
+            using(var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.Encrypt, Util.TestDataPath(TEST_DATA , keyType+"-crypt-crt." +fileFormat)))
             using(var encrypter = new Encrypter(keyset))
-            using (var crypter = new Crypter(Path.Combine(TEST_DATA, "rsa-crypt")))
+            using (var crypter = new Crypter(Util.TestDataPath(TEST_DATA, "rsa-crypt")))
             {
 
                 var ciphertext = encrypter.Encrypt(input);
@@ -59,10 +59,10 @@ namespace KeyczarTest
          [Test]
           public void TestSignImport([Values("rsa", "dsa")]String keyType, [Values("pem", "der")] String fileFormat)
         {
-             using (var signer = new Signer(Path.Combine(TEST_DATA, keyType + "-sign")))
+            using (var signer = new Signer(Util.TestDataPath(TEST_DATA, keyType + "-sign")))
              {
                  var signature = signer.Sign(input);
-                 using (var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.Verify, Path.Combine(TEST_DATA, keyType + "-sign-crt." + fileFormat)))
+                 using (var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.Verify, Util.TestDataPath(TEST_DATA, keyType + "-sign-crt." + fileFormat)))
                  using (var verifier = new Verifier(keyset))
                  {
                      Expect(verifier.Verify(input, signature), Is.True);

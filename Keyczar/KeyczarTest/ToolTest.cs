@@ -106,8 +106,8 @@ namespace KeyczarTest
 			result = Util.KeyczarTool("pass", 
 			                          importkey: null,
 			                          location: path,
-			                          status: "primary", 
-			                          importlocation:Path.Combine(CERTIFICATE_DATA,"rsa-crypt-pkcs8.pem"));
+			                          status: "primary",
+                                      importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"));
 			
 			Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
 
@@ -129,8 +129,8 @@ namespace KeyczarTest
 			result = Util.KeyczarTool("pass", 
 			                          importkey: null,
 			                          location: path,
-			                          status: "primary", 
-			                          importlocation:Path.Combine(CERTIFICATE_DATA,"rsa-crypt-pkcs8.pem"));
+			                          status: "primary",
+                                      importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"));
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
 			

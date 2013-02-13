@@ -24,6 +24,10 @@ using Org.BouncyCastle.Crypto.Signers;
 
 namespace Keyczar.Crypto
 {
+    /// <summary>
+    /// Base Class for RSA Implementations
+    /// </summary>
+    /// <typeparam name="TPublicKey">The type of the public key.</typeparam>
     public abstract class RsaPrivateSignKeyBase<TPublicKey> : Key, ISignerKey, IPrivateKey, IRsaPrivateKey
         where TPublicKey : RsaPublicSignKeyBase, IVerifierKey, IRsaPublicKey
     {
@@ -127,6 +131,13 @@ namespace Keyczar.Crypto
             PublicKey = GeneratePubKey(size, pub.Exponent.ToSystemBigInteger(), pub.Modulus.ToSystemBigInteger());
         }
 
+        /// <summary>
+        /// Generates the pub key.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="publicExponent">The public exponent.</param>
+        /// <param name="modulus">The modulus.</param>
+        /// <returns></returns>
         protected abstract TPublicKey GeneratePubKey(int size, BigInteger publicExponent, BigInteger modulus);
   
 

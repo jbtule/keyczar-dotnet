@@ -73,6 +73,13 @@ namespace Keyczar.Crypto
             return PublicKey.GetEncryptingStream(output);
         }
 
+        /// <summary>
+        /// Generates the pub key.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="publicExponent">The public exponent.</param>
+        /// <param name="modulus">The modulus.</param>
+        /// <returns></returns>
         protected override RsaPublicKey GeneratePubKey(int size, BigInteger publicExponent, BigInteger modulus)
         {
            return new RsaPublicKey

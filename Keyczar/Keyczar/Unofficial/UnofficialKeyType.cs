@@ -15,6 +15,9 @@
 
 namespace Keyczar.Unofficial
 {
+    /// <summary>
+    /// Place to find Unofficial KeyType identifiers
+    /// </summary>
     public static class UnofficialKeyType
     {
 

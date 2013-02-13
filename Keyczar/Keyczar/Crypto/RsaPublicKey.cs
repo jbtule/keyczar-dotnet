@@ -61,6 +61,10 @@ namespace Keyczar.Crypto
             return 0;
         }
 
+        /// <summary>
+        /// Gets the key hash.
+        /// </summary>
+        /// <returns></returns>
         public override byte[] GetKeyHash()
         {
             var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
@@ -85,8 +89,12 @@ namespace Keyczar.Crypto
 
 			return new RsaDigestSigner(digest);
         }
-      
 
+
+        /// <summary>
+        /// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
+        /// </summary>
+        /// <returns></returns>
         public override IEnumerable<byte[]> GetFallbackKeyHash()
         {
             var list = new List<byte[]>();

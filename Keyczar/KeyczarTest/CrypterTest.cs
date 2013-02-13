@@ -152,7 +152,7 @@ namespace KeyczarTest
             using (var encrypter = new Encrypter(Util.TestDataPath(TEST_DATA, "rsa.public")))
             {
                 var cipher = encrypter.Encrypt(input);
-                var subPath = Path.Combine(TEST_DATA, "rsa");
+                var subPath = Util.TestDataPath(TEST_DATA, "rsa");
                 using (var crypter = new Crypter(subPath))
                 {
                     var decrypt = crypter.Decrypt(cipher);

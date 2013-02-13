@@ -483,7 +483,7 @@ namespace KeyczarTest
         [Category("Unofficial")]
         public void TestCreateBlob()
         {
-            Directory.CreateDirectory(WRITE_DATA);
+            Directory.CreateDirectory(Util.TestDataPath(WRITE_DATA,""));
 
             var keyMetaData = new KeyMetadata
             {
@@ -521,7 +521,7 @@ namespace KeyczarTest
 
                         using (var signer = new Signer(keySet2))
                         {
-                            File.WriteAllText(Path.Combine(WRITE_DATA, "unofficial", "sign.out"), signer.Sign(input));
+                            File.WriteAllText(Util.TestDataPath(WRITE_DATA, "sign.out", "unofficial"), signer.Sign(input));
                         }
                     }
                 }

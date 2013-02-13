@@ -25,6 +25,9 @@ using Org.BouncyCastle.Crypto.Signers;
 
 namespace Keyczar.Crypto
 {
+    /// <summary>
+    /// Base class for Rsa Key Implementations
+    /// </summary>
     public abstract class RsaPublicSignKeyBase : Key, IVerifierKey, IRsaPublicKey
     {
 

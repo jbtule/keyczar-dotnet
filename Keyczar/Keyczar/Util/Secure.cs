@@ -86,6 +86,7 @@ namespace Keyczar.Util
         /// <param name="a">Array A.</param>
         /// <param name="b">Array b.</param>
         /// <param name="startIndex">The start index.</param>
+        /// <param name="maxCount">The max count.</param>
         /// <returns></returns>
         public static bool Equals(Array a, Array b, int startIndex =0, int maxCount=-1)
         {

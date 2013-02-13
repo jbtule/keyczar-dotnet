@@ -413,8 +413,15 @@ namespace Keyczar.Util
             return final;
         }
 
+        /// <summary>
+        /// Raw json reader
+        /// </summary>
         public class RawJsonReader : JsonTextReader
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RawJsonReader" /> class.
+            /// </summary>
+            /// <param name="reader">The reader.</param>
             public RawJsonReader(TextReader reader)
                 : base(reader)
             {

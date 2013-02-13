@@ -40,6 +40,13 @@ namespace Keyczar.Unofficial
             set { PublicKey.Digest = value; }
         }
 
+        /// <summary>
+        /// Generates the pub key.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="publicExponent">The public exponent.</param>
+        /// <param name="modulus">The modulus.</param>
+        /// <returns></returns>
         protected override RsaPublicSignKey GeneratePubKey(int size, BigInteger publicExponent, BigInteger modulus)
         {
 
@@ -52,8 +59,13 @@ namespace Keyczar.Unofficial
                        };
         }
 
- 
 
+
+        /// <summary>
+        /// Picks the digests based on key size and relative strengths as described in NIST SP800-57.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <returns></returns>
         protected string DigestForSize(int size)
         {
 
