@@ -45,22 +45,28 @@ namespace Keyczar
         }
 
         private Verifier _verifier;
+        private Func<DateTime> _currentDateTime;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimeoutVerifier"/> class.
+        /// Initializes a new instance of the <see cref="TimeoutVerifier" /> class.
         /// </summary>
         /// <param name="keySetLocation">The keyset location.</param>
-        public TimeoutVerifier(string keySetLocation) : this(new KeySet(keySetLocation))
+        /// <param name="currentDateTime">The current date time providers.</param>
+        public TimeoutVerifier(string keySetLocation, Func<DateTime> currentDateTime = null)
+            : this(new KeySet(keySetLocation), currentDateTime)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimeoutVerifier"/> class.
+        /// Initializes a new instance of the <see cref="TimeoutVerifier" /> class.
         /// </summary>
         /// <param name="keySet">The key set.</param>
-        public TimeoutVerifier(IKeySet keySet) : base(keySet)
+        /// <param name="currentDateTime">The current date time provider.</param>
+        public TimeoutVerifier(IKeySet keySet, Func<DateTime> currentDateTime = null)
+            : base(keySet)
         {
             _verifier = new TimeoutVerifierHelper(keySet);
+            _currentDateTime = currentDateTime ?? (()=> DateTime.Now);
         }
 
         /// <summary>
@@ -78,12 +84,11 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawData">The raw data.</param>
         /// <param name="signature">The signature.</param>
-        /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
-        public bool Verify(string rawData, WebBase64 signature, Func<DateTime> currentDateTime=null)
+        public bool Verify(string rawData, WebBase64 signature)
         {
 
-            return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes(), currentDateTime);
+            return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
         }
 
         /// <summary>
@@ -93,11 +98,11 @@ namespace Keyczar
         /// <param name="signature">The signature.</param>
         /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
-        public bool Verify(byte[] rawData, byte[] signature, Func<DateTime> currentDateTime = null)
+        public bool Verify(byte[] rawData, byte[] signature)
         {
             using (var memstream = new MemoryStream(rawData))
             {
-                return Verify(memstream, signature, currentDateTime: currentDateTime);
+                return Verify(memstream, signature);
             }
         }
 
@@ -110,11 +115,11 @@ namespace Keyczar
         /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
-        public bool Verify(Stream input, byte[] signature, long inputLength = -1, Func<DateTime> currentDateTime = null)
+        public bool Verify(Stream input, byte[] signature, long inputLength = -1)
         {
-            var dateTimeNow = currentDateTime ?? (() => DateTime.Now);
+            
 
-            var milliseconds = FromDateTime(dateTimeNow());
+            var milliseconds = FromDateTime(_currentDateTime());
             
             if (!_verifier.Verify(input, signature, inputLength))
                 return false; 

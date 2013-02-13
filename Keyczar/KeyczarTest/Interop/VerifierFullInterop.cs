@@ -43,26 +43,26 @@ namespace KeyczarTest.Interop
         [Test]
         public void VerifyTimeoutSucess()
         {
+            Func<DateTime> earlyCurrentTimeProvider = () => new DateTime(2012, 12, 21, 11, 11, 0, DateTimeKind.Utc).AddMinutes(-5);
 
             var path = TestData(Location);
-            using (var verifier = new TimeoutVerifier(path))
+            using (var verifier = new TimeoutVerifier(path, earlyCurrentTimeProvider))
             {
                 var primarySignature = (WebBase64)File.ReadAllLines(Path.Combine(path, "2.timeout")).First();
-                Expect(verifier.Verify(Input, primarySignature,
-                                       currentDateTime: () => new DateTime(2012, 12, 21, 11, 11, 0, DateTimeKind.Utc).AddMinutes(-5)), Is.True);
+                Expect(verifier.Verify(Input, primarySignature), Is.True);
             }
         }
 
         [Test]
         public void VerifyTimeoutExpired()
         {
-
+            Func<DateTime> lateCurrentTimeProvider =
+           () => new DateTime(2012, 12, 21, 11, 11, 0, DateTimeKind.Utc).AddMinutes(5);
             var path = TestData(Location);
-            using (var verifier = new TimeoutVerifier(path))
+            using (var verifier = new TimeoutVerifier(path, lateCurrentTimeProvider))
             {
                 var primarySignature = (WebBase64)File.ReadAllLines(Path.Combine(path, "2.timeout")).First();
-                Expect(verifier.Verify(Input, primarySignature,
-                                       currentDateTime: () => new DateTime(2012, 12, 21, 11, 11, 0, DateTimeKind.Utc).AddMinutes(5)), Is.False);
+                Expect(verifier.Verify(Input, primarySignature), Is.False);
             }
         }
 
