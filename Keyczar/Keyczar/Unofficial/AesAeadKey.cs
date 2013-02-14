@@ -163,7 +163,7 @@ namespace Keyczar.Unofficial
 
             var randomNonce = new byte[IVLength];
             Secure.Random.NextBytes(randomNonce);
-            return new AesAeadStream(
+            return new SymmetricAeadStream(
                          GetMode(),
                          output,
                          randomNonce,
@@ -198,7 +198,7 @@ namespace Keyczar.Unofficial
         public FinishingStream GetDecryptingStream(Stream output)
         {
            
-            return new AesAeadStream(
+            return new SymmetricAeadStream(
                 GetMode(),
                 output,
                 new byte[IVLength], 

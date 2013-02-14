@@ -26,7 +26,7 @@ namespace Keyczar.Unofficial
     /// <summary>
     /// Wrapper for AEAD symmetric block ciphers  using bouncy castle
     /// </summary>
-    public class AesAeadStream : FinishingStream
+    public class SymmetricAeadStream : FinishingStream
     {
         private IAeadBlockCipher _cipher;
         private readonly int _tagLength;
@@ -40,7 +40,7 @@ namespace Keyczar.Unofficial
         private int _inLen = 0;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AesAeadStream"/> class.
+        /// Initializes a new instance of the <see cref="SymmetricAeadStream"/> class.
         /// </summary>
         /// <param name="makeCipher">The make cipher.</param>
         /// <param name="outStream">The out stream.</param>
@@ -48,7 +48,7 @@ namespace Keyczar.Unofficial
         /// <param name="tagLength">Length of the tag.</param>
         /// <param name="initFunc">The init func.</param>
         /// <param name="encrypt">if set to <c>true</c> [encrypt].</param>
-        public AesAeadStream(Func<IAeadBlockCipher> makeCipher,
+        public SymmetricAeadStream(Func<IAeadBlockCipher> makeCipher,
                              Stream outStream, 
                              byte[] nonce, 
                              int tagLength,

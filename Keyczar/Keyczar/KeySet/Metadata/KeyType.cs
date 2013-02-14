@@ -87,11 +87,11 @@ namespace Keyczar
 
 		static KeyType(){
 			Aes.KeySizes<AesKey>(128,192,256).DefineSpec();
-			HmacSha1.KeySizes<HmacSha1Key>(256).WithDigestSizes(20).DefineSpec();
-			DsaPriv.KeySizes<DsaPrivateKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
-			DsaPub.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
-			RsaPriv.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
-			RsaPub.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
+			HmacSha1.KeySizes<HmacSha1Key>(256).DefineSpec();
+			DsaPriv.KeySizes<DsaPrivateKey>(1024).IsAsymmetric().DefineSpec();
+			DsaPub.KeySizes<DsaPublicKey>(1024).IsAsymmetric().DefineSpec();
+			RsaPriv.KeySizes<RsaPrivateKey>(2048, 1024, 4096).IsAsymmetric().DefineSpec();
+			RsaPub.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).IsAsymmetric().DefineSpec();
 
 		    KeyType see;
 		    see = UnofficialKeyType.AesAead;
@@ -124,7 +124,7 @@ namespace Keyczar
         public class KeyTypeSpec
         {
 			internal KeyTypeSpec(){
-                DigestSizes = new int[]{0};
+       
 			    
 			}
 
@@ -147,12 +147,7 @@ namespace Keyczar
             /// <value>The key sizes.</value>
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
             public int[] KeySizes{ get; internal set; }
-            /// <summary>
-            /// Gets or sets the digest sizes.
-            /// </summary>
-            /// <value>The digest sizes.</value>
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-            public int[] DigestSizes{ get; internal set; }
+
             /// <summary>
             /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is unofficial.
             /// </summary>
@@ -164,16 +159,7 @@ namespace Keyczar
             /// <value><c>true</c> if asymmetric; otherwise, <c>false</c>.</value>
             public bool Asymmetric{ get; internal set; }
 
-            /// <summary>
-            /// Describes the digest sizes.
-            /// </summary>
-            /// <param name="sizes">The sig sizes.</param>
-            /// <returns></returns>
-            public KeyTypeSpec WithDigestSizes(params int[] sizes)
-            {
-                DigestSizes = sizes;
-                return this;
-            }
+         
             /// <summary>
             /// Specifies this  instance is unofficial.
             /// </summary>

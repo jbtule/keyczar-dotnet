@@ -96,7 +96,6 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawData">The raw data.</param>
         /// <param name="signature">The signature.</param>
-        /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
         public bool Verify(byte[] rawData, byte[] signature)
         {
@@ -112,7 +111,6 @@ namespace Keyczar
         /// <param name="input">The input.</param>
         /// <param name="signature">The signature.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
-        /// <param name="currentDateTime">The current date time. If you need to provide it from an external source</param>
         /// <returns></returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
         public bool Verify(Stream input, byte[] signature, long inputLength = -1)
