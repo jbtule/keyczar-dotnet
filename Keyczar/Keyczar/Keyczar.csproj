@@ -99,7 +99,7 @@
     <Compile Include="Exceptions.cs" />
     <Compile Include="Keyczar.cs" />
     <Compile Include="Crypto\AesKey.cs" />
-    <Compile Include="Unofficial\AesAeadStream.cs" />
+    <Compile Include="Unofficial\SymmetricAeadStream.cs" />
     <Compile Include="Unofficial\BlobKeySet.cs" />
     <Compile Include="Crypto\DsaPrivateKey.cs" />
     <Compile Include="Crypto\DsaPublicKey.cs" />
