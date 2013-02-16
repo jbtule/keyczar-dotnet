@@ -31,3 +31,8 @@ _ReSharper*
 
 #Temp files
 tmp/
+
+#misc temp files
+*~
+.metadata
+.DS_Store

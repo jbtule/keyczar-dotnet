@@ -1,0 +1,18 @@
+# Travis-CI Build for keyczar-dotnet 
+# see travis-ci.org for details
+
+language: c
+# Make sure mono is installed
+install:
+ - sudo apt-get install -qq mono-devel
+
+script:
+ - cd Keyczar/
+ - .ci/RestoreNugetPackages.sh
+ - xbuild Keyczar.sln
+ - .ci/RunNUnit.sh 
+
+branches:
+ only:
+  - master
+  - stable
