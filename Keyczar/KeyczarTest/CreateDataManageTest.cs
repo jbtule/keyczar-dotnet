@@ -150,6 +150,24 @@ namespace KeyczarTest
                     var ciphertext = signer.Sign(input);
                     File.WriteAllText(Path.Combine(kspath, "1.out"), ciphertext);
                 }
+
+                using (var signer = new TimeoutSigner(kspath))
+                {
+                    var ciphertext = signer.Sign(input, new DateTime(2012, 12, 21, 11, 11, 0, DateTimeKind.Utc));
+                    File.WriteAllText(Path.Combine(kspath, "1.timeout"), ciphertext);
+                }
+                
+                using (var signer = new AttachedSigner(kspath))
+                {
+                    var ciphertext = signer.Sign(input);
+                    File.WriteAllText(Path.Combine(kspath, "1.attached"), ciphertext);
+                }
+
+                using (var signer = new AttachedSigner(kspath))
+                {
+                    var ciphertext = signer.Sign(input, Encoding.UTF8.GetBytes("secret"));
+                    File.WriteAllText(Path.Combine(kspath, "1.secret.attached"), ciphertext);
+                }
             }
 
             using (var ks = new MutableKeySet(kspath))
@@ -175,6 +193,25 @@ namespace KeyczarTest
                 {
                     var ciphertext = signer.Sign(input);
                     File.WriteAllText(Path.Combine(kspath, "2.out"), ciphertext);
+                }
+
+
+                using (var signer = new TimeoutSigner(kspath))
+                {
+                    var ciphertext = signer.Sign(input, new DateTime(2012, 12, 21, 11, 11, 0, DateTimeKind.Utc));
+                    File.WriteAllText(Path.Combine(kspath, "2.timeout"), ciphertext);
+                }
+
+                using (var signer = new AttachedSigner(kspath))
+                {
+                    var ciphertext = signer.Sign(input);
+                    File.WriteAllText(Path.Combine(kspath, "2.atttached"), ciphertext);
+                }
+
+                using (var signer = new AttachedSigner(kspath))
+                {
+                    var ciphertext = signer.Sign(input, Encoding.UTF8.GetBytes("secret"));
+                    File.WriteAllText(Path.Combine(kspath, "2.secret.atttached"), ciphertext);
                 }
             }
         }
