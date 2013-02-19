@@ -35,8 +35,8 @@ namespace Keyczar.Unofficial
         private Stream _output;
         private byte[] _nonce;
         private byte[] _header;
-        private bool _init =false;
-        private int _outLen =0;
+        private bool _init = false;
+        private int _outLen = 0;
         private int _inLen = 0;
 
         /// <summary>
@@ -49,11 +49,11 @@ namespace Keyczar.Unofficial
         /// <param name="initFunc">The init func.</param>
         /// <param name="encrypt">if set to <c>true</c> [encrypt].</param>
         public SymmetricAeadStream(Func<IAeadBlockCipher> makeCipher,
-                             Stream outStream, 
-                             byte[] nonce, 
-                             int tagLength,
-                             Action<byte[],IAeadBlockCipher,byte[], bool> initFunc,
-                             bool encrypt)
+                                   Stream outStream,
+                                   byte[] nonce,
+                                   int tagLength,
+                                   Action<byte[], IAeadBlockCipher, byte[], bool> initFunc,
+                                   bool encrypt)
         {
             _output = outStream;
             _nonce = nonce;
@@ -118,7 +118,6 @@ namespace Keyczar.Unofficial
                 }
                 else
                 {
-
                     Array.Copy(buffer, 0, _nonce, 0, _nonce.Length);
 
                     offset = offset + _nonce.Length;
@@ -144,7 +143,7 @@ namespace Keyczar.Unofficial
         public override int GetTagLength(byte[] header)
         {
             _header = header;
-        
+
             return 0; //Because the alortihm includes it.
         }
 

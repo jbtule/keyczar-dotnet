@@ -25,27 +25,24 @@ namespace KeyczarTool
     public class Program
     {
         public static int Main(string[] args)
-        { 
-            
+        {
             // locate any commands in the assembly (or use an IoC container, or whatever source)
             var commands = new ConsoleCommand[]
                                {
-                                   new Create(), 
-                                   new AddKey(), 
-                                   new PubKey(), 
-                                   new Promote(), 
-                                   new Demote(), 
-                                   new Revoke(), 
+                                   new Create(),
+                                   new AddKey(),
+                                   new PubKey(),
+                                   new Promote(),
+                                   new Demote(),
+                                   new Revoke(),
                                    new ImportKey(),
-								   new Export(),
-                                   new UseKey(), 
-                                   new Password(), 
+                                   new Export(),
+                                   new UseKey(),
+                                   new Password(),
                                };
 
             // run the command for the console input
             return ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
         }
-
-       
     }
 }

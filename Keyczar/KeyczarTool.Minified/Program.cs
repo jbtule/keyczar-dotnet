@@ -6,12 +6,11 @@ using System.Text;
 
 namespace KeyczarTool.Minified
 {
-    class Program
+    internal class Program
     {
-
-        static int Main(string[] arguments)
+        private static int Main(string[] arguments)
         {
-            return Diminish.Main<int>.Call<string[]>("KeyczarTool","KeyczarTool.Program")(arguments);
+            return Diminish.Main<int>.Call<string[]>("KeyczarTool", "KeyczarTool.Program")(arguments);
         }
     }
 }

@@ -25,16 +25,15 @@ namespace Keyczar.Unofficial
     /// </summary>
     public class WebKeySet : IKeySet
     {
-    
-
         /// <summary>
         /// Initializes a new instance of the <see cref="WebKeySet" /> class.
         /// </summary>
         /// <param name="webUrl">The web URL.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings", MessageId = "0#", Justification = "Uri is way to inconvenient for a simple web address")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
+            MessageId = "0#", Justification = "Uri is way to inconvenient for a simple web address")]
         public WebKeySet(string webUrl)
         {
-            WebClient = new WebClient { BaseAddress = webUrl };
+            WebClient = new WebClient {BaseAddress = webUrl};
         }
 
         /// <summary>
@@ -53,7 +52,8 @@ namespace Keyczar.Unofficial
         /// </value>
         public KeyMetadata Metadata
         {
-            get { 
+            get
+            {
                 var meta = WebClient.DownloadString("meta");
                 return JsonConvert.DeserializeObject<KeyMetadata>(meta);
             }
@@ -70,6 +70,5 @@ namespace Keyczar.Unofficial
             var data = WebClient.DownloadData(version.ToString(CultureInfo.InvariantCulture));
             return data;
         }
-
     }
 }

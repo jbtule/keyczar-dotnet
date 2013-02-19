@@ -25,7 +25,7 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
+using BouncyBigInteger = Org.BouncyCastle.Math.BigInteger;
 using System.Numerics;
 
 namespace Keyczar.Crypto
@@ -45,19 +45,17 @@ namespace Keyczar.Crypto
         /// Gets the public key.
         /// </summary>
         /// <value>The public key.</value>
-        Key IPrivateKey.PublicKey 
-            {
-                get { return PublicKey; }
-            }
+        Key IPrivateKey.PublicKey
+        {
+            get { return PublicKey; }
+        }
 
         /// <summary>
         /// Gets or sets the X.
         /// </summary>
         /// <value>The X.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger X { get; set; }
-
-     
 
 
         /// <summary>
@@ -80,16 +78,16 @@ namespace Keyczar.Crypto
 
             var keygen = new DsaKeyPairGenerator();
             keygen.Init(new DsaKeyGenerationParameters(Secure.Random, paramgen.GenerateParameters()));
-            var pair =keygen.GenerateKeyPair();
-            var priv =(DsaPrivateKeyParameters) pair.Private;
-			X = priv.X.ToSystemBigInteger();
+            var pair = keygen.GenerateKeyPair();
+            var priv = (DsaPrivateKeyParameters) pair.Private;
+            X = priv.X.ToSystemBigInteger();
             Size = size;
             PublicKey = new DsaPublicKey();
-            var pub =(DsaPublicKeyParameters) pair.Public;
+            var pub = (DsaPublicKeyParameters) pair.Public;
             PublicKey.Y = pub.Y.ToSystemBigInteger();
-			PublicKey.G = pub.Parameters.G.ToSystemBigInteger();
-			PublicKey.P = pub.Parameters.P.ToSystemBigInteger();
-			PublicKey.Q = pub.Parameters.Q.ToSystemBigInteger();
+            PublicKey.G = pub.Parameters.G.ToSystemBigInteger();
+            PublicKey.P = pub.Parameters.P.ToSystemBigInteger();
+            PublicKey.Q = pub.Parameters.Q.ToSystemBigInteger();
             PublicKey.Size = size;
         }
 
@@ -109,15 +107,15 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public HashingStream GetSigningStream()
         {
-			var digest =PublicKey.GetDigest();
-			var signer = new DsaDigestSigner(new DsaSigner(), digest);
+            var digest = PublicKey.GetDigest();
+            var signer = new DsaDigestSigner(new DsaSigner(), digest);
             var param = new DsaPrivateKeyParameters(X.ToBouncyBigInteger(),
                                                     new DsaParameters(PublicKey.P.ToBouncyBigInteger(),
                                                                       PublicKey.Q.ToBouncyBigInteger(),
                                                                       PublicKey.G.ToBouncyBigInteger()));
-            signer.Init(forSigning:true, parameters:new ParametersWithRandom(param,Secure.Random));
+            signer.Init(forSigning: true, parameters: new ParametersWithRandom(param, Secure.Random));
 
-			return new DigestStream(signer);
+            return new DigestStream(signer);
         }
 
         /// <summary>
@@ -128,6 +126,5 @@ namespace Keyczar.Crypto
         {
             return PublicKey.GetVerifyingStream();
         }
-
     }
 }

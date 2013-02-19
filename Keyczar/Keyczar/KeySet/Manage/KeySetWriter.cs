@@ -19,7 +19,6 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Keyczar.Util;
-
 using Newtonsoft.Json;
 
 namespace Keyczar
@@ -27,11 +26,11 @@ namespace Keyczar
     /// <summary>
     /// Writes a keyset using the standard storage format
     /// </summary>
-    public class KeySetWriter:IKeySetWriter
+    public class KeySetWriter : IKeySetWriter
     {
         private readonly string _location;
         private readonly bool _overwrite;
-        private List<string> _filePaths = new List<string> ();
+        private List<string> _filePaths = new List<string>();
         private List<Exception> _exceptions = new List<Exception>();
         private bool success = true;
 
@@ -40,7 +39,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="location">The location.</param>
         /// <param name="overwrite">if set to <c>true</c> [overwrite].</param>
-        public KeySetWriter(string location, bool overwrite =false)
+        public KeySetWriter(string location, bool overwrite = false)
         {
             _location = location;
             _overwrite = overwrite;
@@ -57,48 +56,50 @@ namespace Keyczar
         /// </summary>
         /// <param name="keyData">The key data.</param>
         /// <param name="version">The version.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Catching to throw later"), 
-        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Catching to throw later"),
+         System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+             "CA2202:Do not dispose objects multiple times")]
         public void Write(byte[] keyData, int version)
         {
             CreateDir();
             var versionFile = Path.Combine(_location, version.ToString(CultureInfo.InvariantCulture));
-			var file = versionFile +".temp";
+            var file = versionFile + ".temp";
             if (!_overwrite && File.Exists(versionFile))
             {
                 success = false;
                 return;
-            } 
+            }
             _filePaths.Add(file);
             try
             {
-				using (var stream = new FileStream(file,FileMode.Create))
+                using (var stream = new FileStream(file, FileMode.Create))
                 using (var writer = new BinaryWriter(stream))
                 {
                     writer.Write(keyData);
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _exceptions.Add(ex);
                 success = false;
             }
-
         }
-
 
 
         /// <summary>
         /// Writes the specified metadata.
         /// </summary>
         /// <param name="metadata">The metadata.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Catching to throw later"),
-        System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Catching to throw later"),
+         System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+             "CA2202:Do not dispose objects multiple times")]
         public void Write(KeyMetadata metadata)
         {
             CreateDir();
-			var meta_file = Path.Combine(_location, "meta");
-			var file = meta_file +".temp";
+            var meta_file = Path.Combine(_location, "meta");
+            var file = meta_file + ".temp";
             if (!_overwrite && File.Exists(meta_file))
             {
                 success = false;
@@ -107,19 +108,17 @@ namespace Keyczar
             try
             {
                 _filePaths.Add(file);
-                using (var stream = new FileStream(file,FileMode.Create))
+                using (var stream = new FileStream(file, FileMode.Create))
                 using (var writer = new StreamWriter(stream))
                 {
                     writer.Write(metadata.ToJson());
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _exceptions.Add(ex);
                 success = false;
             }
-
-            
         }
 
         /// <summary>
@@ -133,13 +132,13 @@ namespace Keyczar
                 foreach (var path in _filePaths)
                 {
                     var newPath = Path.Combine(Path.GetDirectoryName(path),
-					                           Path.GetFileNameWithoutExtension(path));
+                                               Path.GetFileNameWithoutExtension(path));
                     File.Delete(newPath);
                     File.Move(path, newPath);
                 }
             }
 
-            if(!success)
+            if (!success)
             {
                 foreach (var path in _filePaths)
                 {
@@ -147,8 +146,8 @@ namespace Keyczar
                 }
             }
 
-            Exception newEx =null;
-            if(_exceptions.Any())
+            Exception newEx = null;
+            if (_exceptions.Any())
                 newEx = new AggregateException(_exceptions);
 
             _filePaths.Clear();
@@ -156,7 +155,7 @@ namespace Keyczar
 
             if (newEx != null)
                 throw newEx;
-            
+
             return success;
         }
     }

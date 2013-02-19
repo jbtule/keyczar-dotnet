@@ -25,7 +25,7 @@ namespace Keyczar.Util
     /// <summary>
     /// Reader that won't close the stream when disposed
     /// </summary>
-    public class NondestructiveBinaryReader: BinaryReader
+    public class NondestructiveBinaryReader : BinaryReader
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NondestructiveBinaryReader"/> class.
@@ -53,7 +53,7 @@ namespace Keyczar.Util
         /// <returns></returns>
         public int Peek()
         {
-            if (BaseStream == null  )
+            if (BaseStream == null)
             {
                 return -1;
             }

@@ -31,8 +31,6 @@ namespace Keyczar.Crypto
     public abstract class RsaPrivateSignKeyBase<TPublicKey> : Key, ISignerKey, IPrivateKey, IRsaPrivateKey
         where TPublicKey : RsaPublicSignKeyBase, IVerifierKey, IRsaPublicKey
     {
-
-
         /// <summary>
         /// Gets the public key.
         /// </summary>
@@ -45,42 +43,42 @@ namespace Keyczar.Crypto
         /// Gets or sets the private exponent.
         /// </summary>
         /// <value>The private exponent.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger PrivateExponent { get; set; }
 
         /// <summary>
         /// Gets or sets the prime P.
         /// </summary>
         /// <value>The prime P.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger PrimeP { get; set; }
 
         /// <summary>
         /// Gets or sets the prime Q.
         /// </summary>
         /// <value>The prime Q.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger PrimeQ { get; set; }
 
         /// <summary>
         /// Gets or sets the prime exponent P.
         /// </summary>
         /// <value>The prime exponent P.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger PrimeExponentP { get; set; }
 
         /// <summary>
         /// Gets or sets the prime exponent Q.
         /// </summary>
         /// <value>The prime exponent Q.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger PrimeExponentQ { get; set; }
 
         /// <summary>
         /// Gets or sets the CRT coefficient.
         /// </summary>
         /// <value>The CRT coefficient.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger CrtCoefficient { get; set; }
 
         /// <summary>
@@ -118,8 +116,8 @@ namespace Keyczar.Crypto
         {
             var rsaparam = new RsaKeyPairGenerator();
             rsaparam.Init(new KeyGenerationParameters(Secure.Random, size));
-            var pair =rsaparam.GenerateKeyPair();
-            var priv =(RsaPrivateCrtKeyParameters) pair.Private;
+            var pair = rsaparam.GenerateKeyPair();
+            var priv = (RsaPrivateCrtKeyParameters) pair.Private;
             PrivateExponent = priv.Exponent.ToSystemBigInteger();
             PrimeP = priv.P.ToSystemBigInteger();
             PrimeQ = priv.Q.ToSystemBigInteger();
@@ -139,17 +137,17 @@ namespace Keyczar.Crypto
         /// <param name="modulus">The modulus.</param>
         /// <returns></returns>
         protected abstract TPublicKey GeneratePubKey(int size, BigInteger publicExponent, BigInteger modulus);
-  
+
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            PublicKey = PublicKey.SafeDispose(); 
+            PublicKey = PublicKey.SafeDispose();
             PrivateExponent = default(BigInteger);
-            PrimeP  = default(BigInteger);
-            PrimeQ  = default(BigInteger);
+            PrimeP = default(BigInteger);
+            PrimeQ = default(BigInteger);
             PrimeExponentP = default(BigInteger);
             PrimeExponentQ = default(BigInteger);
             CrtCoefficient = default(BigInteger);
@@ -164,7 +162,6 @@ namespace Keyczar.Crypto
         {
             return PublicKey.GetVerifyingStream();
         }
-
 
 
         /// <summary>
@@ -185,7 +182,7 @@ namespace Keyczar.Crypto
                                               PrimeExponentQ.ToBouncyBigInteger(),
                                               CrtCoefficient.ToBouncyBigInteger()));
 
-            return new DigestStream(signer, Size / 8);
+            return new DigestStream(signer, Size/8);
         }
     }
 }

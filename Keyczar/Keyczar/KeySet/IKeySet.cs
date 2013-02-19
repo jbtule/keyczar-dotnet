@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Keyczar.Util;
+
 namespace Keyczar
 {
     /// <summary>
@@ -44,10 +45,8 @@ namespace Keyczar
     /// <summary>
     /// Defines methods for getting keys out of a key set
     /// </summary>
-    public interface IKeySet 
+    public interface IKeySet
     {
-
-      
         /// <summary>
         /// Gets the metadata.
         /// </summary>
@@ -61,6 +60,4 @@ namespace Keyczar
         /// <returns></returns>
         byte[] GetKeyData(int version);
     }
-
-
 }

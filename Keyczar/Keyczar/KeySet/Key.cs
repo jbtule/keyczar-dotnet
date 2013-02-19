@@ -26,27 +26,25 @@ using Org.BouncyCastle.Security;
 
 namespace Keyczar
 {
-   
     /// <summary>
     /// Base class for all crypt/sign Keys
     /// </summary>
     public abstract class Key : IDisposable, IKey
     {
-   
-
         /// <summary>
         /// Gets the key hash.
         /// </summary>
         /// <returns></returns>
         public abstract byte[] GetKeyHash();
 
-		/// <summary>
-		/// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
-		/// </summary>
-		/// <returns></returns>
-		public virtual IEnumerable<byte[]> GetFallbackKeyHash(){
-			return Enumerable.Empty<byte[]>();
-		}
+        /// <summary>
+        /// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
+        /// </summary>
+        /// <returns></returns>
+        public virtual IEnumerable<byte[]> GetFallbackKeyHash()
+        {
+            return Enumerable.Empty<byte[]>();
+        }
 
         private KeyType _type;
 
@@ -61,17 +59,18 @@ namespace Keyczar
             {
                 if (_type == null)
                 {
-                   _type = KeyType.ForType(GetType());
+                    _type = KeyType.ForType(GetType());
                 }
                 return _type;
-			}set{}
+            }
+            set { }
         }
 
-		/// <summary>
-		/// Gets or sets the size.
-		/// </summary>
-		/// <value>The size.</value>
-		public int Size{get;set;}
+        /// <summary>
+        /// Gets or sets the size.
+        /// </summary>
+        /// <value>The size.</value>
+        public int Size { get; set; }
 
         /// <summary>
         /// Reads the specified type.
@@ -82,7 +81,7 @@ namespace Keyczar
         public static Key Read(KeyType type, byte[] keyData)
         {
             string json = Keyczar.RawStringEncoding.GetString(keyData);
-            var key = (Key)JsonConvert.DeserializeObject(json, type.RepresentedType);
+            var key = (Key) JsonConvert.DeserializeObject(json, type.RepresentedType);
             return key;
         }
 
@@ -93,7 +92,7 @@ namespace Keyczar
         /// <param name="size">The size.</param>
         /// <returns></returns>
         /// <exception cref="InvalidKeyTypeException"></exception>
-        public static Key Generate(KeyType type, int size=0)
+        public static Key Generate(KeyType type, int size = 0)
         {
             if (size == 0)
             {
@@ -103,9 +102,9 @@ namespace Keyczar
             {
                 throw new InvalidKeyTypeException(string.Format("Invalid Size: {0}!", size));
             }
-            var key =(Key)Activator.CreateInstance(type.RepresentedType);
+            var key = (Key) Activator.CreateInstance(type.RepresentedType);
             key.GenerateKey(size);
-			key.Size = size;
+            key.Size = size;
             return key;
         }
 

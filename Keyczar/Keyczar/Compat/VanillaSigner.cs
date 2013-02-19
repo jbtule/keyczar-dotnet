@@ -28,7 +28,6 @@ namespace Keyczar.Compat
     /// Plain old signing with plain old signature
     /// </summary>
     public class VanillaSigner:Signer
-
     {
 
         /// <summary>

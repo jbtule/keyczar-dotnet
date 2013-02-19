@@ -35,62 +35,69 @@ using NUnit.Framework;
 namespace KeyczarTest
 {
     [TestFixture]
-    public class PkcsImportTest:AssertionHelper
+    public class PkcsImportTest : AssertionHelper
     {
-          private static readonly String TEST_DATA = Path.Combine("remote-testdata","existing-data","dotnet","certificates");
-          private static readonly String input = "This is some test data";
+        private static readonly String TEST_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet",
+                                                                "certificates");
 
-          private Stream HelperOpenPkcsStream(String keyType, String fileFormat, String keyPurpose)
-          {
-              return File.OpenRead(Util.TestDataPath(TEST_DATA, keyType + "-" + keyPurpose + "-pkcs8." + fileFormat));
-          }
+        private static readonly String input = "This is some test data";
+
+        private Stream HelperOpenPkcsStream(String keyType, String fileFormat, String keyPurpose)
+        {
+            return File.OpenRead(Util.TestDataPath(TEST_DATA, keyType + "-" + keyPurpose + "-pkcs8." + fileFormat));
+        }
 
 
-         [Test]
-          public void TestCryptImport(
-             [Values("rsa")] string keyType, 
-             [Values("pem", "der")] string format)
-          {
-              using (var keystream = HelperOpenPkcsStream(keyType, format, "crypt"))
-              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.DecryptAndEncrypt, keystream, ()=>"pass"/* hard coding for test only!!!!*/))
-              using (var crypter = new Crypter(keyset))
-              using (var encrypter = new Encrypter(Util.TestDataPath(TEST_DATA, "rsa-crypt")))
-              {
-
-                  var ciphertext = encrypter.Encrypt(input);
-                  var plaintext = crypter.Decrypt(ciphertext);
-                  Expect(plaintext, Is.EqualTo(input));
-              }
-          }
         [Test]
-         public void TestCryptImportBadKey(
-           [Values("dsa")] string keyType,
-           [Values("pem", "der")] string format)
-         {
-             using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
-             {
-                 Expect(()=> ImportedKeySet.Import.PkcsKey(KeyPurpose.DecryptAndEncrypt, keystream, () => "pass"/* hard coding for test only!!!!*/),Throws.InstanceOf<InvalidKeySetException>());
-             }
-            
-         }
-     
-         [Test]
-          public void TestSignImport(
-             [Values("rsa", "dsa")] string keyType,
-             [Values("pem", "der")] string format)
-          {
-              using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
-              using (var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.SignAndVerify, keystream, () => "pass"/* hard coding for test only!!!!*/))
-              using (var signer = new Signer(keyset))
-          
-              {
-                  var signature = signer.Sign(input);
-                  using (var verifier = new Verifier(Util.TestDataPath(TEST_DATA, keyType + "-sign-pub")))
-                  {
-                      Expect(verifier.Verify(input, signature), Is.True);
-                  }
-              }
-          }
+        public void TestCryptImport(
+            [Values("rsa")] string keyType,
+            [Values("pem", "der")] string format)
+        {
+            using (var keystream = HelperOpenPkcsStream(keyType, format, "crypt"))
+            using (
+                var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.DecryptAndEncrypt, keystream, () => "pass"
+                    /* hard coding for test only!!!!*/))
+            using (var crypter = new Crypter(keyset))
+            using (var encrypter = new Encrypter(Util.TestDataPath(TEST_DATA, "rsa-crypt")))
+            {
+                var ciphertext = encrypter.Encrypt(input);
+                var plaintext = crypter.Decrypt(ciphertext);
+                Expect(plaintext, Is.EqualTo(input));
+            }
+        }
 
+        [Test]
+        public void TestCryptImportBadKey(
+            [Values("dsa")] string keyType,
+            [Values("pem", "der")] string format)
+        {
+            using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
+            {
+                Expect(
+                    () =>
+                    ImportedKeySet.Import.PkcsKey(KeyPurpose.DecryptAndEncrypt, keystream, () => "pass"
+                        /* hard coding for test only!!!!*/), Throws.InstanceOf<InvalidKeySetException>());
+            }
+        }
+
+        [Test]
+        public void TestSignImport(
+            [Values("rsa", "dsa")] string keyType,
+            [Values("pem", "der")] string format)
+        {
+            using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
+            using (
+                var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.SignAndVerify, keystream, () => "pass"
+                    /* hard coding for test only!!!!*/))
+            using (var signer = new Signer(keyset))
+
+            {
+                var signature = signer.Sign(input);
+                using (var verifier = new Verifier(Util.TestDataPath(TEST_DATA, keyType + "-sign-pub")))
+                {
+                    Expect(verifier.Verify(input, signature), Is.True);
+                }
+            }
+        }
     }
 }

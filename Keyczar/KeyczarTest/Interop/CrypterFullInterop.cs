@@ -19,14 +19,13 @@ namespace KeyczarTest.Interop
         [Test]
         public void DecryptSession()
         {
-
             var path = TestData(Location);
 
-            var material = (WebBase64)File.ReadAllLines(Path.Combine(path, "2.session.material")).First();
-            var ciphertext = (WebBase64)File.ReadAllLines(Path.Combine(path, "2.session.ciphertext")).First();
+            var material = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.session.material")).First();
+            var ciphertext = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.session.ciphertext")).First();
 
             using (var crypter = new Crypter(path))
-            using (var sessionCrypter = new SessionCrypter(crypter,material))
+            using (var sessionCrypter = new SessionCrypter(crypter, material))
             {
                 var decrypted = sessionCrypter.Decrypt(ciphertext);
                 Expect(decrypted, Is.EqualTo(Input));
@@ -36,12 +35,11 @@ namespace KeyczarTest.Interop
         [Test]
         public void DecryptSignedSession()
         {
-
             var path = TestData(Location);
             var signpath = TestData(SignLocation);
 
-            var material = (WebBase64)File.ReadAllLines(Path.Combine(path, "2.signedsession.material")).First();
-            var ciphertext = (WebBase64)File.ReadAllLines(Path.Combine(path, "2.signedsession.ciphertext")).First();
+            var material = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.signedsession.material")).First();
+            var ciphertext = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.signedsession.ciphertext")).First();
 
             using (var crypter = new Crypter(path))
             using (var verifier = new AttachedVerifier(signpath))

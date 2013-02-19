@@ -35,8 +35,7 @@ namespace Keyczar.Crypto
         /// Gets the fallback key hash.
         /// </summary>
         /// <returns></returns>
-		IEnumerable<byte[]> GetFallbackKeyHash();
-
+        IEnumerable<byte[]> GetFallbackKeyHash();
     }
 
     /// <summary>
@@ -44,7 +43,6 @@ namespace Keyczar.Crypto
     /// </summary>
     internal interface IPbeKey
     {
-     
     }
 
     /// <summary>
@@ -120,5 +118,4 @@ namespace Keyczar.Crypto
         /// <value>The public key.</value>
         Key PublicKey { get; }
     }
-
 }

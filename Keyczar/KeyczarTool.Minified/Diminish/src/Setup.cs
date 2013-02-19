@@ -1,5 +1,6 @@
 //Public Domain
 //AssemblyResolve Concept from http://blogs.msdn.com/b/microsoft_press/archive/2010/02/03/jeffrey-richter-excerpt-2-from-clr-via-c-third-edition.aspx
+
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -8,7 +9,7 @@ using KeyczarTool.Minified.Diminish.SevenZip;
 
 namespace KeyczarTool.Minified.Diminish
 {
-        public static class Setup
+    public static class Setup
     {
         private static readonly IDictionary<string, Assembly> _loaded = new Dictionary<string, Assembly>();
 

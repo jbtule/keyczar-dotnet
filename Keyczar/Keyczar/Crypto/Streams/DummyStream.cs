@@ -14,7 +14,6 @@
  */
 
 
-
 using Keyczar.Util;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
@@ -32,14 +31,14 @@ namespace Keyczar.Crypto.Streams
         public DummyStream() : base(new HMac(new Sha1Digest()))
         {
         }
+
         /// <summary>
         /// Returns Blank Hash Value because this is a dummy operation
         /// </summary>
         /// <value>The blank shash value.</value>
         public override byte[] HashValue
         {
-            get { return new byte[]{}; }
+            get { return new byte[] {}; }
         }
-      
     }
 }

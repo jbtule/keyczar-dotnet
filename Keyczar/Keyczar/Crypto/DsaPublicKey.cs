@@ -28,38 +28,37 @@ namespace Keyczar.Crypto
     /// <summary>
     /// The Dsa Public Key
     /// </summary>
-    public class DsaPublicKey : Key,IVerifierKey
+    public class DsaPublicKey : Key, IVerifierKey
     {
         /// <summary>
         /// Gets or sets the P.
         /// </summary>
         /// <value>The P.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger P { get; set; }
 
         /// <summary>
         /// Gets or sets the Q.
         /// </summary>
         /// <value>The Q.</value>
-		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
-		public BigInteger Q { get; set; }
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
+        public BigInteger Q { get; set; }
 
         /// <summary>
         /// Gets or sets the G.
         /// </summary>
         /// <value>The G.</value>
-		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
-		public BigInteger G { get; set; }
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
+        public BigInteger G { get; set; }
 
         /// <summary>
         /// Gets or sets the Y.
         /// </summary>
         /// <value>The Y.</value>
-		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
-		public BigInteger Y { get; set; }
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
+        public BigInteger Y { get; set; }
 
 
-     
         /// <summary>
         /// Gets the key hash.
         /// </summary>
@@ -67,9 +66,9 @@ namespace Keyczar.Crypto
         public override byte[] GetKeyHash()
         {
             var qMag = Utility.StripLeadingZeros(Utility.GetBytes(Q));
-			var pMag = Utility.StripLeadingZeros(Utility.GetBytes(P));
-			var gMag = Utility.StripLeadingZeros(Utility.GetBytes(G));
-			var yMag = Utility.StripLeadingZeros(Utility.GetBytes(Y));
+            var pMag = Utility.StripLeadingZeros(Utility.GetBytes(P));
+            var gMag = Utility.StripLeadingZeros(Utility.GetBytes(G));
+            var yMag = Utility.StripLeadingZeros(Utility.GetBytes(Y));
             var hash = Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, pMag, qMag, gMag, yMag);
             qMag.Clear();
             pMag.Clear();
@@ -93,11 +92,10 @@ namespace Keyczar.Crypto
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-
-            Q = default(BigInteger); 
-			P = default(BigInteger);
-			Y = default(BigInteger); 
-			G = default(BigInteger); 
+            Q = default(BigInteger);
+            P = default(BigInteger);
+            Y = default(BigInteger);
+            G = default(BigInteger);
             Size = 0;
         }
 
@@ -108,18 +106,19 @@ namespace Keyczar.Crypto
         internal IDigest GetDigest()
         {
             var qSize = Q.ToBouncyBigInteger().BitLength;
-            if(qSize <= 160)
-                return new Sha1Digest();  //80 Bits of security
+            if (qSize <= 160)
+                return new Sha1Digest(); //80 Bits of security
             if (qSize <= 224)
-                return new Sha224Digest();  //112 Bits of security
+                return new Sha224Digest(); //112 Bits of security
             if (qSize <= 256)
-                return new Sha256Digest();  //128 Bits of security
+                return new Sha256Digest(); //128 Bits of security
 
             //No keys should fall here or below with DSA2
-            if (qSize <= 384) 
-                return new Sha384Digest();  //192 Bits of security
-            return new Sha512Digest();  //256 Bits of security
+            if (qSize <= 384)
+                return new Sha384Digest(); //192 Bits of security
+            return new Sha512Digest(); //256 Bits of security
         }
+
         /// <summary>
         /// Gets the verifying stream.
         /// </summary>
@@ -127,10 +126,13 @@ namespace Keyczar.Crypto
         public VerifyingStream GetVerifyingStream()
         {
             var tSigner = new DsaSigner();
-            tSigner.Init(forSigning: false, parameters: new DsaPublicKeyParameters(Y.ToBouncyBigInteger(), 
-                new DsaParameters(P.ToBouncyBigInteger(),Q.ToBouncyBigInteger(), G.ToBouncyBigInteger() ) ));
-			var digest = GetDigest();
-			return new DigestStream(new DsaDigestSigner(tSigner, digest));
+            tSigner.Init(forSigning: false, parameters: new DsaPublicKeyParameters(Y.ToBouncyBigInteger(),
+                                                                                   new DsaParameters(
+                                                                                       P.ToBouncyBigInteger(),
+                                                                                       Q.ToBouncyBigInteger(),
+                                                                                       G.ToBouncyBigInteger())));
+            var digest = GetDigest();
+            return new DigestStream(new DsaDigestSigner(tSigner, digest));
         }
     }
 }

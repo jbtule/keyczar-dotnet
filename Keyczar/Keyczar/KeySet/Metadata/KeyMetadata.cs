@@ -23,14 +23,11 @@ using Newtonsoft.Json;
 
 namespace Keyczar
 {
-
     /// <summary>
     /// Metadata for a keyset
     /// </summary>
-    
     public class KeyMetadata
     {
-
         /// <summary>
         /// Reads the specified meta data.
         /// </summary>
@@ -47,7 +44,7 @@ namespace Keyczar
         public KeyMetadata()
         {
             Name = String.Empty;
-            Versions= new List<KeyVersion>();
+            Versions = new List<KeyVersion>();
         }
 
         /// <summary>
@@ -69,6 +66,7 @@ namespace Keyczar
         /// </summary>
         /// <value>The name.</value>
         public string Name { get; set; }
+
         /// <summary>
         /// Gets or sets the purpose.
         /// </summary>
@@ -93,7 +91,5 @@ namespace Keyczar
         /// </summary>
         /// <value>The versions.</value>
         public IList<KeyVersion> Versions { get; internal set; }
-
-        
     }
 }

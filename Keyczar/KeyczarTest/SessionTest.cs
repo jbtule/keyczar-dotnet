@@ -27,24 +27,23 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class SessionTest:AssertionHelper
+    public class SessionTest : AssertionHelper
     {
+        private readonly String TEST_DATA;
 
-          private readonly String TEST_DATA;
+        public SessionTest(string testPath)
+        {
+            testPath = Util.ReplaceDirPrefix(testPath);
 
-          public SessionTest(string testPath)
-          {
-			testPath =Util.ReplaceDirPrefix(testPath);
+            TEST_DATA = testPath;
+        }
 
-              TEST_DATA = testPath;
-          }
+        private static String input = "This is some test data";
 
-  private static String input = "This is some test data";
-
-  // Bigger than a public key block
-  private byte[] bigInput = new byte[10000];
-  private Encrypter publicKeyEncrypter;
-  private Crypter privateKeyDecrypter;
+        // Bigger than a public key block
+        private byte[] bigInput = new byte[10000];
+        private Encrypter publicKeyEncrypter;
+        private Crypter privateKeyDecrypter;
 
         [SetUp]
         public void Setup()
@@ -53,14 +52,16 @@ namespace KeyczarTest
             privateKeyDecrypter = new Crypter(Util.TestDataPath(TEST_DATA, "rsa"));
         }
 
-        private SessionCrypter HelperSessionCrypter(Encrypter encrypter,string unoffical)
+        private SessionCrypter HelperSessionCrypter(Encrypter encrypter, string unoffical)
         {
             if (String.IsNullOrWhiteSpace(unoffical))
             {
                 return new SessionCrypter(encrypter);
-            }else
+            }
+            else
             {
-                return new SessionCrypter(encrypter, symmetricKeyType: UnofficialKeyType.AesAead, keyPacker: new BsonSessionKeyPacker());
+                return new SessionCrypter(encrypter, symmetricKeyType: UnofficialKeyType.AesAead,
+                                          keyPacker: new BsonSessionKeyPacker());
             }
         }
 
@@ -78,38 +79,39 @@ namespace KeyczarTest
 
         [TestCase("")]
         [TestCase("bson", Category = "Unofficial")]
-       public  void TestCrypterDecryptsOwnCiphertext(string unoffical){
-           using (var sessionCrypter = HelperSessionCrypter(publicKeyEncrypter,unoffical))
-           {
-               var ciphertext = sessionCrypter.Encrypt(input);
+        public void TestCrypterDecryptsOwnCiphertext(string unoffical)
+        {
+            using (var sessionCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
+            {
+                var ciphertext = sessionCrypter.Encrypt(input);
 
 
-               var plaintext = sessionCrypter.Decrypt(ciphertext);
-               Expect(plaintext, Is.EqualTo(input));
+                var plaintext = sessionCrypter.Decrypt(ciphertext);
+                Expect(plaintext, Is.EqualTo(input));
 
-               // Try encrypting a bigger input under the same session key
-               byte[] bigCiphertext = sessionCrypter.Encrypt(bigInput);
-               byte[] bigPlaintext = sessionCrypter.Decrypt(bigCiphertext);
-               Expect(bigPlaintext, Is.EqualTo(bigInput));
-           }
+                // Try encrypting a bigger input under the same session key
+                byte[] bigCiphertext = sessionCrypter.Encrypt(bigInput);
+                byte[] bigPlaintext = sessionCrypter.Decrypt(bigCiphertext);
+                Expect(bigPlaintext, Is.EqualTo(bigInput));
+            }
 
 
             //If you close the session and start again, you'd get a different crypter key
             WebBase64 ciphertext2;
-           using (var sessionCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
-           {
-              ciphertext2 = sessionCrypter.Encrypt(input);
-           }
+            using (var sessionCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
+            {
+                ciphertext2 = sessionCrypter.Encrypt(input);
+            }
 
             using (var sessionCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
             {
-                Expect(()=> sessionCrypter.Decrypt(ciphertext2),Throws.InstanceOf<InvalidCryptoDataException>());
+                Expect(() => sessionCrypter.Decrypt(ciphertext2), Throws.InstanceOf<InvalidCryptoDataException>());
             }
-       }
+        }
 
         [TestCase("")]
         [TestCase("bson", Category = "Unofficial")]
-         public void TestCrypterPair(string unoffical)
+        public void TestCrypterPair(string unoffical)
         {
             using (var localCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
             {
@@ -118,9 +120,8 @@ namespace KeyczarTest
 
                 using (var remoteCrypter = HelperSessionCrypter(privateKeyDecrypter, sessionMaterial, unoffical))
                 {
-
                     var decrypted = remoteCrypter.Decrypt(encrypted);
-                    Expect(decrypted,Is.EqualTo(input));
+                    Expect(decrypted, Is.EqualTo(input));
 
                     var encryptedB = remoteCrypter.Encrypt(bigInput);
                     var decryptedB = localCrypter.Decrypt(encryptedB);
@@ -135,15 +136,15 @@ namespace KeyczarTest
         {
             using (var localCrypter = HelperSessionCrypter(publicKeyEncrypter, unoffical))
             using (var localCrypter2 = HelperSessionCrypter(publicKeyEncrypter, unoffical))
-              {
-                  var encrypted = localCrypter.Encrypt(input);
-                  var sessionMaterial = localCrypter2.SessionMaterial;
+            {
+                var encrypted = localCrypter.Encrypt(input);
+                var sessionMaterial = localCrypter2.SessionMaterial;
 
-                  using (var remoteCrypter = HelperSessionCrypter(privateKeyDecrypter, sessionMaterial, unoffical))
-                  {
-                      Expect(() => remoteCrypter.Decrypt(encrypted), Throws.TypeOf<InvalidCryptoDataException>());
-                  }
-              }
-          }
+                using (var remoteCrypter = HelperSessionCrypter(privateKeyDecrypter, sessionMaterial, unoffical))
+                {
+                    Expect(() => remoteCrypter.Decrypt(encrypted), Throws.TypeOf<InvalidCryptoDataException>());
+                }
+            }
+        }
     }
 }

@@ -21,9 +21,10 @@ using Keyczar.Unofficial;
 using ManyConsole;
 using NDesk.Options;
 using Keyczar;
+
 namespace KeyczarTool
 {
-    class Create : ConsoleCommand
+    internal class Create : ConsoleCommand
 
     {
         private string _location;
@@ -32,7 +33,6 @@ namespace KeyczarTool
         private bool _asymm;
         private string _asymmAlg;
         private bool _unofficial;
-        private string _unoffAlg;
 
         public Create()
         {
@@ -40,17 +40,18 @@ namespace KeyczarTool
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
             this.HasRequiredOption("o|purpose=", Localized.Purpose, v => { _pupose = v; });
             this.HasOption("n|name=", Localized.Name, v => { _name = v; });
-            this.HasOption("a|asymmetric:", Localized.Asymmetric, v => { _asymm = true;
-                                                                                           _asymmAlg = v;
-            });
+            this.HasOption("a|asymmetric:", Localized.Asymmetric, v =>
+                                                                      {
+                                                                          _asymm = true;
+                                                                          _asymmAlg = v;
+                                                                      });
             this.HasOption("u|unofficial:", Localized.UnofficialCreate, v =>
-                                                                                      {
-                                                                                          _unofficial = true;
-                                                                                           _unoffAlg = v;
-                                                                                      });
+                                                                            {
+                                                                                _unofficial = true;
+                                                                            });
             this.SkipsCommandSummaryBeforeRunning();
         }
-        
+
         public override int Run(string[] remainingArguments)
         {
             KeyPurpose purpose = _pupose == "sign" ? KeyPurpose.SignAndVerify : KeyPurpose.DecryptAndEncrypt;
@@ -58,15 +59,14 @@ namespace KeyczarTool
             KeyType type = PickKeyType(purpose);
 
 
-            var meta =new KeyMetadata()
-                {
-                    Name = _name,
-                    Purpose = purpose,
-                    KeyType = type,
-                };
+            var meta = new KeyMetadata()
+                           {
+                               Name = _name,
+                               Purpose = purpose,
+                               KeyType = type,
+                           };
             using (var keySet = new MutableKeySet(meta))
             {
-
                 if (keySet.Save(new KeySetWriter(_location)))
                 {
                     Console.WriteLine(Localized.MsgCreatedKeySet);
@@ -92,8 +92,8 @@ namespace KeyczarTool
                     if (_unofficial)
                     {
                         type = UnofficialKeyType.RSAPrivSign;
-
-                    } else if (_asymmAlg == "rsa")
+                    }
+                    else if (_asymmAlg == "rsa")
                     {
                         type = KeyType.RsaPriv;
                     }
@@ -101,12 +101,7 @@ namespace KeyczarTool
                     {
                         type = KeyType.DsaPriv;
                     }
-
-                 
                 }
-
-
-               
             }
             else if (purpose == KeyPurpose.DecryptAndEncrypt)
             {

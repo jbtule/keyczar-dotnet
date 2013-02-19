@@ -23,12 +23,11 @@ using Org.BouncyCastle.Crypto.Signers;
 using System;
 
 namespace Keyczar.Unofficial
-{  
-    
+{
     /// <summary>
     /// Rsa Public Key For Signing with Update Hash Algorithms
     /// </summary>
-    public class RsaPublicSignKey:RsaPublicSignKeyBase
+    public class RsaPublicSignKey : RsaPublicSignKeyBase
     {
         /// <summary>
         /// The sha1 digest
@@ -82,7 +81,7 @@ namespace Keyczar.Unofficial
         /// The digest.
         /// </value>
         public string Digest { get; set; }
-        
+
 
         internal override ISigner GetSigner()
         {
@@ -101,7 +100,7 @@ namespace Keyczar.Unofficial
             }
             else if (Digest == Sha512Digest)
             {
-                 digest = new Sha512Digest();
+                digest = new Sha512Digest();
             }
             else if (Digest == Sha1Digest)
             {

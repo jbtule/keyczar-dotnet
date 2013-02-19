@@ -27,7 +27,6 @@ namespace Keyczar.Unofficial
     /// </summary>
     public class RsaPrivateSignKey : RsaPrivateSignKeyBase<RsaPublicSignKey>
     {
-
         /// <summary>
         /// Gets or sets the digest.
         /// </summary>
@@ -35,7 +34,8 @@ namespace Keyczar.Unofficial
         /// The digest.
         /// </value>
         [JsonIgnore]
-        public string Digest { 
+        public string Digest
+        {
             get { return PublicKey.Digest; }
             set { PublicKey.Digest = value; }
         }
@@ -49,7 +49,6 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         protected override RsaPublicSignKey GeneratePubKey(int size, BigInteger publicExponent, BigInteger modulus)
         {
-
             return new RsaPublicSignKey
                        {
                            Size = size,
@@ -60,7 +59,6 @@ namespace Keyczar.Unofficial
         }
 
 
-
         /// <summary>
         /// Picks the digests based on key size and relative strengths as described in NIST SP800-57.
         /// </summary>
@@ -68,19 +66,18 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         protected string DigestForSize(int size)
         {
-
             //Based on matching up digest strength equal or above key strength from
             //http://csrc.nist.gov/publications/nistpubs/800-57/sp800-57_part1_rev3_general.pdf
 
-                if (size <= 1024)
-                    return RsaPublicSignKey.Sha1Digest; //80 Bits of security
-                if (size <= 2048)
-                    return RsaPublicSignKey.Sha224Digest; //112 Bits of security
-                if (size <= 3072)
-                    return RsaPublicSignKey.Sha256Digest; //128 Bits of security
-                if (size <= 7680)
-                    return RsaPublicSignKey.Sha384Digest; //192 Bits of security
-                return RsaPublicSignKey.Sha512Digest; //256 Bits of security
+            if (size <= 1024)
+                return RsaPublicSignKey.Sha1Digest; //80 Bits of security
+            if (size <= 2048)
+                return RsaPublicSignKey.Sha224Digest; //112 Bits of security
+            if (size <= 3072)
+                return RsaPublicSignKey.Sha256Digest; //128 Bits of security
+            if (size <= 7680)
+                return RsaPublicSignKey.Sha384Digest; //192 Bits of security
+            return RsaPublicSignKey.Sha512Digest; //256 Bits of security
         }
     }
 }

@@ -35,20 +35,17 @@ namespace Keyczar.Unofficial
     /// Uses Authenticated Encryption with Associated Data Mode with AES.
     /// Specficially supports GCM mode.
     /// </summary>
-    public class AesAeadKey:Key,ICrypterKey
+    public class AesAeadKey : Key, ICrypterKey
     {
-     
         /// <summary>
         /// Uses 128bit block size
         /// </summary>
-        [JsonIgnore]
-        public readonly int BlockLength = 16;
+        [JsonIgnore] public readonly int BlockLength = 16;
 
         /// <summary>
         /// Uses 128bit MAC
         /// </summary>
-        [JsonIgnore]
-        public readonly int TagLength = 16;
+        [JsonIgnore] public readonly int TagLength = 16;
 
         /// <summary>
         /// Gets or sets the length of the IV.
@@ -56,11 +53,9 @@ namespace Keyczar.Unofficial
         /// <value>
         /// The length of the IV.
         /// </value>
-        
-       
-        [DefaultValue(16)] 
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore, 
-           DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
+        [DefaultValue(16)]
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore,
+            DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public int IVLength { get; set; }
 
         /// <summary>
@@ -80,7 +75,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         public AesAeadKey()
         {
-            Mode = GcmMode;//Default Mode
+            Mode = GcmMode; //Default Mode
             IVLength = 12;
         }
 
@@ -88,8 +83,9 @@ namespace Keyczar.Unofficial
         /// Gets or sets the aes key bytes.
         /// </summary>
         /// <value>The aes key bytes.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-        [JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays")]
+        [JsonConverter(typeof (WebSafeBase64ByteConverter))]
         [JsonProperty("AesKeyString")]
         public byte[] AesKeyBytes { get; set; }
 
@@ -99,7 +95,7 @@ namespace Keyczar.Unofficial
         /// <param name="size">The size.</param>
         protected override void GenerateKey(int size)
         {
-            AesKeyBytes = new byte[size / 8];
+            AesKeyBytes = new byte[size/8];
             Secure.Random.NextBytes(AesKeyBytes);
         }
 
@@ -109,7 +105,8 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Encoding.UTF8.GetBytes(Mode), Utility.GetBytes(IVLength), AesKeyBytes);
+            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
+                                   Encoding.UTF8.GetBytes(Mode), Utility.GetBytes(IVLength), AesKeyBytes);
         }
 
         /// <summary>
@@ -122,7 +119,8 @@ namespace Keyczar.Unofficial
             if (IVLength == 16 && Mode == GcmMode)
             {
                 //Pre IVLength property existing key hash
-                list.Add(Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Encoding.UTF8.GetBytes(Mode), AesKeyBytes));
+                list.Add(Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
+                                         Encoding.UTF8.GetBytes(Mode), AesKeyBytes));
             }
             return list;
         }
@@ -132,12 +130,12 @@ namespace Keyczar.Unofficial
             if (Mode == GcmMode)
             {
                 return () => _cipher;
-
             }
             throw new InvalidKeyTypeException("Unsupported AES AEAD Mode: " + Mode);
         }
 
         private KeyParameter _keyParm;
+
         private KeyParameter GetKeyParameters()
         {
             if (_keyParm == null)
@@ -148,7 +146,6 @@ namespace Keyczar.Unofficial
             return _keyParm;
         }
 
-       
 
         private readonly GcmBlockCipher _cipher = new GcmBlockCipher(new AesFastEngine(), new Tables8kGcmMultiplier());
 
@@ -159,18 +156,17 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public FinishingStream GetEncryptingStream(Stream output)
         {
-
-
             var randomNonce = new byte[IVLength];
             Secure.Random.NextBytes(randomNonce);
             return new SymmetricAeadStream(
-                         GetMode(),
-                         output,
-                         randomNonce,
-                         TagLength,
-                         (nonce, cipher, authdata, encrypt) => cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength * 8, nonce, authdata)),
-                         encrypt: true
-                         );
+                GetMode(),
+                output,
+                randomNonce,
+                TagLength,
+                (nonce, cipher, authdata, encrypt) =>
+                cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength*8, nonce, authdata)),
+                encrypt: true
+                );
         }
 
         /// <summary>
@@ -179,15 +175,16 @@ namespace Keyczar.Unofficial
         /// <returns>null as authentication is built in to the encryption</returns>
         public HashingStream GetAuthSigningStream()
         {
-            return null;//One stop encrypting and signing;
+            return null; //One stop encrypting and signing;
         }
+
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns>null as authentication is built in to the decryption</returns>
         public VerifyingStream GetAuthVerifyingStream()
         {
-            return null;//One stop verifying and decrypting
+            return null; //One stop verifying and decrypting
         }
 
         /// <summary>
@@ -197,14 +194,14 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public FinishingStream GetDecryptingStream(Stream output)
         {
-           
             return new SymmetricAeadStream(
                 GetMode(),
                 output,
-                new byte[IVLength], 
+                new byte[IVLength],
                 TagLength,
-                (nonce, cipher, additionalData, encrypt) => cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength * 8, nonce, additionalData)),
-                encrypt:false
+                (nonce, cipher, additionalData, encrypt) =>
+                cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength*8, nonce, additionalData)),
+                encrypt: false
                 );
         }
 
@@ -219,6 +216,5 @@ namespace Keyczar.Unofficial
             _cipher.Reset();
             AesKeyBytes = AesKeyBytes.Clear();
         }
-      
     }
 }

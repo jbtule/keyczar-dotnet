@@ -21,7 +21,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar;
-
 using NUnit.Framework;
 
 namespace KeyczarTest
@@ -30,7 +29,7 @@ namespace KeyczarTest
     public class FallbackTest : AssertionHelper
     {
         private static String input = "This is some test data";
-        private readonly String TEST_DATA = Path.Combine( "remote-testdata","special-case", "badhash");
+        private readonly String TEST_DATA = Path.Combine("remote-testdata", "special-case", "badhash");
 
         /// <summary>
         /// Tests the fall back hash for CPP implementation that stripped leading zeros of the key for hash.
@@ -42,12 +41,11 @@ namespace KeyczarTest
 
             using (var crypter = new Crypter(subPath))
             {
-                var primaryCipherText = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var primaryCipherText = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
 
 
                 var primaryDecrypted = crypter.Decrypt(primaryCipherText);
                 Expect(primaryDecrypted, Is.EqualTo(input));
-         
             }
         }
 
@@ -61,16 +59,14 @@ namespace KeyczarTest
 
             using (var crypter = new Crypter(subPath))
             {
-                var activeCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                var primaryCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
 
                 var activeDecrypted = crypter.Decrypt(activeCiphertext);
                 Expect(activeDecrypted, Is.EqualTo(input));
                 var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
                 Expect(primaryDecrypted, Is.EqualTo(input));
-
             }
         }
-
     }
 }

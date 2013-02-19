@@ -38,19 +38,17 @@ namespace KeyczarTest
 
             using (var crypter = new Crypter(subPath))
             {
-                var activeCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                var primaryCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
 
                 var activeDecrypted = crypter.Decrypt(activeCiphertext);
                 Expect(activeDecrypted, Is.EqualTo(input));
                 var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
                 Expect(primaryDecrypted, Is.EqualTo(input));
-
             }
         }
 
 
-     
         [TestCase("hmac")]
         [TestCase("dsa")]
         [TestCase("rsa-sign")]
@@ -60,14 +58,13 @@ namespace KeyczarTest
 
             using (var verifier = new Verifier(subPath))
             {
-                var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                var primarySignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
 
                 var activeVerify = verifier.Verify(input, activeSignature);
                 Expect(activeVerify, Is.True);
                 var primaryVerify = verifier.Verify(input, primarySignature);
                 Expect(primaryVerify, Is.True);
-
             }
         }
 
@@ -76,20 +73,20 @@ namespace KeyczarTest
         [TestCase("rsa-sign")]
         public void TwoKeysWithSameHashTimeoutVerifySucess(string dir)
         {
-            Func<DateTime> earlyCurrentTimeProvider = () => new DateTime(2012, 12, 21, 11, 11, 0, DateTimeKind.Utc).AddMinutes(-5);
+            Func<DateTime> earlyCurrentTimeProvider =
+                () => new DateTime(2012, 12, 21, 11, 11, 0, DateTimeKind.Utc).AddMinutes(-5);
 
             var subPath = Util.TestDataPath(TEST_DATA, dir);
 
             using (var verifier = new TimeoutVerifier(subPath, earlyCurrentTimeProvider))
             {
-                var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.timeout")).First();
-                var primarySignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "2.timeout")).First();
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.timeout")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.timeout")).First();
 
                 var activeVerify = verifier.Verify(input, activeSignature);
                 Expect(activeVerify, Is.True);
                 var primaryVerify = verifier.Verify(input, primarySignature);
                 Expect(primaryVerify, Is.True);
-
             }
         }
 
@@ -105,14 +102,13 @@ namespace KeyczarTest
 
             using (var verifier = new TimeoutVerifier(subPath, lateCurrentTimeProvider))
             {
-                var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.timeout")).First();
-                var primarySignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "2.timeout")).First();
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.timeout")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.timeout")).First();
 
                 var activeVerify = verifier.Verify(input, activeSignature);
                 Expect(activeVerify, Is.False);
                 var primaryVerify = verifier.Verify(input, primarySignature);
                 Expect(primaryVerify, Is.False);
-
             }
         }
 
@@ -125,8 +121,8 @@ namespace KeyczarTest
 
             using (var verifier = new AttachedVerifier(subPath))
             {
-                var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.attached")).First();
-                var primarySignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "2.attached")).First();
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.attached")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.attached")).First();
 
                 string activeVerifiedMessage;
                 var activeVerify = verifier.TryGetVerifiedMessage(activeSignature, out activeVerifiedMessage);
@@ -136,7 +132,6 @@ namespace KeyczarTest
                 var primaryVerify = verifier.TryGetVerifiedMessage(primarySignature, out primaryVerifiedMessage);
                 Expect(primaryVerify, Is.True);
                 Expect(primaryVerifiedMessage, Is.EqualTo(input));
-
             }
         }
 
@@ -149,21 +144,20 @@ namespace KeyczarTest
 
             using (var verifier = new AttachedVerifier(subPath))
             {
-                var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.secret.attached")).First();
-                var primarySignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath,"2.secret.attached")).First();
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.secret.attached")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.secret.attached")).First();
 
                 string activeVerifiedMessage;
-                var activeVerify = verifier.TryGetVerifiedMessage(activeSignature, out activeVerifiedMessage, Encoding.UTF8.GetBytes("secret"));
+                var activeVerify = verifier.TryGetVerifiedMessage(activeSignature, out activeVerifiedMessage,
+                                                                  Encoding.UTF8.GetBytes("secret"));
                 Expect(activeVerify, Is.True);
                 Expect(activeVerifiedMessage, Is.EqualTo(input));
                 string primaryVerifiedMessage;
-                var primaryVerify = verifier.TryGetVerifiedMessage(primarySignature, out primaryVerifiedMessage, Encoding.UTF8.GetBytes("secret"));
+                var primaryVerify = verifier.TryGetVerifiedMessage(primarySignature, out primaryVerifiedMessage,
+                                                                   Encoding.UTF8.GetBytes("secret"));
                 Expect(primaryVerify, Is.True);
                 Expect(primaryVerifiedMessage, Is.EqualTo(input));
-
             }
         }
-
-
     }
 }

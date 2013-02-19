@@ -29,7 +29,7 @@ namespace Keyczar.Unofficial
     /// <summary>
     /// Packs a key including type into a single bson binary array
     /// </summary>
-    public class BsonSessionKeyPacker:ISessionKeyPacker
+    public class BsonSessionKeyPacker : ISessionKeyPacker
     {
         /// <summary>
         /// Format for packing the key in bson
@@ -58,7 +58,6 @@ namespace Keyczar.Unofficial
             /// </summary>
             /// <value>The key.</value>
             public Key Key { get; set; }
-
         }
 
         private static KeyPack PackIt(Key key)
@@ -73,9 +72,7 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public byte[] Pack(Key key)
         {
-
             return Utility.ToBson(PackIt(key));
-          
         }
 
         /// <summary>
@@ -85,17 +82,25 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public Key Unpack(byte[] data)
         {
-            using (var input = new MemoryStream(data)) 
+            using (var input = new MemoryStream(data))
             {
                 var reader = new BsonReader(input);
                 var val = JToken.ReadFrom(reader);
-                var keyType = (KeyType)(string)val["type"];
+                var keyType = (KeyType) (string) val["type"];
                 var keyString = val["key"].ToString();
                 using (var stringReader = new StringReader(keyString))
                 {
-                    var jsonSerializer = JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
-                    return (Key) jsonSerializer.Deserialize(new WebSafeBase64ByteConverter.RawJsonReader(stringReader), keyType.RepresentedType);
-
+                    var jsonSerializer =
+                        JsonSerializer.Create(new JsonSerializerSettings
+                                                  {
+                                                      ContractResolver =
+                                                          new CamelCasePropertyNamesContractResolver
+                                                          ()
+                                                  });
+                    return
+                        (Key)
+                        jsonSerializer.Deserialize(new WebSafeBase64ByteConverter.RawJsonReader(stringReader),
+                                                   keyType.RepresentedType);
                 }
             }
         }

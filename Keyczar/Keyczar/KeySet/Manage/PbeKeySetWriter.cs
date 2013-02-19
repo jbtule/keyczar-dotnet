@@ -26,7 +26,6 @@ namespace Keyczar
     /// </summary>
     public class PbeKeySetWriter : IKeySetWriter, IDisposable
     {
-    
         private IKeySetWriter _writer;
         private readonly int _iterationCount;
         private CachedPrompt _password;
@@ -83,7 +82,7 @@ namespace Keyczar
         public void Dispose()
         {
             Dispose(true);
-                  GC.SuppressFinalize(this);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>

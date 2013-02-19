@@ -25,7 +25,7 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Parameters;
 using System.Numerics;
 using Org.BouncyCastle.Crypto.Signers;
-using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
+using BouncyBigInteger = Org.BouncyCastle.Math.BigInteger;
 
 namespace Keyczar.Crypto
 {
@@ -33,8 +33,7 @@ namespace Keyczar.Crypto
     /// The RSA Private Key
     /// </summary>
     public class RsaPrivateKey : RsaPrivateSignKeyBase<RsaPublicKey>, ICrypterKey
-    {   
-        
+    {
         /// <summary>
         /// Gets or sets the padding.
         /// </summary>
@@ -52,8 +51,9 @@ namespace Keyczar.Crypto
         /// <returns>null</returns>
         public HashingStream GetAuthSigningStream()
         {
-            return null;  //not signed
+            return null; //not signed
         }
+
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
@@ -82,15 +82,14 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         protected override RsaPublicKey GeneratePubKey(int size, BigInteger publicExponent, BigInteger modulus)
         {
-           return new RsaPublicKey
-            {
-                Size = size,
-                PublicExponent = publicExponent,
-                Modulus = modulus
-            };
+            return new RsaPublicKey
+                       {
+                           Size = size,
+                           PublicExponent = publicExponent,
+                           Modulus = modulus
+                       };
         }
 
-   
 
         /// <summary>
         /// Gets the decrypting stream.
@@ -102,17 +101,20 @@ namespace Keyczar.Crypto
             var rsa = new RsaEngine();
             var oaep = PublicKey.UpdatePadding(rsa);
 
-            return new AsymmetricStream(oaep, output, 
-               (cipher, encrypt) => cipher.Init( encrypt, new RsaPrivateCrtKeyParameters(
-                PublicKey.Modulus.ToBouncyBigInteger(),
-				PublicKey.PublicExponent.ToBouncyBigInteger(),
-				PrivateExponent.ToBouncyBigInteger(),
-				PrimeP.ToBouncyBigInteger(),
-				PrimeQ.ToBouncyBigInteger(),
-				PrimeExponentP.ToBouncyBigInteger(),
-				PrimeExponentQ.ToBouncyBigInteger(),
-				CrtCoefficient.ToBouncyBigInteger())),
-                encrypt:false);
+            return new AsymmetricStream(oaep, output,
+                                        (cipher, encrypt) => cipher.Init(encrypt, new RsaPrivateCrtKeyParameters(
+                                                                                      PublicKey.Modulus
+                                                                                               .ToBouncyBigInteger(),
+                                                                                      PublicKey.PublicExponent
+                                                                                               .ToBouncyBigInteger(),
+                                                                                      PrivateExponent.ToBouncyBigInteger
+                                                                                          (),
+                                                                                      PrimeP.ToBouncyBigInteger(),
+                                                                                      PrimeQ.ToBouncyBigInteger(),
+                                                                                      PrimeExponentP.ToBouncyBigInteger(),
+                                                                                      PrimeExponentQ.ToBouncyBigInteger(),
+                                                                                      CrtCoefficient.ToBouncyBigInteger())),
+                                        encrypt: false);
         }
     }
 }

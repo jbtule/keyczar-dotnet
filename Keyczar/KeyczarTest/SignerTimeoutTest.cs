@@ -28,17 +28,16 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class SignerTimeoutTest:AssertionHelper
-    { 
-        
-          private readonly String TEST_DATA;
+    public class SignerTimeoutTest : AssertionHelper
+    {
+        private readonly String TEST_DATA;
 
-          public SignerTimeoutTest(string testPath)
-          {
-			testPath =Util.ReplaceDirPrefix(testPath);
+        public SignerTimeoutTest(string testPath)
+        {
+            testPath = Util.ReplaceDirPrefix(testPath);
 
-              TEST_DATA = testPath;
-          }
+            TEST_DATA = testPath;
+        }
 
 
         private String input = "This is some test data";
@@ -51,23 +50,21 @@ namespace KeyczarTest
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestdir);
             Expect(() => new TimeoutSigner(subPath), Throws.InstanceOf<InvalidKeySetException>());
             Expect(() => new TimeoutVerifier(subPath), Throws.InstanceOf<InvalidKeySetException>());
-
         }
 
 
         [TestCase("hmac", "")]
         [TestCase("dsa", "")]
-        [TestCase("rsa-sign","")]
+        [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
-          public void TestTimeoutSignAndVerify(string subPath, string nestDir){
-
-              using (var signer = new TimeoutSigner(Util.TestDataPath(TEST_DATA, subPath, nestDir)))
-              using (var verifier = new TimeoutVerifier(Util.TestDataPath(TEST_DATA, subPath, nestDir)))
-              {
- 
+        public void TestTimeoutSignAndVerify(string subPath, string nestDir)
+        {
+            using (var signer = new TimeoutSigner(Util.TestDataPath(TEST_DATA, subPath, nestDir)))
+            using (var verifier = new TimeoutVerifier(Util.TestDataPath(TEST_DATA, subPath, nestDir)))
+            {
                 // Create a signature that will be valid for a long time
                 var sig = signer.Sign(input, DateTime.Now.AddDays(365));
-                Expect(signer.Verify(input, sig),Is.True);
+                Expect(signer.Verify(input, sig), Is.True);
                 Expect(verifier.Verify(input, sig), Is.True);
 
                 // Create a signature that is already expired
@@ -84,10 +81,7 @@ namespace KeyczarTest
                     Thread.Sleep(1000);
                 }
                 Expect(verifier.Verify(input, sig), Is.False);
-              }
-        
-          }
-  
-
+            }
+        }
     }
 }

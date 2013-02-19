@@ -36,9 +36,11 @@ using NUnit.Framework;
 namespace KeyczarTest
 {
     [TestFixture]
-    public class CrossCompatibilityTest:AssertionHelper
+    public class CrossCompatibilityTest : AssertionHelper
     {
-        private static readonly String TEST_DATA = Path.Combine("remote-testdata","existing-data","dotnet","crosscomp");
+        private static readonly String TEST_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet",
+                                                                "crosscomp");
+
         private String plaintext = "This is not a test, this is a real string";
         private String morePlaintext = "Some text to encrypt";
 
@@ -49,8 +51,8 @@ namespace KeyczarTest
             using (var crypter = new Crypter(subPath))
             {
                 var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-				var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
-                
+                var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+
                 var activeDecrypted = crypter.Decrypt(activeCiphertext);
                 Expect(activeDecrypted, Is.EqualTo(morePlaintext));
                 var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
@@ -61,11 +63,10 @@ namespace KeyczarTest
         [TestCase("rsa")]
         public void TestDecryptPrimaryOnly(String subDir)
         {
-
             var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var crypter = new Crypter(subPath))
             {
-                var primaryCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
                 var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
                 Expect(primaryDecrypted, Is.EqualTo(plaintext));
             }
@@ -78,12 +79,9 @@ namespace KeyczarTest
             var subPath = Util.TestDataPath(TEST_DATA, subDir);
             using (var verifier = new Signer(subPath))
             {
-                var signature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var signature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
                 Expect(verifier.Verify(plaintext, signature), Is.True);
             }
         }
-
-
-
     }
 }

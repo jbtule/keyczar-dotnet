@@ -37,12 +37,12 @@ namespace KeyczarTool
 
         public override int Run(string[] remainingArguments)
         {
-                 using (var keySet = new MutableKeySet(_location))
+            using (var keySet = new MutableKeySet(_location))
             {
-                var status =keySet.Demote(_version);
+                var status = keySet.Demote(_version);
                 if (status == null)
                 {
-                    Console.WriteLine("{0} {1}",Localized.MsgUnknownVersion,_version);
+                    Console.WriteLine("{0} {1}", Localized.MsgUnknownVersion, _version);
                     return -1;
                 }
                 try
@@ -58,8 +58,8 @@ namespace KeyczarTool
                 }
             }
 
-                 Console.WriteLine("{0} {1}",Localized.MsgCouldNotWrite, _location);
-                 return -1;
+            Console.WriteLine("{0} {1}", Localized.MsgCouldNotWrite, _location);
+            return -1;
         }
     }
 }

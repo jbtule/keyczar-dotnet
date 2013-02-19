@@ -21,20 +21,20 @@ namespace Keyczar.Crypto.Streams
     /// <summary>
     /// Bouncy Castle based Digest STream
     /// </summary>
-    public class DigestStream:VerifyingStream
+    public class DigestStream : VerifyingStream
     {
         private ISigner _digestSigner;
-		private int _outputSize;
+        private int _outputSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DigestStream" /> class.
         /// </summary>
         /// <param name="digestSigner">The digest signer.</param>
         /// <param name="outputSize">Size of the output.</param>
-        public DigestStream(ISigner digestSigner, int outputSize=-1)
+        public DigestStream(ISigner digestSigner, int outputSize = -1)
         {
             _digestSigner = digestSigner;
-			_outputSize = outputSize;
+            _outputSize = outputSize;
         }
 
         /// <summary>
@@ -58,7 +58,6 @@ namespace Keyczar.Crypto.Streams
         /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
         public override void Flush()
         {
-           
         }
 
         /// <summary>
@@ -77,7 +76,7 @@ namespace Keyczar.Crypto.Streams
         /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            _digestSigner.BlockUpdate(buffer,offset,count);
+            _digestSigner.BlockUpdate(buffer, offset, count);
         }
 
         /// <summary>
@@ -113,13 +112,13 @@ namespace Keyczar.Crypto.Streams
         /// <returns></returns>
         public override bool VerifySignature(byte[] signature)
         {
-		
-			if(signature.Length > _outputSize && _outputSize > 0){
-				byte[] trimmedSig = new byte[_outputSize];
-				Array.Copy(signature, trimmedSig, _outputSize);
-			    signature = trimmedSig;
-			}
-             return _digestSigner.VerifySignature(signature);
+            if (signature.Length > _outputSize && _outputSize > 0)
+            {
+                byte[] trimmedSig = new byte[_outputSize];
+                Array.Copy(signature, trimmedSig, _outputSize);
+                signature = trimmedSig;
+            }
+            return _digestSigner.VerifySignature(signature);
         }
     }
 }

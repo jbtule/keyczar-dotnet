@@ -21,10 +21,11 @@ namespace Keyczar.Util
     /// <summary>
     /// Resets a stream when it's disposed or called reset
     /// </summary>
-    public class NondestructiveStreamReset:IDisposable
+    public class NondestructiveStreamReset : IDisposable
     {
         private Stream _stream;
         private long _position;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NondestructiveStreamReset" /> class.
         /// </summary>

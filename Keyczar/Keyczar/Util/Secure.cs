@@ -36,9 +36,9 @@ namespace Keyczar.Util
         /// <typeparam name="T"></typeparam>
         /// <param name="disposable">The disposable.</param>
         /// <returns></returns>
-        public static T SafeDispose<T>(this T disposable) where T:class,IDisposable
+        public static T SafeDispose<T>(this T disposable) where T : class, IDisposable
         {
-            if(disposable != null)
+            if (disposable != null)
                 disposable.Dispose();
             return null;
         }
@@ -53,7 +53,8 @@ namespace Keyczar.Util
         /// <param name="action">The action.</param>
         /// <param name="defaultAction">The default action.</param>
         /// <returns></returns>
-        public static TReturn Maybe<T, TReturn>(this T target, Func<T, TReturn> action, Func<TReturn> defaultAction) where T : class
+        public static TReturn Maybe<T, TReturn>(this T target, Func<T, TReturn> action, Func<TReturn> defaultAction)
+            where T : class
         {
             if (target != null)
             {
@@ -75,11 +76,11 @@ namespace Keyczar.Util
         }
 
 
-
         /// <summary>
         /// The _dummy array for fake comparison that will return false
         /// </summary>
-        private static readonly byte[] DummyArray = new byte[] { 1, 2 };
+        private static readonly byte[] DummyArray = new byte[] {1, 2};
+
         /// <summary>
         /// Compares the arrays in a conservative way.
         /// </summary>
@@ -88,38 +89,39 @@ namespace Keyczar.Util
         /// <param name="startIndex">The start index.</param>
         /// <param name="maxCount">The max count.</param>
         /// <returns></returns>
-        public static bool Equals(Array a, Array b, int startIndex =0, int maxCount=-1)
+        public static bool Equals(Array a, Array b, int startIndex = 0, int maxCount = -1)
         {
             //We don't ever want to use this function to compare two nulls
             //so conservatively returning false;
-            if(a== null && b == null)
+            if (a == null && b == null)
                 return false;
 
             if (a == null)
                 a = new object[] {};
             if (b == null)
-                b = new object[] { };
+                b = new object[] {};
             var length = Math.Max(a.Length, b.Length);
 
             var compare = true;
-            
+
             //We don't ever want to use this function to compare zero length arrays
             //so conservatively returning false;
-            if(length ==0)
+            if (length == 0)
                 return false;
 
             //we compare every index even when we know the result is false
             for (var i = 0; i < length; i++)
             {
-                if(i < startIndex)
+                if (i < startIndex)
                     continue;
-				if(maxCount >=0 && i >= maxCount)
-					continue;
+                if (maxCount >= 0 && i >= maxCount)
+                    continue;
 
                 //This first case is used to try and not leak when a key matching a keyhash couldn't be found.
                 if (a.GetLength(0) <= i | b.GetLength(0) <= i) //uses non short ciruit "or (|)"
                     //always returns false
-                    compare = DummyArray.GetValue(0).Equals(DummyArray.GetValue(1)) & compare;  //uses non short ciruit "and (&)"
+                    compare = DummyArray.GetValue(0).Equals(DummyArray.GetValue(1)) & compare;
+                        //uses non short ciruit "and (&)"
                 else
                     compare = a.GetValue(i).Equals(b.GetValue(i)) & compare; //uses non short ciruit "and (&)"
             }

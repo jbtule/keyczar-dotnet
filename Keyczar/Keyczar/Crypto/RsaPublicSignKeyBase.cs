@@ -30,23 +30,20 @@ namespace Keyczar.Crypto
     /// </summary>
     public abstract class RsaPublicSignKeyBase : Key, IVerifierKey, IRsaPublicKey
     {
-
-
         /// <summary>
         /// Gets or sets the modulus.
         /// </summary>
         /// <value>The modulus.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger Modulus { get; set; }
 
         /// <summary>
         /// Gets or sets the public exponent.
         /// </summary>
         /// <value>The public exponent.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
+        [JsonConverter(typeof (BigIntegerWebSafeBase64ByteConverter))]
         public BigInteger PublicExponent { get; set; }
 
-  
 
         /// <summary>
         /// Generates the key.
@@ -69,7 +66,7 @@ namespace Keyczar.Crypto
         }
 
 
-		internal abstract ISigner GetSigner();
+        internal abstract ISigner GetSigner();
 
         /// <summary>
         /// Gets the verifying stream.
@@ -78,10 +75,10 @@ namespace Keyczar.Crypto
         public VerifyingStream GetVerifyingStream()
         {
             var signer = GetSigner();
-            signer.Init(forSigning:false,parameters:new RsaKeyParameters(false,
-                                                                         Modulus.ToBouncyBigInteger(),
-                                                                         PublicExponent.ToBouncyBigInteger()));
-            return new DigestStream(signer,  Size / 8);
+            signer.Init(forSigning: false, parameters: new RsaKeyParameters(false,
+                                                                            Modulus.ToBouncyBigInteger(),
+                                                                            PublicExponent.ToBouncyBigInteger()));
+            return new DigestStream(signer, Size/8);
         }
     }
 }

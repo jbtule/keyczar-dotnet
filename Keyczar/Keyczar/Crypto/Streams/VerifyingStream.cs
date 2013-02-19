@@ -20,11 +20,10 @@ using System.Text;
 
 namespace Keyczar.Crypto.Streams
 {
-
     /// <summary>
     /// Stream that can verify a stream when finished
     /// </summary>
-    public abstract class VerifyingStream:HashingStream
+    public abstract class VerifyingStream : HashingStream
     {
         /// <summary>
         /// Verifies the signature.

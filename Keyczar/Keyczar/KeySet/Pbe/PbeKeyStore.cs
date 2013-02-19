@@ -18,8 +18,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Keyczar.Compat;
-
-
 using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
@@ -35,7 +33,6 @@ namespace Keyczar.Pbe
     /// </summary>
     public class PbeKeyStore
     {
-
         /// <summary>
         /// Encrypts the key data.
         /// </summary>
@@ -45,8 +42,6 @@ namespace Keyczar.Pbe
         /// <returns></returns>
         public static PbeKeyStore EncryptKeyData(byte[] key, Func<string> passwordPrompt, int iterationCount)
         {
-
-
             var pks = new PbeKeyStore()
                           {
                               Cipher = PbeKeyType.Aes128,
@@ -57,8 +52,8 @@ namespace Keyczar.Pbe
 
             Secure.Random.NextBytes(pks.Salt);
 
-            var pbeKey = new PbeAesKey(){Size = 128};
-            pbeKey.AesKeyBytes = pks.GetDerivedBytes(pbeKey.Size / 8, passwordPrompt);
+            var pbeKey = new PbeAesKey() {Size = 128};
+            pbeKey.AesKeyBytes = pks.GetDerivedBytes(pbeKey.Size/8, passwordPrompt);
             pks.IV = pbeKey.IV;
 
             using (pbeKey)
@@ -67,7 +62,7 @@ namespace Keyczar.Pbe
             {
                 var data = crypter.Encrypt(key);
                 byte[] justciphertext = new byte[data.Length - Keyczar.HeaderLength];
-                Array.Copy(data,Keyczar.HeaderLength,justciphertext,0,justciphertext.Length);
+                Array.Copy(data, Keyczar.HeaderLength, justciphertext, 0, justciphertext.Length);
                 pks.Key = justciphertext;
             }
 
@@ -97,22 +92,24 @@ namespace Keyczar.Pbe
         /// Gets or sets the IV.
         /// </summary>
         /// <value>The IV.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
-        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof (WebSafeBase64ByteConverter))]
         public byte[] IV { get; set; }
 
         /// <summary>
         /// Gets or sets the encrypted key.
         /// </summary>
         /// <value>The key.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof (WebSafeBase64ByteConverter))]
         public byte[] Key { get; set; }
 
         /// <summary>
         /// Gets or sets the salt.
         /// </summary>
         /// <value>The salt.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof (WebSafeBase64ByteConverter))]
         public byte[] Salt { get; set; }
 
 
@@ -128,9 +125,9 @@ namespace Keyczar.Pbe
             PbeParametersGenerator pdb;
             if (Hmac == PbeHashType.HmacSha1)
             {
-
                 pdb = new Pkcs5S2ParametersGenerator();
-                pdb.Init(PbeParametersGenerator.Pkcs5PasswordToBytes(passwordPrompt().ToCharArray()), Salt, IterationCount);
+                pdb.Init(PbeParametersGenerator.Pkcs5PasswordToBytes(passwordPrompt().ToCharArray()), Salt,
+                         IterationCount);
             }
             else if (Hmac == PbeHashType.HmacSha256)
             {
@@ -140,8 +137,8 @@ namespace Keyczar.Pbe
             {
                 throw new InvalidKeySetException("Unknown Pbe Cipher");
             }
-            
-            var key = (KeyParameter)pdb.GenerateDerivedMacParameters(length * 8);
+
+            var key = (KeyParameter) pdb.GenerateDerivedMacParameters(length*8);
             return key.GetKey();
         }
 
@@ -152,7 +149,7 @@ namespace Keyczar.Pbe
         /// <returns></returns>
         public byte[] DecryptKeyData(Func<string> passwordPrompt)
         {
-            var key = new PbeAesKey { IV = IV };
+            var key = new PbeAesKey {IV = IV};
 
             if (Cipher == PbeKeyType.Aes128)
             {
@@ -165,72 +162,68 @@ namespace Keyczar.Pbe
 
             key.AesKeyBytes = GetDerivedBytes(key.Size/8, passwordPrompt);
 
-                using (key)
-                using(var ks = new ImportedKeySet(key,KeyPurpose.DecryptAndEncrypt,"Pbe key"))
-                using(var crypter = new Crypter(ks))
-                using(var memstream = new MemoryStream())
-                {
-                    memstream.Write(Keyczar.FormatBytes, 0, Keyczar.FormatBytes.Length);
-                    memstream.Write(new byte[Keyczar.KeyHashLength], 0, Keyczar.KeyHashLength);
-                    memstream.Write(Key, 0, Key.Length);
-                    return crypter.Decrypt(memstream.ToArray());
-                }
-            
-
+            using (key)
+            using (var ks = new ImportedKeySet(key, KeyPurpose.DecryptAndEncrypt, "Pbe key"))
+            using (var crypter = new Crypter(ks))
+            using (var memstream = new MemoryStream())
+            {
+                memstream.Write(Keyczar.FormatBytes, 0, Keyczar.FormatBytes.Length);
+                memstream.Write(new byte[Keyczar.KeyHashLength], 0, Keyczar.KeyHashLength);
+                memstream.Write(Key, 0, Key.Length);
+                return crypter.Decrypt(memstream.ToArray());
+            }
         }
 
-		[JsonConverter(typeof(JsonConverter))]
-		internal class HardcodedKeyType:KeyType{
-			Type _representedType;
-			internal HardcodedKeyType(String identifier,Type representedType):base(identifier){
-				_representedType =representedType;
-			}
+        [JsonConverter(typeof (JsonConverter))]
+        internal class HardcodedKeyType : KeyType
+        {
+            private Type _representedType;
 
-			public override Type RepresentedType{
-				get{
-					return _representedType;
-				}set{
-					_representedType = value;
-				}
-			}
-		}
+            internal HardcodedKeyType(String identifier, Type representedType) : base(identifier)
+            {
+                _representedType = representedType;
+            }
+
+            public override Type RepresentedType
+            {
+                get { return _representedType; }
+                set { _representedType = value; }
+            }
+        }
 
 
         internal class PbeAesKey : AesKey, IPbeKey
         {
-
             internal PbeAesKey()
             {
                 IV = new byte[16];
                 Secure.Random.NextBytes(IV);
             }
 
-			KeyType _keyType =new HardcodedKeyType("PBE_AES",typeof(PbeAesKey));
+            private KeyType _keyType = new HardcodedKeyType("PBE_AES", typeof (PbeAesKey));
 
-			[JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
-			public override KeyType KeyType {
-				get {
-					return _keyType;
-				}set{
-					_keyType =value;
-				}
-			}
+            [JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
+            public override KeyType KeyType
+            {
+                get { return _keyType; }
+                set { _keyType = value; }
+            }
 
-			public override byte[] GetKeyHash()
-			{
-				return Utility.GetBytes(0);
-			}
+            public override byte[] GetKeyHash()
+            {
+                return Utility.GetBytes(0);
+            }
 
-			public override IEnumerable<byte[]> GetFallbackKeyHash ()
-			{
-				return Enumerable.Empty<byte[]>();
-			}
+            public override IEnumerable<byte[]> GetFallbackKeyHash()
+            {
+                return Enumerable.Empty<byte[]>();
+            }
 
             public byte[] IV { get; set; }
 
             public override FinishingStream GetEncryptingStream(Stream output)
             {
-                var stream = (CipherTextOnlyFinishingStream)base.GetEncryptingStream(output);
+                var stream = (CipherTextOnlyFinishingStream) base.GetEncryptingStream(output);
                 stream.CipherTextOnly = true;
                 stream.IV = IV;
                 return stream;
@@ -238,12 +231,11 @@ namespace Keyczar.Pbe
 
             public override FinishingStream GetDecryptingStream(Stream output)
             {
-                var stream = (CipherTextOnlyFinishingStream)base.GetDecryptingStream(output);
+                var stream = (CipherTextOnlyFinishingStream) base.GetDecryptingStream(output);
                 stream.CipherTextOnly = true;
                 stream.IV = IV;
                 return stream;
             }
-
         }
     }
 }

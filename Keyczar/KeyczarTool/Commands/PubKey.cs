@@ -23,7 +23,7 @@ using ManyConsole;
 
 namespace KeyczarTool
 {
-    public class PubKey: ConsoleCommand
+    public class PubKey : ConsoleCommand
     {
         private string _location;
         private string _destination;
@@ -76,11 +76,10 @@ namespace KeyczarTool
             using (var keySet = new MutableKeySet(ks))
             {
                 var pubKeySet = keySet.PublicKey();
-                if(pubKeySet !=null)
+                if (pubKeySet != null)
                 {
                     using (pubKeySet)
                     {
-
                         IKeySetWriter writer = new KeySetWriter(_destination, overwrite: false);
 
                         if (pubKeySet.Save(writer))
@@ -91,7 +90,6 @@ namespace KeyczarTool
                         else
                         {
                             ret = -1;
-
                         }
                     }
                 }

@@ -1,5 +1,4 @@
-﻿
-/*
+﻿/*
  * Copyright 2008 Google Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,23 +26,22 @@ using System.Text;
 using Keyczar.Compat;
 using NUnit.Framework;
 using Keyczar;
+
 namespace KeyczarTest
 {
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class SignerTest:AssertionHelper
+    public class SignerTest : AssertionHelper
     {
-           
-          private readonly String TEST_DATA;
+        private readonly String TEST_DATA;
 
-          public SignerTest(string testPath)
-          {
-			testPath =Util.ReplaceDirPrefix(testPath);
+        public SignerTest(string testPath)
+        {
+            testPath = Util.ReplaceDirPrefix(testPath);
 
-              TEST_DATA = testPath;
-          }
-
+            TEST_DATA = testPath;
+        }
 
 
         private static String input = "This is some test data";
@@ -56,7 +54,7 @@ namespace KeyczarTest
             using (var verifier = new Signer(subPath))
             {
                 var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-				var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
                 Expect(verifier.Verify(input, activeSignature), Is.True);
                 Expect(verifier.Verify(input, primarySignature), Is.True);
             }
@@ -66,22 +64,22 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
-         public void TestPublicVerify(String subDir, string nestDir)
-         {
+        public void TestPublicVerify(String subDir, string nestDir)
+        {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
 
             using (var verifier = new Verifier(subPath))
             using (var publicVerifier = new Verifier(subPath + ".public"))
             {
                 var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-				var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
 
                 Expect(verifier.Verify(input, activeSignature), Is.True);
                 Expect(verifier.Verify(input, primarySignature), Is.True);
                 Expect(publicVerifier.Verify(input, activeSignature), Is.True);
                 Expect(publicVerifier.Verify(input, primarySignature), Is.True);
             }
-         }
+        }
 
 
         [TestCase("dsa-sizes", "")]
@@ -96,53 +94,56 @@ namespace KeyczarTest
             {
                 foreach (var size in ks.Metadata.KeyType.KeySizeOptions)
                 {
-                    var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(subPath, String.Format("{0}.out", size))).First();
+                    var activeSignature =
+                        (WebBase64) File.ReadAllLines(Path.Combine(subPath, String.Format("{0}.out", size))).First();
 
                     Expect(verifier.Verify(input, activeSignature), Is.True);
                     Expect(publicVerifier.Verify(input, activeSignature), Is.True);
                 }
-              
             }
         }
 
 
-         [TestCase("hmac", "")]
-         [TestCase("dsa", "")]
-         [TestCase("rsa-sign", "")]
-         [TestCase("rsa-sign", "unofficial")]
-         public void TestBadVerify(String subDir, string nestDir)
-         {
-             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
-             using (var verifier = new Signer(subPath))
-             {
-                 var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-                 var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
-                 Expect(verifier.Verify("Wrong String", activeSignature), Is.False);
-                 Expect(verifier.Verify("Wrong String", primarySignature), Is.False);
-                 Expect(verifier.Verify(input, (WebBase64)(primarySignature.ToString().Substring(0, primarySignature.ToString().Length - 4) + "junk")), Is.False);
-             }
-         }
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestBadVerify(String subDir, string nestDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
+            using (var verifier = new Signer(subPath))
+            {
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+                Expect(verifier.Verify("Wrong String", activeSignature), Is.False);
+                Expect(verifier.Verify("Wrong String", primarySignature), Is.False);
+                Expect(
+                    verifier.Verify(input,
+                                    (WebBase64)
+                                    (primarySignature.ToString().Substring(0, primarySignature.ToString().Length - 4) +
+                                     "junk")), Is.False);
+            }
+        }
 
 
-         [TestCase("aes", "")]
-         [TestCase("rsa", "")]
-         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
-         public void TestWrongPurpose(String subDir, string nestdir)
-         {
-             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestdir);
-             Expect(() => new Signer(subPath), Throws.InstanceOf<InvalidKeySetException>());
-             Expect(() => new Verifier(subPath), Throws.InstanceOf<InvalidKeySetException>());
+        [TestCase("aes", "")]
+        [TestCase("rsa", "")]
+        [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        public void TestWrongPurpose(String subDir, string nestdir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestdir);
+            Expect(() => new Signer(subPath), Throws.InstanceOf<InvalidKeySetException>());
+            Expect(() => new Verifier(subPath), Throws.InstanceOf<InvalidKeySetException>());
+        }
 
-         }
-
-         [TestCase("hmac", "")]
-         [TestCase("dsa", "")]
-         [TestCase("rsa-sign", "")]
-         [TestCase("rsa-sign", "unofficial")]
-         public void TestSignAndVerify(String subDir, string nestDir)
-         {
-             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
-             using (var signer = new Signer(subPath))
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndVerify(String subDir, string nestDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
+            using (var signer = new Signer(subPath))
             {
                 var sig = signer.Sign(input);
 
@@ -152,13 +153,10 @@ namespace KeyczarTest
         }
 
 
-
-
-
-         [TestCase("hmac", "")]
-         [TestCase("dsa", "")]
-         [TestCase("rsa-sign", "")]
-         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
         public void TestBadSigs(String subDir, string nestDir)
         {
             using (var signer = new Signer(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
@@ -166,14 +164,14 @@ namespace KeyczarTest
                 byte[] sig = signer.Sign(inputBytes);
 
                 // Another input string should not verify
-                Assert.That(signer.Verify(Encoding.UTF8.GetBytes("Some other string"),sig),Is.False);
+                Assert.That(signer.Verify(Encoding.UTF8.GetBytes("Some other string"), sig), Is.False);
                 Expect(() => signer.Verify(inputBytes, new byte[0]), Throws.TypeOf<InvalidCryptoDataException>());
                 sig[0] ^= 23;
                 Expect(() => signer.Verify(inputBytes, sig), Throws.TypeOf<InvalidCryptoVersionException>());
                 Expect(() => signer.Verify(inputBytes, sig), Throws.TypeOf<InvalidCryptoVersionException>());
                 sig[0] ^= 23;
                 sig[1] ^= 45;
-                Expect(signer.Verify(inputBytes, sig),Is.False);
+                Expect(signer.Verify(inputBytes, sig), Is.False);
             }
         }
     }

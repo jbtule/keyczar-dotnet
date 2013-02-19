@@ -28,26 +28,25 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class CrypterTest:AssertionHelper
+    public class CrypterTest : AssertionHelper
     {
-        
-          private readonly String TEST_DATA;
+        private readonly String TEST_DATA;
 
-          public CrypterTest(string testPath)
-          {
-			testPath =Util.ReplaceDirPrefix(testPath);
+        public CrypterTest(string testPath)
+        {
+            testPath = Util.ReplaceDirPrefix(testPath);
 
             TEST_DATA = testPath;
-          }
+        }
 
         private static String input = "This is some test data";
         private static byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-		private static byte[] bigInput = new byte[10000];
+        private static byte[] bigInput = new byte[10000];
 
         private void HelperDecrypt(Crypter crypter, String subPath)
         {
             var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "1.out")).First();
-			var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
+            var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "2.out")).First();
 
             var activeDecrypted = crypter.Decrypt(activeCiphertext);
             Expect(activeDecrypted, Is.EqualTo(input));
@@ -56,10 +55,10 @@ namespace KeyczarTest
         }
 
 
-        [TestCase("aes","")]
+        [TestCase("aes", "")]
         [TestCase("rsa", "")]
         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
-        public void TestDecrypt(String subDir,string nestedDir)
+        public void TestDecrypt(String subDir, string nestedDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
 
@@ -74,54 +73,52 @@ namespace KeyczarTest
         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
         public void TestEncryptDecrypt(String subDir, string nestedDir)
         {
-
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
 
             using (var crypter = new Crypter(subPath))
             {
                 var cipher = crypter.Encrypt(input);
-                var decrypt =crypter.Decrypt(cipher);
+                var decrypt = crypter.Decrypt(cipher);
                 Expect(decrypt, Is.EqualTo(input));
             }
         }
 
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
-        [TestCase("rsa-sign.public","")]
+        [TestCase("rsa-sign.public", "")]
         [TestCase("rsa-sign", "unofficial")]
         [TestCase("rsa-sign.public", "unofficial")]
         public void TestWrongPurpose(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
-            Expect(()=>new Crypter(subPath),Throws.InstanceOf<InvalidKeySetException>());
+            Expect(() => new Crypter(subPath), Throws.InstanceOf<InvalidKeySetException>());
             Expect(() => new Encrypter(subPath), Throws.InstanceOf<InvalidKeySetException>());
         }
 
-		[TestCase(CompressionType.Gzip)]
-		[TestCase(CompressionType.Zlib)]
-		public void TestEncryptDecryptCompression(CompressionType compression)
-		{
-			
-			var subPath = Util.TestDataPath(TEST_DATA, "aes");
-			
-			using (var crypter = new Crypter(subPath){Compression = compression})
-			{
-				var cipher = crypter.Encrypt(input);
-				var decrypt =crypter.Decrypt(cipher);
-				Expect(decrypt, Is.EqualTo(input));
-				using(var crypter2 = new Crypter(subPath)){
-					var decrypt2 =crypter2.Decrypt(cipher);
-					Expect(decrypt2, Is.Not.EqualTo(input));
-				}
+        [TestCase(CompressionType.Gzip)]
+        [TestCase(CompressionType.Zlib)]
+        public void TestEncryptDecryptCompression(CompressionType compression)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, "aes");
 
-				var ciphertiny = crypter.Encrypt(bigInput);
-				//large array of zeros will compress down a lot
-				Expect(ciphertiny.Length, Is.LessThan(bigInput.Length));
-				var big =crypter.Decrypt(ciphertiny);
-				Expect(big, Is.EqualTo(bigInput));
+            using (var crypter = new Crypter(subPath) {Compression = compression})
+            {
+                var cipher = crypter.Encrypt(input);
+                var decrypt = crypter.Decrypt(cipher);
+                Expect(decrypt, Is.EqualTo(input));
+                using (var crypter2 = new Crypter(subPath))
+                {
+                    var decrypt2 = crypter2.Decrypt(cipher);
+                    Expect(decrypt2, Is.Not.EqualTo(input));
+                }
 
-			}
-		}
+                var ciphertiny = crypter.Encrypt(bigInput);
+                //large array of zeros will compress down a lot
+                Expect(ciphertiny.Length, Is.LessThan(bigInput.Length));
+                var big = crypter.Decrypt(ciphertiny);
+                Expect(big, Is.EqualTo(bigInput));
+            }
+        }
 
 
         [TestCase("aes", "")]
@@ -147,7 +144,6 @@ namespace KeyczarTest
         }
 
 
-
         [Test]
         public void TestRsaCryptWithPublicKey()
         {
@@ -169,8 +165,6 @@ namespace KeyczarTest
         public void TestAesEncryptedKeyDecrypt(string subDir, string nestedDir)
         {
             // Test reading and using encrypted keys
-
-
 
 
             var basePath = Util.TestDataPath(TEST_DATA, nestedDir);
@@ -215,9 +209,6 @@ namespace KeyczarTest
                     Expect(decrypted, Is.EqualTo(each), "Length:" + i);
                 }
             }
-
         }
-
-       
     }
 }

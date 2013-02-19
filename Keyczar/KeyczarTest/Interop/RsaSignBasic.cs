@@ -12,6 +12,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+
 using System;
 using NUnit.Framework;
 
@@ -19,11 +20,11 @@ namespace KeyczarTest.Interop
 {
     [TestFixture]
     public class RsaSignBasic : PublicVerifierBasicInterop
-	{
-		public RsaSignBasic (string imp):base(imp)
-		{
-			Location = "rsa-sign";
-		}
+    {
+        public RsaSignBasic(string imp) : base(imp)
+        {
+            Location = "rsa-sign";
+        }
 
         [TestCase("1024")]
         [TestCase("2048")]
@@ -40,7 +41,5 @@ namespace KeyczarTest.Interop
         {
             HelperPublicVerifyVariousSizes(size);
         }
-
-	}
+    }
 }
-

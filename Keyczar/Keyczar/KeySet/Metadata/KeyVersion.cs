@@ -20,7 +20,7 @@ namespace Keyczar
     /// <summary>
     /// Describes key versions
     /// </summary>
-    public class KeyVersion:IComparable<KeyVersion>
+    public class KeyVersion : IComparable<KeyVersion>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyVersion"/> class.
@@ -46,11 +46,13 @@ namespace Keyczar
         /// </summary>
         /// <value>The version number.</value>
         public int VersionNumber { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="KeyVersion"/> is exportable.
         /// </summary>
         /// <value><c>true</c> if exportable; otherwise, <c>false</c>.</value>
         public bool Exportable { get; set; }
+
         /// <summary>
         /// Gets or sets the status.
         /// </summary>
@@ -86,7 +88,6 @@ namespace Keyczar
             }
             return 1;
         }
-
 
 
         /// <summary>
@@ -126,7 +127,7 @@ namespace Keyczar
             }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
+            if (((object) a == null) || ((object) b == null))
             {
                 return false;
             }

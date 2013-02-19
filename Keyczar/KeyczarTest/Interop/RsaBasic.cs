@@ -12,19 +12,20 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+
 using System;
 using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
     [TestFixture]
-	public class RsaBasic:CrypterBasicInterop
-	{
+    public class RsaBasic : CrypterBasicInterop
+    {
         public RsaBasic(string imp)
             : base(imp)
-		{
-			Location ="rsa";
-		}
+        {
+            Location = "rsa";
+        }
 
         [TestCase("1024")]
         [TestCase("2048")]
@@ -33,7 +34,7 @@ namespace KeyczarTest.Interop
         {
             HelperDecryptVariousSizes(size);
         }
-	}
+    }
 
     [TestFixture]
     public class RsaFull : CrypterFullInterop
@@ -44,7 +45,5 @@ namespace KeyczarTest.Interop
             Location = "rsa";
             SignLocation = "dsa.public";
         }
-
     }
 }
-

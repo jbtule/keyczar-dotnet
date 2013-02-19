@@ -12,6 +12,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+
 using System;
 using NUnit.Framework;
 using Keyczar;
@@ -20,22 +21,21 @@ using System.Linq;
 
 namespace KeyczarTest.Interop
 {
-
-	[TestFixture]
+    [TestFixture]
     public abstract class CrypterBasicInterop : BasicInterop
-	{
-		protected string Location;
+    {
+        protected string Location;
 
-		public CrypterBasicInterop (string imp):base(imp)
-		{
-		}
+        public CrypterBasicInterop(string imp) : base(imp)
+        {
+        }
 
 
         protected void HelperDecryptVariousSizes(string size)
         {
             var path = TestData(Location) + "-size";
 
-            var activeCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(path, size + ".out")).First();
+            var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(path, size + ".out")).First();
 
             using (var crypter = new Crypter(path))
             {
@@ -44,22 +44,21 @@ namespace KeyczarTest.Interop
             }
         }
 
-		[Test]
-		public void Decrypt(){
-			
-			var path = TestData(Location);
-			
-			var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(path, "1.out")).First();
-			var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.out")).First();
-			
-			using (var crypter = new Crypter(path))
-			{
-				var activeDecrypted = crypter.Decrypt(activeCiphertext);
-				Expect(activeDecrypted, Is.EqualTo(Input));
-				var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
-				Expect(primaryDecrypted, Is.EqualTo(Input));
-			}
-		}
-	}
-}
+        [Test]
+        public void Decrypt()
+        {
+            var path = TestData(Location);
 
+            var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(path, "1.out")).First();
+            var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.out")).First();
+
+            using (var crypter = new Crypter(path))
+            {
+                var activeDecrypted = crypter.Decrypt(activeCiphertext);
+                Expect(activeDecrypted, Is.EqualTo(Input));
+                var primaryDecrypted = crypter.Decrypt(primaryCiphertext);
+                Expect(primaryDecrypted, Is.EqualTo(Input));
+            }
+        }
+    }
+}

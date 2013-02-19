@@ -31,7 +31,7 @@ namespace Keyczar.Crypto.Streams
         private readonly int _tagSize;
         private Action<byte[], IBufferedCipher, bool> _initFunc;
         private readonly bool _encrypt;
-        private bool _init =false;
+        private bool _init = false;
         private int _outLen;
         private int _inLen;
 
@@ -44,7 +44,8 @@ namespace Keyczar.Crypto.Streams
         /// <param name="tagSize">Size of the tag.</param>
         /// <param name="initFunc">The init func.</param>
         /// <param name="encrypt">if set to <c>true</c> [encrypt].</param>
-        public SymmetricStream(IBufferedCipher cipher, Stream output, byte[] iv, int tagSize, Action<byte[], IBufferedCipher, bool> initFunc, bool encrypt)
+        public SymmetricStream(IBufferedCipher cipher, Stream output, byte[] iv, int tagSize,
+                               Action<byte[], IBufferedCipher, bool> initFunc, bool encrypt)
         {
             _cipher = cipher;
             _output = output;
@@ -72,14 +73,13 @@ namespace Keyczar.Crypto.Streams
         {
             Flush();
             _output = null;
-            _iv = _iv.Clear(); 
+            _iv = _iv.Clear();
             _initFunc = null;
             _cipher.Reset();
             _cipher = null;
-               
+
             base.Dispose(disposing);
         }
-
 
 
         /// <summary>
@@ -105,7 +105,6 @@ namespace Keyczar.Crypto.Streams
                     if (_encrypt)
                     {
                         _output.Write(_iv, 0, _iv.Length);
-
                     }
                     else
                     {
@@ -114,7 +113,7 @@ namespace Keyczar.Crypto.Streams
                         count = count - _iv.Length;
                     }
                 }
-                _initFunc(_iv,_cipher,_encrypt);
+                _initFunc(_iv, _cipher, _encrypt);
                 _init = true;
             }
 
@@ -124,7 +123,6 @@ namespace Keyczar.Crypto.Streams
             outBuffer.Clear();
             _outLen += outLen;
             _inLen += count;
-                  
         }
 
         /// <summary>
@@ -146,7 +144,7 @@ namespace Keyczar.Crypto.Streams
         {
             if (!_init && _encrypt)
             {
-                if(!CipherTextOnly)
+                if (!CipherTextOnly)
                     _output.Write(_iv, 0, _iv.Length);
 
                 _initFunc(_iv, _cipher, _encrypt);
@@ -156,7 +154,7 @@ namespace Keyczar.Crypto.Streams
             var buffLen = _cipher.GetOutputSize(_inLen) - _outLen;
             var buffer = new byte[buffLen];
             var writeLen = _cipher.DoFinal(buffer, 0);
-            _output.Write(buffer,  0, writeLen);
+            _output.Write(buffer, 0, writeLen);
             buffer.Clear();
         }
 
@@ -165,17 +163,14 @@ namespace Keyczar.Crypto.Streams
         /// </summary>
         /// <value><c>true</c> if [cipher text only]; otherwise, <c>false</c>.</value>
         public override bool CipherTextOnly { get; set; }
+
         /// <summary>
         /// Gets or sets the IV.
         /// </summary>
         /// <value>The IV.</value>
         public override byte[] IV
-        { 
-
-            get
-            {
-                return _iv;
-            } 
+        {
+            get { return _iv; }
             set { _iv = value; }
         }
     }

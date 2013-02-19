@@ -25,7 +25,7 @@ namespace Keyczar.Util
     /// <summary>
     /// Binary writer that doesn't close underlying stream when disposed
     /// </summary>
-    public class NondestructiveBinaryWriter:BinaryWriter
+    public class NondestructiveBinaryWriter : BinaryWriter
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NondestructiveBinaryWriter"/> class.
@@ -40,16 +40,16 @@ namespace Keyczar.Util
         /// </summary>
         /// <param name="input">The input.</param>
         /// <param name="encoding">The encoding.</param>
-         public NondestructiveBinaryWriter(Stream input, Encoding encoding)
-                   : base(input, encoding)
+        public NondestructiveBinaryWriter(Stream input, Encoding encoding)
+            : base(input, encoding)
         {
         }
 
 
-         /// <summary>
-         /// Releases the unmanaged resources used by the <see cref="T:System.IO.BinaryWriter"/> and optionally releases the managed resources.
-         /// </summary>
-         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
+        /// <summary>
+        /// Releases the unmanaged resources used by the <see cref="T:System.IO.BinaryWriter"/> and optionally releases the managed resources.
+        /// </summary>
+        /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
             base.Dispose(false);

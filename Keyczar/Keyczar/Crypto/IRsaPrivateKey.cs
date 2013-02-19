@@ -30,7 +30,7 @@ namespace Keyczar.Crypto
         /// <value>
         /// The public key.
         /// </value>
-        IRsaPublicKey PublicKey { get;  }
+        IRsaPublicKey PublicKey { get; }
 
         /// <summary>
         /// Gets or sets the private exponent.

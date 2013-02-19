@@ -25,7 +25,6 @@ namespace Keyczar.Crypto.Streams
     /// </summary>
     public class DotNetSymmetricStream : CipherTextOnlyFinishingStream
     {
-
         /// <summary>
         /// Gets the length of the tag.
         /// </summary>
@@ -45,6 +44,7 @@ namespace Keyczar.Crypto.Streams
         private readonly int _tagSize;
         private ICryptoTransform _transform;
         private bool _init = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetSymmetricStream"/> class.
         /// </summary>
@@ -56,7 +56,7 @@ namespace Keyczar.Crypto.Streams
         {
             _algorithm = algorithm;
             _encrypt = encrypt;
-                
+
             _rawOutput = output;
             _tagSize = tagSize;
         }
@@ -65,10 +65,10 @@ namespace Keyczar.Crypto.Streams
         {
             get
             {
-                if ( _output == null)
+                if (_output == null)
                 {
                     _transform = _encrypt ? _algorithm.CreateEncryptor() : _algorithm.CreateDecryptor();
-                    _output =new NondestructiveCryptoStream(_rawOutput, _transform, CryptoStreamMode.Write);
+                    _output = new NondestructiveCryptoStream(_rawOutput, _transform, CryptoStreamMode.Write);
                 }
                 return _output;
             }
@@ -79,7 +79,8 @@ namespace Keyczar.Crypto.Streams
         /// Releases the unmanaged resources used by the <see cref="T:System.IO.Stream"/> and optionally releases the managed resources.
         /// </summary>
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_output")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
+            MessageId = "_output")]
         protected override void Dispose(bool disposing)
         {
             _output = _output.SafeDispose();
@@ -89,7 +90,7 @@ namespace Keyczar.Crypto.Streams
             }
             _rawOutput = null;
             _transform = _transform.SafeDispose();
-            if(disposing)
+            if (disposing)
             {
                 var alg = _algorithm as IDisposable;
                 alg.SafeDispose();
@@ -123,16 +124,16 @@ namespace Keyczar.Crypto.Streams
         /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if(!_init && !CipherTextOnly)
+            if (!_init && !CipherTextOnly)
             {
                 if (_encrypt)
                 {
-                     _rawOutput.Write(_algorithm.IV, 0, _algorithm.IV.Length);
-
-                }else
+                    _rawOutput.Write(_algorithm.IV, 0, _algorithm.IV.Length);
+                }
+                else
                 {
                     var iv = new byte[_algorithm.BlockSize/8];
-                    Array.Copy(buffer,0,iv, 0, iv.Length);
+                    Array.Copy(buffer, 0, iv, 0, iv.Length);
                     _algorithm.IV = iv;
                     offset = offset + iv.Length;
                     count = count - iv.Length;
@@ -149,7 +150,6 @@ namespace Keyczar.Crypto.Streams
         /// </summary>
         public override void Finish()
         {
-
             if (!_init && _encrypt && !CipherTextOnly)
             {
                 _rawOutput.Write(_algorithm.IV, 0, _algorithm.IV.Length);

@@ -36,8 +36,8 @@ namespace KeyczarTest.Interop
             var keyPath = TestData("aes");
             var dataPath = TestData("aes-crypted");
 
-            var activeCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(dataPath, "1.out")).First();
-            var primaryCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(dataPath, "2.out")).First();
+            var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(dataPath, "1.out")).First();
+            var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(dataPath, "2.out")).First();
             using (var keyDecrypter = new Crypter(keyPath))
             using (var crypter = new Crypter(new EncryptedKeySet(dataPath, keyDecrypter)))
             {

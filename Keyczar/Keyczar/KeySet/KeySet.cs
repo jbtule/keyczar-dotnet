@@ -12,6 +12,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -42,7 +43,7 @@ namespace Keyczar
         /// <param name="version">The version.</param>
         /// <returns></returns>
         public byte[] GetKeyData(int version)
-        {      
+        {
             var path = Path.Combine(_location, version.ToString(CultureInfo.InvariantCulture));
             return File.ReadAllBytes(path);
         }
@@ -56,8 +57,7 @@ namespace Keyczar
             get
             {
                 var path = Path.Combine(_location, "meta");
-                return KeyMetadata.Read(File.ReadAllText(path,Keyczar.RawStringEncoding));
-                
+                return KeyMetadata.Read(File.ReadAllText(path, Keyczar.RawStringEncoding));
             }
         }
     }

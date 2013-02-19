@@ -20,24 +20,25 @@ namespace Keyczar.Unofficial
     /// </summary>
     public static class UnofficialKeyType
     {
-
         /// <summary>
         /// Unofficial type AES Authenticated Encryption with Associated Data
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType AesAead = "C#_AES_AEAD";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType AesAead = "C#_AES_AEAD";
 
         /// <summary>
         /// The Unofficial RSA priv sign
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType RSAPrivSign = "C#_RSA_SIGN_PRIV";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType RSAPrivSign =
+                "C#_RSA_SIGN_PRIV";
 
         /// <summary>
         /// The Unofficial RSA pub sign
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType RSAPubSign = "C#_RSA_SIGN_PUB";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType RSAPubSign =
+                "C#_RSA_SIGN_PUB";
 
         static UnofficialKeyType()
         {

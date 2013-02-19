@@ -12,10 +12,9 @@ namespace KeyczarTest.Unofficial
     [Category("Unofficial")]
     public class WebKeySetTest : AssertionHelper
     {
-
         private static string input = "Some test text";
 
-		private static string TEST_DATA = Path.Combine("remote-testdata","existing-data", "dotnet");
+        private static string TEST_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet");
 
         private static string TEST_WEBDATA = "http://jbtule.github.com/keyczar-dotnet/keys/";
 
@@ -32,9 +31,6 @@ namespace KeyczarTest.Unofficial
                 using (var dataEncrypter = new Encrypter(new EncryptedKeySet(new WebKeySet(webKeyPath), keyDecrypter)))
                 {
                     ciphertext = dataEncrypter.Encrypt(input);
-
-
-
                 }
 
                 using (var dataDecrypter = new Crypter(new EncryptedKeySet(new WebKeySet(webKeyPath), keyDecrypter)))
@@ -51,11 +47,11 @@ namespace KeyczarTest.Unofficial
             var basePath = Util.TestDataPath(TEST_DATA, "");
             var keyPath = Path.Combine(basePath, "rsa");
             var webKeyPath = TEST_WEBDATA + "rsa.public/";
-            
-            WebBase64 ciphertext; 
+
+            WebBase64 ciphertext;
             using (var dataEncrypter = new Encrypter(new WebKeySet(webKeyPath)))
             {
-                ciphertext =dataEncrypter.Encrypt(input);
+                ciphertext = dataEncrypter.Encrypt(input);
             }
 
             using (var dataDecrypter = new Crypter(keyPath))
@@ -63,7 +59,6 @@ namespace KeyczarTest.Unofficial
                 var plaintext = dataDecrypter.Decrypt(ciphertext);
                 Expect(plaintext, Is.EqualTo(input));
             }
-
         }
 
 

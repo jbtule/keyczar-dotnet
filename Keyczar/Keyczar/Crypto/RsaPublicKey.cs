@@ -25,7 +25,7 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
+using BouncyBigInteger = Org.BouncyCastle.Math.BigInteger;
 using Org.BouncyCastle.Security;
 
 namespace Keyczar.Crypto
@@ -33,12 +33,13 @@ namespace Keyczar.Crypto
     /// <summary>
     /// The RSA public key
     /// </summary>
-    public class RsaPublicKey : RsaPublicSignKeyBase,IEncrypterKey, IRsaPublicKey
+    public class RsaPublicKey : RsaPublicSignKeyBase, IEncrypterKey, IRsaPublicKey
     {
         /// <summary>
         /// PkcsPadding identifier
         /// </summary>
         public static readonly string PkcsPadding = "PKCS";
+
         /// <summary>
         /// OaepPadding identifer
         /// </summary>
@@ -82,12 +83,11 @@ namespace Keyczar.Crypto
         }
 
 
-
         internal override ISigner GetSigner()
         {
-			var digest =new Sha1Digest();
+            var digest = new Sha1Digest();
 
-			return new RsaDigestSigner(digest);
+            return new RsaDigestSigner(digest);
         }
 
 
@@ -146,15 +146,15 @@ namespace Keyczar.Crypto
         {
             var rsa = new RsaEngine();
 
-            var oaep =  UpdatePadding(rsa);
-    
+            var oaep = UpdatePadding(rsa);
+
             return new AsymmetricStream(
                 oaep,
                 output,
-                (cipher,encrypt)=>  cipher.Init(encrypt,new RsaKeyParameters(false,
-			                                                             Modulus.ToBouncyBigInteger(), 
-			                                                             PublicExponent.ToBouncyBigInteger())),
-                encrypt:true);
+                (cipher, encrypt) => cipher.Init(encrypt, new RsaKeyParameters(false,
+                                                                               Modulus.ToBouncyBigInteger(),
+                                                                               PublicExponent.ToBouncyBigInteger())),
+                encrypt: true);
         }
 
         /// <summary>
