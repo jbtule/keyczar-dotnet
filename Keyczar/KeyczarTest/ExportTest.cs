@@ -13,7 +13,7 @@ namespace KeyczarTest
     [TestFixture]
     public class ExportTest:AssertionHelper
     {
-        private static readonly String TEST_DATA = "testdata";
+        private static readonly String TEST_DATA = Path.Combine("remote-testdata","existing-data","dotnet");
 
         [Test]
         public void TestSymetricKeyExport()

@@ -4,6 +4,7 @@
 language: c
 # Make sure mono is installed
 install:
+ - sudo apt-get update -qq
  - sudo apt-get install -qq mono-devel
 
 script:

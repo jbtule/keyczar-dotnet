@@ -27,6 +27,12 @@ namespace KeyczarTest
 {
     public static class Util
     {
+		public static string ReplaceDirPrefix(string prefixedDir){
+			prefixedDir =prefixedDir.Replace("gen|", Path.Combine("gen-testdata")+ Path.DirectorySeparatorChar);
+			prefixedDir =prefixedDir.Replace("rem|", Path.Combine("remote-testdata","existing-data") + Path.DirectorySeparatorChar);
+			return prefixedDir;
+		}
+
         private static string TestDataBaseDir(string baseDir)
         {
             return Path.Combine("..", "..", "..", "TestData", baseDir);

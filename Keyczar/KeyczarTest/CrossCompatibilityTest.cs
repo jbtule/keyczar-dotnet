@@ -38,7 +38,7 @@ namespace KeyczarTest
     [TestFixture]
     public class CrossCompatibilityTest:AssertionHelper
     {
-        private static readonly String TEST_DATA = Path.Combine("testdata","crosscomp");
+        private static readonly String TEST_DATA = Path.Combine("remote-testdata","existing-data","dotnet","crosscomp");
         private String plaintext = "This is not a test, this is a real string";
         private String morePlaintext = "Some text to encrypt";
 

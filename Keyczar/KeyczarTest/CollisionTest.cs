@@ -28,7 +28,7 @@ namespace KeyczarTest
     public class CollisionTest : AssertionHelper
     {
         private static String input = "This is some test data";
-        private readonly String TEST_DATA = Path.Combine("testdata", "key-collision");
+        private readonly String TEST_DATA = Path.Combine("remote-testdata", "special-case", "key-collision");
 
         [TestCase("aes")]
         [TestCase("rsa")]

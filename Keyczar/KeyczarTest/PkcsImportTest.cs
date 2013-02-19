@@ -37,7 +37,7 @@ namespace KeyczarTest
     [TestFixture]
     public class PkcsImportTest:AssertionHelper
     {
-          private static readonly String TEST_DATA = Path.Combine("testdata","certificates");
+          private static readonly String TEST_DATA = Path.Combine("remote-testdata","existing-data","dotnet","certificates");
           private static readonly String input = "This is some test data";
 
           private Stream HelperOpenPkcsStream(String keyType, String fileFormat, String keyPurpose)

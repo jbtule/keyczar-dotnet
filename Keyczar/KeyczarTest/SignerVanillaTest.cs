@@ -9,9 +9,9 @@ using NUnit.Framework;
 
 namespace KeyczarTest
 {
-    [TestFixture("testdata")]
-    [TestFixture("cstestdata")]
-    [TestFixture("tool_cstestdata")]
+    [TestFixture("rem|dotnet")]
+    [TestFixture("gen|cstestdata")]
+    [TestFixture("gen|tool_cstestdata")]
     public class SignerVanillaTest:AssertionHelper
     {
         private static String input = "This is some test data";
@@ -19,6 +19,8 @@ namespace KeyczarTest
 
         public SignerVanillaTest(string testPath)
         {
+			testPath =Util.ReplaceDirPrefix(testPath);
+
               TEST_DATA = testPath;
         }
 

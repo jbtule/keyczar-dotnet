@@ -52,7 +52,7 @@ namespace KeyczarTest.Interop
 
         public string TestData(string dir)
         {
-            return Util.TestDataPath(Path.Combine("interop-data", _implementation + "_data"),dir);
+            return Util.TestDataPath(Path.Combine("remote-testdata","interop-data", _implementation + "_data"),dir);
         }
 
 	}

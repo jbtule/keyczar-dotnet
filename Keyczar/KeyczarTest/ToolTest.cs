@@ -33,7 +33,7 @@ namespace KeyczarTest
 	{
 
 		private String TEST_DATA = Path.GetTempPath();
-		private string CERTIFICATE_DATA= Path.Combine("testdata","certificates");
+		private string CERTIFICATE_DATA= Path.Combine("remote-testdata","existing-data","dotnet","certificates");
 
         private static String input = "This is some test data";
         private static byte[] bigInput = new byte[10000];

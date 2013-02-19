@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace KeyczarTest.Unofficial
 {
     [Category("Unofficial")]
-    [TestFixture("cstestdata")]
+    [TestFixture("gen|cstestdata")]
     public class BsonSessionDecryptTest : AssertionHelper
     {
         private readonly String TEST_DATA;
@@ -31,7 +31,8 @@ namespace KeyczarTest.Unofficial
 
         public BsonSessionDecryptTest(string testPath)
         {
-            TEST_DATA = testPath;
+			testPath =Util.ReplaceDirPrefix(testPath);
+			TEST_DATA = testPath;
         }
 
         [TestCase("")]

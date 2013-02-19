@@ -25,9 +25,9 @@ using NUnit.Framework;
 
 namespace KeyczarTest
 {
-    [TestFixture("testdata")]
-    [TestFixture("cstestdata")]
-    [TestFixture("tool_cstestdata")]
+    [TestFixture("rem|dotnet")]
+    [TestFixture("gen|cstestdata")]
+    [TestFixture("gen|tool_cstestdata")]
     public class CrypterTest:AssertionHelper
     {
         
@@ -35,7 +35,9 @@ namespace KeyczarTest
 
           public CrypterTest(string testPath)
           {
-              TEST_DATA = testPath;
+			testPath =Util.ReplaceDirPrefix(testPath);
+
+            TEST_DATA = testPath;
           }
 
         private static String input = "This is some test data";

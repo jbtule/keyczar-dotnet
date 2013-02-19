@@ -36,7 +36,7 @@ namespace KeyczarTest
     [TestFixture]
     public class CertificateImportTest:AssertionHelper
     {
-          private static readonly String TEST_DATA = Path.Combine("testdata","certificates");
+          private static readonly String TEST_DATA = Path.Combine("remote-testdata", "existing-data","dotnet","certificates");
 
           private String input = "This is some test data";
 

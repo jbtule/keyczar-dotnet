@@ -29,14 +29,17 @@ See [Wiki](http://github.com/jbtule/keyczar-dotnet/wiki) for more info.
  
 ## Source & Build
 
-Source code can be found on [github](http://github.com/jbtule/keyczar-dotnet/tree/master/dotnet).
-More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
+Source code can be obtained with
+
+  git clone --recursive https://github.com/jbtule/keyczar-dotnet.git
+
+Source can be built with Visual Studio 2012, MonoDevelop, msbuild, or xbuild using the Keyczar.sln as long as you have the nuget dependencies downloaded. More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
 
 ## Compatibility
 
  - Should interoperate with java/python/c++ with standard api
  - All unofficial/incompatible api changes are under the unofficial names space to be clear what is provided that won't interoperate with java/python/c++.
- - Unofficial algorithms included are *AES-GCM* (`KeyType=C#_AES_AEAD`) and RSA-PSS (`KeyType="C#_RSA_SIGN_PRIV") use the unofficial flag on the KeyczarTool.
+ - Unofficial algorithms included are *AES-GCM* (`KeyType=C#_AES_AEAD`) and RSA-PSS (`KeyType=C#_RSA_SIGN_PRIV`) use the unofficial flag on the KeyczarTool.
  - `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionVerifer`
  - The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
 

@@ -18,7 +18,7 @@ namespace KeyczarTest.Unofficial
     {
         private static string input = "Some test text";
 
-        private static string TEST_DATA = Path.Combine("testdata", "unofficial", "blob");
+        private static string TEST_DATA = Path.Combine("remote-testdata","existing-data", "dotnet", "unofficial", "blob");
 
 
         [Test]

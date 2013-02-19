@@ -29,7 +29,7 @@ namespace KeyczarTest
     [TestFixture,Category("Create")]
     public class CreateDataToolTest : AssertionHelper
     {
-        private static string WRITE_DATA = "tool_cstestdata";
+		private static string WRITE_DATA = Path.Combine("gen-testdata","tool_cstestdata");
 
         private static String input = "This is some test data";
 

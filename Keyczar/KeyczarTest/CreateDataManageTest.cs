@@ -31,7 +31,7 @@ namespace KeyczarTest
     [TestFixture,Category("Create")]
     public class CreateDataManageTest:AssertionHelper
     {    
-        private static string WRITE_DATA = "cstestdata";
+        private static string WRITE_DATA = Path.Combine("gen-testdata", "cstestdata");
         private static String input = "This is some test data";
 
         private MutableKeySet CreateNewKeySet(KeyType type, KeyPurpose purpose, string name =null)

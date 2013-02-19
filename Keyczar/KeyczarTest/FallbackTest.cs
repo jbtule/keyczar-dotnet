@@ -30,7 +30,7 @@ namespace KeyczarTest
     public class FallbackTest : AssertionHelper
     {
         private static String input = "This is some test data";
-        private readonly String TEST_DATA = Path.Combine( "testdata", "badhash");
+        private readonly String TEST_DATA = Path.Combine( "remote-testdata","special-case", "badhash");
 
         /// <summary>
         /// Tests the fall back hash for CPP implementation that stripped leading zeros of the key for hash.

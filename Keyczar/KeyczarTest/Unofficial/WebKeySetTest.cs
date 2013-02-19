@@ -15,7 +15,7 @@ namespace KeyczarTest.Unofficial
 
         private static string input = "Some test text";
 
-        private static string TEST_DATA = "testdata";
+		private static string TEST_DATA = Path.Combine("remote-testdata","existing-data", "dotnet");
 
         private static string TEST_WEBDATA = "http://jbtule.github.com/keyczar-dotnet/keys/";
 

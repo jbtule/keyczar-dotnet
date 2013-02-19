@@ -6,8 +6,8 @@ using NUnit.Framework;
 
 namespace KeyczarTest
 {
-    [TestFixture("testdata")]
-    [TestFixture("cstestdata")]
+    [TestFixture("rem|dotnet")]
+    [TestFixture("gen|cstestdata")]
     public class SessionDecryptTest:AssertionHelper
     {
         private readonly String TEST_DATA;
@@ -28,6 +28,8 @@ namespace KeyczarTest
 
         public SessionDecryptTest(string testPath)
         {
+			testPath =Util.ReplaceDirPrefix(testPath);
+
             TEST_DATA = testPath;
         }
 
