@@ -20,6 +20,9 @@ test-results
 *.sln.docstates
 *.userprefs
 
+# Ignore Mono Develop temp files
+*.pidb
+
 # Build results
 [Dd]ebug/
 [Rr]elease/

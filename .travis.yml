@@ -11,9 +11,9 @@ install:
 
 script:
  - cd Keyczar/
- - .ci/RestoreNugetPackages.sh
- - xbuild Keyczar.sln
- - .ci/RunNUnit.sh 
+ - .ci/PreXbuild.sh
+ - ./mono-build.sh 
+ - .ci/PostXbuild.sh 
 
 branches:
  only:
