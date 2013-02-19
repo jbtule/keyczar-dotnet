@@ -1,3 +1,9 @@
+### Keyczar dotnet v 0.7.5.5 (Beta) February 19, 2013
+
+ - Changed TimeoutVerifier to support alternative time source in constuctor.
+ - Removed unnecessary digest size spec.
+ - Renamed AesAeadStream to SymmetricAeadStream
+ 
 ### Keyczar dotnet v 0.7.5.4 (Beta) February 11, 2013
 
  - Added Unofficial RSA-PSS signing implementation with appropriate strength digest hash algorithms.		 

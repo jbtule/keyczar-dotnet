@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Keyczar</id>
-        <version>0.7.5-beta4</version>
+        <version>0.7.5-beta5</version>
         <title>Keyczar</title>
         <authors>Jay Tuley,Google</authors>
         <owners>Jay Tuley</owners>
@@ -23,14 +23,9 @@ Keyczar is an open source cryptographic toolkit designed to make it easier and s
 </description>
         <summary>Toolkit for safe and simple cryptography</summary>
         <releaseNotes>
-		  - Added Unofficial RSA-PSS signing implementation with appropriate strength digest hash algorithms.		 
-		  - Made changes to AES-GCM implementation to improve performance when next Bouncy Castle is released.
-		  - Better implementation for handling key hash collisions.
-		  - Added missing test check against version number for future ciphetext formats.
-		  - Removed dependencies on System.Security.Cryptography.
-		  - No longer uses dynamic invocation, more likely to be AOT compile compatible.
-		  - Works when encountering a buggy cpp key hash.
-		  - Works when encountering a buggy java signature.
+		 - Changed TimeoutVerifier to support alternative time source in constuctor.
+		 - Removed unnecessary digest size spec.
+		 - Renamed AesAeadStream to SymmetricAeadStream
 		</releaseNotes>
         <copyright>Copyright 2012-2013</copyright>
         <tags>cryptography crypto security encryption symmetric asymmetric mac aes rsa dsa hmac</tags>
