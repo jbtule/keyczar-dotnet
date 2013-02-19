@@ -75,13 +75,23 @@ See more usage and documentation in the [Wiki](http://github.com/jbtule/keyczar-
 
  - [NUnit 2.6.1 or later](http://www.nunit.org/)
 
+## Source ##
+
+Source code can be obtained with `git`
+```
+git clone --recursive https://github.com/jbtule/keyczar-dotnet.git
+```
+The `recursive` flag pulls in the unit test data.
+
 ## Build ##
 
-#### Visual Studio 2010 or Later / MSBuild [![.Net Build Status][1]][2] ####
+#### Visual Studio 2010 or Later / MSBuild ####
+**Master: [![.Net Build Status][1]][2] Stable: [![.Net Build Status][5]][6]**
 
 Dependencies should be downloaded automaticially with [NuGet](http://nuget.org) which is integrated into the solution. Build all should trigger nuget to download all dependencies from Visual Studio or MSBuild. 
 
-#### MonoDevelop 3.04 or Later / xbuild [![ Mono Build Status][3]][4] ####
+#### MonoDevelop 3.04 or Later / xbuild ####
+**Master: [![ Mono Build Status][3]][4] Stable: [![ Mono Build Status][7]][8]**
 
 Run `MonoRestoreNugetPackages.sh` script first to restore NuGet dependency then you may build from MonoDevelop with `Build All` or with just xbuild run `xbuild Keyczar.sln`.
 
@@ -89,6 +99,10 @@ Run `MonoRestoreNugetPackages.sh` script first to restore NuGet dependency then 
 [2]:http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1
 [3]:https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master
 [4]:https://travis-ci.org/jbtule/keyczar-dotnet
+[5]:http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt933\)/statusIcon
+[6]:http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt933&buildId=lastFinished&guest=1
+[7]:https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=stable
+[8]:https://travis-ci.org/jbtule/keyczar-dotnet
 
 See more in [Building in Depth](http://github.com/jbtule/keyczar-dotnet/wiki/Building-or-Testing-Keyczar-dotnet-in-Depth).
 
