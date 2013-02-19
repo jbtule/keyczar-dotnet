@@ -78,9 +78,11 @@ See more usage and documentation in the [Wiki](http://github.com/jbtule/keyczar-
 ## Source ##
 
 Source code can be obtained with `git`
+
 ```
 git clone --recursive https://github.com/jbtule/keyczar-dotnet.git
 ```
+
 The `recursive` flag pulls in the unit test data.
 
 ## Build ##
