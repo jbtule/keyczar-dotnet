@@ -95,7 +95,7 @@ Dependencies should be downloaded automaticially with [NuGet](http://nuget.org) 
 #### MonoDevelop 3.04 or Later / xbuild ####
 **Master: [![ Mono Build Status][3]][4] Stable: [![ Mono Build Status][7]][8]**
 
-Run `MonoRestoreNugetPackages.sh` script first to restore NuGet dependency then you may build from MonoDevelop with `Build All` or  just with xbuild, set export EnableNuGetPackageRestore=true` and run `xbuild Keyczar.sln`.
+Run `MonoRestoreNugetPackages.sh` script first to restore NuGet dependency then you may build from MonoDevelop with `Build All` or  just with xbuild, set `export EnableNuGetPackageRestore=true` and run `xbuild Keyczar.sln`.
 
 [1]:http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon
 [2]:http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1
