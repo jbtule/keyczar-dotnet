@@ -102,27 +102,27 @@ namespace KeyczarTest
         }
 
 
-        [Test]
+        [Test,Category("NoProfiler")]
         public void TestSecureEqualsSameLengthConstantTimeCompareTests()
         {
             CompareDiffNanoSeconds(() => Secure.Equals(random1, random1),() => Secure.Equals(random1, random2));
         }
 
-        [Test]
+        [Test,Category("NoProfiler")]
         public void TestSecureEqualsSameLengthConstantTimeCompareTestsLarge()
         {
             CompareDiffNanoSeconds(() => Secure.Equals(randomLarge1, randomLarge1, startIndex: 32, maxCount: 32),
                 () => Secure.Equals(randomLarge1, randomLarge2, startIndex: 32, maxCount: 32));
         }
 
-        [Test]
+        [Test,Category("NoProfiler")]
         public void TestSecureEqualsDifferentLengthConstantTimeCompareTestsLarge()
         {
             CompareDiffNanoSeconds(() => Secure.Equals(randomLarge1, randomLarge1, startIndex: 32, maxCount: 32),
                 () => Secure.Equals(emptyArray, randomLarge1, startIndex: 32, maxCount: 32));
         }
 
-        [Test]
+        [Test,Category("NoProfiler")]
         public void TestSecureEqualsDifferentLengthConstantTimeCompareTests()
         {
             CompareDiffNanoSeconds(() => Secure.Equals(random1, random1),
@@ -130,7 +130,7 @@ namespace KeyczarTest
         }
 
 
-        [Test]
+        [Test,Category("NoProfiler")]
         public void TestSecureEqualsDifferentLengthConstantTimeCompareTests2()
         {
             CompareDiffNanoSeconds(() => Secure.Equals(random1, random1),
