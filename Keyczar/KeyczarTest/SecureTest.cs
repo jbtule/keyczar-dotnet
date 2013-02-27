@@ -30,6 +30,7 @@ namespace KeyczarTest
         private byte[] randomLarge1;
         private byte[] randomLarge2;
         private byte[] emptyArray;
+        
         [SetUp]
         public void Setup()
         {
@@ -44,20 +45,35 @@ namespace KeyczarTest
             Secure.Random.NextBytes(randomLarge2);
         }
 
-        private long AvergateTimeNanoSeconds(Func<bool> comparison, bool expected)
+        private void CompareDiffNanoSeconds(Func<bool> compareTrue, Func<bool> compareFalse)
         {  
             var iterations = 500000;
             var timeSpan = new TimeSpan(0);
+ 			var timeSpan2 = new TimeSpan(0);
             for (int i = 0; i < iterations; i++)
             {
                 var watch = new System.Diagnostics.Stopwatch();
                 watch.Start();
-                var actual = comparison();
+                var actual = compareTrue();
                 watch.Stop();
                 timeSpan += watch.Elapsed;
-                Expect(actual, Is.EqualTo(expected));
+                Expect(actual, Is.True);
+
+                var watch2 = new System.Diagnostics.Stopwatch();
+                watch2.Start();
+                var actual2 = compareFalse();
+                watch2.Stop();
+                timeSpan2 += watch2.Elapsed;
+                Expect(actual2, Is.False);
             }
-            return (timeSpan.Ticks / iterations) * 100;
+            var trueAvgDur = (timeSpan.Ticks / iterations) * 100;
+            var falsAvgDur = (timeSpan2.Ticks / iterations) * 100;
+
+           //if the entire difference of operation is less than 200 nano seconds
+           //and 200 nano seconds is the narrowest event that can be detected over a lan within an operation 
+           //then we can be reasonably assume that any comparision differences are not detectable.
+           //but different runtimes, cpu's etc can effect this, we can only do our best in such situations.
+           Expect(Math.Abs(trueAvgDur - falsAvgDur), Is.LessThan(200));
         }
 
         [Test]
@@ -85,57 +101,41 @@ namespace KeyczarTest
             Expect(() => Secure.Equals(randomLarge1, randomLarge2, startIndex: -32, maxCount: 32), Throws.TypeOf<ArgumentOutOfRangeException>());
         }
 
-        private void ExpectAverageTimeDifferencesSafe(long avg1NanoSeconds, long avg2NanoSeconds)
-        {
-            //if the entire difference of operation is less than 200 nano seconds
-            //and 200 nano seconds is the narrowest event that can be detected over a lan within an operation 
-            //then we can be reasonably assume that any comparision differences are not detectable.
-            //but different runtimes, cpu's etc can effect this, we can only do our best in such situations.
-            Expect(Math.Abs(avg1NanoSeconds - avg2NanoSeconds), Is.LessThan(200));
-        }
 
         [Test]
         public void TestSecureEqualsSameLengthConstantTimeCompareTests()
         {
-           var avgCompare1 = AvergateTimeNanoSeconds(() => Secure.Equals(random1, random1), true);
-           var avgCompare2 = AvergateTimeNanoSeconds(() => Secure.Equals(random1, random2), false);
-            ExpectAverageTimeDifferencesSafe(avgCompare1, avgCompare2);
+            CompareDiffNanoSeconds(() => Secure.Equals(random1, random1),() => Secure.Equals(random1, random2));
         }
 
         [Test]
         public void TestSecureEqualsSameLengthConstantTimeCompareTestsLarge()
         {
-            var avgCompare1 = AvergateTimeNanoSeconds(() => Secure.Equals(randomLarge1, randomLarge1, startIndex: 32, maxCount: 32), true);
-            var avgCompare2 = AvergateTimeNanoSeconds(() => Secure.Equals(randomLarge1, randomLarge2, startIndex: 32, maxCount: 32), false);
-            ExpectAverageTimeDifferencesSafe(avgCompare1, avgCompare2);
+            CompareDiffNanoSeconds(() => Secure.Equals(randomLarge1, randomLarge1, startIndex: 32, maxCount: 32),
+                () => Secure.Equals(randomLarge1, randomLarge2, startIndex: 32, maxCount: 32));
         }
 
         [Test]
         public void TestSecureEqualsDifferentLengthConstantTimeCompareTestsLarge()
         {
-            var avgCompare1 = AvergateTimeNanoSeconds(() => Secure.Equals(randomLarge1, randomLarge1, startIndex: 32, maxCount: 32), true);
-            var avgCompare2 = AvergateTimeNanoSeconds(() => Secure.Equals(emptyArray, randomLarge1, startIndex: 32, maxCount: 32), false);
-            ExpectAverageTimeDifferencesSafe(avgCompare1, avgCompare2);
+            CompareDiffNanoSeconds(() => Secure.Equals(randomLarge1, randomLarge1, startIndex: 32, maxCount: 32),
+                () => Secure.Equals(emptyArray, randomLarge1, startIndex: 32, maxCount: 32));
         }
 
         [Test]
         public void TestSecureEqualsDifferentLengthConstantTimeCompareTests()
         {
-            var avgCompare1 = AvergateTimeNanoSeconds(() => Secure.Equals(random1, random1), true);
-            var avgCompare2 = AvergateTimeNanoSeconds(() => Secure.Equals(emptyArray, random2), false);
-            ExpectAverageTimeDifferencesSafe(avgCompare1, avgCompare2);
+            CompareDiffNanoSeconds(() => Secure.Equals(random1, random1),
+                    () => Secure.Equals(emptyArray, random2));
         }
 
 
         [Test]
         public void TestSecureEqualsDifferentLengthConstantTimeCompareTests2()
         {
-            var avgCompare1 = AvergateTimeNanoSeconds(() => Secure.Equals(random1, random1), true);
-            var avgCompare2 = AvergateTimeNanoSeconds(() => Secure.Equals(random1, emptyArray), false);
-            ExpectAverageTimeDifferencesSafe(avgCompare1, avgCompare2);
+            CompareDiffNanoSeconds(() => Secure.Equals(random1, random1),
+                   () => Secure.Equals(random1, emptyArray));
         }
-
-
     
     }
 }
