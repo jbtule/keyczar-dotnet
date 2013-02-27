@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Keyczar;
 using Keyczar.Unofficial;
@@ -16,7 +19,10 @@ namespace KeyczarTest.Unofficial
 
         private static string TEST_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet");
 
-        private static string TEST_WEBDATA = "http://jbtule.github.com/keyczar-dotnet/keys/";
+
+   
+        private static string TEST_WEBDATA = "https://jtuley-keyczar-testdata.googlecode.com/git/existing-data/dotnet/";
+     
 
         [Test]
         public void TestCryptedKey()
@@ -65,6 +71,8 @@ namespace KeyczarTest.Unofficial
         [Test]
         public void TestPublicKeyVerify()
         {
+    
+
             var basePath = Util.TestDataPath(TEST_DATA, "");
             var keyPath = Path.Combine(basePath, "rsa-sign");
             var webKeyPath = TEST_WEBDATA + "rsa-sign.public/";
@@ -75,7 +83,8 @@ namespace KeyczarTest.Unofficial
                 signature = dataSigner.Sign(input);
             }
 
-            using (var dataVerifier = new Verifier(new WebKeySet(webKeyPath)))
+            var webKeySet = new WebKeySet(webKeyPath);
+            using (var dataVerifier = new Verifier(webKeySet))
             {
                 var verified = dataVerifier.Verify(input, signature);
                 Expect(verified, Is.True);

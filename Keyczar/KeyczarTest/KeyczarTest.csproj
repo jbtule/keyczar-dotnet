@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="CollisionTest.cs" />
     <Compile Include="FallbackTest.cs" />
+    <Compile Include="SecureTest.cs" />
     <Compile Include="Support\DotNetSymmetricStream.cs" />
     <Compile Include="Interop\Aes.cs" />
     <Compile Include="Interop\AesCrypted.cs" />

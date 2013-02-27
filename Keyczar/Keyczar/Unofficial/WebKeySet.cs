@@ -14,8 +14,12 @@
  */
 
 
+using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using Newtonsoft.Json;
 
 namespace Keyczar.Unofficial
@@ -29,12 +33,76 @@ namespace Keyczar.Unofficial
         /// Initializes a new instance of the <see cref="WebKeySet" /> class.
         /// </summary>
         /// <param name="webUrl">The web URL.</param>
+        /// <param name="allowNonSslUrl">Allow non https urls (less security)</param>
+        /// <exception cref="System.ArgumentException">https urls only;webUrl</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1054:UriParametersShouldNotBeStrings",
             MessageId = "0#", Justification = "Uri is way to inconvenient for a simple web address")]
-        public WebKeySet(string webUrl)
+        public WebKeySet(string webUrl, bool allowNonSslUrl = false)
         {
+            if (!allowNonSslUrl && !webUrl.StartsWith("https:", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException("https urls only","webUrl");
+            }
+
             WebClient = new WebClient {BaseAddress = webUrl};
         }
+        /// <summary>
+        /// Adds the thumbprint to identify valid self signed certificates.
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        public static void AddSelfSignedThumbprint(string thumbprint)
+        {
+            thumbprint = thumbprint.Replace(":", "");
+            thumbprint = thumbprint.Replace(" ", ""); 
+            thumbprint = thumbprint.ToUpperInvariant();
+            if (SelfSignedThumbprints.Count == 0)
+            {
+                ServicePointManager.ServerCertificateValidationCallback += CertificateValidationCallback;
+            }
+            SelfSignedThumbprints.Add(thumbprint);
+        }
+
+        /// <summary>
+        /// Removes thumbprint to identify valid self signed certificates.
+        /// </summary>
+        /// <param name="thumbprint">The thumbprint.</param>
+        public static void RemoveSelfSignedThumbprint(string thumbprint)
+        {
+            thumbprint = thumbprint.Replace(":", "");
+            thumbprint = thumbprint.Replace(" ", "");
+            thumbprint = thumbprint.ToUpperInvariant();
+            SelfSignedThumbprints.Remove(thumbprint);
+            if (SelfSignedThumbprints.Count == 0)
+            {
+// ReSharper disable DelegateSubtraction
+                ServicePointManager.ServerCertificateValidationCallback -= CertificateValidationCallback;
+// ReSharper restore DelegateSubtraction
+            }
+        }
+
+
+        /// <summary>
+        /// The self signed thumbprints
+        /// </summary>
+        private static readonly HashSet<string> SelfSignedThumbprints = new HashSet<string>();
+
+
+
+        private static bool CertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslpolicyerrors)
+        {
+            if (sslpolicyerrors == SslPolicyErrors.None)
+                return true;
+            if (sslpolicyerrors == SslPolicyErrors.RemoteCertificateChainErrors)
+            {
+                var cert = certificate as X509Certificate2;
+                if (cert != null)
+                {
+                    return SelfSignedThumbprints.Contains(cert.Thumbprint);
+                }
+            }
+            return false;
+        }
+
 
         /// <summary>
         /// Gets the web client.
