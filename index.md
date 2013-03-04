@@ -1,6 +1,8 @@
 ---
 layout: main
 title: Keyczar-dotnet by jbtule
+project: keyczar-dotnet
+username: jbtule
 ---
 
 # Keyczar dotnet #
