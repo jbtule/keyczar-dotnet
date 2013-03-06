@@ -1,3 +1,9 @@
+### Keyczar dotnet v 0.7.5.6 (Beta) March 6, 2013
+
+ - Less variable constant time compare
+ - WebKeySet requires SSL by default
+ - WebKeySet can allow self signed certs by thumbprint
+
 ### Keyczar dotnet v 0.7.5.5 (Beta) February 19, 2013
 
  - Changed TimeoutVerifier to support alternative time source in constuctor.

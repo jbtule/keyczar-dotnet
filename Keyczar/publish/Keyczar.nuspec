@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>Keyczar</id>
-        <version>0.7.5-beta5</version>
+        <version>0.7.5-beta6</version>
         <title>Keyczar</title>
         <authors>Jay Tuley,Google</authors>
         <owners>Jay Tuley</owners>
@@ -23,9 +23,9 @@ Keyczar is an open source cryptographic toolkit designed to make it easier and s
 </description>
         <summary>Toolkit for safe and simple cryptography</summary>
         <releaseNotes>
-		 - Changed TimeoutVerifier to support alternative time source in constuctor.
-		 - Removed unnecessary digest size spec.
-		 - Renamed AesAeadStream to SymmetricAeadStream
+		 - Less variable constant time compare
+		 - WebKeySet requires SSL by default
+		 - WebKeySet can allow self signed certs by thumbprint
 		</releaseNotes>
         <copyright>Copyright 2012-2013</copyright>
         <tags>cryptography crypto security encryption symmetric asymmetric mac aes rsa dsa hmac</tags>
