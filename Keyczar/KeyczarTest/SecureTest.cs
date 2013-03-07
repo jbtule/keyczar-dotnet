@@ -50,26 +50,43 @@ namespace KeyczarTest
             var iterations = 500000;
             var timeSpan = new TimeSpan(0);
  			var timeSpan2 = new TimeSpan(0);
-            for (int i = 0; i < iterations; i++)
+            long trueAvgDur=0;
+            long falsAvgDur=0;
+            int reiterateCount = 0;
+            var reiterate = true;
+            //because load on the machine could throw off the average
+            //progressively add more iterations to factor out the possiblity
+            while (reiterate)
             {
-                var watch = new System.Diagnostics.Stopwatch();
-                watch.Start();
-                var actual = compareTrue();
-                watch.Stop();
-                timeSpan += watch.Elapsed;
-                Expect(actual, Is.True);
+                reiterateCount++;
+                for (int i = 0; i < iterations; i++)
+                {
+                    var watch = new System.Diagnostics.Stopwatch();
+                    watch.Start();
+                    var actual = compareTrue();
+                    watch.Stop();
+                    timeSpan += watch.Elapsed;
+                    Expect(actual, Is.True);
 
-                var watch2 = new System.Diagnostics.Stopwatch();
-                watch2.Start();
-                var actual2 = compareFalse();
-                watch2.Stop();
-                timeSpan2 += watch2.Elapsed;
-                Expect(actual2, Is.False);
+                    var watch2 = new System.Diagnostics.Stopwatch();
+                    watch2.Start();
+                    var actual2 = compareFalse();
+                    watch2.Stop();
+                    timeSpan2 += watch2.Elapsed;
+                    Expect(actual2, Is.False);
+                }
+
+                trueAvgDur = (timeSpan.Ticks / (iterations * reiterateCount))*100;
+                falsAvgDur = (timeSpan2.Ticks / (iterations * reiterateCount)) * 100;
+                reiterate = Math.Abs(trueAvgDur - falsAvgDur) >= 200;
+
+                //with a really high iteration count if the test is still not passing
+                //something is wrong and this unit test should fail.
+                if (reiterateCount > 10)
+                    break;
             }
-            var trueAvgDur = (timeSpan.Ticks / iterations) * 100;
-            var falsAvgDur = (timeSpan2.Ticks / iterations) * 100;
 
-           //if the entire difference of operation is less than 200 nano seconds
+            //if the entire difference of operation is less than 200 nano seconds
            //and 200 nano seconds is the narrowest event that can be detected over a lan within an operation 
            //then we can be reasonably assume that any comparision differences are not detectable.
            //but different runtimes, cpu's etc can effect this, we can only do our best in such situations.
