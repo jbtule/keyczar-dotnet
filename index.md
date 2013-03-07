@@ -1,8 +1,9 @@
 ---
 layout: main
-title: Keyczar-dotnet by jbtule
+title: Keyczar high level encryption toolkit in C#
 project: keyczar-dotnet
 username: jbtule
+heading: Keyczar high level encryption toolkit in C#
 ---
 
 # Keyczar dotnet #
