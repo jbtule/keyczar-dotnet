@@ -27,7 +27,8 @@ namespace KeyczarTest.Interop
         {
         }
     }
-
+   
+    [TestFixture("py3")]
     [TestFixture("cs")]
     [TestFixture("py")]
     [TestFixture("j")]

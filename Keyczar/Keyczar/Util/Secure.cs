@@ -94,6 +94,7 @@ namespace Keyczar.Util
         /// <exception cref="System.ArgumentNullException">Both a and b both cannot be null.</exception>
         /// <exception cref="System.ArgumentException">Both a and b both cannot have zero length.</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">startIndex and maxCount cannot be set so that there isn't a comparison.</exception>
+	[MethodImpl(MethodImplOptions.NoOptimization)]
         public static bool Equals(byte[] a, byte[] b, int startIndex = 0, int maxCount = -1)
         {
             //We don't ever want to use this function to compare two nulls
