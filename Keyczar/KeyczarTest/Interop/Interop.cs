@@ -32,6 +32,7 @@ namespace KeyczarTest.Interop
     [TestFixture("cs")]
     [TestFixture("py")]
     [TestFixture("j")]
+    [TestFixture("go")]
     public abstract class Interop : AssertionHelper
     {
         private string _implementation;

@@ -155,17 +155,11 @@ namespace Keyczar
         private static Dictionary<int, SortedList<KeyVersion, Key>> HashKeys(IList<Tuple<byte[],KeyVersion,Key>> versions)
         {
             return versions
-                .Select(t=>new {Hash =t.Item1, Version=t.Item2, CryptKey =t.Item3})
+                .Select(t => new {Hash = t.Item1, Version = t.Item2, CryptKey = t.Item3})
                 .ToLookup(k => Utility.ToInt32(k.Hash), v => v)
-                .ToDictionary(k => k.Key, v =>
-                                              {
-                                                  var list = new SortedList<KeyVersion, Key>();
-                                                  foreach (var pair in v)
-                                                  {
-                                                      list.Add(pair.Version,pair.CryptKey);
-                                                  }
-                                                  return list;
-                                              });
+                .ToDictionary(k => k.Key,
+                              v => new SortedList<KeyVersion, Key>(v.ToDictionary(vk => vk.Version, vv => vv.CryptKey)));
+
         }
 
         /// <summary>
