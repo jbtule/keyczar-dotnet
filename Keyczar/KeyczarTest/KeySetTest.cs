@@ -38,7 +38,7 @@ namespace KeyczarTest
 
           public KeySetTest(string testPath)
           {
-			  testPath =Util.ReplaceDirPrefix(testPath);
+              testPath =Util.ReplaceDirPrefix(testPath);
 
               TEST_DATA = testPath;
           }
@@ -79,7 +79,7 @@ namespace KeyczarTest
               using (var reader = new PbeKeySet(new KeySet(Util.TestDataPath(TEST_DATA, "pbe_json")), password))
               {
 
-				Expect(reader.Metadata.Encrypted, Is.True);
+                Expect(reader.Metadata.Encrypted, Is.True);
 
                   var data1 = Encoding.UTF8.GetString(reader.GetKeyData(1));
                   var data2 = Encoding.UTF8.GetString(reader.GetKeyData(1));
@@ -109,27 +109,27 @@ namespace KeyczarTest
           }
 
 
-		[Test]
-		public void TestRevoke()
-		{
-			using(var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"))){
-				var status =reader.Demote(1);
-				Expect(status, Is.EqualTo(KeyStatus.Inactive));
-				var re = reader.Revoke(1);
-				Expect(re,Is.True);
-				Expect(reader.Metadata.Versions.Any(),Is.False);
-			}
-		}
+        [Test]
+        public void TestRevoke()
+        {
+            using(var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"))){
+                var status =reader.Demote(1);
+                Expect(status, Is.EqualTo(KeyStatus.Inactive));
+                var re = reader.Revoke(1);
+                Expect(re,Is.True);
+                Expect(reader.Metadata.Versions.Any(),Is.False);
+            }
+        }
 
-		[Test]
-		public void TestPromotePrimary()
-		{
-			using(var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"))){
-				var status =reader.Promote(1);
-				Expect(status, Is.EqualTo(KeyStatus.Primary));
-				Expect(() => new GetPrimary(reader).GetPrimaryExposed(), Is.Not.Null);
-			}
-		}
+        [Test]
+        public void TestPromotePrimary()
+        {
+            using(var reader = new MutableKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"))){
+                var status =reader.Promote(1);
+                Expect(status, Is.EqualTo(KeyStatus.Primary));
+                Expect(() => new GetPrimary(reader).GetPrimaryExposed(), Is.Not.Null);
+            }
+        }
 
         [Test]
         public void TestAddUnknownProperty()

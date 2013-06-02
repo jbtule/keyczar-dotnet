@@ -29,20 +29,20 @@ namespace Keyczar
     /// <summary>
     /// Types of compression for plaintext
     /// </summary>
-	public enum CompressionType{
+    public enum CompressionType{
         /// <summary>
         /// None
         /// </summary>
-		None =0,
+        None =0,
         /// <summary>
         /// Gzip compression
         /// </summary>
-		Gzip =1,
+        Gzip =1,
         /// <summary>
         /// Zlib compression
         /// </summary>
-		Zlib =2,
-	}
+        Zlib =2,
+    }
 
     /// <summary>
     ///  Encrypts data using a given key set.
@@ -78,9 +78,9 @@ namespace Keyczar
         /// Gets or sets the compression.
         /// </summary>
         /// <value>The compression.</value>
-		public CompressionType Compression{
-			get;set;
-		}
+        public CompressionType Compression{
+            get;set;
+        }
 
         /// <summary>
         /// Encrypts the specified raw string data.
@@ -89,7 +89,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Encrypt(string rawData)
         {
-			return WebBase64.FromBytes(Encrypt(RawStringEncoding.GetBytes(rawData)));
+            return WebBase64.FromBytes(Encrypt(RawStringEncoding.GetBytes(rawData)));
         }
 
         /// <summary>
@@ -125,36 +125,36 @@ namespace Keyczar
             var cryptKey = key as IEncrypterKey;
 
             var resetStream = Utility.ResetStreamWhenFinished(output);
-			using (var reader = new NondestructiveBinaryReader(input))
-	        {
-	            FinishingStream encryptingStream;
+            using (var reader = new NondestructiveBinaryReader(input))
+            {
+                FinishingStream encryptingStream;
 
              
-	            output.Write(header, 0, header.Length);
-	            encryptingStream = cryptKey.GetEncryptingStream(output);
-	           
+                output.Write(header, 0, header.Length);
+                encryptingStream = cryptKey.GetEncryptingStream(output);
+               
 
-				Stream wrapper = encryptingStream;
-				if(Compression == CompressionType.Gzip){
-					wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
-				}else if(Compression == CompressionType.Zlib){
-					wrapper = new ZlibStream(encryptingStream,CompressionMode.Compress,true);
-				}
+                Stream wrapper = encryptingStream;
+                if(Compression == CompressionType.Gzip){
+                    wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
+                }else if(Compression == CompressionType.Zlib){
+                    wrapper = new ZlibStream(encryptingStream,CompressionMode.Compress,true);
+                }
 
-	            using (encryptingStream)
-	            {
-	                encryptingStream.GetTagLength(header);
-					using(Compression == CompressionType.None ? null : wrapper){
+                using (encryptingStream)
+                {
+                    encryptingStream.GetTagLength(header);
+                    using(Compression == CompressionType.None ? null : wrapper){
                         while (reader.Peek() != -1 && input.Position < stopLength)
-		                {
+                        {
                             var adjustedBufferSize = (int)Math.Min(BufferSize, (stopLength - input.Position));
                             byte[] buffer = reader.ReadBytes(adjustedBufferSize);
-							wrapper.Write(buffer, 0, buffer.Length);
-		                }
-					}
-	                encryptingStream.Finish();
-	            }
-	        }
+                            wrapper.Write(buffer, 0, buffer.Length);
+                        }
+                    }
+                    encryptingStream.Finish();
+                }
+            }
 
            
             byte[] hash;

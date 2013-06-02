@@ -65,7 +65,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Sign(String rawData, DateTime expiration)
         {
-			return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
+            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
 
         }
 
@@ -130,11 +130,11 @@ namespace Keyczar
             /// <returns></returns>
             public byte[] Sign(Stream input, DateTime expiration, long inputLength)
             {
-				using(var stream = new MemoryStream()){
+                using(var stream = new MemoryStream()){
                     Sign(input, stream, prefixData: expiration, postfixData: null, signatureData: expiration, inputLength:inputLength);
-					stream.Flush();
-					return stream.ToArray();
-				}
+                    stream.Flush();
+                    return stream.ToArray();
+                }
             }
 
             /// <summary>

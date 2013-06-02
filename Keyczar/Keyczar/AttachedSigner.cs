@@ -23,27 +23,27 @@ namespace Keyczar
     /// <summary>
     /// Signs a message and attaches the signature
     /// </summary>
-	public class AttachedSigner:AttachedVerifier
-	{
+    public class AttachedSigner:AttachedVerifier
+    {
         private AttachedSignerHelper _signer;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AttachedSigner"/> class.
-		/// </summary>
-		/// <param name="keySetLocation">The key set location.</param>
-		public AttachedSigner(string keySetLocation) : this(new KeySet(keySetLocation))
-		{
-		}
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttachedSigner"/> class.
+        /// </summary>
+        /// <param name="keySetLocation">The key set location.</param>
+        public AttachedSigner(string keySetLocation) : this(new KeySet(keySetLocation))
+        {
+        }
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AttachedSigner"/> class.
-		/// </summary>
-		/// <param name="keySet">The key set.</param>
-		public AttachedSigner(IKeySet keySet) : base(keySet)
-		{
-			_signer = new AttachedSignerHelper(keySet);
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttachedSigner"/> class.
+        /// </summary>
+        /// <param name="keySet">The key set.</param>
+        public AttachedSigner(IKeySet keySet) : base(keySet)
+        {
+            _signer = new AttachedSignerHelper(keySet);
 
-		}
+        }
 
         /// <summary>
         /// Signs the specified raw data.
@@ -51,11 +51,11 @@ namespace Keyczar
         /// <param name="rawData">The raw data.</param>
         /// <param name="hidden">The hidden data used to generate the digest signature.</param>
         /// <returns></returns>
-		public WebBase64 Sign(String rawData,Byte[] hidden =null)
-		{
+        public WebBase64 Sign(String rawData,Byte[] hidden =null)
+        {
             return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), hidden));
 
-		}
+        }
 
 
         /// <summary>
@@ -64,8 +64,8 @@ namespace Keyczar
         /// <param name="data">The data.</param>
         /// <param name="hidden">The hidden data used to generate the digest signature.</param>
         /// <returns></returns>
-		public byte[] Sign(byte[] data, Byte[] hidden =null)
-		{
+        public byte[] Sign(byte[] data, Byte[] hidden =null)
+        {
             using (var outstream = new MemoryStream())
             using (var memstream = new MemoryStream(data))
             {
@@ -73,7 +73,7 @@ namespace Keyczar
                 outstream.Flush();
                 return outstream.ToArray();
             }
-		}
+        }
 
         /// <summary>
         /// Signs the specified input.
@@ -82,25 +82,25 @@ namespace Keyczar
         /// <param name="signedData">The stream to write the data with attached signature.</param>
         /// <param name="hidden">The hidden data that can be used to generate the signature.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
-		public void Sign(Stream input, Stream signedData, Byte[] hidden =null, long inputLength =-1)
-		{
+        public void Sign(Stream input, Stream signedData, Byte[] hidden =null, long inputLength =-1)
+        {
             _signer.Sign(input, signedData, hidden, inputLength);
-		}
+        }
 
         /// <summary>
         /// Helper subclass to sign correctly
         /// </summary>
-		protected class AttachedSignerHelper:Signer
-		{
-			/// <summary>
-			/// Initializes a new instance of the <see cref="AttachedSignerHelper"/> class.
-			/// </summary>
-			/// <param name="keySet">The key set.</param>
-			public AttachedSignerHelper(IKeySet keySet)
-				: base(keySet)
-			{
-				
-			}
+        protected class AttachedSignerHelper:Signer
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="AttachedSignerHelper"/> class.
+            /// </summary>
+            /// <param name="keySet">The key set.</param>
+            public AttachedSignerHelper(IKeySet keySet)
+                : base(keySet)
+            {
+                
+            }
 
             /// <summary>
             /// Signs the specified data.
@@ -178,7 +178,7 @@ namespace Keyczar
                 }
                 outputStream.Write(signature, 0, signature.Length);
             }
-		}
-	}
+        }
+    }
 }
 

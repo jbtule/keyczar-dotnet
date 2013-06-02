@@ -72,7 +72,7 @@ namespace Keyczar
         protected static readonly int BufferSize = 4096;
 
         private readonly Dictionary<int, SortedList<KeyVersion, Key>> _hashedKeys;
-		private readonly Dictionary<int, List<Key>> _hashedFallbackKeys;
+        private readonly Dictionary<int, List<Key>> _hashedFallbackKeys;
 
         private readonly Dictionary<int, Key> _versions;
         private readonly KeyVersion _primaryVersion;
@@ -140,7 +140,7 @@ namespace Keyczar
             _versions = versions.ToDictionary(k => k.Item2.VersionNumber, v => v.Item3);
 
             _hashedKeys = HashKeys(versions);
-			_hashedFallbackKeys = HashedFallbackKeys(versions);
+            _hashedFallbackKeys = HashedFallbackKeys(versions);
         }
 
         private static Dictionary<int, List<Key>> HashedFallbackKeys(IList<Tuple<byte[], KeyVersion, Key>> versions)
@@ -195,22 +195,22 @@ namespace Keyczar
         {
             var hashIndex =Utility.ToInt32(hash);
             SortedList<KeyVersion, Key> list;
-			var found = new List<Key>();
+            var found = new List<Key>();
             if (_hashedKeys.TryGetValue(hashIndex, out list))
             {
-				found.AddRange(list.Select(it => it.Value));
+                found.AddRange(list.Select(it => it.Value));
             }
 
-			//Fallback hashes for old/buggy hashes from other keyczar
-			List<Key> fallbacklist;
-			if (_hashedFallbackKeys.TryGetValue(hashIndex, out fallbacklist)){
-				found.AddRange(fallbacklist);
-			}
+            //Fallback hashes for old/buggy hashes from other keyczar
+            List<Key> fallbacklist;
+            if (_hashedFallbackKeys.TryGetValue(hashIndex, out fallbacklist)){
+                found.AddRange(fallbacklist);
+            }
 
-			//For special imported keys
-			if(_hashedKeys.TryGetValue(0, out list)){
-				found.AddRange(list.Select(it=>it.Value));
-			}
+            //For special imported keys
+            if(_hashedKeys.TryGetValue(0, out list)){
+                found.AddRange(list.Select(it=>it.Value));
+            }
             return found.Any() ? (IEnumerable<Key>)found : new Key[] {null};
         }
 

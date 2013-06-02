@@ -145,45 +145,45 @@ namespace Keyczar
                         : new MemoryStream();
                     Stream wrapper = baseStream;
                     bool success = false;
-					if(Compression == CompressionType.Gzip){
+                    if(Compression == CompressionType.Gzip){
                         wrapper = new WriteDecompressGzipStream(baseStream);
-					}else if(Compression == CompressionType.Zlib){
+                    }else if(Compression == CompressionType.Zlib){
                         wrapper = new ZlibStream(baseStream, CompressionMode.Decompress, true);
-					}
+                    }
 
                     //Perform Decryption
-					using(Compression == CompressionType.None ? null : wrapper){
+                    using(Compression == CompressionType.None ? null : wrapper){
                         FinishingStream crypterStream; 
                         resetStream.Reset();
-	                   
-	                    input.Seek(HeaderLength, SeekOrigin.Current);
-						crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper), () => new DummyStream());
-	                    
-					    try
-					    {
-					        using (crypterStream)
-					        {
-					            var tagLength = crypterStream.GetTagLength(header);
-					            while (input.Position < fullLength - tagLength)
-					            {
-					                byte[] buffer =
-					                    reader.ReadBytes((int) Math.Min(BufferSize, fullLength - tagLength - input.Position));
-					                crypterStream.Write(buffer, 0, buffer.Length);
-					            }
-					            crypterStream.Finish();
+                       
+                        input.Seek(HeaderLength, SeekOrigin.Current);
+                        crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper), () => new DummyStream());
+                        
+                        try
+                        {
+                            using (crypterStream)
+                            {
+                                var tagLength = crypterStream.GetTagLength(header);
+                                while (input.Position < fullLength - tagLength)
+                                {
+                                    byte[] buffer =
+                                        reader.ReadBytes((int) Math.Min(BufferSize, fullLength - tagLength - input.Position));
+                                    crypterStream.Write(buffer, 0, buffer.Length);
+                                }
+                                crypterStream.Finish();
                                 input.Seek(tagLength, SeekOrigin.Current); 
                                 success = true;
-					        }
-					    }
-					    catch (Exception e)
-					    {
+                            }
+                        }
+                        catch (Exception e)
+                        {
                             //We don't want exceptions to keep us from trying different keys
                             //particularly ones that aren't pre verified
                             System.Diagnostics.Debug.WriteLine(e.Message);
                             System.Diagnostics.Debug.WriteLine(e.StackTrace);
-					    }
+                        }
                      
-					}
+                    }
                     if (success)
                     {
                         if (!ciphertextIsPreverified)

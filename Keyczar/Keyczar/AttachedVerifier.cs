@@ -23,33 +23,33 @@ namespace Keyczar
     /// <summary>
     /// Verifies a message with an attached signature.
     /// </summary>
-	public class AttachedVerifier:Keyczar
+    public class AttachedVerifier:Keyczar
     {
         private HelperAttachedVerify _verifier;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="AttachedSigner"/> class.
-		/// </summary>
-		/// <param name="keySetLocation">The key set location.</param>
-		public AttachedVerifier(string keySetLocation)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AttachedSigner"/> class.
+        /// </summary>
+        /// <param name="keySetLocation">The key set location.</param>
+        public AttachedVerifier(string keySetLocation)
             : this(new KeySet(keySetLocation))
-		{
-		}
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AttachedSigner" /> class.
         /// </summary>
         /// <param name="keySet">The key set.</param>
         /// <exception cref="InvalidKeySetException">This key set can not be used for verifying signatures.</exception>
-		public AttachedVerifier(IKeySet keySet) : base(keySet)
-		{
-			if (keySet.Metadata.Purpose != KeyPurpose.Verify
-			    && keySet.Metadata.Purpose != KeyPurpose.SignAndVerify)
-			{
+        public AttachedVerifier(IKeySet keySet) : base(keySet)
+        {
+            if (keySet.Metadata.Purpose != KeyPurpose.Verify
+                && keySet.Metadata.Purpose != KeyPurpose.SignAndVerify)
+            {
                 throw new InvalidKeySetException("This key set can not be used for verifying signatures.");
-			}
+            }
             _verifier = new HelperAttachedVerify(keySet);
-		}
+        }
 
 
         /// <summary>
@@ -58,10 +58,10 @@ namespace Keyczar
         /// <param name="signedMessage">The signed message.</param>
         /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
         /// <returns></returns>
-		public bool Verify(WebBase64 signedMessage, byte[] hidden =null){
+        public bool Verify(WebBase64 signedMessage, byte[] hidden =null){
 
             return Verify(signedMessage.ToBytes(), hidden);
-		}
+        }
 
         /// <summary>
         /// Verifies the specified message.
@@ -69,12 +69,12 @@ namespace Keyczar
         /// <param name="signedMessage">The signed message.</param>
         /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
         /// <returns></returns>
-		public bool Verify(byte[] signedMessage, byte[] hidden =null){
+        public bool Verify(byte[] signedMessage, byte[] hidden =null){
             using (var memstream = new MemoryStream(signedMessage))
             {
                 return Verify(memstream, hidden);
             }
-		}
+        }
 
         /// <summary>
         /// Verifies the specified message.
@@ -83,7 +83,7 @@ namespace Keyczar
         /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
-		public bool Verify(Stream input, byte[] hidden =null, long inputLength=-1)
+        public bool Verify(Stream input, byte[] hidden =null, long inputLength=-1)
         {
             return _verifier.VerifyHidden(input, null, hidden, inputLength);
         }
@@ -276,6 +276,6 @@ namespace Keyczar
                 base.PostfixDataVerify(verifyingStream, extra: null);
             }
         }
-	}
+    }
 }
 
