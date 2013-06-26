@@ -90,7 +90,7 @@ namespace KeyczarTest
            //and 200 nano seconds is the narrowest event that can be detected over a lan within an operation 
            //then we can be reasonably assume that any comparision differences are not detectable.
            //but different runtimes, cpu's etc can effect this, we can only do our best in such situations.
-           Expect(Math.Abs(trueAvgDur - falsAvgDur), Is.LessThan(200));
+           Expect(Math.Abs(trueAvgDur - falsAvgDur), Is.LessThanOrEqual(200));
         }
 
         [Test]
