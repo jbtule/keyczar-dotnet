@@ -17,9 +17,8 @@ before_install:
 
 script:
  - cd Keyczar/
- - .ci/PreXbuild.sh
- - ./mono-build.sh 
- - .ci/PostXbuild.sh 
+ - xbuild 
+ - .ci/RunTests.sh 
 
 branches:
  only:
