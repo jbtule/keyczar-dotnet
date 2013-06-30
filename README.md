@@ -35,6 +35,26 @@ Source code can be obtained with
 
 Source can be built with Visual Studio 2012, MonoDevelop, msbuild, or xbuild using the Keyczar.sln as long as you have the nuget dependencies downloaded. More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
 
+Master | Stable | Provider
+------ | ------ | --------
+[![Build Status][WinImgMaster]][WinLinkMaster] | [![Build Status][WinImgStable]][WinLinkStable] | Windows CI Provided By [CodeBetter][] and [JetBrains][] 
+[![Build Status][MonoImgMaster]][MonoLinkMaster] | [![Build Status][MonoImgStable]][MonoLinkStable] | Mono CI Provided by [travis-ci][] 
+
+[WinImgMaster]:http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon
+[WinLinkMaster]:http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1
+[MonoImgMaster]:https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master
+[MonoLinkMaster]:https://travis-ci.org/jbtule/keyczar-dotnet
+[WinImgStable]:http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt933\)/statusIcon
+[WinLinkStable]:http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt933&buildId=lastFinished&guest=1
+[MonoImgStable]:https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=stable
+[MonoLinkStable]:https://travis-ci.org/jbtule/keyczar-dotnet
+
+
+[JetBrains]:http://www.jetbrains.com/
+[CodeBetter]:http://codebetter.com/
+[travis-ci]:https://travis-ci.org/
+
+
 ## Compatibility
 
  - Should interoperate with java/python/c++ with standard api
