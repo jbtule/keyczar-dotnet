@@ -26,7 +26,7 @@ namespace KeyczarTool
     {
         public static int Main(string[] args)
         {
-            // locate any commands in the assembly (or use an IoC container, or whatever source)
+
             var commands = new ConsoleCommand[]
                                {
                                    new Create(),
