@@ -49,6 +49,10 @@ namespace KeyczarTool.Commands
                     Func<string> newPrompt = CachedPrompt.Password(Util.DoublePromptForPassword).Prompt;
                     writer = new PbeKeySetWriter(writer, newPrompt);
                 }
+                else
+                {
+                    keySet.Metadata.Encrypted = false;
+                }
                 using (writer as PbeKeySetWriter)
                 {
                     if (keySet.Save(writer))
