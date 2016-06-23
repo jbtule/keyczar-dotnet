@@ -21,7 +21,7 @@ namespace KeyczarTest.Unofficial
 
 
    
-        private static string TEST_WEBDATA = "https://jtuley-keyczar-testdata.googlecode.com/git/existing-data/dotnet/";
+        private static string TEST_WEBDATA = "https://raw.githubusercontent.com/jbtule/keyczar-testdata/master/existing-data/";
      
 
         [Test]
