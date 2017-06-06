@@ -55,8 +55,9 @@ namespace KeyczarTool
                 }
                 catch
                 {
+                    Console.WriteLine("{0} {1}.", Localized.MsgCouldNotWrite, _location);
                 }
-                Console.WriteLine("{0} {1}.", Localized.MsgCouldNotWrite, _location);
+                
                 return -1;
             }
         }
