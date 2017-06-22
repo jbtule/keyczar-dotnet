@@ -1,26 +1,16 @@
 # Travis-CI Build for keyczar-dotnet 
 # see travis-ci.org for details
 
-language: objective-c
+language: csharp
+solution: Keyczar/Keyczar.sln
 
-env:
- global:
-  - EnableNuGetPackageRestore=true 
- matrix:
-  - MONO_VER="2.10.11"
-  - MONO_VER="3.0.12"
-
-before_install:
- - wget "http://download.mono-project.com/archive/${MONO_VER}/macos-10-x86/MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.dmg"
- - hdid "MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.dmg"
- - sudo installer -pkg "/Volumes/Mono Framework MDK ${MONO_VER}/MonoFramework-MDK-${MONO_VER}.macos10.xamarin.x86.pkg" -target /
+mono:
+  - latest
+  - 3.12.0
+  - 3.10.0
+  - 2.10.8
 
 script:
  - cd Keyczar/
  - xbuild 
- - .ci/RunTests.sh 
-
-branches:
- only:
-  - master
-  - stable
+ - .ci/RunTests.sh
