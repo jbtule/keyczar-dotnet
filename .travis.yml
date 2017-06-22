@@ -4,6 +4,9 @@
 language: csharp
 solution: Keyczar/Keyczar.sln
 
+env:		
+  - EnableNuGetPackageRestore=true 
+
 mono:
   - latest
   - 3.12.0
