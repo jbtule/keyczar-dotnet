@@ -3,14 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keyczar", "Keyczar\Keyczar.csproj", "{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{386EA88A-2149-473B-AF48-05672E301AE0}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\NuGet.Config = .nuget\NuGet.Config
-		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyczarTest", "KeyczarTest\KeyczarTest.csproj", "{FCDC85F7-BC0C-4F95-8DF2-3C2F8FAA8FE7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyczarTool", "KeyczarTool\KeyczarTool.csproj", "{27C1284A-EF74-418E-81AC-0C6B0880B559}"
