@@ -9,7 +9,7 @@ build_script:
   - cmd: cd Keyczar
   - cmd: msbuild /t:restore
   - cmd: msbuild
-  - cmd: packages/nunit.runners/2.6.1/tools/nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest/bin/Debug/net40/KeyczarTest.dll -include=Create
+  - cmd: ./packages/nunit.runners/2.6.1/tools/nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest/bin/Debug/net40/KeyczarTest.dll -include=Create
 
 test:
   categories:
