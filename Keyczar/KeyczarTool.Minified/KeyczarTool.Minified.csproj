@@ -64,8 +64,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\KeyczarTool\Properties\AssemblyInfo.cs">
-      <Link>Properties\AssemblyInfo.cs</Link>
+    <Compile Include="..\KeyczarTool\Properties\AdditionalInfo.cs">
+      <Link>Properties\AdditionalInfo.cs</Link>
     </Compile>
     <Compile Include="Diminish\src\7zipsdk\Common\CRC.cs" />
     <Compile Include="Diminish\src\7zipsdk\Common\InBuffer.cs" />
@@ -88,7 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\KeyczarTool\KeyczarTool.csproj">
-      <Project>{27c1284a-ef74-418e-81ac-0c6b0880b559}</Project>
+      <Project>{5F05075D-B252-4CB7-A89C-799B3869A2EF}</Project>
       <Name>KeyczarTool</Name>
       <Private>False</Private>
     </ProjectReference>

@@ -111,7 +111,7 @@
       <Name>Keyczar</Name>
     </ProjectReference>
     <ProjectReference Include="..\KeyczarTool\KeyczarTool.csproj">
-      <Project>{27C1284A-EF74-418E-81AC-0C6B0880B559}</Project>
+      <Project>{5F05075D-B252-4CB7-A89C-799B3869A2EF}</Project>
       <Name>KeyczarTool</Name>
     </ProjectReference>
   </ItemGroup>
