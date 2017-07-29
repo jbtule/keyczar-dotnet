@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent"> 
-    <Exec Command="'$(ProjectDir)\..\packages\diminishdependencies.tool\1.1.3\tools\DiminishDependencies.exe' -o '$(ProjectDir)\..\KeyczarTool.Minified\Diminish\refs' '$(TargetDir)KeyczarTool.exe' '$(TargetDir)*.dll'" /> 
+    <Exec Command="'$(ProjectDir)..\packages\diminishdependencies.tool\1.1.3\tools\DiminishDependencies.exe' -o '$(ProjectDir)..\KeyczarTool.Minified\Diminish\refs' '$(TargetDir)KeyczarTool.exe' '$(TargetDir)*.dll'" /> 
   </Target>
 
 </Project>
