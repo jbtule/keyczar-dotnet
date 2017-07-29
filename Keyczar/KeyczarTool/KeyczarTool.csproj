@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk" >
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net40</TargetFramework>
     <OutputType>Exe</OutputType>
@@ -38,7 +38,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent"> 
-    <Exec Command='"$(ProjectDir)\..\packages\diminishdependencies.tool\1.1.3\tools\DiminishDependencies.exe" -o "$(ProjectDir)\..\KeyczarTool.Minified\Diminish\refs" "$(TargetDir)KeyczarTool.exe" "$(TargetDir)*.dll"' /> 
+    <Exec Command="&quot;$(ProjectDir)\..\packages\diminishdependencies.tool\1.1.3\tools\DiminishDependencies.exe&quot; -o &quot;$(ProjectDir)\..\KeyczarTool.Minified\Diminish\refs&quot; &quot;$(TargetDir)KeyczarTool.exe&quot; &quot;$(TargetDir)*.dll&quot;" /> 
   </Target>
 
 </Project>

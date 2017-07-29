@@ -39,7 +39,5 @@
     <None Include="Unofficial\Readme.txt" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+
 </Project>
