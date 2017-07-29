@@ -1,11 +1,19 @@
 image: Visual Studio 2017
 
+install:
+  - cmd: git submodule update --init --recursive
+
 build: off
 
 build_script:
   - cmd: cd Keyczar
   - cmd: msbuild /t:restore
   - cmd: msbuild
+
+test:
+  categories:
+    except:
+      - Performance
 
 artifacts:
   - path: '**\bin\*\*.nupkg'
