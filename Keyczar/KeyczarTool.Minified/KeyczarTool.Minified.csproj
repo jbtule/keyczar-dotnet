@@ -132,7 +132,6 @@
     <Content Include="Diminish\refs\Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
   <PropertyGroup>
     <PreBuildEvent>
     </PreBuildEvent>
