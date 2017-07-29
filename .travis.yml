@@ -20,3 +20,8 @@ install:
 
 script:
  - msbuild
+ - .ci/RunTests.sh
+
+branches:
+  only:
+    - master

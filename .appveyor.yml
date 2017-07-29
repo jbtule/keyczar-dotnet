@@ -6,8 +6,6 @@ build_script:
   - cmd: msbuild /t:restore
   - cmd: msbuild
 
-test: off
-
 artifacts:
   - path: '**\bin\*\*.nupkg'
 

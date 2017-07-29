@@ -38,7 +38,7 @@ namespace KeyczarTest
 
         private static string TestDataBaseDir(string baseDir)
         {
-            return Path.Combine("..", "..", "..", "TestData", baseDir);
+            return Path.Combine("..", "..", "..", "..", "TestData", baseDir);
         }
 
         public static string TestDataPath(string baseDir, string topDir, string subDir = null)
