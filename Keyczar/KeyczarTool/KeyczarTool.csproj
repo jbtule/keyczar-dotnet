@@ -1,9 +1,7 @@
-﻿<Project >
-  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
+﻿<Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
     <TargetFramework>net40</TargetFramework>
     <OutputType>Exe</OutputType>
-    <Platform>Any CPU</Platform>
     <Description>Keyczar dotnet</Description>
     <Company></Company>
     <Authors> jbtule </Authors>
@@ -39,9 +37,8 @@
     </Compile>
   </ItemGroup>
 
-  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
-  <PropertyGroup>
-    <PostBuildEvent>"$(ProjectDir)\..\packages\diminishdependencies.tool\1.1.3\tools\DiminishDependencies.exe" -o "$(ProjectDir)\..\KeyczarTool.Minified\Diminish\refs" "$(TargetDir)KeyczarTool.exe" "$(TargetDir)*.dll"</PostBuildEvent>
-  </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent"> 
+    <Exec Command="'$(ProjectDir)\..\packages\diminishdependencies.tool\1.1.3\tools\DiminishDependencies.exe' -o '$(ProjectDir)\..\KeyczarTool.Minified\Diminish\refs' '$(TargetDir)KeyczarTool.exe' '$(TargetDir)*.dll'" /> 
+  </Target>
 
 </Project>
