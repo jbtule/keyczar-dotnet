@@ -12,6 +12,7 @@ build_script:
 
 test:
   categories:
+    - [Create]
     except:
       - Performance
 
