@@ -1,4 +1,4 @@
-﻿<Project>
+﻿<Project >
   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.props" />
   <PropertyGroup>
     <TargetFramework>net40</TargetFramework>
@@ -13,7 +13,7 @@
   <ItemGroup>
     <PackageReference Include="ManyConsole" Version="0.4.2.*" />
     <PackageReference Include="NDesk.Options" Version="0.2.*" />
-    <PackageReference Include="DiminishDependencies.Tool" Version="1.1.3" PrivateAssets="All" />
+    <PackageReference Include="DiminishDependencies.Tool" Version="1.1.3" ExcludeAssets="contentfiles" PrivateAssets="All" />
  </ItemGroup>
  <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
@@ -25,22 +25,20 @@
   <ItemGroup>
     <ProjectReference Include="..\Keyczar\Keyczar.csproj" />
   </ItemGroup>
+
   <ItemGroup>
-    <Compile Update="Localized.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Localized.resx</DependentUpon>
-    </Compile>
     <EmbeddedResource Update="Localized.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Localized.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Localized.Designer.cs">
+      <DependentUpon>Localized.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
 
-   <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
-
-
+  <Import Sdk="Microsoft.NET.Sdk" Project="Sdk.targets" />
   <PropertyGroup>
     <PostBuildEvent>"$(ProjectDir)\..\packages\diminishdependencies.tool\1.1.3\tools\DiminishDependencies.exe" -o "$(ProjectDir)\..\KeyczarTool.Minified\Diminish\refs" "$(TargetDir)KeyczarTool.exe" "$(TargetDir)*.dll"</PostBuildEvent>
   </PropertyGroup>
