@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net40</TargetFramework>
     <OutputType>Exe</OutputType>
+    <Platform>Any CPU</Platform>
     <Description>Keyczar dotnet</Description>
     <Company></Company>
     <Authors> jbtule </Authors>
