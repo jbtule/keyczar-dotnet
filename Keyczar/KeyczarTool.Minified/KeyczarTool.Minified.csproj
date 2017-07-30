@@ -37,22 +37,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="Diminish/refs/BouncyCastle.Crypto.dll.dep-lzma" />
-    <None Remove="Diminish/refs/Ionic.Zip.dll.dep-lzma" />
-    <None Remove="Diminish/refs/Keyczar.dll.dep-lzma" />
-    <None Remove="Diminish/refs/KeyczarTool.exe.dep-lzma" />
-    <None Remove="Diminish/refs/ManyConsole.dll.dep-lzma" />
-    <None Remove="Diminish/refs/NDesk.Options.dll.dep-lzma" />
-    <None Remove="Diminish/refs/Newtonsoft.Json.dll.dep-lzma" />
+    <None Remove="Diminish/refs/*.dep-lzma" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Diminish\refs\BouncyCastle.Crypto.dll.dep-lzma" />
-    <EmbeddedResource Include="Diminish\refs\Ionic.Zip.dll.dep-lzma" />
-    <EmbeddedResource Include="Diminish\refs\Keyczar.dll.dep-lzma" />
-    <EmbeddedResource Include="Diminish\refs\KeyczarTool.exe.dep-lzma" />
-    <EmbeddedResource Include="Diminish\refs\ManyConsole.dll.dep-lzma" />
-    <EmbeddedResource Include="Diminish\refs\NDesk.Options.dll.dep-lzma" />
-    <EmbeddedResource Include="Diminish\refs\Newtonsoft.Json.dll.dep-lzma" />
+    <EmbeddedResource Include="Diminish\refs\*.dep-lzma" />
   </ItemGroup>
 
 </Project>
