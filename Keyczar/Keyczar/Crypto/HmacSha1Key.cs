@@ -66,16 +66,16 @@ namespace Keyczar.Crypto
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetSigningStream()
+        public HashingStream GetSigningStream(Keyczar keyczar)
         {
-            return GetVerifyingStream();
+            return GetVerifyingStream(keyczar);
         }
 
         /// <summary>
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream()
+        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
         {
             var hmac = new HMac(new Sha1Digest());
             hmac.Init(new KeyParameter(HmacKeyBytes));

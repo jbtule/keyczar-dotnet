@@ -6,6 +6,7 @@
   <ItemGroup>
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="nunit.framework" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BouncyCastle" Version="1.8.*" />

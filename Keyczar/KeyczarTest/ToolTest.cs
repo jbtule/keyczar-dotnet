@@ -512,8 +512,8 @@ namespace KeyczarTest
 
             var ks2 = new KeySet(path);
             dynamic key2 = ks2.GetKey(1);
-            Expect(key2.Size, Is.EqualTo(1024));
-            Expect(key2.Padding, Is.EqualTo("PKCS"));
+            Expect((int)key2.Size, Is.EqualTo(1024));
+            Expect((string)key2.Padding, Is.EqualTo("PKCS"));
 
             Directory.Delete(path2, true);
             Directory.Delete(path, true);

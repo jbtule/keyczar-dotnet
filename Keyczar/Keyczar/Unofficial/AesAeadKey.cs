@@ -154,7 +154,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output)
+        public FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar)
         {
             var randomNonce = new byte[IVLength];
             Secure.Random.NextBytes(randomNonce);
@@ -173,7 +173,7 @@ namespace Keyczar.Unofficial
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null as authentication is built in to the encryption</returns>
-        public HashingStream GetAuthSigningStream()
+        public HashingStream GetAuthSigningStream(Keyczar keyczar)
         {
             return null; //One stop encrypting and signing;
         }
@@ -182,7 +182,7 @@ namespace Keyczar.Unofficial
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns>null as authentication is built in to the decryption</returns>
-        public VerifyingStream GetAuthVerifyingStream()
+        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
         {
             return null; //One stop verifying and decrypting
         }
@@ -192,7 +192,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetDecryptingStream(Stream output)
+        public FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar)
         {
             return new SymmetricAeadStream(
                 GetMode(),

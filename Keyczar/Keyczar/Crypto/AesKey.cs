@@ -121,18 +121,18 @@ namespace Keyczar.Crypto
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetAuthSigningStream()
+        public HashingStream GetAuthSigningStream(Keyczar keyczar)
         {
-            return HmacKey.Maybe(h => h.GetSigningStream(), () => null);
+            return HmacKey.Maybe(h => h.GetSigningStream(keyczar), () => null);
         }
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetAuthVerifyingStream()
+        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
         {
-            return HmacKey.Maybe(h => h.GetVerifyingStream(), () => null);
+            return HmacKey.Maybe(h => h.GetVerifyingStream(keyczar), () => null);
         }
 
 
@@ -141,7 +141,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public virtual FinishingStream GetEncryptingStream(Stream output)
+        public virtual FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar)
         {
             var ivarr = new byte[BlockLength];
             Secure.Random.NextBytes(ivarr);
@@ -160,7 +160,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public virtual FinishingStream GetDecryptingStream(Stream output)
+        public virtual FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar)
         {
             return new SymmetricStream(
                 new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),

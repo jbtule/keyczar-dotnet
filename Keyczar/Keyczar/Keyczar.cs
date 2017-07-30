@@ -21,9 +21,26 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar.Util;
+using System.Configuration;
 
 namespace Keyczar
 {
+
+    public class KeyczarConfig
+    {
+
+        public KeyczarConfig(){
+            StrictDsaVerification = Convert.ToBoolean(ConfigurationManager.AppSettings["keyczar.strict_dsa_verification"] ?? "false");
+        }
+
+		/// <summary>
+		/// To be compatable with Java, by default ignores specific parsable, but bad DSA sigs. 
+		/// Can turn on strit checking with the App Setting "keyczar.strict_dsa_verification"
+		/// </summary>
+		public bool StrictDsaVerification { get; set; }
+
+	}
+
     /// <summary>
     /// Base class for standard crypt/sign API
     /// </summary>
@@ -46,10 +63,16 @@ namespace Keyczar
             }
         }
 
-        /// <summary>
-        /// Key hash length
-        /// </summary>
-        public static readonly int KeyHashLength = 4;
+		/// <summary>
+		/// Config Options
+		/// </summary>
+		public KeyczarConfig Config { get; set; } = new KeyczarConfig();
+
+
+		/// <summary>
+		/// Key hash length
+		/// </summary>
+		public static readonly int KeyHashLength = 4;
 
         /// <summary>
         /// Keyczar format version

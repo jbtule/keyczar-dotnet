@@ -44,7 +44,7 @@ namespace Keyczar
         /// <param name="keySet">The key set.</param>
         public TimeoutSigner(IKeySet keySet) : base(keySet)
         {
-            _signer = new TimeoutSignerHelper(keySet);
+            _signer = new TimeoutSignerHelper(keySet, this);
         }
 
         /// <summary>
@@ -102,23 +102,15 @@ namespace Keyczar
         {
 
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TimeoutSignerHelper"/> class.
-            /// </summary>
-            /// <param name="keySetLocation">The key set location.</param>
-            public TimeoutSignerHelper(string keySetLocation)
-                : this(new KeySet(keySetLocation))
-            {
-            }
-
+          
             /// <summary>
             /// Initializes a new instance of the <see cref="TimeoutSignerHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public TimeoutSignerHelper(IKeySet keySet)
+            public TimeoutSignerHelper(IKeySet keySet, Keyczar parent)
                 : base(keySet)
             {
-                
+                Config = parent.Config;
             }
 
             /// <summary>
