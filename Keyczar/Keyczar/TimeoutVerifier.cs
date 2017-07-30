@@ -65,7 +65,7 @@ namespace Keyczar
         public TimeoutVerifier(IKeySet keySet, Func<DateTime> currentDateTime = null)
             : base(keySet)
         {
-            _verifier = new TimeoutVerifierHelper(keySet);
+            _verifier = new TimeoutVerifierHelper(keySet, this);
             _currentDateTime = currentDateTime ?? (()=> DateTime.Now);
         }
 
@@ -136,21 +136,15 @@ namespace Keyczar
         /// </summary>
         protected class TimeoutVerifierHelper:Verifier
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TimeoutVerifierHelper"/> class.
-            /// </summary>
-            /// <param name="keySetLocation">The key set location.</param>
-            public TimeoutVerifierHelper(string keySetLocation)
-                : this(new KeySet(keySetLocation))
-            {
-            }
+           
 
             /// <summary>
             /// Initializes a new instance of the <see cref="TimeoutVerifierHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public TimeoutVerifierHelper(IKeySet keySet) : base(keySet)
+            public TimeoutVerifierHelper(IKeySet keySet, Keyczar parent) : base(keySet)
             {
+                Config = parent.Config;
             }
 
             /// <summary>

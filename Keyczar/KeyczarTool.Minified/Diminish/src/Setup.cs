@@ -16,6 +16,7 @@ namespace KeyczarTool.Minified.Diminish
         public static Assembly AssemblyLoad(string asssemblyName)
         {
             var shortName = new AssemblyName(asssemblyName).Name;
+            shortName = shortName.Replace(".resources", "");
             if (!_loaded.ContainsKey(shortName))
             {
                 Func<string, string> resourceFormat =

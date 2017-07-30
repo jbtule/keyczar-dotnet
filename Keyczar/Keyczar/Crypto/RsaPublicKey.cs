@@ -142,7 +142,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output)
+        public FinishingStream GetEncryptingStream(Stream output, Keyczar keyczar)
         {
             var rsa = new RsaEngine();
 
@@ -161,7 +161,7 @@ namespace Keyczar.Crypto
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null</returns>
-        public HashingStream GetAuthSigningStream()
+        public HashingStream GetAuthSigningStream(Keyczar keyczar)
         {
             return null; //not signing
         }

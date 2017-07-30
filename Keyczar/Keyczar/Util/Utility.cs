@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Serialization;
 using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Asn1;
 
 namespace Keyczar.Util
 {
@@ -31,6 +32,17 @@ namespace Keyczar.Util
     /// </summary>
     public static class Utility
     {
+
+		public static byte[] RemoveJunkFronAnsiObj(byte[] data)
+		{
+			using (var input = new MemoryStream(data))
+			{
+				var asn1 = new Asn1InputStream(input, data.Length);
+				var result = asn1.ReadObject();
+				return result.GetDerEncoded();
+			}
+		}
+
         /// <summary>
         /// Resets the stream poisition when Closed or Disposed.
         /// </summary>

@@ -48,7 +48,7 @@ namespace Keyczar
             {
                 throw new InvalidKeySetException("This key set can not be used for verifying signatures.");
             }
-            _verifier = new HelperAttachedVerify(keySet);
+            _verifier = new HelperAttachedVerify(keySet, this);
         }
 
 
@@ -201,8 +201,9 @@ namespace Keyczar
             /// Initializes a new instance of the <see cref="HelperAttachedVerify"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public HelperAttachedVerify(IKeySet keySet) : base(keySet)
+            public HelperAttachedVerify(IKeySet keySet, Keyczar parent) : base(keySet)
             {
+                Config = parent.Config;
             }
 
             /// <summary>

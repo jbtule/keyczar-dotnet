@@ -131,7 +131,7 @@ namespace Keyczar
 
              
                 output.Write(header, 0, header.Length);
-                encryptingStream = cryptKey.GetEncryptingStream(output);
+                encryptingStream = cryptKey.GetEncryptingStream(output, this);
                
 
                 Stream wrapper = encryptingStream;
@@ -159,7 +159,7 @@ namespace Keyczar
            
             byte[] hash;
             using (var outputReader = new NondestructiveBinaryReader(output))
-            using (var signingStream = cryptKey.GetAuthSigningStream())
+            using (var signingStream = cryptKey.GetAuthSigningStream(this))
             {
                 if (signingStream == null || signingStream.GetTagLength(header) ==0)
                     return;

@@ -105,7 +105,7 @@ namespace Keyczar
             var key = GetPrimaryKey() as ISignerKey;
             using (var reader = new NondestructiveBinaryReader(input))
             {
-                using (var signingStream = key.GetSigningStream())
+                using (var signingStream = key.GetSigningStream(this))
                 {
                     PrefixDataSign(signingStream, prefixData);
                     while (reader.Peek() != -1 && input.Position < stopLength)

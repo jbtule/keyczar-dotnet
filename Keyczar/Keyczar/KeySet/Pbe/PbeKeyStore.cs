@@ -221,17 +221,17 @@ namespace Keyczar.Pbe
 
             public byte[] IV { get; set; }
 
-            public override FinishingStream GetEncryptingStream(Stream output)
+            public override FinishingStream GetEncryptingStream(Stream output, Keyczar keyczar)
             {
-                var stream = (CipherTextOnlyFinishingStream) base.GetEncryptingStream(output);
+                var stream = (CipherTextOnlyFinishingStream) base.GetEncryptingStream(output, keyczar);
                 stream.CipherTextOnly = true;
                 stream.IV = IV;
                 return stream;
             }
 
-            public override FinishingStream GetDecryptingStream(Stream output)
+            public override FinishingStream GetDecryptingStream(Stream output, Keyczar keyczar)
             {
-                var stream = (CipherTextOnlyFinishingStream) base.GetDecryptingStream(output);
+                var stream = (CipherTextOnlyFinishingStream) base.GetDecryptingStream(output, keyczar);
                 stream.CipherTextOnly = true;
                 stream.IV = IV;
                 return stream;

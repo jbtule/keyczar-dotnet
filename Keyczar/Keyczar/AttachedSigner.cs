@@ -41,7 +41,7 @@ namespace Keyczar
         /// <param name="keySet">The key set.</param>
         public AttachedSigner(IKeySet keySet) : base(keySet)
         {
-            _signer = new AttachedSignerHelper(keySet);
+            _signer = new AttachedSignerHelper(keySet, this);
 
         }
 
@@ -96,10 +96,10 @@ namespace Keyczar
             /// Initializes a new instance of the <see cref="AttachedSignerHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public AttachedSignerHelper(IKeySet keySet)
+            public AttachedSignerHelper(IKeySet keySet,Keyczar parent)
                 : base(keySet)
             {
-                
+                Config = parent.Config;
             }
 
             /// <summary>

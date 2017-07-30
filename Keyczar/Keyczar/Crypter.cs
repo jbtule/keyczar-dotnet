@@ -103,7 +103,7 @@ namespace Keyczar
 
                     bool ciphertextIsPreverified = false;
                     //in case there aren't any keys that match that hash we are going to fake verify.
-                    using (var verifyStream = cryptKey.Maybe(m => m.GetAuthVerifyingStream(), () => new DummyStream()))
+                    using (var verifyStream = cryptKey.Maybe(m => m.GetAuthVerifyingStream(this), () => new DummyStream()))
                     {
                         //If we verify in once pass like with AEAD verify stream will be null;
                         if (verifyStream != null)
@@ -157,7 +157,7 @@ namespace Keyczar
                         resetStream.Reset();
                        
                         input.Seek(HeaderLength, SeekOrigin.Current);
-                        crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper), () => new DummyStream());
+                        crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper, this), () => new DummyStream());
                         
                         try
                         {

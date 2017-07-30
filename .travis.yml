@@ -2,17 +2,26 @@
 # see travis-ci.org for details
 
 language: csharp
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+    - os: osx
+
 solution: Keyczar/Keyczar.sln
 
-env:		
-  - EnableNuGetPackageRestore=true 
-
 mono:
-  - latest
-  - 3.12.0
-  - 3.10.0
+  - beta
+
+install:
+  - cd Keyczar/
+  - msbuild /t:restore
 
 script:
- - cd Keyczar/
- - xbuild 
+ - msbuild
  - .ci/RunTests.sh
+
+branches:
+  only:
+    - master

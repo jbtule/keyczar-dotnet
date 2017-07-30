@@ -123,7 +123,7 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream()
+        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
         {
             var tSigner = new DsaSigner();
             tSigner.Init(forSigning: false, parameters: new DsaPublicKeyParameters(Y.ToBouncyBigInteger(),
@@ -132,7 +132,14 @@ namespace Keyczar.Crypto
                                                                                        Q.ToBouncyBigInteger(),
                                                                                        G.ToBouncyBigInteger())));
             var digest = GetDigest();
-            return new DigestStream(new DsaDigestSigner(tSigner, digest));
+            var signer = new DsaDigestSigner(tSigner, digest);
+            return new DigestStream(new DsaDigestSigner(tSigner, digest), sigRepair: sig =>{
+                if (!keyczar.Config.StrictDsaVerification)
+                {
+                    return Utility.RemoveJunkFronAnsiObj(sig);
+                }
+                return sig;
+            });
         }
     }
 }

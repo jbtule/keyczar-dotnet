@@ -1,130 +1,25 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FCDC85F7-BC0C-4F95-8DF2-3C2F8FAA8FE7}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>KeyczarTest</RootNamespace>
-    <AssemblyName>KeyczarTest</AssemblyName>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <RestorePackages>true</RestorePackages>
-  </PropertyGroup>
-  <PropertyGroup Condition="$(OS) == 'Windows_NT'">
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>False</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>x86</PlatformTarget>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>True</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
+        <TargetFramework>net40</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.1\lib\nunit.framework.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.8\lib\net40\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="BouncyCastle.Crypto">
-      <HintPath>..\packages\BouncyCastle.1.7.0\lib\Net40-Client\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
+    <Reference Include="nunit.framework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CollisionTest.cs" />
-    <Compile Include="FallbackTest.cs" />
-    <Compile Include="SecureTest.cs" />
-    <Compile Include="Support\DotNetSymmetricStream.cs" />
-    <Compile Include="Interop\Aes.cs" />
-    <Compile Include="Interop\AesCrypted.cs" />
-    <Compile Include="Interop\AesNoPrimary.cs" />
-    <Compile Include="Interop\CrypterFullInterop.cs" />
-    <Compile Include="Interop\DsaBasic.cs" />
-    <Compile Include="Interop\DsaFull.cs" />
-    <Compile Include="Interop\HmacBasic.cs" />
-    <Compile Include="Interop\HmacFull.cs" />
-    <Compile Include="Interop\PublicVerifierFullInterop.cs" />
-    <Compile Include="Interop\RsaBasic.cs" />
-    <Compile Include="Interop\RsaSignBasic.cs" />
-    <Compile Include="Interop\RsaSignFull.cs" />
-    <Compile Include="Interop\VerifierFullInterop.cs" />
-    <Compile Include="Support\NonDestructiveCryptoStream.cs" />
-    <Compile Include="SessionDecryptTest.cs" />
-    <Compile Include="SignerAttachedTest.cs" />
-    <Compile Include="CertificateImportTest.cs" />
-    <Compile Include="CreateDataToolTest.cs" />
-    <Compile Include="ExportTest.cs" />
-    <Compile Include="PkcsImportTest.cs" />
-    <Compile Include="SignerVanillaTest.cs" />
-    <Compile Include="StreamBehaviorTest.cs" />
-    <Compile Include="Unofficial\BlobKeySetTest.cs" />
-    <Compile Include="CrossCompatibilityTest.cs" />
-    <Compile Include="CrypterTest.cs" />
-    <Compile Include="KeySetTest.cs" />
-    <Compile Include="RsaPaddingTest.cs" />
-    <Compile Include="SessionTest.cs" />
-    <Compile Include="SignerTest.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SignerTimeoutTest.cs" />
-    <Compile Include="Unofficial\BsonSessionDecryptTest.cs" />
-    <Compile Include="Unofficial\WebKeySetTest.cs" />
-    <Compile Include="Support\Util.cs" />
-    <Compile Include="CreateDataManageTest.cs" />
-    <Compile Include="ToolTest.cs" />
-    <Compile Include="PerfTest.cs" />
-    <Compile Include="Interop\Interop.cs" />
-    <Compile Include="Interop\CrypterBasicInterop.cs" />
-    <Compile Include="Interop\VerifierBasicInterop.cs" />
-    <Compile Include="Interop\PublicVerifierBasicInterop.cs" />
+    <PackageReference Include="BouncyCastle" Version="1.8.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="4.5.*" />
+    <PackageReference Include="NUnit" Version="2.6.1" />
+    <PackageReference Include="NUnit.Runners" Version="2.6.1" PrivateAssets="All" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Keyczar\Keyczar.csproj">
-      <Project>{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}</Project>
-      <Name>Keyczar</Name>
     </ProjectReference>
     <ProjectReference Include="..\KeyczarTool\KeyczarTool.csproj">
-      <Project>{27C1284A-EF74-418E-81AC-0C6B0880B559}</Project>
-      <Name>KeyczarTool</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
-  <ItemGroup />
-  <ItemGroup />
+
 </Project>
