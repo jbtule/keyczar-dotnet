@@ -68,11 +68,3 @@ Windows | Mac | Linux
 ## Contribute ##
 
 Code contribution, reported issues or code reviews welcome! Pull requests are automatically built and tested with [Travis CI](https://travis-ci.org/jbtule/keyczar-dotnet).
-
-## Compatibility ##
-
- - Should interoperate with java/python/c++ with standard api
- - All unofficial/incompatible api changes are under the unofficial names space to be clear what won't interoperate with java/python/c++
- - Unofficial algorithms included are *AES-GCM* (`KeyType=C#_AES_AEAD`) and RSA-PSS (`KeyType=C#_RSA_SIGN_PRIV`) use the unofficial flag on the KeyczarTool.
- - `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionedVerifer`
- - The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
