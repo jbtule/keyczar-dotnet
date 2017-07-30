@@ -12,6 +12,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+extern alias SC;
 
 
 using System;
@@ -22,7 +23,10 @@ using System.Text;
 using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
-using Ionic.Zlib;
+
+using SC::SharpCompress.Compressors;
+using SC::SharpCompress.Compressors.Deflate;
+
 namespace Keyczar
 {
 

@@ -12,6 +12,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+extern alias SC;
+
 
 using System;
 using System.Collections.Generic;
@@ -19,7 +21,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Ionic.Zip;
+using SC::SharpCompress.Archives.Zip;
 using Keyczar.Util;
 using Newtonsoft.Json;
 
@@ -30,7 +32,7 @@ namespace Keyczar.Unofficial
     /// </summary>
     public class BlobKeySet : IKeySet, IDisposable
     {
-        private ZipFile _zipFile;
+        private ZipArchive _zipFile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlobKeySet"/> class.
@@ -38,7 +40,7 @@ namespace Keyczar.Unofficial
         /// <param name="readStream">The read stream.</param>
         public BlobKeySet(Stream readStream)
         {
-            _zipFile = ZipFile.Read(readStream);
+            _zipFile = ZipArchive.Open(readStream);
         }
 
 
@@ -51,10 +53,11 @@ namespace Keyczar.Unofficial
             "CA2202:Do not dispose objects multiple times")]
         public byte[] GetKeyData(int version)
         {
-            using (var stream = _zipFile[version.ToString(CultureInfo.InvariantCulture)].OpenReader())
+            var keyEntry =_zipFile.Entries.First(entry => entry.Key == version.ToString(CultureInfo.InvariantCulture));
+            using (var stream = keyEntry.OpenEntryStream())
             using (var reader = new BinaryReader(stream))
             {
-                return reader.ReadBytes((int) stream.Length);
+                return reader.ReadBytes((int) keyEntry.Size);
             }
         }
 
@@ -68,7 +71,8 @@ namespace Keyczar.Unofficial
         {
             get
             {
-                using (var stream = _zipFile["meta"].OpenReader())
+                var metaEntry = _zipFile.Entries.First(entry => entry.Key == "meta");
+                using (var stream = metaEntry.OpenEntryStream())
                 using (var reader = new StreamReader(stream))
                 {
                     return JsonConvert.DeserializeObject<KeyMetadata>(reader.ReadToEnd());

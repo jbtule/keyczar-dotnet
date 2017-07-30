@@ -13,10 +13,12 @@
  *  limitations under the License.
  */
 
+extern alias SC;
 
 using System;
 using System.IO;
-using Ionic.Zlib;
+using SC::SharpCompress.Compressors;
+using SC::SharpCompress.Compressors.Deflate;
 
 namespace Keyczar.Util
 {

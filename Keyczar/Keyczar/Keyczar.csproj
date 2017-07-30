@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFrameworks>net40</TargetFrameworks>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
     <Description>Google Keyczar Library compatible implementation in .NET </Description>
@@ -26,11 +26,24 @@
     <Version>0.7.7</Version>
   </PropertyGroup>
   
-  <ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net40'">
     <PackageReference Include="BouncyCastle" Version="1.8.*" />
-    <PackageReference Include="DotNetZip" Version="1.10.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="4.5.*" />
   </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="sharpcompress" Version="0.18.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.*" />
+  </ItemGroup>
+  
+  <Target Name="ChangeAliasesOfSharpCompress" BeforeTargets="FindReferenceAssembliesForReferences;ResolveReferences">
+    <ItemGroup>
+      <ReferencePath Condition="'%(FileName)' == 'SharpCompress'">
+        <Aliases>SC</Aliases>
+      </ReferencePath>
+    </ItemGroup>
+  </Target>
 
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
