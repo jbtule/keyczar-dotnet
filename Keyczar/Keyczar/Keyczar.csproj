@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net40</TargetFrameworks>
+    <TargetFrameworks>net40;netstandard2.0;</TargetFrameworks>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
     <Description>Google Keyczar Library compatible implementation in .NET </Description>
@@ -31,6 +31,11 @@
     <PackageReference Include="BouncyCastle" Version="1.8.*" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0-preview2-*"/>
+    <PackageReference Include="System.Runtime.Numerics" Version="4.3.*"/>
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.*" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="sharpcompress" Version="0.18.*" />
@@ -45,7 +50,7 @@
     </ItemGroup>
   </Target>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)'=='net40'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
