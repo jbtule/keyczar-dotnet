@@ -33,7 +33,7 @@ Source code can be obtained with
 
     git clone --recursive https://github.com/jbtule/keyczar-dotnet.git
 
-Source can be built with Visual Studio 2012, MonoDevelop, msbuild, or xbuild using the Keyczar.sln as long as you have the nuget dependencies downloaded. More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
+Source can be built with Visual Studio 2017, Visual Studio for Mac 7.1, or msbuild 15. More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
 
 Windows | Mac | Linux
 ------ | ------ | --------
