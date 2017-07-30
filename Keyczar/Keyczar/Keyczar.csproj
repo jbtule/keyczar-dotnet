@@ -34,6 +34,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="Microsoft.CSharp" Version="4.3.*"/>
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0-preview2-*"/>
     <PackageReference Include="System.Runtime.Numerics" Version="4.3.*"/>
     <PackageReference Include="BouncyCastle.NetCore" Version="1.8.*" />
