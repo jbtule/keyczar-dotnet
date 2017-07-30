@@ -4,7 +4,12 @@
     <TargetFramework>net40</TargetFramework>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
-    <Description>Keyczar dotnet</Description>
+    <Description>Google Keyczar Library compatible implementation in .NET </Description>
+    <Summary>Implemented in C# 4 to be compatible with the Java/Python/C++ 
+                  Keyczar's standard features and will interoperate with them by default. 
+                  Also has more features than official versions (including newer encryption options).
+                  Uses BouncyCastle as backend for most encryption. 
+                  Official keyczar version: http://keyczar.org</Summary>
     <Company></Company>
     <Authors> jbtule </Authors>
     <Copyright>Copyright © Contributors 2012-2017"</Copyright>
@@ -23,7 +28,7 @@
   
   <ItemGroup>
     <PackageReference Include="BouncyCastle" Version="1.8.*" />
-    <PackageReference Include="Unofficial.Ionic.Zip" Version="1.9.1.8" />
+    <PackageReference Include="DotNetZip" Version="1.10.*" />
     <PackageReference Include="Newtonsoft.Json" Version="4.5.*" />
   </ItemGroup>
 

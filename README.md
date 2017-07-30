@@ -2,7 +2,7 @@
 Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features
 and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
 
- - Keyczar-dotnet: http://jbtule.github.com/keyczar-dotnet
+ - Keyczar-dotnet: http://jbtule.github.io/keyczar-dotnet
  - Official keyczar site: http://keyczar.org
 
 ## Usage 
@@ -18,8 +18,8 @@ See [Wiki](http://github.com/jbtule/keyczar-dotnet/wiki) for more info.
 
 #### Keyczar.dll 
 
- - [BouncyCastle 1.7.0 or later](http://www.bouncycastle.org/csharp/)
- - [DotNetZip 1.9.1.8 or later](http://dotnetzip.codeplex.com/)
+ - [BouncyCastle 1.8.0 or later](http://www.bouncycastle.org/csharp/)
+ - [DotNetZip 1.10 later](https://github.com/haf/DotNetZip.Semverd)
  - [Newtonsoft.Json 4.5.8 or later](http://json.codeplex.com/)
 
 #### KeyczarTool.exe
@@ -35,24 +35,17 @@ Source code can be obtained with
 
 Source can be built with Visual Studio 2012, MonoDevelop, msbuild, or xbuild using the Keyczar.sln as long as you have the nuget dependencies downloaded. More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
 
-Master | Stable | Provider
+Windows | Mac | Linux
 ------ | ------ | --------
-[![Build Status][WinImgMaster]][WinLinkMaster] | [![Build Status][WinImgStable]][WinLinkStable] | Windows CI Provided By [CodeBetter][] and [JetBrains][] 
-[![Build Status][MonoImgMaster]][MonoLinkMaster] | [![Build Status][MonoImgStable]][MonoLinkStable] | Mono CI Provided by [travis-ci][] 
+[![Build Status][WinImgMaster]][WinLinkMaster] | [![Build Status][MacImgMaster]][MacLinkMaster] | [![Build Status][TuxImgMaster]][TuxLinkMaster]
 
-[WinImgMaster]:http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt922\)/statusIcon
-[WinLinkMaster]:http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt922&buildId=lastFinished&guest=1
-[MonoImgMaster]:https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=master
-[MonoLinkMaster]:https://travis-ci.org/jbtule/keyczar-dotnet
-[WinImgStable]:http://teamcity.codebetter.com/app/rest/builds/buildType:\(id:bt933\)/statusIcon
-[WinLinkStable]:http://teamcity.codebetter.com/viewLog.html?buildTypeId=bt933&buildId=lastFinished&guest=1
-[MonoImgStable]:https://travis-ci.org/jbtule/keyczar-dotnet.png?branch=stable
-[MonoLinkStable]:https://travis-ci.org/jbtule/keyczar-dotnet
+[WinImgMaster]:https://ci.appveyor.com/api/projects/status/5p0wfhgroa8a9f4t/branch/master?svg=true
+[WinLinkMaster]:https://ci.appveyor.com/project/jbtule/keyczar-dotnet-l0us4/branch/master
+[MacImgMaster]:https://travis-matrix-badges.herokuapp.com/repos/jbtule/keyczar-dotnet/branches/master/2
 
-
-[JetBrains]:http://www.jetbrains.com/
-[CodeBetter]:http://codebetter.com/
-[travis-ci]:https://travis-ci.org/
+[MacLinkMaster]:https://travis-ci.org/jbtule/keyczar-dotnet
+[TuxImgMaster]:https://travis-matrix-badges.herokuapp.com/repos/jbtule/keyczar-dotnet/branches/master/1
+[TuxLinkMaster]:https://travis-ci.org/jbtule/keyczar-dotnet
 
 
 ## Compatibility
