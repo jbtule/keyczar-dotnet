@@ -20,6 +20,7 @@ using System.Text;
 using Keyczar;
 using Keyczar.Util;
 using ManyConsole;
+using Keyczar.Unofficial;
 
 namespace KeyczarTool
 {
@@ -64,7 +65,7 @@ namespace KeyczarTool
                 case "HMAC_SHA1":
                     return KeyType.HmacSha1;
                 case "AES_GCM":
-                    return KeyType.AesAead;
+                    return UnofficialKeyType.AesAead;
                 default:
                     throw new ConsoleHelpAsException(string.Format(Localized.MsgInvalidType, type));
             }

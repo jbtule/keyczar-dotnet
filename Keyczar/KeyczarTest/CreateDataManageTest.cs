@@ -15,7 +15,9 @@
 
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using Keyczar;
 using Keyczar.Compat;
 using Keyczar.Unofficial;
@@ -121,7 +123,7 @@ namespace KeyczarTest
                 }
                 Console.WriteLine("Created {1} collision after {0} iterations", count, dir);
 
-                var ver = ks.AddKey(KeyStatus.Primary, newKey1, type:ktype);
+                var ver = ks.AddKey(KeyStatus.Primary, newKey1);
 
                 Expect(ver, Is.EqualTo(1));
 
@@ -166,7 +168,7 @@ namespace KeyczarTest
 
             using (var ks = new MutableKeySet(kspath))
             {
-                var ver = ks.AddKey(KeyStatus.Primary, newKey2, type:ktype);
+                var ver = ks.AddKey(KeyStatus.Primary, newKey2);
                 Expect(ver, Is.EqualTo(2));
 
                 var success = ks.Save(writer);
@@ -217,7 +219,7 @@ namespace KeyczarTest
             Func<string> passPrompt = () => "cartman"; //hardcoded because this is a test;
             using (var encwriter = new PbeKeySetWriter(writer, passPrompt))
             {
-                using (var ks = CreateNewKeySet(KeyType.Aes, KeyPurpose.DecryptAndEncrypt))
+                using (var ks = CreateNewKeySet(KeyKind.Symmetric, KeyPurpose.DecryptAndEncrypt))
                 {
                     var success = ks.Save(writer);
                     Expect(success, Is.True);
@@ -237,7 +239,7 @@ namespace KeyczarTest
             var writer = new KeySetWriter(kspath, overwrite: true);
 
 
-            using (var ks = CreateNewKeySet(type, KeyPurpose.DecryptAndEncrypt))
+            using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
             {
                 int ver = ks.AddKey(KeyStatus.Primary, type:type);
                 Expect(ver, Is.EqualTo(1));
