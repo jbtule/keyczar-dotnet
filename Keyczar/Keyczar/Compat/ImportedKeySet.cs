@@ -26,6 +26,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using Org.BouncyCastle.OpenSsl;
+
 namespace Keyczar.Compat
 {
     /// <summary>
@@ -38,7 +39,6 @@ namespace Keyczar.Compat
         /// </summary>
         public static Importer Import = new Importer();
 
-   
 
         private readonly KeyMetadata _metadata;
         private Key _key;
@@ -49,7 +49,7 @@ namespace Keyczar.Compat
         /// <param name="key">The key.</param>
         /// <param name="purpose">The purpose.</param>
         /// <param name="description">The description.</param>
-        public ImportedKeySet(Key key, KeyPurpose purpose, string description =null)
+        public ImportedKeySet(Key key, KeyPurpose purpose, string description = null)
         {
             _key = key;
             var keyType = key.KeyType;
@@ -71,7 +71,7 @@ namespace Keyczar.Compat
             };
         }
 
-       
+
         /// <summary>
         /// Gets the binary data that the key is stored in.
         /// </summary>
@@ -96,8 +96,8 @@ namespace Keyczar.Compat
         /// </summary>
         public void Dispose()
         {
-           Dispose(true);
-           GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -148,7 +148,7 @@ namespace Keyczar.Compat
                     {
                         return null;
                     }
-                    return  _password().ToCharArray();
+                    return _password().ToCharArray();
                 }
             }
 
@@ -203,21 +203,20 @@ namespace Keyczar.Compat
                         var keyParam = bouncyKey as RsaPrivateCrtKeyParameters;
                         key = new RsaPrivateKey()
                                   {
-                                    PublicKey = new RsaPublicKey()
+                                      PublicKey = new RsaPublicKey()
                                                       {
                                                           Modulus = keyParam.Modulus.ToSystemBigInteger(),
-														  PublicExponent = keyParam.PublicExponent.ToSystemBigInteger(),
+                                                          PublicExponent = keyParam.PublicExponent.ToSystemBigInteger(),
                                                           Size = keyParam.Modulus.BitLength,
                                                       },
-									PrimeP = keyParam.P.ToSystemBigInteger(),
-									PrimeExponentP = keyParam.DP.ToSystemBigInteger(),
-									PrimeExponentQ = keyParam.DQ.ToSystemBigInteger(),
-									PrimeQ = keyParam.Q.ToSystemBigInteger(),
-									CrtCoefficient = keyParam.QInv.ToSystemBigInteger(),
-									PrivateExponent = keyParam.Exponent.ToSystemBigInteger(),
-                                    Size = keyParam.Modulus.BitLength,
+                                      PrimeP = keyParam.P.ToSystemBigInteger(),
+                                      PrimeExponentP = keyParam.DP.ToSystemBigInteger(),
+                                      PrimeExponentQ = keyParam.DQ.ToSystemBigInteger(),
+                                      PrimeQ = keyParam.Q.ToSystemBigInteger(),
+                                      CrtCoefficient = keyParam.QInv.ToSystemBigInteger(),
+                                      PrivateExponent = keyParam.Exponent.ToSystemBigInteger(),
+                                      Size = keyParam.Modulus.BitLength,
                                   };
-
                     }
                     else if (bouncyKey is DsaPrivateKeyParameters)
                     {
@@ -236,10 +235,10 @@ namespace Keyczar.Compat
                                                           Y =
                                                               keyParam.Parameters.G.ModPow(keyParam.X,
                                                                                            keyParam.Parameters.P)
-                                                              .ToSystemBigInteger(),
-													  	G = keyParam.Parameters.G.ToSystemBigInteger(),
-														P = keyParam.Parameters.P.ToSystemBigInteger(),
-														Q = keyParam.Parameters.Q.ToSystemBigInteger(),
+                                                                      .ToSystemBigInteger(),
+                                                          G = keyParam.Parameters.G.ToSystemBigInteger(),
+                                                          P = keyParam.Parameters.P.ToSystemBigInteger(),
+                                                          Q = keyParam.Parameters.Q.ToSystemBigInteger(),
                                                           Size = keyParam.Parameters.P.BitLength
                                                       },
                                       Size = keyParam.Parameters.P.BitLength
@@ -277,7 +276,6 @@ namespace Keyczar.Compat
             /// <returns></returns>
             public virtual ImportedKeySet X509Certificate(KeyPurpose purpose, Stream input)
             {
-
                 var parser = new X509CertificateParser();
                 var cert = parser.ReadCertificate(input);
                 var bouncyKey = cert.GetPublicKey();
@@ -287,11 +285,11 @@ namespace Keyczar.Compat
                 {
                     var keyParam = bouncyKey as RsaKeyParameters;
                     key = new RsaPublicKey
-                    {
-                        Modulus = keyParam.Modulus.ToSystemBigInteger(),
-						PublicExponent = keyParam.Exponent.ToSystemBigInteger(),
-                        Size = keyParam.Modulus.BitLength,
-                    };
+                              {
+                                  Modulus = keyParam.Modulus.ToSystemBigInteger(),
+                                  PublicExponent = keyParam.Exponent.ToSystemBigInteger(),
+                                  Size = keyParam.Modulus.BitLength,
+                              };
                 }
                 else if (bouncyKey is DsaPublicKeyParameters)
                 {
@@ -301,20 +299,19 @@ namespace Keyczar.Compat
                         throw new InvalidKeySetException("DSA key cannot be used for encryption!");
                     }
                     key = new DsaPublicKey
-                    {
-						Y = keyParam.Y.ToSystemBigInteger(),
-						G = keyParam.Parameters.G.ToSystemBigInteger(),
-						P = keyParam.Parameters.P.ToSystemBigInteger(),
-						Q = keyParam.Parameters.Q.ToSystemBigInteger(),
-                        Size = keyParam.Parameters.P.BitLength
-                    };
+                              {
+                                  Y = keyParam.Y.ToSystemBigInteger(),
+                                  G = keyParam.Parameters.G.ToSystemBigInteger(),
+                                  P = keyParam.Parameters.P.ToSystemBigInteger(),
+                                  Q = keyParam.Parameters.Q.ToSystemBigInteger(),
+                                  Size = keyParam.Parameters.P.BitLength
+                              };
                 }
                 else
                 {
                     throw new InvalidKeySetException("Unsupported key type!");
                 }
                 return new ImportedKeySet(key, purpose, "imported from certificate");
-
             }
         }
     }

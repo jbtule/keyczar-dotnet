@@ -9,17 +9,19 @@ using NUnit.Framework;
 
 namespace KeyczarTest
 {
-    [TestFixture("testdata")]
-    [TestFixture("cstestdata")]
-    [TestFixture("tool_cstestdata")]
-    public class SignerVanillaTest:AssertionHelper
+    [TestFixture("rem|dotnet")]
+    [TestFixture("gen|cstestdata")]
+    [TestFixture("gen|tool_cstestdata")]
+    public class SignerVanillaTest : AssertionHelper
     {
         private static String input = "This is some test data";
         private readonly String TEST_DATA;
 
         public SignerVanillaTest(string testPath)
         {
-              TEST_DATA = testPath;
+            testPath = Util.ReplaceDirPrefix(testPath);
+
+            TEST_DATA = testPath;
         }
 
         [TestCase("aes", "")]
@@ -30,16 +32,16 @@ namespace KeyczarTest
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestdir);
             Expect(() => new VanillaSigner(subPath), Throws.InstanceOf<InvalidKeySetException>());
             Expect(() => new VanillaVerifier(subPath), Throws.InstanceOf<InvalidKeySetException>());
-
         }
 
-        [TestCase("hmac")]
-        [TestCase("dsa")]
-        [TestCase("rsa-sign")]
-        public void TestSignAndVerify(String subDir)
+        [TestCase("hmac", "")]
+        [TestCase("dsa", "")]
+        [TestCase("rsa-sign", "")]
+        [TestCase("rsa-sign", "unofficial")]
+        public void TestSignAndVerify(String subDir, string nestDir)
         {
-            using (var signer = new VanillaSigner(Path.Combine(TEST_DATA, subDir)))
-            using (var verifier = new VanillaVerifier(Path.Combine(TEST_DATA, subDir)))
+            using (var signer = new VanillaSigner(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
+            using (var verifier = new VanillaVerifier(Util.TestDataPath(TEST_DATA, subDir, nestDir)))
             {
                 var sig = signer.Sign(input);
 

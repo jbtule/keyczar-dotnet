@@ -28,8 +28,27 @@ namespace KeyczarTest
     public static class Util
     {
 
+   
+
+        public static string ReplaceDirPrefix(string prefixedDir)
+        {
+            prefixedDir = prefixedDir.Replace("gen|", Path.Combine("gen-testdata") + Path.DirectorySeparatorChar);
+            prefixedDir = prefixedDir.Replace("rem|",
+                                              Path.Combine("remote-testdata", "existing-data") +
+                                              Path.DirectorySeparatorChar);
+            return prefixedDir;
+        }
+
+        private static string TestDataBaseDir(string baseDir)
+        {
+            return Path.Combine("..", "..", "..", "..", "TestData", baseDir);
+        }
+
         public static string TestDataPath(string baseDir, string topDir, string subDir = null)
         {
+            baseDir = TestDataBaseDir(baseDir);
+
+
             if (String.IsNullOrWhiteSpace(topDir))
             {
                 return baseDir;
@@ -47,133 +66,130 @@ namespace KeyczarTest
     }
 
 
-        internal class InProcessKeyczarToolRunner : KeyczarToolRunner
+    internal class InProcessKeyczarToolRunner : KeyczarToolRunner
+    {
+        protected override void RunTool(out object result, IList<object> stdInArgs, IList<string> separateArgs)
         {
-            protected override void RunTool(out object result, IList<object> stdInArgs, IList<string> separateArgs)
+            byte[] stdinbytes;
+            using (var instream = new MemoryStream())
+            using (var tempwrite = new StreamWriter(instream))
             {
-
-      
-
-                byte[] stdinbytes;
-                using(var instream = new MemoryStream())
-                using (var tempwrite = new StreamWriter(instream))
+                if (stdInArgs.Any())
                 {
-                    if (stdInArgs.Any())
+                    foreach (var args in stdInArgs)
                     {
-                        foreach (var args in stdInArgs)
-                        {
-                            tempwrite.WriteLine(args);
-                        }
+                        tempwrite.WriteLine(args);
                     }
-                    tempwrite.Flush();
-                    stdinbytes =instream.ToArray();
-
                 }
-
-
-                var combinedArg = String.Join(" ", separateArgs);
-                var program = "KeyczarTool";
-                if (IsRunningOnMono)
-                {
-                    combinedArg = "KeyczarTool.exe " + combinedArg;
-                    program = "mono";
-                }
-
-                Console.WriteLine("{0} {1}", program, combinedArg);
-                var origIn = Console.In;
-                var origOut = Console.Out;
-                using (var inbyteStream = new MemoryStream(stdinbytes))
-                using (var input = new StreamReader(inbyteStream))
-                {
-                    Console.SetIn(input);
-                    using (var stream = new MemoryStream())
-                    using (var output = new StreamWriter(stream))
-                    {
-                      
-                        Console.SetOut(output);
-                        KeyczarTool.Program.Main(separateArgs.Select(it => it.Replace("\"", "")).ToArray());
-
-                        output.Flush();
-                        result = Encoding.UTF8.GetString(stream.ToArray());
-                    } 
-                    
-                    Console.SetIn(origIn);
-                    Console.SetOut(origOut);
-                }
-
-                Console.WriteLine(result);
+                tempwrite.Flush();
+                stdinbytes = instream.ToArray();
             }
+
+
+            var combinedArg = String.Join(" ", separateArgs);
+            var program = "KeyczarTool";
+            if (IsRunningOnMono)
+            {
+                combinedArg = "KeyczarTool.exe " + combinedArg;
+                program = "mono";
+            }
+
+            Console.WriteLine("{0} {1}", program, combinedArg);
+            var origIn = Console.In;
+            var origOut = Console.Out;
+            using (var inbyteStream = new MemoryStream(stdinbytes))
+            using (var input = new StreamReader(inbyteStream))
+            {
+                Console.SetIn(input);
+                using (var stream = new MemoryStream())
+                using (var output = new StreamWriter(stream))
+                {
+                    Console.SetOut(output);
+                    KeyczarTool.Program.Main(separateArgs.Select(it => it.Replace("\"", "")).ToArray());
+
+                    output.Flush();
+                    result = Encoding.UTF8.GetString(stream.ToArray());
+                }
+
+                Console.SetIn(origIn);
+                Console.SetOut(origOut);
+            }
+
+            Console.WriteLine(result);
+        }
+    }
+
+    internal class KeyczarToolRunner : DynamicObject
+    {
+        protected bool IsRunningOnMono = (Type.GetType("Mono.Runtime") != null);
+
+        public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
+        {
+            var stdInArgCount = binder.CallInfo.ArgumentCount - binder.CallInfo.ArgumentNames.Count;
+
+            var stdInArgs = args.Take(stdInArgCount);
+
+            var processArgs = args.Skip(stdInArgCount);
+
+            var count = 0;
+            var separateArgs = binder.CallInfo.ArgumentNames.Zip(processArgs,
+                                                                 (n, p) =>
+                                                                 count++ == 0
+                                                                     ? n
+                                                                     : p == null
+                                                                           ? String.Format("--{0}", n)
+                                                                           : n.Equals("additionalArgs")
+                                                                                 ? String.Join(" ",
+                                                                                               ((string[]) p).Select(
+                                                                                                   i =>
+                                                                                                   string.Format(
+                                                                                                       "\"{0}\"", i)))
+                                                                                 : string.Format("--{0}=\"{1}\"", n, p))
+                                     .ToList();
+
+
+            RunTool(out result, stdInArgs.ToList(), separateArgs.ToList());
+
+            return true;
         }
 
-        internal class KeyczarToolRunner : DynamicObject
+        protected virtual void RunTool(out object result, IList<object> stdInArgs, IList<string> separateArgs)
         {
-
-			protected bool IsRunningOnMono = (Type.GetType ("Mono.Runtime") != null);
-
-            public override bool TryInvoke(InvokeBinder binder, object[] args, out object result)
+            var combinedArg = String.Join(" ", separateArgs);
+            var program = "KeyczarTool";
+            if (IsRunningOnMono)
             {
-                var stdInArgCount = binder.CallInfo.ArgumentCount - binder.CallInfo.ArgumentNames.Count;
-
-                var stdInArgs = args.Take(stdInArgCount);
-
-                var processArgs = args.Skip(stdInArgCount);
-
-                var count = 0;
-                var separateArgs = binder.CallInfo.ArgumentNames.Zip(processArgs,
-                                                                     (n, p) =>
-
-                                                                     count++ == 0
-                                                                         ? n
-                                                                         : p == null
-                                                                               ? String.Format("--{0}", n)
-                                                                               : n.Equals("additionalArgs")
-                                                                               ? String.Join(" ", ((string[])p).Select(i=>string.Format("\"{0}\"", i)))
-                                                                               : string.Format("--{0}=\"{1}\"", n, p)).ToList();
-
-
-                RunTool(out result, stdInArgs.ToList(), separateArgs.ToList());
-
-                return true;
+                combinedArg = "KeyczarTool.exe " + combinedArg;
+                program = "mono";
             }
 
-            protected virtual void RunTool(out object result, IList<object> stdInArgs, IList<string> separateArgs)
+            Console.WriteLine("{0} {1}", program, combinedArg);
+
+            var process = new Process()
+                              {
+                                  StartInfo = new ProcessStartInfo(program, combinedArg)
+                                                  {
+                                                      RedirectStandardInput = true,
+                                                      RedirectStandardOutput = true,
+                                                      RedirectStandardError = true,
+                                                      UseShellExecute = false,
+                                                      CreateNoWindow = true
+                                                  }
+                              };
+            process.Start();
+
+            foreach (var stdArg in stdInArgs)
             {
-                var combinedArg = String.Join(" ", separateArgs);
-                var program = "KeyczarTool";
-                if (IsRunningOnMono)
-                {
-                    combinedArg = "KeyczarTool.exe " + combinedArg;
-                    program = "mono";
-                }
-
-                Console.WriteLine("{0} {1}", program, combinedArg);
-
-                var process = new Process()
-                                  {
-                                      StartInfo = new ProcessStartInfo(program, combinedArg)
-                                                      {
-                                                          RedirectStandardInput = true,
-                                                          RedirectStandardOutput = true,
-                                                          RedirectStandardError = true,
-                                                          UseShellExecute = false,
-                                                          CreateNoWindow = true
-                                                      }
-                                  };
-                process.Start();
-
-                foreach (var stdArg in stdInArgs)
-                {
-                    Thread.Sleep(3000);
-                    process.StandardInput.WriteLine(stdArg.ToString());
-                }
+                Thread.Sleep(3000);
+                process.StandardInput.WriteLine(stdArg.ToString());
+            }
 
 
-                process.WaitForExit(5000);
+            process.WaitForExit(5000);
 
-                result = process.StandardOutput.ReadToEnd();
-                Console.WriteLine(result);
-                Console.WriteLine(process.StandardError.ReadToEnd());
-           }
-      }
+            result = process.StandardOutput.ReadToEnd();
+            Console.WriteLine(result);
+            Console.WriteLine(process.StandardError.ReadToEnd());
+        }
+    }
 }
-

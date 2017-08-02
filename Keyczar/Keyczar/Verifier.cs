@@ -53,13 +53,14 @@ namespace Keyczar
             }
         }
 
-        /// <summary>
-        /// Verifies the specified raw data.
-        /// </summary>
-        /// <param name="rawData">The raw data.</param>
-        /// <param name="signature">The signature.</param>
-        /// <returns></returns>
-        public bool Verify(string rawData, WebBase64 signature)
+
+		/// <summary>
+		/// Verifies the specified raw data.
+		/// </summary>
+		/// <param name="rawData">The raw data.</param>
+		/// <param name="signature">The signature.</param>
+		/// <returns></returns>
+		public bool Verify(string rawData, WebBase64 signature)
         {
 			return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
         }
@@ -149,7 +150,7 @@ namespace Keyczar
                 {
                     resetData.Reset();
                     //in case there aren't any keys that match that hash we are going to fake verify.
-                    using (var verifyStream = key.Maybe(m => m.GetVerifyingStream(), () => new DummyStream()))
+                    using (var verifyStream = key.Maybe(m => m.GetVerifyingStream(this), () => new DummyStream()))
                     {
                         PrefixDataVerify(verifyStream,prefixData);
                         while (reader.Peek() != -1 && input.Position < stopLength)
@@ -160,9 +161,20 @@ namespace Keyczar
                         }
                             PostfixDataVerify(verifyStream,postfixData);
 
-                        if (verifyStream.VerifySignature(trimmedSig))
+                        try
                         {
-                            return true;
+
+
+                            if (verifyStream.VerifySignature(trimmedSig))
+                            {
+                                return true;
+                            }
+                        }
+                        catch (Exception e)
+                        {      
+                            //We don't want exceptions to keep us from trying different keys
+                            System.Diagnostics.Debug.WriteLine(e.Message);
+                            System.Diagnostics.Debug.WriteLine(e.StackTrace);
                         }
                     }
 

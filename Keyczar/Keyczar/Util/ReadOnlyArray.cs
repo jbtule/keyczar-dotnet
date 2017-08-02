@@ -7,7 +7,6 @@ using System.Text;
 
 namespace Keyczar.Util
 {
-
     /// <summary>
     /// Read only array helper
     /// </summary>
@@ -22,7 +21,7 @@ namespace Keyczar.Util
         public static ReadOnlyArray<T> Create<T>(params T[] items)
         {
             return new ReadOnlyArray<T>(items);
-        } 
+        }
     }
 
     /// <summary>
@@ -30,22 +29,22 @@ namespace Keyczar.Util
     /// </summary>
     /// <typeparam name="T"></typeparam>
     [ImmutableObject(true)]
-    public class ReadOnlyArray<T>:ReadOnlyCollection<T>
+    public class ReadOnlyArray<T> : ReadOnlyCollection<T>
     {
-
         /// <summary>
         /// Ts the specified array.
         /// </summary>
         /// <param name="array">The array.</param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Linq Provides the alternative")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Linq Provides the alternative")]
         public static implicit operator T[](ReadOnlyArray<T> array)
         {
             return array.ToArray();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ReadOnlyArray{T}" /> class.
+        /// Initializes a new instance of the <see cref="ReadOnlyArray" /> class.
         /// </summary>
         /// <param name="items">The items.</param>
         public ReadOnlyArray(params T[] items)

@@ -9,7 +9,7 @@ using ManyConsole;
 
 namespace KeyczarTool
 {
-    class ImportKey : ConsoleCommand
+    internal class ImportKey : ConsoleCommand
     {
         private string _location;
         private string _importLocation;
@@ -30,23 +30,23 @@ namespace KeyczarTool
 
         public override int Run(string[] remainingArguments)
         {
-              var ret = 0;
+            var ret = 0;
             Crypter crypter = null;
             IKeySet ks = new KeySet(_location);
 
             Func<string> singlePrompt = CachedPrompt.Password(() =>
-            {
-                Console.WriteLine(Localized.MsgForKeySet);
-                return Util.PromptForPassword();
-            }).Prompt;
+                                                                  {
+                                                                      Console.WriteLine(Localized.MsgForKeySet);
+                                                                      return Util.PromptForPassword();
+                                                                  }).Prompt;
 
             var prompt = ks.Metadata.Encrypted
-                 ? singlePrompt
-                 : CachedPrompt.Password(() =>
-                                             {
-                                                 Console.WriteLine(Localized.MsgForKeySet);
-                                                 return Util.PromptForPassword();
-                                             }).Prompt;
+                             ? singlePrompt
+                             : CachedPrompt.Password(() =>
+                                                         {
+                                                             Console.WriteLine(Localized.MsgForKeySet);
+                                                             return Util.PromptForPassword();
+                                                         }).Prompt;
 
             IDisposable dks = null;
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
@@ -75,11 +75,11 @@ namespace KeyczarTool
             using (d2ks)
             using (var keySet = new MutableKeySet(ks))
             {
-                 if(_status != KeyStatus.Primary && _status != KeyStatus.Active)
-                 {
-                     Console.WriteLine("{0} {1}.",Localized.Status, _status.Identifier);
-                     return -1;
-                 }
+                if (_status != KeyStatus.Primary && _status != KeyStatus.Active)
+                {
+                    Console.WriteLine("{0} {1}.", Localized.Status, _status.Identifier);
+                    return -1;
+                }
                 ImportedKeySet importedKeySet = null;
                 try
                 {
@@ -87,13 +87,13 @@ namespace KeyczarTool
                 }
                 catch
                 {
-              
                     importedKeySet = ImportedKeySet.Import.PkcsKey(
                         keySet.Metadata.Purpose, _importLocation,
-                        CachedPrompt.Password(() => { 
-                            Console.WriteLine(Localized.MsgForImport);
-                            return Util.PromptForPassword();
-                        }).Prompt);
+                        CachedPrompt.Password(() =>
+                                                  {
+                                                      Console.WriteLine(Localized.MsgForImport);
+                                                      return Util.PromptForPassword();
+                                                  }).Prompt);
                 }
                 if (importedKeySet == null)
                 {
@@ -116,11 +116,11 @@ namespace KeyczarTool
                                               importedKeySet.Metadata.Kind);
                         }
                     }
-                   
+
                     using (importedKeySet)
                     {
                         if (ret != -1)
-                            {
+                        {
                             var ver = keySet.AddKey(_status, importedKeySet.GetKey(1));
 
 
@@ -133,18 +133,16 @@ namespace KeyczarTool
                             else if (_password)
                             {
                                 writer = new PbeKeySetWriter(writer, prompt);
-
                             }
 
                             if (keySet.Save(writer))
                             {
-                                Console.WriteLine("{0} {1}.", Localized.MsgImportedNewKey,ver);
+                                Console.WriteLine("{0} {1}.", Localized.MsgImportedNewKey, ver);
                                 ret = 0;
                             }
                             else
                             {
                                 ret = -1;
-
                             }
                         }
                     }

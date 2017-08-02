@@ -24,15 +24,14 @@ namespace Keyczar.Crypto.Streams
     /// <summary>
     /// Stream the provides a hash value when finished
     /// </summary>
-    public abstract class HashingStream:FinishingStream
+    public abstract class HashingStream : FinishingStream
     {
         /// <summary>
         /// Gets the hash value.
         /// </summary>
         /// <value>The hash value.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays")]
         public abstract byte[] HashValue { get; }
-    
     }
-
 }

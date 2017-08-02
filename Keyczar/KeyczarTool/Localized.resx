@@ -339,8 +339,7 @@
   </data>
   <data name="MsgAddedPasssword" xml:space="preserve">
     <value>Added Password to PBE Keyset.</value>
-    <comment>sucess message
-</comment>
+    <comment>sucess message</comment>
   </data>
   <data name="MsgChangedPassword" xml:space="preserve">
     <value>Changed Password for PBE Keyset.</value>

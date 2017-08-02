@@ -44,7 +44,7 @@ namespace Keyczar
         /// <param name="keySet">The key set.</param>
         public TimeoutSigner(IKeySet keySet) : base(keySet)
         {
-            _signer = new TimeoutSignerHelper(keySet);
+            _signer = new TimeoutSignerHelper(keySet, this);
         }
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Sign(String rawData, DateTime expiration)
         {
-			return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
+            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
 
         }
 
@@ -102,23 +102,15 @@ namespace Keyczar
         {
 
 
-            /// <summary>
-            /// Initializes a new instance of the <see cref="TimeoutSignerHelper"/> class.
-            /// </summary>
-            /// <param name="keySetLocation">The key set location.</param>
-            public TimeoutSignerHelper(string keySetLocation)
-                : this(new KeySet(keySetLocation))
-            {
-            }
-
+          
             /// <summary>
             /// Initializes a new instance of the <see cref="TimeoutSignerHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public TimeoutSignerHelper(IKeySet keySet)
+            public TimeoutSignerHelper(IKeySet keySet, Keyczar parent)
                 : base(keySet)
             {
-                
+                Config = parent.Config;
             }
 
             /// <summary>
@@ -130,11 +122,11 @@ namespace Keyczar
             /// <returns></returns>
             public byte[] Sign(Stream input, DateTime expiration, long inputLength)
             {
-				using(var stream = new MemoryStream()){
+                using(var stream = new MemoryStream()){
                     Sign(input, stream, prefixData: expiration, postfixData: null, signatureData: expiration, inputLength:inputLength);
-					stream.Flush();
-					return stream.ToArray();
-				}
+                    stream.Flush();
+                    return stream.ToArray();
+                }
             }
 
             /// <summary>

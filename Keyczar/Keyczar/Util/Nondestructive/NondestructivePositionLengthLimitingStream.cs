@@ -24,11 +24,12 @@ namespace Keyczar.Util
     /// <summary>
     /// Wraps a stream to limit it's length
     /// </summary>
-    public class NondestructivePositionLengthLimitingStream:Stream
+    public class NondestructivePositionLengthLimitingStream : Stream
     {
-        private  Stream _stream;
+        private Stream _stream;
         private long _length;
         private long _initialPosition;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NondestructivePositionLengthLimitingStream"/> class.
         /// </summary>
@@ -98,7 +99,6 @@ namespace Keyczar.Util
         public override void SetLength(long value)
         {
             _length = value;
-            
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace Keyczar.Util
         {
             if (Position + count > (Length + InitialPosition))
             {
-                count = (int)((Length + InitialPosition) - Position);
+                count = (int) ((Length + InitialPosition) - Position);
             }
             return _stream.Read(buffer, offset, count);
         }

@@ -35,6 +35,7 @@ namespace Keyczar.Crypto.Streams
         }
 
         private HMac _hmacAlg;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HmacStream"/> class.
         /// </summary>
@@ -68,7 +69,6 @@ namespace Keyczar.Crypto.Streams
         /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception>
         public override void Flush()
         {
-
         }
 
         /// <summary>
@@ -87,7 +87,7 @@ namespace Keyczar.Crypto.Streams
         /// <exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            _hmacAlg.BlockUpdate(buffer,offset, count);
+            _hmacAlg.BlockUpdate(buffer, offset, count);
         }
 
         private byte[] _hashValue;
@@ -103,7 +103,6 @@ namespace Keyczar.Crypto.Streams
         }
 
 
-
         /// <summary>
         /// Finishes this instance.
         /// </summary>
@@ -112,7 +111,7 @@ namespace Keyczar.Crypto.Streams
             if (!_final)
             {
                 _hmacAlg.DoFinal(_hashValue, 0);
-                
+
                 _final = true;
             }
         }
@@ -125,7 +124,7 @@ namespace Keyczar.Crypto.Streams
         public override bool VerifySignature(byte[] signature)
         {
             Finish();
-            return Secure.Equals(signature, HashValue);
+            return Secure.Equals(signature, HashValue, maxCount: _hmacAlg.GetMacSize());
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Keyczar.Unofficial
     /// <summary>
     /// Reads key set from a single zipped up blob
     /// </summary>
-    public class BlobKeySet:IKeySet, IDisposable
+    public class BlobKeySet : IKeySet, IDisposable
     {
         private ZipFile _zipFile;
 
@@ -39,7 +39,6 @@ namespace Keyczar.Unofficial
         public BlobKeySet(Stream readStream)
         {
             _zipFile = ZipFile.Read(readStream);
-
         }
 
 
@@ -48,13 +47,14 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="version">The version.</param>
         /// <returns></returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times")]
         public byte[] GetKeyData(int version)
         {
             using (var stream = _zipFile[version.ToString(CultureInfo.InvariantCulture)].OpenReader())
             using (var reader = new BinaryReader(stream))
             {
-               return reader.ReadBytes((int)stream.Length);
+                return reader.ReadBytes((int) stream.Length);
             }
         }
 
@@ -62,7 +62,8 @@ namespace Keyczar.Unofficial
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times")]
         public KeyMetadata Metadata
         {
             get
@@ -88,10 +89,9 @@ namespace Keyczar.Unofficial
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-         protected virtual void Dispose(bool disposing)
-         {
-             
-             _zipFile = _zipFile.SafeDispose();
-         }
+        protected virtual void Dispose(bool disposing)
+        {
+            _zipFile = _zipFile.SafeDispose();
+        }
     }
 }

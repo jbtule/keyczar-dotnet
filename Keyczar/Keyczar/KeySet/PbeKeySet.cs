@@ -18,13 +18,12 @@ using Newtonsoft.Json;
  *  limitations under the License.
  */
 
-
 namespace Keyczar
 {
     /// <summary>
     /// Password based encrypted Key Set
     /// </summary>
-    public class PbeKeySet: IKeySet,IDisposable
+    public class PbeKeySet : IKeySet, IDisposable
     {
         private IKeySet _keySet;
         private CachedPrompt _password;
@@ -38,7 +37,6 @@ namespace Keyczar
         public PbeKeySet(string keySetLocation, Func<string> passwordPrompt)
             : this(new KeySet(keySetLocation), passwordPrompt)
         {
-            
         }
 
         /// <summary>
@@ -86,8 +84,8 @@ namespace Keyczar
         /// </summary>
         public void Dispose()
         {
-             Dispose(true);
-               GC.SuppressFinalize(this);
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
         /// <summary>
@@ -104,7 +102,6 @@ namespace Keyczar
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-
             _keySet = null;
             _password = _password.SafeDispose();
         }

@@ -15,6 +15,8 @@
 
 
 using System;
+using System.IO;
+using System.Runtime.CompilerServices;
 using Org.BouncyCastle.Security;
 
 namespace Keyczar.Util
@@ -36,9 +38,9 @@ namespace Keyczar.Util
         /// <typeparam name="T"></typeparam>
         /// <param name="disposable">The disposable.</param>
         /// <returns></returns>
-        public static T SafeDispose<T>(this T disposable) where T:class,IDisposable
+        public static T SafeDispose<T>(this T disposable) where T : class, IDisposable
         {
-            if(disposable != null)
+            if (disposable != null)
                 disposable.Dispose();
             return null;
         }
@@ -53,7 +55,8 @@ namespace Keyczar.Util
         /// <param name="action">The action.</param>
         /// <param name="defaultAction">The default action.</param>
         /// <returns></returns>
-        public static TReturn Maybe<T, TReturn>(this T target, Func<T, TReturn> action, Func<TReturn> defaultAction) where T : class
+        public static TReturn Maybe<T, TReturn>(this T target, Func<T, TReturn> action, Func<TReturn> defaultAction)
+            where T : class
         {
             if (target != null)
             {
@@ -75,52 +78,73 @@ namespace Keyczar.Util
         }
 
 
-
         /// <summary>
         /// The _dummy array for fake comparison that will return false
-        /// </summary>
-        private static readonly byte[] DummyArray = new byte[] { 1, 2 };
+        /// </summary>  
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        private static readonly ReadOnlyArray<byte> DummyArray = ReadOnlyArray.Create<byte>(1, 2);
+
         /// <summary>
         /// Compares the arrays in a conservative way.
         /// </summary>
         /// <param name="a">Array A.</param>
         /// <param name="b">Array b.</param>
         /// <param name="startIndex">The start index.</param>
+        /// <param name="maxCount">The max count.</param>
         /// <returns></returns>
-        public static bool Equals(Array a, Array b, int startIndex =0)
+        /// <exception cref="System.ArgumentNullException">Both a and b both cannot be null.</exception>
+        /// <exception cref="System.ArgumentException">Both a and b both cannot have zero length.</exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">startIndex and maxCount cannot be set so that there isn't a comparison.</exception>
+	[MethodImpl(MethodImplOptions.NoOptimization)]
+        public static bool Equals(byte[] a, byte[] b, int startIndex = 0, int maxCount = -1)
         {
             //We don't ever want to use this function to compare two nulls
-            //so conservatively returning false;
-            if(a== null && b == null)
-                return false;
+            //so we are throwing an exception to fix usage if this happens
+            if (a == null && b == null)
+                throw new ArgumentNullException("Both a and b both cannot be null.");
 
             if (a == null)
-                a = new object[] {};
+                a = new byte[] { };
             if (b == null)
-                b = new object[] { };
+                b = new byte[] { };
+
             var length = Math.Max(a.Length, b.Length);
 
-            var compare = true;
-            
+            var compare = 0;
+
             //We don't ever want to use this function to compare zero length arrays
-            //so conservatively returning false;
-            if(length ==0)
-                return false;
+            //so we are throwing an exception to fix usage if this happens
+            if (length == 0)
+                throw new ArgumentException("Both a and b both cannot have zero length.");
+
+            //We don't ever want to use this function to compare zero indexes
+            //so we are throwing an exception to fix usage if this happens
+            if (maxCount == 0 || startIndex < 0)
+                throw new ArgumentOutOfRangeException("maxCount", "maxCount, startindex cannot be set so that there isn't a comparison.");
+
+            //changes readonly collection to byte[] clone
+            byte[] dummy = DummyArray;
 
             //we compare every index even when we know the result is false
+            bool compared = false;
             for (var i = 0; i < length; i++)
             {
-                if(i < startIndex)
+                if (i < startIndex)
+                    continue;
+                if (maxCount >= 0 & i >= maxCount + startIndex)
                     continue;
 
                 //This first case is used to try and not leak when a key matching a keyhash couldn't be found.
-                if (a.GetLength(0) <= i | b.GetLength(0) <= i) //uses non short ciruit "or (|)"
-                    //always returns false
-                    compare = DummyArray.GetValue(0).Equals(DummyArray.GetValue(1)) & compare;  //uses non short ciruit "and (&)"
+                if (a.Length <= i | b.Length <= i)
+                    compare |= dummy[0] ^ dummy[1];
                 else
-                    compare = a.GetValue(i).Equals(b.GetValue(i)) & compare; //uses non short ciruit "and (&)"
+                    compare |= a[i] ^ b[i];
+
+                compared = true;
             }
-            return compare;
+
+            //`compared` added just to make sure that loop has run.
+            return compared & (compare == 0);
         }
     }
 }

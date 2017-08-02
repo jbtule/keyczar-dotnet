@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using Keyczar;
 using Keyczar.Unofficial;
@@ -12,12 +15,14 @@ namespace KeyczarTest.Unofficial
     [Category("Unofficial")]
     public class WebKeySetTest : AssertionHelper
     {
-
         private static string input = "Some test text";
 
-        private static string TEST_DATA = "testdata";
+        private static string TEST_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet");
 
-        private static string TEST_WEBDATA = "http://jbtule.github.com/keyczar-dotnet/keys/";
+
+   
+        private static string TEST_WEBDATA = "https://raw.githubusercontent.com/jbtule/keyczar-testdata/master/existing-data/dotnet/";
+     
 
         [Test]
         public void TestCryptedKey()
@@ -32,9 +37,6 @@ namespace KeyczarTest.Unofficial
                 using (var dataEncrypter = new Encrypter(new EncryptedKeySet(new WebKeySet(webKeyPath), keyDecrypter)))
                 {
                     ciphertext = dataEncrypter.Encrypt(input);
-
-
-
                 }
 
                 using (var dataDecrypter = new Crypter(new EncryptedKeySet(new WebKeySet(webKeyPath), keyDecrypter)))
@@ -51,11 +53,11 @@ namespace KeyczarTest.Unofficial
             var basePath = Util.TestDataPath(TEST_DATA, "");
             var keyPath = Path.Combine(basePath, "rsa");
             var webKeyPath = TEST_WEBDATA + "rsa.public/";
-            
-            WebBase64 ciphertext; 
+
+            WebBase64 ciphertext;
             using (var dataEncrypter = new Encrypter(new WebKeySet(webKeyPath)))
             {
-                ciphertext =dataEncrypter.Encrypt(input);
+                ciphertext = dataEncrypter.Encrypt(input);
             }
 
             using (var dataDecrypter = new Crypter(keyPath))
@@ -63,13 +65,14 @@ namespace KeyczarTest.Unofficial
                 var plaintext = dataDecrypter.Decrypt(ciphertext);
                 Expect(plaintext, Is.EqualTo(input));
             }
-
         }
 
 
         [Test]
         public void TestPublicKeyVerify()
         {
+    
+
             var basePath = Util.TestDataPath(TEST_DATA, "");
             var keyPath = Path.Combine(basePath, "rsa-sign");
             var webKeyPath = TEST_WEBDATA + "rsa-sign.public/";
@@ -80,7 +83,8 @@ namespace KeyczarTest.Unofficial
                 signature = dataSigner.Sign(input);
             }
 
-            using (var dataVerifier = new Verifier(new WebKeySet(webKeyPath)))
+            var webKeySet = new WebKeySet(webKeyPath);
+            using (var dataVerifier = new Verifier(webKeySet))
             {
                 var verified = dataVerifier.Verify(input, signature);
                 Expect(verified, Is.True);

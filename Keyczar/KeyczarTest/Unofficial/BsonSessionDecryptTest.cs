@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace KeyczarTest.Unofficial
 {
     [Category("Unofficial")]
-    [TestFixture("cstestdata")]
+    [TestFixture("gen|cstestdata")]
     public class BsonSessionDecryptTest : AssertionHelper
     {
         private readonly String TEST_DATA;
@@ -31,6 +31,7 @@ namespace KeyczarTest.Unofficial
 
         public BsonSessionDecryptTest(string testPath)
         {
+            testPath = Util.ReplaceDirPrefix(testPath);
             TEST_DATA = testPath;
         }
 
@@ -38,7 +39,6 @@ namespace KeyczarTest.Unofficial
         [TestCase("signed")]
         public void TestDecrypt(string signed)
         {
-
             string subDir = "bson_session";
             if (!string.IsNullOrWhiteSpace(signed))
             {
@@ -49,17 +49,17 @@ namespace KeyczarTest.Unofficial
                 publicKeyVerifier = publicKeyVerifier.SafeDispose();
             }
             var subPath = Util.TestDataPath(TEST_DATA, subDir, "unofficial");
-            var sessionMaterialInput = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "session.out")).First();
+            var sessionMaterialInput = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "session.out")).First();
 
-            var sessionCiphertextInput = (WebBase64)File.ReadAllLines(Path.Combine(subPath, "ciphertext.out")).First();
+            var sessionCiphertextInput = (WebBase64) File.ReadAllLines(Path.Combine(subPath, "ciphertext.out")).First();
 
-            using (var sessionCrypter = new SessionCrypter(privateKeyDecrypter, sessionMaterialInput, publicKeyVerifier, new BsonSessionKeyPacker()))
+            using (
+                var sessionCrypter = new SessionCrypter(privateKeyDecrypter, sessionMaterialInput, publicKeyVerifier,
+                                                        new BsonSessionKeyPacker()))
             {
                 var plaintext = sessionCrypter.Decrypt(sessionCiphertextInput);
                 Expect(plaintext, Is.EqualTo(input));
             }
-
         }
-
     }
 }

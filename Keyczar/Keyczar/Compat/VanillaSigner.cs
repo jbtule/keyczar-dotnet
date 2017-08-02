@@ -28,7 +28,6 @@ namespace Keyczar.Compat
     /// Plain old signing with plain old signature
     /// </summary>
     public class VanillaSigner:Signer
-
     {
 
         /// <summary>
@@ -88,13 +87,13 @@ namespace Keyczar.Compat
 
         }
 
-		/// <summary>
-		/// Pads the signature with extra data.
-		/// </summary>
-		/// <param name="signature">The signature.</param>
-		/// <param name="outputStream">The padded signature.</param>
-		/// <param name="extra">The extra data passed by sigData.</param>
-		/// <returns></returns>
+        /// <summary>
+        /// Pads the signature with extra data.
+        /// </summary>
+        /// <param name="signature">The signature.</param>
+        /// <param name="outputStream">The padded signature.</param>
+        /// <param name="extra">The extra data passed by sigData.</param>
+        /// <returns></returns>
         protected override void PadSignature(byte[] signature, Stream outputStream,  object extra)
         {
             outputStream.Write(signature,0,signature.Length);

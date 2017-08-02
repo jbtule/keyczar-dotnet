@@ -23,7 +23,7 @@ using ManyConsole;
 
 namespace KeyczarTool
 {
-    class AddKey : ConsoleCommand
+    internal class AddKey : ConsoleCommand
     {
         private string _location;
         private KeyStatus _status;
@@ -37,7 +37,8 @@ namespace KeyczarTool
         {
             this.IsCommand("addkey", Localized.AddKey);
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
-			this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
+
+            this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
             this.HasOption<int>("b|size=", Localized.Size, v => { _size = v; }); 
             this.HasOption("t|type=", Localized.KeyType, v => { _type = v; });
             this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
@@ -76,9 +77,9 @@ namespace KeyczarTool
 
             Func<string> crypterPrompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
 
-			var prompt = ks.Metadata.Encrypted 
-				 ? new Func<string>(CachedPrompt.Password(Util.PromptForPassword).Prompt)
-				 : new Func<string>(CachedPrompt.Password(Util.DoublePromptForPassword).Prompt);
+            var prompt = ks.Metadata.Encrypted
+                             ? new Func<string>(CachedPrompt.Password(Util.PromptForPassword).Prompt)
+                             : new Func<string>(CachedPrompt.Password(Util.DoublePromptForPassword).Prompt);
 
             IDisposable dks = null;
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
@@ -90,33 +91,35 @@ namespace KeyczarTool
                     dks = cks;
                 }
                 else
-                {     
+                {
                     crypter = new Crypter(_crypterLocation);
                 }
                 ks = new EncryptedKeySet(ks, crypter);
-            }else  if (_password)
+            }
+            else if (_password)
             {
                 ks = new PbeKeySet(ks, prompt);
             }
             var d2ks = ks as IDisposable;
 
 
-            using(crypter)
+            using (crypter)
             using (dks)
             using (d2ks)
             using (var keySet = new MutableKeySet(ks))
             {
-                 if(_status != KeyStatus.Primary && _status != KeyStatus.Active)
-                 {
-                     Console.WriteLine("{0} {1}.",Localized.MsgInvalidStatus, _status.Identifier);
-                     return -1;
-                 }
 
-                 object options = null;
-                 if (!String.IsNullOrWhiteSpace(_padding))
-                 {
-                     options = new {Padding = _padding};
-                 }
+                if (_status != KeyStatus.Primary && _status != KeyStatus.Active)
+                {
+                    Console.WriteLine("{0} {1}.", Localized.MsgInvalidStatus, _status.Identifier);
+                    return -1;
+                }
+
+                object options = null;
+                if (!String.IsNullOrWhiteSpace(_padding))
+                {
+                    options = new {Padding = _padding};
+                }
 
                 int ver;
                 var type = KeyTypeForString(_type);
@@ -131,11 +134,11 @@ namespace KeyczarTool
                 }
 
 
-                IKeySetWriter writer = new KeySetWriter(_location, overwrite:true);
-               
+                IKeySetWriter writer = new KeySetWriter(_location, overwrite: true);
+
                 if (crypter != null)
                 {
-                    writer = new EncryptedKeySetWriter(writer,crypter);
+                    writer = new EncryptedKeySetWriter(writer, crypter);
                 }
                 else if (_password)
                 {
@@ -148,7 +151,7 @@ namespace KeyczarTool
                     {
                         if (keySet.Save(writer))
                         {
-                            Console.WriteLine("{0} {1}.",Localized.MsgCreatedKey, ver);
+                            Console.WriteLine("{0} {1}.", Localized.MsgCreatedKey, ver);
                             ret = 0;
                         }
                         else
@@ -165,7 +168,7 @@ namespace KeyczarTool
 
             if (ret != 0)
             {
-                Console.WriteLine("{0} {1}.",Localized.MsgCouldNotWrite, _location);
+                Console.WriteLine("{0} {1}.", Localized.MsgCouldNotWrite, _location);
             }
 
             return ret;

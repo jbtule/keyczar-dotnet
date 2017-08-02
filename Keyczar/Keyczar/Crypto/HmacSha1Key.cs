@@ -28,19 +28,19 @@ namespace Keyczar.Crypto
     /// <summary>
     /// The Hmac 256 Sha1 key
     /// </summary>
-    public class HmacSha1Key:Key,ISignerKey,IVerifierKey
+    public class HmacSha1Key : Key, ISignerKey, IVerifierKey
     {
         /// <summary>
         /// The hash size is 160 bits
         /// </summary>
-        [JsonIgnore]
-        public readonly int HashLength = 20;
+        [JsonIgnore] public readonly int HashLength = 20;
 
         /// <summary>
         /// Gets or sets the hmac key bytes.
         /// </summary>
         /// <value>The hmac key bytes.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof (WebSafeBase64ByteConverter))]
         [JsonProperty("HmacKeyString")]
         public byte[] HmacKeyBytes { get; set; }
 
@@ -59,23 +59,23 @@ namespace Keyczar.Crypto
         /// </summary>
         protected override void Dispose(bool disposing)
         {
-            HmacKeyBytes =  HmacKeyBytes.Clear();
+            HmacKeyBytes = HmacKeyBytes.Clear();
         }
 
         /// <summary>
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetSigningStream()
+        public HashingStream GetSigningStream(Keyczar keyczar)
         {
-            return GetVerifyingStream();
+            return GetVerifyingStream(keyczar);
         }
 
         /// <summary>
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream()
+        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
         {
             var hmac = new HMac(new Sha1Digest());
             hmac.Init(new KeyParameter(HmacKeyBytes));
@@ -88,9 +88,8 @@ namespace Keyczar.Crypto
         /// <param name="size">The size.</param>
         protected override void GenerateKey(int size)
         {
-            HmacKeyBytes = new byte[size / 8];
+            HmacKeyBytes = new byte[size/8];
             Secure.Random.NextBytes(HmacKeyBytes);
         }
-
     }
 }

@@ -25,7 +25,6 @@ namespace Keyczar
     /// </summary>
     public class EncryptedKeySetWriter : IKeySetWriter
     {
-        
         private readonly Encrypter _encrypter;
         private readonly IKeySetWriter _writer;
 
@@ -47,8 +46,8 @@ namespace Keyczar
         /// <param name="version">The version.</param>
         public void Write(byte[] keyData, int version)
         {
-           var cipherData = _encrypter.Encrypt(keyData);
-           _writer.Write(Keyczar.RawStringEncoding.GetBytes(WebSafeBase64.Encode(cipherData)), version);
+            var cipherData = _encrypter.Encrypt(keyData);
+            _writer.Write(Keyczar.RawStringEncoding.GetBytes(WebSafeBase64.Encode(cipherData)), version);
         }
 
         /// <summary>

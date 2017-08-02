@@ -43,7 +43,6 @@ namespace KeyczarTool
         /// <exception cref="System.Exception">Entered non matching password too many times</exception>
         public static string DoublePromptForPassword()
         {
-
             int i = 0;
             while (i++ < 4)
             {

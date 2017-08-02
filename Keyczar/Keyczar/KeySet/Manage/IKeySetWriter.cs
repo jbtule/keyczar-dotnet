@@ -33,7 +33,7 @@ namespace Keyczar
         /// <param name="writer">The writer.</param>
         /// <param name="key">The key.</param>
         /// <param name="version">The version.</param>
-        public static void Write(this IKeySetWriter writer,Key key, int version)
+        public static void Write(this IKeySetWriter writer, Key key, int version)
         {
             writer.Write(Keyczar.RawStringEncoding.GetBytes(key.ToJson()), version);
         }
@@ -45,15 +45,15 @@ namespace Keyczar
     /// </summary>
     public interface INonSeparatedMetadataAndKey
     {
-        
     }
 
     /// <summary>
     /// Interface for mechanisms to store keysets
     /// </summary>
-    public interface IKeySetWriter 
+    public interface IKeySetWriter
 
-    {    /// <summary>
+    {
+        /// <summary>
         /// Writes the specified key data.
         /// </summary>
         /// <param name="keyData">The key data.</param>
@@ -72,5 +72,4 @@ namespace Keyczar
         /// <returns></returns>
         bool Finish();
     }
-
 }

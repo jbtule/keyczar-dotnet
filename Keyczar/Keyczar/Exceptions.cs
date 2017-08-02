@@ -19,20 +19,17 @@ using System.Runtime.Serialization;
 
 namespace Keyczar
 {
-
     /// <summary>
     /// Unoffical Needs Explict Use exception 
     /// </summary>
     [Serializable]
     public class UnofficialNeedsExplicitUseException : Exception
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="UnofficialNeedsExplicitUseException" /> class.
         /// </summary>
-          public UnofficialNeedsExplicitUseException():base()
+        public UnofficialNeedsExplicitUseException() : base()
         {
-            
         }
 
         /// <summary>
@@ -42,7 +39,6 @@ namespace Keyczar
         public UnofficialNeedsExplicitUseException(string message)
             : base(message)
         {
-
         }
 
 
@@ -52,9 +48,8 @@ namespace Keyczar
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
         public UnofficialNeedsExplicitUseException(string message, Exception innerException)
-            : base(message,innerException)
+            : base(message, innerException)
         {
-
         }
 
         /// <summary>
@@ -63,12 +58,9 @@ namespace Keyczar
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         protected UnofficialNeedsExplicitUseException(SerializationInfo info,
-                    StreamingContext context):base(info,context)
+                                                      StreamingContext context) : base(info, context)
         {
-
         }
-
-
     }
 
 
@@ -78,13 +70,11 @@ namespace Keyczar
     [Serializable]
     public class InvalidCryptoVersionException : Exception
     {
-
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidCryptoVersionException" /> class.
         /// </summary>
         public InvalidCryptoVersionException() : base()
         {
-            
         }
 
         /// <summary>
@@ -94,7 +84,6 @@ namespace Keyczar
         public InvalidCryptoVersionException(string message)
             : base(message)
         {
-
         }
 
         /// <summary>
@@ -103,9 +92,8 @@ namespace Keyczar
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
         public InvalidCryptoVersionException(string message, Exception innerException)
-            : base(message,innerException)
+            : base(message, innerException)
         {
-
         }
 
         /// <summary>
@@ -114,11 +102,9 @@ namespace Keyczar
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         protected InvalidCryptoVersionException(SerializationInfo info,
-                    StreamingContext context):base(info,context)
+                                                StreamingContext context) : base(info, context)
         {
-
         }
-
     }
 
     /// <summary>
@@ -133,16 +119,14 @@ namespace Keyczar
         public InvalidCryptoDataException()
             : base()
         {
-            
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidCryptoDataException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public InvalidCryptoDataException(string message):base(message)
+        public InvalidCryptoDataException(string message) : base(message)
         {
-           
         }
 
         /// <summary>
@@ -151,9 +135,8 @@ namespace Keyczar
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
         public InvalidCryptoDataException(string message, Exception innerException)
-            : base(message,innerException)
+            : base(message, innerException)
         {
-
         }
 
         /// <summary>
@@ -162,9 +145,8 @@ namespace Keyczar
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         protected InvalidCryptoDataException(SerializationInfo info,
-                    StreamingContext context):base(info,context)
+                                             StreamingContext context) : base(info, context)
         {
-
         }
     }
 
@@ -180,7 +162,6 @@ namespace Keyczar
         public InvalidKeyTypeException()
             : base()
         {
-            
         }
 
 
@@ -191,7 +172,6 @@ namespace Keyczar
         public InvalidKeyTypeException(string message)
             : base(message)
         {
-
         }
 
         /// <summary>
@@ -200,9 +180,8 @@ namespace Keyczar
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
         public InvalidKeyTypeException(string message, Exception innerException)
-            : base(message,innerException)
+            : base(message, innerException)
         {
-
         }
 
         /// <summary>
@@ -211,9 +190,8 @@ namespace Keyczar
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         protected InvalidKeyTypeException(SerializationInfo info,
-                    StreamingContext context):base(info,context)
+                                          StreamingContext context) : base(info, context)
         {
-
         }
     }
 
@@ -223,16 +201,14 @@ namespace Keyczar
     [Serializable]
     public class InvalidKeySetException : Exception
     {
-
-
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidKeySetException" /> class.
         /// </summary>
         public InvalidKeySetException()
             : base()
         {
-            
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="InvalidKeySetException"/> class.
         /// </summary>
@@ -240,7 +216,6 @@ namespace Keyczar
         public InvalidKeySetException(string message)
             : base(message)
         {
-
         }
 
         /// <summary>
@@ -249,9 +224,8 @@ namespace Keyczar
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
         public InvalidKeySetException(string message, Exception innerException)
-            : base(message,innerException)
+            : base(message, innerException)
         {
-
         }
 
         /// <summary>
@@ -260,9 +234,8 @@ namespace Keyczar
         /// <param name="info">The info.</param>
         /// <param name="context">The context.</param>
         protected InvalidKeySetException(SerializationInfo info,
-                    StreamingContext context):base(info,context)
+                                         StreamingContext context) : base(info, context)
         {
-
         }
     }
 }

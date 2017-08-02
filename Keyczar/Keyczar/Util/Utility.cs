@@ -23,6 +23,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 using Newtonsoft.Json.Serialization;
 using Org.BouncyCastle.Crypto.Digests;
+using Org.BouncyCastle.Asn1;
 
 namespace Keyczar.Util
 {
@@ -31,6 +32,17 @@ namespace Keyczar.Util
     /// </summary>
     public static class Utility
     {
+
+		public static byte[] RemoveJunkFronAnsiObj(byte[] data)
+		{
+			using (var input = new MemoryStream(data))
+			{
+				var asn1 = new Asn1InputStream(input, data.Length);
+				var result = asn1.ReadObject();
+				return result.GetDerEncoded();
+			}
+		}
+
         /// <summary>
         /// Resets the stream poisition when Closed or Disposed.
         /// </summary>
@@ -41,19 +53,20 @@ namespace Keyczar.Util
             return new NondestructiveStreamReset(stream);
         }
 
+
         /// <summary>
         /// Copies string/object dictionary to the destnation objects properties.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="destination">The dest.</param>
-        public static void CopyProperties(IDictionary<string,object> source, object destination)
+        public static void CopyProperties(IDictionary<string, object> source, object destination)
         {
             foreach (var pair in source)
             {
-                var prop =destination.GetType().GetProperty(pair.Key);
+                var prop = destination.GetType().GetProperty(pair.Key);
                 if (prop != null)
                 {
-                    prop.SetValue(destination,pair.Value,null);
+                    prop.SetValue(destination, pair.Value, null);
                 }
             }
         }
@@ -65,7 +78,7 @@ namespace Keyczar.Util
         /// <param name="destination">The dest.</param>
         public static void CopyProperties(object source, object destination)
         {
-            var dict =source.GetType().GetProperties().ToDictionary(k => k.Name, v => v.GetValue(source,null));
+            var dict = source.GetType().GetProperties().ToDictionary(k => k.Name, v => v.GetValue(source, null));
             CopyProperties(dict, destination);
         }
 
@@ -78,7 +91,12 @@ namespace Keyczar.Util
         public static string ToJson(this object value)
         {
             return JsonConvert.SerializeObject(value,
-                new JsonSerializerSettings {ContractResolver = new CamelCasePropertyNamesContractResolver()});
+                                               new JsonSerializerSettings
+                                                   {
+                                                       ContractResolver =
+                                                           new CamelCasePropertyNamesContractResolver
+                                                           ()
+                                                   });
         }
 
 
@@ -91,7 +109,7 @@ namespace Keyczar.Util
         {
             using (var output = new MemoryStream())
             {
-                var serializer = new JsonSerializer {ContractResolver = new CamelCasePropertyNamesContractResolver(), };
+                var serializer = new JsonSerializer {ContractResolver = new CamelCasePropertyNamesContractResolver(),};
                 var writer = new BsonWriter(output);
                 serializer.Serialize(writer, value);
                 output.Flush();
@@ -104,25 +122,28 @@ namespace Keyczar.Util
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-		public static BigInteger ToSystemBigInteger(this Org.BouncyCastle.Math.BigInteger value){
-			var bytes = value.ToByteArray();
-			if(BitConverter.IsLittleEndian){
-				Array.Reverse(bytes);
-			}
-			var bigint = new BigInteger(bytes);
-			return bigint;
-		}
+        public static BigInteger ToSystemBigInteger(this Org.BouncyCastle.Math.BigInteger value)
+        {
+            var bytes = value.ToByteArray();
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(bytes);
+            }
+            var bigint = new BigInteger(bytes);
+            return bigint;
+        }
 
         /// <summary>
         /// To the bouncy castle big integer.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
-		public static Org.BouncyCastle.Math.BigInteger ToBouncyBigInteger(this BigInteger value){
-			var bytes = Utility.GetBytes(value);
-			var bigint = new Org.BouncyCastle.Math.BigInteger(bytes);
-			return bigint;
-		}
+        public static Org.BouncyCastle.Math.BigInteger ToBouncyBigInteger(this BigInteger value)
+        {
+            var bytes = Utility.GetBytes(value);
+            var bigint = new Org.BouncyCastle.Math.BigInteger(bytes);
+            return bigint;
+        }
 
         /// <summary>
         /// Gets the bytes for an int laid out big endian
@@ -154,33 +175,35 @@ namespace Keyczar.Util
             return bytes;
         }
 
-		/// <summary>
-		/// Gets the bytes for a long laid out big endian
-		/// </summary>
-		/// <param name="data">The data.</param>
-		/// <returns></returns>
-		public static byte[] GetBytes(BigInteger data){
-			var bytes = data.ToByteArray();
-			if(BitConverter.IsLittleEndian){
-				Array.Reverse(bytes);
-			}
-			return bytes;
-		}
+        /// <summary>
+        /// Gets the bytes for a long laid out big endian
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
+        public static byte[] GetBytes(BigInteger data)
+        {
+            var bytes = data.ToByteArray();
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(bytes);
+            }
+            return bytes;
+        }
 
-		/// <summary>
-		/// To the BigInteger from big endian bytes.
-		/// </summary>
-		/// <param name="data">The data.</param>
-		/// <returns></returns>
-		public static BigInteger ToBigInteger(byte[] data)
-		{
-			var dataclone = (byte[]) data.Clone();
-			if (BitConverter.IsLittleEndian)
-			{
-				Array.Reverse(dataclone);
-			}
-			return new BigInteger(dataclone);
-		}
+        /// <summary>
+        /// To the BigInteger from big endian bytes.
+        /// </summary>
+        /// <param name="data">The data.</param>
+        /// <returns></returns>
+        public static BigInteger ToBigInteger(byte[] data)
+        {
+            var dataclone = (byte[]) data.Clone();
+            if (BitConverter.IsLittleEndian)
+            {
+                Array.Reverse(dataclone);
+            }
+            return new BigInteger(dataclone);
+        }
 
         /// <summary>
         /// To the int64 from big endian bytes.
@@ -189,12 +212,12 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static long ToInt64(byte[] data)
         {
-			var dataclone = (byte[]) data.Clone();
+            var dataclone = (byte[]) data.Clone();
             if (BitConverter.IsLittleEndian)
             {
-				Array.Reverse(dataclone);
+                Array.Reverse(dataclone);
             }
-			return BitConverter.ToInt64(dataclone,0);
+            return BitConverter.ToInt64(dataclone, 0);
         }
 
         /// <summary>
@@ -204,12 +227,12 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static int ToInt32(byte[] data)
         {
-			var dataclone = (byte[]) data.Clone();
+            var dataclone = (byte[]) data.Clone();
             if (BitConverter.IsLittleEndian)
             {
-				Array.Reverse(dataclone);
+                Array.Reverse(dataclone);
             }
-			return BitConverter.ToInt32(dataclone, 0);
+            return BitConverter.ToInt32(dataclone, 0);
         }
 
         /// <summary>
@@ -221,13 +244,13 @@ namespace Keyczar.Util
         public static byte[] ReadHeader(byte[] data, out byte[] keyHash)
         {
             var output = new byte[Keyczar.HeaderLength];
-            
+
             Array.Copy(data, 0, output, 0, output.Length);
             keyHash = new byte[Keyczar.KeyHashLength];
             Array.Copy(data, Keyczar.FormatBytes.Length, keyHash, 0, keyHash.Length);
 
-            if(output[0] !=  Keyczar.FormatVersion)
-                 throw new InvalidCryptoVersionException("The version identifier doesn't match the current framework.");
+            if (output[0] != Keyczar.FormatVersion)
+                throw new InvalidCryptoVersionException("The version identifier doesn't match the current framework.");
 
             return output;
         }
@@ -244,6 +267,10 @@ namespace Keyczar.Util
             data.Read(output, 0, output.Length);
             keyHash = new byte[Keyczar.KeyHashLength];
             Array.Copy(output, Keyczar.FormatBytes.Length, keyHash, 0, keyHash.Length);
+
+            if (output[0] != Keyczar.FormatVersion)
+                throw new InvalidCryptoVersionException("The version identifier doesn't match the current framework.");
+
             return output;
         }
 
@@ -255,19 +282,19 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static byte[] HashKey(int size, params byte[][] components)
         {
-           var sha1 = new Sha1Digest();
-            
-           foreach (var data in components)
-           {
-               sha1.BlockUpdate(data,0, data.Length);
-           }
+            var sha1 = new Sha1Digest();
 
-           var hash = new byte[sha1.GetDigestSize()];
-           sha1.DoFinal(hash, 0);
-           sha1.Reset();
-           var outBytes = new byte[size];
-           Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
-           return outBytes;
+            foreach (var data in components)
+            {
+                sha1.BlockUpdate(data, 0, data.Length);
+            }
+
+            var hash = new byte[sha1.GetDigestSize()];
+            sha1.DoFinal(hash, 0);
+            sha1.Reset();
+            var outBytes = new byte[size];
+            Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
+            return outBytes;
         }
 
         /// <summary>
@@ -278,13 +305,13 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static byte[] HashKeyLengthPrefix(int size, params byte[][] components)
         {
-             var sha1 = new Sha1Digest();
-            
+            var sha1 = new Sha1Digest();
+
             foreach (var data in components)
             {
                 byte[] length = GetBytes(data.Length);
-                sha1.BlockUpdate(length,0, length.Length);
-                sha1.BlockUpdate(data,0, data.Length);
+                sha1.BlockUpdate(length, 0, length.Length);
+                sha1.BlockUpdate(data, 0, data.Length);
             }
             var hash = new byte[sha1.GetDigestSize()];
             sha1.DoFinal(hash, 0);
@@ -308,6 +335,5 @@ namespace Keyczar.Util
             Array.Copy(data, index, output, 0, output.Length);
             return output;
         }
-
     }
 }

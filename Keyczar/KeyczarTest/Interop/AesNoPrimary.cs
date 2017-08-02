@@ -22,25 +22,24 @@ using NUnit.Framework;
 namespace KeyczarTest.Interop
 {
     [TestFixture]
-    public class AesNoPrimary:Interop
+    public class AesNoPrimary : Interop
     {
         public AesNoPrimary(string implementation) : base(implementation)
         {
         }
-          
+
         [Test]
         public void Decrypt()
         {
             var path = TestData("aes-noprimary");
 
-            var activeCiphertext = (WebBase64)File.ReadAllLines(Path.Combine(path, "1.out")).First();
+            var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(path, "1.out")).First();
 
             using (var crypter = new Crypter(path))
             {
                 var activeDecrypted = crypter.Decrypt(activeCiphertext);
                 Expect(activeDecrypted, Is.EqualTo(Input));
             }
-
         }
 
         [Test]
@@ -51,7 +50,6 @@ namespace KeyczarTest.Interop
             {
                 Expect(() => encrypter.Encrypt(Input), Throws.TypeOf<MissingPrimaryKeyException>());
             }
-
         }
     }
 }

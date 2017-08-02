@@ -38,17 +38,20 @@ namespace Keyczar.Util
     {
         #region Helpers
 
-        private static readonly char[] ALPHABET = {
-      'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
-      'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
-      'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
-      'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
-      '4', '5', '6', '7', '8', '9', '-', '_'};
+        private static readonly char[] ALPHABET =
+            {
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
+                'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
+                'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+                'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3',
+                '4', '5', '6', '7', '8', '9', '-', '_'
+            };
+
         /**
          * Mapping table from Base64 characters to 6-bit nibbles.
          */
         private static readonly sbyte[] DECODE = new sbyte[128];
-        private static readonly char[] WHITESPACE = { '\t', '\n', '\r', ' ', '\f' };
+        private static readonly char[] WHITESPACE = {'\t', '\n', '\r', ' ', '\f'};
 
         static WebSafeBase64()
         {
@@ -64,7 +67,7 @@ namespace Keyczar.Util
 
             for (int i = 0; i < ALPHABET.Length; i++)
             {
-                DECODE[ALPHABET[i]] = (sbyte)i;
+                DECODE[ALPHABET[i]] = (sbyte) i;
             }
         }
 
@@ -75,7 +78,7 @@ namespace Keyczar.Util
             {
                 throw new Base64DecodingException("Invalid Encoding");
             }
-            return (byte)DECODE[i];
+            return (byte) DECODE[i];
         }
 
         /// <summary>
@@ -90,7 +93,6 @@ namespace Keyczar.Util
             /// <param name="message">The message.</param>
             public Base64DecodingException(string message)
             {
-
             }
 
 
@@ -100,9 +102,7 @@ namespace Keyczar.Util
             public Base64DecodingException()
                 : base()
             {
-
             }
-
 
 
             /// <summary>
@@ -113,7 +113,6 @@ namespace Keyczar.Util
             public Base64DecodingException(string message, Exception innerException)
                 : base(message, innerException)
             {
-
             }
 
             /// <summary>
@@ -122,12 +121,10 @@ namespace Keyczar.Util
             /// <param name="info">The info.</param>
             /// <param name="context">The context.</param>
             protected Base64DecodingException(SerializationInfo info,
-                        StreamingContext context)
+                                              StreamingContext context)
                 : base(info, context)
             {
-
             }
-
         }
 
         private static bool IsWhiteSpace(int i)
@@ -144,9 +141,9 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static char[] Encode(byte[] input)
         {
-            int inputBlocks = input.Length / 3;
-            int remainder = input.Length % 3;
-            int outputLen = inputBlocks * 4;
+            int inputBlocks = input.Length/3;
+            int remainder = input.Length%3;
+            int outputLen = inputBlocks*4;
 
             switch (remainder)
             {
@@ -165,7 +162,7 @@ namespace Keyczar.Util
             for (int i = 0; i < inputBlocks; i++)
             {
                 int buffer = (0xFF & input[inPos++]) << 16 | (0xFF & input[inPos++]) << 8
-                    | (0xFF & input[inPos++]);
+                             | (0xFF & input[inPos++]);
                 outChar[outPos++] = ALPHABET[(buffer >> 18) & 0x3F];
                 outChar[outPos++] = ALPHABET[(buffer >> 12) & 0x3F];
                 outChar[outPos++] = ALPHABET[(buffer >> 6) & 0x3F];
@@ -220,9 +217,9 @@ namespace Keyczar.Util
             }
 
             inLen -= whiteSpaceChars;
-            int inputBlocks = inLen / 4;
-            int remainder = inLen % 4;
-            int outputLen = inputBlocks * 3;
+            int inputBlocks = inLen/4;
+            int remainder = inLen%4;
+            int outputLen = inputBlocks*3;
             switch (remainder)
             {
                 case 1:
@@ -247,9 +244,9 @@ namespace Keyczar.Util
                 }
                 if (buffCount == 4)
                 {
-                    outChar[outPos++] = (byte)(buffer >> 16);
-                    outChar[outPos++] = (byte)(buffer >> 8);
-                    outChar[outPos++] = (byte)buffer;
+                    outChar[outPos++] = (byte) (buffer >> 16);
+                    outChar[outPos++] = (byte) (buffer >> 8);
+                    outChar[outPos++] = (byte) buffer;
                     buffer = 0;
                     buffCount = 0;
                 }
@@ -257,11 +254,11 @@ namespace Keyczar.Util
             switch (buffCount)
             {
                 case 2:
-                    outChar[outPos++] = (byte)(buffer >> 4);
+                    outChar[outPos++] = (byte) (buffer >> 4);
                     break;
                 case 3:
-                    outChar[outPos++] = (byte)(buffer >> 10);
-                    outChar[outPos++] = (byte)(buffer >> 2);
+                    outChar[outPos++] = (byte) (buffer >> 10);
+                    outChar[outPos++] = (byte) (buffer >> 2);
                     break;
             }
 
@@ -294,10 +291,11 @@ namespace Keyczar.Util
         /// <param name="existingValue">The existing value of object being read.</param>
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+                                        JsonSerializer serializer)
         {
             var value = serializer.Deserialize<String>(reader);
-            return (WebBase64)value;
+            return (WebBase64) value;
         }
 
         /// <summary>
@@ -309,7 +307,7 @@ namespace Keyczar.Util
         /// </returns>
         public override bool CanConvert(Type objectType)
         {
-            return typeof(WebBase64).IsAssignableFrom(objectType);
+            return typeof (WebBase64).IsAssignableFrom(objectType);
         }
     }
 
@@ -326,7 +324,7 @@ namespace Keyczar.Util
         /// <param name="serializer">The calling serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            base.WriteJson(writer, Utility.GetBytes((BigInteger)value), serializer);
+            base.WriteJson(writer, Utility.GetBytes((BigInteger) value), serializer);
         }
 
         /// <summary>
@@ -337,10 +335,10 @@ namespace Keyczar.Util
         /// <param name="existingValue">The existing value of object being read.</param>
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+                                        JsonSerializer serializer)
         {
-
-            var value = (byte[])base.ReadJson(reader, objectType, existingValue, serializer);
+            var value = (byte[]) base.ReadJson(reader, objectType, existingValue, serializer);
 
             var final = Utility.ToBigInteger(value);
             Secure.Clear(value);
@@ -356,10 +354,9 @@ namespace Keyczar.Util
         /// </returns>
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(BigInteger);
+            return objectType == typeof (BigInteger);
         }
     }
-
 
 
     /// <summary>
@@ -381,8 +378,7 @@ namespace Keyczar.Util
             }
             else
             {
-
-                var encoded = WebSafeBase64.Encode(((byte[])value));
+                var encoded = WebSafeBase64.Encode(((byte[]) value));
                 serializer.Serialize(writer, new string(encoded));
                 Secure.Clear(encoded);
             }
@@ -396,7 +392,8 @@ namespace Keyczar.Util
         /// <param name="existingValue">The existing value of object being read.</param>
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+                                        JsonSerializer serializer)
         {
             byte[] final;
             if (reader is BsonReader || reader is RawJsonReader)
@@ -408,13 +405,19 @@ namespace Keyczar.Util
                 var base64 = (serializer.Deserialize<string>(reader) ?? String.Empty).ToCharArray();
                 final = WebSafeBase64.Decode(base64);
                 Secure.Clear(base64);
-
             }
             return final;
         }
 
+        /// <summary>
+        /// Raw json reader
+        /// </summary>
         public class RawJsonReader : JsonTextReader
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RawJsonReader" /> class.
+            /// </summary>
+            /// <param name="reader">The reader.</param>
             public RawJsonReader(TextReader reader)
                 : base(reader)
             {
@@ -430,9 +433,7 @@ namespace Keyczar.Util
         /// </returns>
         public override bool CanConvert(Type objectType)
         {
-            return objectType == typeof(byte[]);
+            return objectType == typeof (byte[]);
         }
     }
-
-
 }

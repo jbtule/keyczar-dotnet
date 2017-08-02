@@ -1,7 +1,4 @@
-﻿
-
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,42 +9,40 @@ using Keyczar;
 
 namespace KeyczarTest.Unofficial
 {
-
     [Category("Unofficial")]
     public class BlobKeySetTest : AssertionHelper
     {
         private static string input = "Some test text";
 
-        private static string TEST_DATA = Path.Combine("testdata", "unofficial", "blob");
+        private static string TEST_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet", "unofficial",
+                                                       "blob");
 
 
         [Test]
         public void TestDecrypt()
         {
-            using (var stream = File.OpenRead(Path.Combine(TEST_DATA,"cryptkey.zip")))
-            using( var keySet = new BlobKeySet(stream))
-            using(var crypter = new Crypter(keySet))
+            using (var stream = File.OpenRead(Util.TestDataPath(TEST_DATA, "cryptkey.zip")))
+            using (var keySet = new BlobKeySet(stream))
+            using (var crypter = new Crypter(keySet))
             {
-                var cipherText = (WebBase64) File.ReadAllText(Path.Combine(TEST_DATA, "crypt.out"));
-                Expect(crypter.Decrypt(cipherText),Is.EqualTo(input));
+                var cipherText = (WebBase64) File.ReadAllText(Util.TestDataPath(TEST_DATA, "crypt.out"));
+                Expect(crypter.Decrypt(cipherText), Is.EqualTo(input));
             }
         }
 
         [Test]
         public void TestSign()
         {
-            using (var stream = File.OpenRead(Path.Combine(TEST_DATA, "cryptkey.zip")))
+            using (var stream = File.OpenRead(Util.TestDataPath(TEST_DATA, "cryptkey.zip")))
             using (var keySet = new BlobKeySet(stream))
             using (var crypter = new Crypter(keySet))
-            using (var signstream = File.OpenRead(Path.Combine(TEST_DATA, "signkey.zip")))
+            using (var signstream = File.OpenRead(Util.TestDataPath(TEST_DATA, "signkey.zip")))
             using (var signkeySet = new BlobKeySet(signstream))
-            using (var verifier = new Verifier(new EncryptedKeySet(signkeySet,crypter)))
+            using (var verifier = new Verifier(new EncryptedKeySet(signkeySet, crypter)))
             {
-                var sig = (WebBase64)File.ReadAllText(Path.Combine(TEST_DATA, "sign.out"));
-                Expect(verifier.Verify(input,sig), Is.True);
+                var sig = (WebBase64) File.ReadAllText(Util.TestDataPath(TEST_DATA, "sign.out"));
+                Expect(verifier.Verify(input, sig), Is.True);
             }
         }
-
-     
     }
 }

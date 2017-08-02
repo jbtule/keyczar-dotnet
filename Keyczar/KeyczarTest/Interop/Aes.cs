@@ -12,6 +12,7 @@
 //    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 //    See the License for the specific language governing permissions and
 //    limitations under the License.
+
 using System;
 using NUnit.Framework;
 using Keyczar;
@@ -20,13 +21,13 @@ using System.Linq;
 
 namespace KeyczarTest.Interop
 {
-	[TestFixture]
-	public class Aes: CrypterBasicInterop
-	{
-		public Aes (string imp):base(imp)
-		{
-			Location="aes";
-		}
+    [TestFixture]
+    public class Aes : CrypterBasicInterop
+    {
+        public Aes(string imp) : base(imp)
+        {
+            Location = "aes";
+        }
 
         [TestCase("128")]
         [TestCase("192")]
@@ -35,6 +36,5 @@ namespace KeyczarTest.Interop
         {
             HelperDecryptVariousSizes(size);
         }
-	}
+    }
 }
-

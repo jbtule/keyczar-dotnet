@@ -1,0 +1,27 @@
+# Travis-CI Build for keyczar-dotnet 
+# see travis-ci.org for details
+
+language: csharp
+matrix:
+  include:
+    - os: linux
+      dist: trusty
+      sudo: required
+    - os: osx
+
+solution: Keyczar/Keyczar.sln
+
+mono:
+  - beta
+
+install:
+  - cd Keyczar/
+  - msbuild /t:restore
+
+script:
+ - msbuild
+ - .ci/RunTests.sh
+
+branches:
+  only:
+    - master

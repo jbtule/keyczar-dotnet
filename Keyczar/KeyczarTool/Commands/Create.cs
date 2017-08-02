@@ -17,12 +17,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Keyczar.Unofficial;
 using ManyConsole;
 using NDesk.Options;
 using Keyczar;
+
 namespace KeyczarTool
 {
-    class Create : ConsoleCommand
+    internal class Create : ConsoleCommand
 
     {
         private string _location;
@@ -37,9 +39,10 @@ namespace KeyczarTool
             this.HasRequiredOption("o|purpose=", Localized.Purpose, v => { _pupose = v; });
             this.HasOption("n|name=", Localized.Name, v => { _name = v; });
             this.HasOption("a|asymmetric:", Localized.Asymmetric, v => { _asymm = true;});
+
             this.SkipsCommandSummaryBeforeRunning();
         }
-        
+
         public override int Run(string[] remainingArguments)
         {
             KeyPurpose purpose = _pupose == "sign" ? KeyPurpose.SignAndVerify : KeyPurpose.DecryptAndEncrypt;
@@ -50,9 +53,9 @@ namespace KeyczarTool
                     Purpose = purpose,
                     Kind = _asymm ? KeyKind.Private : KeyKind.Symmetric,
                 };
+
             using (var keySet = new MutableKeySet(meta))
             {
-
                 if (keySet.Save(new KeySetWriter(_location)))
                 {
                     Console.WriteLine(Localized.MsgCreatedKeySet);
@@ -64,6 +67,5 @@ namespace KeyczarTool
             return -1;
         }
 
-     
     }
 }

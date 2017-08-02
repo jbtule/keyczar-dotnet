@@ -23,7 +23,7 @@ namespace Keyczar.Crypto.Streams
     /// <summary>
     /// Bouncy Castle Asymmetric encryption
     /// </summary>
-    public class AsymmetricStream: FinishingStream
+    public class AsymmetricStream : FinishingStream
     {
         private IBufferedCipher _cipher;
         private Stream _output;
@@ -41,7 +41,8 @@ namespace Keyczar.Crypto.Streams
         /// <param name="output">The output.</param>
         /// <param name="initFunc">The init func.</param>
         /// <param name="encrypt">if set to <c>true</c> [encrypt].</param>
-        public AsymmetricStream(IAsymmetricBlockCipher cipher, Stream output, Action<IBufferedCipher,bool> initFunc,bool encrypt)
+        public AsymmetricStream(IAsymmetricBlockCipher cipher, Stream output, Action<IBufferedCipher, bool> initFunc,
+                                bool encrypt)
         {
             _cipher = new BufferedAsymmetricBlockCipher(cipher);
             _output = output;
@@ -51,7 +52,7 @@ namespace Keyczar.Crypto.Streams
 
         private void Init()
         {
-            if(!_init)
+            if (!_init)
             {
                 _initFunc(_cipher, _encrypt);
                 _init = true;
@@ -66,7 +67,6 @@ namespace Keyczar.Crypto.Streams
         {
             if (disposing)
             {
-                
             }
             _cipher.Reset();
             _cipher = null;
@@ -130,10 +130,9 @@ namespace Keyczar.Crypto.Streams
         /// </summary>
         /// <exception cref="InvalidCryptoDataException"></exception>
         public override void Finish()
-        { 
+        {
             try
             {
-              
                 Init();
                 var buffLen = _cipher.GetOutputSize(_inLen) - _outLen;
                 var buffer = new byte[buffLen];
@@ -145,7 +144,6 @@ namespace Keyczar.Crypto.Streams
             {
                 throw new InvalidCryptoDataException(ex.Message);
             }
-
         }
     }
 }

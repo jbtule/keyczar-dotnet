@@ -21,31 +21,34 @@ namespace Keyczar
     /// The key status
     /// </summary>
     [ImmutableObject(true)]
-    public class KeyStatus:Util.StringType
+    public class KeyStatus : Util.StringType
     {
         /// <summary>
         /// Primary
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyStatus Primary = "PRIMARY";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyStatus Primary = "PRIMARY";
+
         /// <summary>
         /// Active
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyStatus Active = "ACTIVE";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyStatus Active = "ACTIVE";
+
         /// <summary>
         /// Inactive
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyStatus Inactive = "INACTIVE";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyStatus Inactive = "INACTIVE";
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="KeyStatus"/>.
         /// </summary>
         /// <param name="identifier">The identifer.</param>
         /// <returns>The result of the conversion.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Constructor Is Alternative")]
-        public static  implicit operator KeyStatus(string identifier)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Constructor Is Alternative")]
+        public static implicit operator KeyStatus(string identifier)
         {
             return new KeyStatus(identifier);
         }
@@ -54,7 +57,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="KeyStatus"/> class.
         /// </summary>
         /// <param name="identifier">The identifer.</param>
-        public KeyStatus(string identifier): base(identifier)
+        public KeyStatus(string identifier) : base(identifier)
         {
         }
     }

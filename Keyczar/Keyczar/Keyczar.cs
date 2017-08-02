@@ -21,9 +21,26 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar.Util;
+using System.Configuration;
 
 namespace Keyczar
 {
+
+    public class KeyczarConfig
+    {
+
+        public KeyczarConfig(){
+            StrictDsaVerification = Convert.ToBoolean(ConfigurationManager.AppSettings["keyczar.strict_dsa_verification"] ?? "false");
+        }
+
+		/// <summary>
+		/// To be compatable with Java, by default ignores specific parsable, but bad DSA sigs. 
+		/// Can turn on strit checking with the App Setting "keyczar.strict_dsa_verification"
+		/// </summary>
+		public bool StrictDsaVerification { get; set; }
+
+	}
+
     /// <summary>
     /// Base class for standard crypt/sign API
     /// </summary>
@@ -47,16 +64,23 @@ namespace Keyczar
         }
 
 
-        /// <summary>
-        /// The meta data format
-        /// </summary>
-        public static readonly string MetaDataFormat = "1";
 
-        /// <summary>
-        /// Key hash length
-        /// </summary>
-        public static readonly int KeyHashLength = 4;
+    		/// <summary>
+    		/// The meta data format
+    		/// </summary>
+    		public static readonly string MetaDataFormat = "1";
 
+				/// <summary>
+				/// Config Options
+				/// </summary>
+				public KeyczarConfig Config { get; set; } = new KeyczarConfig();
+
+
+				/// <summary>
+				/// Key hash length
+				/// </summary>
+				public static readonly int KeyHashLength = 4;
+    
         /// <summary>
         /// Keyczar format version
         /// </summary>
@@ -78,7 +102,7 @@ namespace Keyczar
         protected static readonly int BufferSize = 4096;
 
         private readonly Dictionary<int, SortedList<KeyVersion, Key>> _hashedKeys;
-		private readonly Dictionary<int, List<Key>> _hashedFallbackKeys;
+        private readonly Dictionary<int, List<Key>> _hashedFallbackKeys;
 
         private readonly Dictionary<int, Key> _versions;
         private readonly KeyVersion _primaryVersion;
@@ -146,7 +170,7 @@ namespace Keyczar
             _versions = versions.ToDictionary(k => k.Item2.VersionNumber, v => v.Item3);
 
             _hashedKeys = HashKeys(versions);
-			_hashedFallbackKeys = HashedFallbackKeys(versions);
+            _hashedFallbackKeys = HashedFallbackKeys(versions);
         }
 
         private static Dictionary<int, List<Key>> HashedFallbackKeys(IList<Tuple<byte[], KeyVersion, Key>> versions)
@@ -161,17 +185,11 @@ namespace Keyczar
         private static Dictionary<int, SortedList<KeyVersion, Key>> HashKeys(IList<Tuple<byte[],KeyVersion,Key>> versions)
         {
             return versions
-                .Select(t=>new {Hash =t.Item1, Version=t.Item2, CryptKey =t.Item3})
+                .Select(t => new {Hash = t.Item1, Version = t.Item2, CryptKey = t.Item3})
                 .ToLookup(k => Utility.ToInt32(k.Hash), v => v)
-                .ToDictionary(k => k.Key, v =>
-                                              {
-                                                  var list = new SortedList<KeyVersion, Key>();
-                                                  foreach (var pair in v)
-                                                  {
-                                                      list.Add(pair.Version,pair.CryptKey);
-                                                  }
-                                                  return list;
-                                              });
+                .ToDictionary(k => k.Key,
+                              v => new SortedList<KeyVersion, Key>(v.ToDictionary(vk => vk.Version, vv => vv.CryptKey)));
+
         }
 
         /// <summary>
@@ -207,22 +225,22 @@ namespace Keyczar
         {
             var hashIndex =Utility.ToInt32(hash);
             SortedList<KeyVersion, Key> list;
-			var found = new List<Key>();
+            var found = new List<Key>();
             if (_hashedKeys.TryGetValue(hashIndex, out list))
             {
-				found.AddRange(list.Select(it => it.Value));
+                found.AddRange(list.Select(it => it.Value));
             }
 
-			//Fallback hashes for old/buggy hashes from other keyczar
-			List<Key> fallbacklist;
-			if (_hashedFallbackKeys.TryGetValue(hashIndex, out fallbacklist)){
-				found.AddRange(fallbacklist);
-			}
+            //Fallback hashes for old/buggy hashes from other keyczar
+            List<Key> fallbacklist;
+            if (_hashedFallbackKeys.TryGetValue(hashIndex, out fallbacklist)){
+                found.AddRange(fallbacklist);
+            }
 
-			//For special imported keys
-			if(_hashedKeys.TryGetValue(0, out list)){
-				found.AddRange(list.Select(it=>it.Value));
-			}
+            //For special imported keys
+            if(_hashedKeys.TryGetValue(0, out list)){
+                found.AddRange(list.Select(it=>it.Value));
+            }
             return found.Any() ? (IEnumerable<Key>)found : new Key[] {null};
         }
 

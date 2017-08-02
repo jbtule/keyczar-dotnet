@@ -21,37 +21,42 @@ namespace Keyczar
     /// Key purpose
     /// </summary>'
     [ImmutableObject(true)]
-    public class KeyPurpose:Util.StringType
+    public class KeyPurpose : Util.StringType
     {
-
         /// <summary>
         /// Decrypt and Encrypt
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyPurpose DecryptAndEncrypt = "DECRYPT_AND_ENCRYPT";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyPurpose DecryptAndEncrypt =
+                "DECRYPT_AND_ENCRYPT";
+
         /// <summary>
         /// Encrypt
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyPurpose Encrypt = "ENCRYPT";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyPurpose Encrypt = "ENCRYPT";
+
         /// <summary>
         /// Sign and verify
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyPurpose SignAndVerify = "SIGN_AND_VERIFY";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyPurpose SignAndVerify =
+                "SIGN_AND_VERIFY";
+
         /// <summary>
         /// Verify
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyPurpose Verify = "VERIFY";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyPurpose Verify = "VERIFY";
 
         /// <summary>
         /// Performs an implicit conversion from <see cref="System.String"/> to <see cref="KeyPurpose"/>.
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The result of the conversion.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Constructor is alternative")]
-        public static  implicit operator KeyPurpose(string identifier)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Constructor is alternative")]
+        public static implicit operator KeyPurpose(string identifier)
         {
             return new KeyPurpose(identifier);
         }

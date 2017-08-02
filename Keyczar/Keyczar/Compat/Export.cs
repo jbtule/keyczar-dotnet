@@ -18,7 +18,6 @@ namespace Keyczar.Compat
     /// </summary>
     public static class Export
     {
-       
         /// <summary>
         /// Exports the primary key as PKCS.
         /// </summary>
@@ -28,35 +27,33 @@ namespace Keyczar.Compat
         /// <returns></returns>
         /// <exception cref="InvalidKeyTypeException">Needs to be a private key.</exception>
         /// <exception cref="InvalidKeyTypeException">Non exportable key type.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2202:Do not dispose objects multiple times")]
         public static bool ExportPrimaryAsPkcs(this IKeySet keySet, string location, Func<string> passwordPrompt)
         {
-            var i =keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
+            var i = keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
             using (var key = keySet.GetKey(i))
             {
                 using (var stream = new FileStream(location, FileMode.Create))
                 using (var writer = new StreamWriter(stream))
                 {
-
                     var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);
 
                     AsymmetricKeyParameter writeKey;
                     if (!(key is IPrivateKey))
                     {
-                     
                         if (key.KeyType == KeyType.DsaPub)
                         {
                             var dsaKey = (DsaPublicKey) key;
                             writeKey = new DsaPublicKeyParameters(dsaKey.Y.ToBouncyBigInteger(),
-                                                                   new DsaParameters(
-                                                                       dsaKey.P.ToBouncyBigInteger(),
-                                                                       dsaKey.Q.ToBouncyBigInteger(),
-                                                                       dsaKey.G.ToBouncyBigInteger()));
-
+                                                                  new DsaParameters(
+                                                                      dsaKey.P.ToBouncyBigInteger(),
+                                                                      dsaKey.Q.ToBouncyBigInteger(),
+                                                                      dsaKey.G.ToBouncyBigInteger()));
                         }
-                        else if (key.KeyType == KeyType.RsaPub)
+                        else if (key is IRsaPublicKey)
                         {
-                            var rsaKey = (RsaPublicKey) key;
+                            var rsaKey = (IRsaPublicKey) key;
                             writeKey = new RsaKeyParameters(false,
                                                             rsaKey.Modulus.ToBouncyBigInteger(),
                                                             rsaKey.PublicExponent.ToBouncyBigInteger());
@@ -78,11 +75,10 @@ namespace Keyczar.Compat
                                                                        dsaKey.PublicKey.P.ToBouncyBigInteger(),
                                                                        dsaKey.PublicKey.Q.ToBouncyBigInteger(),
                                                                        dsaKey.PublicKey.G.ToBouncyBigInteger()));
-
                         }
-                        else if (key.KeyType == KeyType.RsaPriv)
+                        else if (key is IRsaPrivateKey)
                         {
-                            var rsaKey = (RsaPrivateKey) key;
+                            var rsaKey = (IRsaPrivateKey) key;
                             writeKey = new RsaPrivateCrtKeyParameters(
                                 rsaKey.PublicKey.Modulus.ToBouncyBigInteger(),
                                 rsaKey.PublicKey.PublicExponent.ToBouncyBigInteger(),
@@ -104,9 +100,7 @@ namespace Keyczar.Compat
                                                       SecureRandom = Secure.Random,
                                                       IterationCount = 4096
                                                   });
-
                     }
-
                 }
             }
 

@@ -42,7 +42,7 @@ namespace KeyczarTool
                 var status = keySet.Revoke(_version);
                 if (!status)
                 {
-                    Console.WriteLine("{0} {1}.",Localized.MsgCouldNotRevoke, _version);
+                    Console.WriteLine("{0} {1}.", Localized.MsgCouldNotRevoke, _version);
                     return -1;
                 }
                 try
@@ -53,8 +53,11 @@ namespace KeyczarTool
                         return 0;
                     }
                 }
-                catch{}
-                Console.WriteLine("{0} {1}.",Localized.MsgCouldNotWrite, _location);
+                catch
+                {
+                    Console.WriteLine("{0} {1}.", Localized.MsgCouldNotWrite, _location);
+                }
+                
                 return -1;
             }
         }

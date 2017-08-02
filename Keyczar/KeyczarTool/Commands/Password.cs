@@ -12,6 +12,7 @@ namespace KeyczarTool.Commands
     {
         private string _location;
         private bool _remove;
+
         public Password()
         {
             this.IsCommand("password", Localized.PasswordCommand);
@@ -22,7 +23,6 @@ namespace KeyczarTool.Commands
 
         public override int Run(string[] remainingArguments)
         {
-
             IKeySet ks = new KeySet(_location);
 
 
@@ -37,8 +37,7 @@ namespace KeyczarTool.Commands
             }
 
 
-
-            using(ks as PbeKeySet)
+            using (ks as PbeKeySet)
             using (var keySet = new MutableKeySet(ks))
             {
                 keySet.ForceKeyDataChange();
@@ -48,7 +47,11 @@ namespace KeyczarTool.Commands
                 {
                     Console.WriteLine(Localized.PasswordPromptNewPassword);
                     Func<string> newPrompt = CachedPrompt.Password(Util.DoublePromptForPassword).Prompt;
-                    writer= new PbeKeySetWriter(writer,newPrompt);
+                    writer = new PbeKeySetWriter(writer, newPrompt);
+                }
+                else
+                {
+                    keySet.Metadata.Encrypted = false;
                 }
                 using (writer as PbeKeySetWriter)
                 {
@@ -56,7 +59,7 @@ namespace KeyczarTool.Commands
                     {
                         if (_remove)
                             Console.WriteLine(Localized.MsgRemovedPassword);
-                        else if(add)
+                        else if (add)
                             Console.WriteLine(Localized.MsgAddedPasssword);
                         else
                             Console.WriteLine(Localized.MsgChangedPassword);

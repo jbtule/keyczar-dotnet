@@ -26,7 +26,7 @@ namespace Keyczar.Util
     /// <summary>
     /// Converts json string to the strong typed StringType and viceversa
     /// </summary>
-    public class StringTypeJsonConverter:Newtonsoft.Json.JsonConverter
+    public class StringTypeJsonConverter : Newtonsoft.Json.JsonConverter
     {
         /// <summary>
         /// Writes the JSON representation of the object.
@@ -36,7 +36,7 @@ namespace Keyczar.Util
         /// <param name="serializer">The calling serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            serializer.Serialize(writer,((StringType) value).Identifier);
+            serializer.Serialize(writer, ((StringType) value).Identifier);
         }
 
         /// <summary>
@@ -47,9 +47,10 @@ namespace Keyczar.Util
         /// <param name="existingValue">The existing value of object being read.</param>
         /// <param name="serializer">The calling serializer.</param>
         /// <returns>The object value.</returns>
-        public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
+        public override object ReadJson(JsonReader reader, Type objectType, object existingValue,
+                                        JsonSerializer serializer)
         {
-            var identifer =serializer.Deserialize<String>(reader);
+            var identifer = serializer.Deserialize<String>(reader);
             return Activator.CreateInstance(objectType, identifer);
         }
 
@@ -71,7 +72,7 @@ namespace Keyczar.Util
     /// Strong typing to string variables
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Identifier}")]
-    [JsonConverter(typeof(StringTypeJsonConverter))]
+    [JsonConverter(typeof (StringTypeJsonConverter))]
     [ImmutableObject(true)]
     public class StringType
     {
@@ -103,7 +104,7 @@ namespace Keyczar.Util
         /// </value>
         public bool IsEmpty
         {
-           get { return String.IsNullOrWhiteSpace(_identifier); }
+            get { return String.IsNullOrWhiteSpace(_identifier); }
         }
 
         /// <summary>
@@ -128,6 +129,7 @@ namespace Keyczar.Util
         {
             return Identifier;
         }
+
         /// <summary>
         /// Implements the operator ==.
         /// </summary>
@@ -143,7 +145,7 @@ namespace Keyczar.Util
             }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
+            if (((object) a == null) || ((object) b == null))
             {
                 return false;
             }

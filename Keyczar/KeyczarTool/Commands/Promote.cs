@@ -34,11 +34,12 @@ namespace KeyczarTool
             this.HasRequiredOption("v|version=", Localized.Version, v => { _version = int.Parse(v); });
             this.SkipsCommandSummaryBeforeRunning();
         }
+
         public override int Run(string[] remainingArguments)
         {
-            using (var keySet = new MutableKeySet(_location)) 
+            using (var keySet = new MutableKeySet(_location))
             {
-                var status =keySet.Promote(_version);
+                var status = keySet.Promote(_version);
                 if (status == null)
                 {
                     Console.WriteLine("{0} {1}.", Localized.MsgUnknownVersion, _version);
@@ -52,8 +53,10 @@ namespace KeyczarTool
                         return 0;
                     }
                 }
-                catch{}
-                Console.WriteLine("{0} {1}.",Localized.MsgCouldNotWrite, _location);
+                catch
+                {
+                }
+                Console.WriteLine("{0} {1}.", Localized.MsgCouldNotWrite, _location);
                 return -1;
             }
         }

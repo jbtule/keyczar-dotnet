@@ -1,0 +1,23 @@
+image: Visual Studio 2017
+
+install:
+  - cmd: git submodule update --init --recursive
+
+build: off
+
+build_script:
+  - cmd: cd Keyczar
+  - cmd: msbuild /t:restore
+  - cmd: msbuild
+  - cmd: .\packages\nunit.runners\2.6.1\tools\nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest\bin\Debug\net40\KeyczarTest.dll -include=Create
+
+test:
+  categories:
+    except:
+      - Performance
+      - Create
+
+artifacts:
+  - path: '**\bin\*\*.nupkg'
+
+skip_branch_with_pr: true

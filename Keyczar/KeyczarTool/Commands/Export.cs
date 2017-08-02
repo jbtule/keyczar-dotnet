@@ -6,9 +6,10 @@ using Keyczar;
 using Keyczar.Util;
 using ManyConsole;
 using Keyczar.Compat;
+
 namespace KeyczarTool
 {
-    class Export : ConsoleCommand
+    internal class Export : ConsoleCommand
     {
         private string _destination;
         private string _location;
@@ -32,10 +33,10 @@ namespace KeyczarTool
             IKeySet ks = new KeySet(_location);
 
             Func<string> prompt = CachedPrompt.Password(() =>
-            {
-                Console.WriteLine(Localized.MsgForKeySet);
-                return Util.PromptForPassword();
-            }).Prompt;
+                                                            {
+                                                                Console.WriteLine(Localized.MsgForKeySet);
+                                                                return Util.PromptForPassword();
+                                                            }).Prompt;
 
             IDisposable dks = null;
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
@@ -63,7 +64,6 @@ namespace KeyczarTool
             using (dks)
             using (d2ks)
             {
-
                 if (!ks.ExportPrimaryAsPkcs(_destination, CachedPrompt.Password(() =>
                                                                                     {
                                                                                         Console.WriteLine(
@@ -79,7 +79,6 @@ namespace KeyczarTool
                 {
                     Console.WriteLine(Localized.MsgExportedPem);
                 }
-
             }
 
 

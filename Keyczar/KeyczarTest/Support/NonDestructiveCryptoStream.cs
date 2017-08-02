@@ -26,7 +26,7 @@ namespace Keyczar.Util
     /// <summary>
     /// Crypto Stream that doesn't close the underlying stream when disposed
     /// </summary>
-    public class NondestructiveCryptoStream:CryptoStream
+    public class NondestructiveCryptoStream : CryptoStream
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NondestructiveCryptoStream"/> class.
@@ -40,7 +40,8 @@ namespace Keyczar.Util
         /// 	<paramref name="stream"/> is not writable.</exception>
         /// <exception cref="T:System.ArgumentException">
         /// 	<paramref name="stream"/> is invalid.</exception>
-        public NondestructiveCryptoStream(Stream stream, ICryptoTransform transform, CryptoStreamMode mode) : base(stream, transform, mode)
+        public NondestructiveCryptoStream(Stream stream, ICryptoTransform transform, CryptoStreamMode mode)
+            : base(stream, transform, mode)
         {
         }
 

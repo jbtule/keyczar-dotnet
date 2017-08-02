@@ -27,8 +27,6 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Keyczar.Crypto
 {
-   
- 
     /// <summary>
     /// Encrypts AES
     /// </summary>
@@ -37,8 +35,7 @@ namespace Keyczar.Crypto
         /// <summary>
         /// Block size is 128bits
         /// </summary>
-        [JsonIgnore]
-        public readonly int BlockLength = 16;
+        [JsonIgnore] public readonly int BlockLength = 16;
 
         /// <summary>
         /// Gets or sets the mode only CBC supported.
@@ -50,7 +47,8 @@ namespace Keyczar.Crypto
         /// Gets or sets the aes key bytes.
         /// </summary>
         /// <value>The aes key bytes.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof(WebSafeBase64ByteConverter))]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays"), JsonConverter(typeof (WebSafeBase64ByteConverter))]
         [JsonProperty("AesKeyString")]
         public byte[] AesKeyBytes { get; set; }
 
@@ -67,31 +65,34 @@ namespace Keyczar.Crypto
         public override byte[] GetKeyHash()
         {
             return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
-                                  HmacKey.HmacKeyBytes);
+                                   HmacKey.HmacKeyBytes);
         }
 
-		/// <summary>
-		/// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
-		/// </summary>
-		/// <returns></returns>
-		public override IEnumerable<byte[]> GetFallbackKeyHash ()
-		{
-			return new byte[][]{
-				//Java keyczar uses block length instead of keylength for hash
-				Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
-				                HmacKey.HmacKeyBytes),
-				//c++ keyczar used to strip leading zeros from key bytes
-				Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), Utility.StripLeadingZeros(AesKeyBytes),
-				                HmacKey.HmacKeyBytes),
-			};
-		}
+        /// <summary>
+        /// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
+        /// </summary>
+        /// <returns></returns>
+        public override IEnumerable<byte[]> GetFallbackKeyHash()
+        {
+            var trimmedKeyBytes = Utility.StripLeadingZeros(AesKeyBytes);
+            return new byte[][]
+                       {
+                           //Java keyczar uses block length instead of keylength for hash
+                           Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
+                                           HmacKey.HmacKeyBytes),
+                           //c++ keyczar used to strip leading zeros from key bytes
+                           Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(trimmedKeyBytes.Length),
+                                           trimmedKeyBytes,
+                                           HmacKey.HmacKeyBytes),
+                       };
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AesKey"/> class.
         /// </summary>
         public AesKey()
         {
-            Mode = "CBC";//Default Mode
+            Mode = "CBC"; //Default Mode
         }
 
         /// <summary>
@@ -100,9 +101,9 @@ namespace Keyczar.Crypto
         /// <param name="size">The size.</param>
         protected override void GenerateKey(int size)
         {
-            AesKeyBytes= new byte[size/8];
+            AesKeyBytes = new byte[size/8];
             Secure.Random.NextBytes(AesKeyBytes);
-            HmacKey = (HmacSha1Key) Generate(KeyType.HmacSha1, 0/*uses default size*/);
+            HmacKey = (HmacSha1Key) Generate(KeyType.HmacSha1, 0 /*uses default size*/);
         }
 
         /// <summary>
@@ -120,20 +121,19 @@ namespace Keyczar.Crypto
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetAuthSigningStream()
+        public HashingStream GetAuthSigningStream(Keyczar keyczar)
         {
-            return HmacKey.Maybe(h=>h.GetSigningStream(),()=> null);
+            return HmacKey.Maybe(h => h.GetSigningStream(keyczar), () => null);
         }
+
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetAuthVerifyingStream()
+        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
         {
-			return HmacKey.Maybe(h=>h.GetVerifyingStream(),()=> null);
+            return HmacKey.Maybe(h => h.GetVerifyingStream(keyczar), () => null);
         }
-
-    
 
 
         /// <summary>
@@ -141,19 +141,18 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public virtual FinishingStream GetEncryptingStream(Stream output)
+        public virtual FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar)
         {
-
             var ivarr = new byte[BlockLength];
             Secure.Random.NextBytes(ivarr);
             return new SymmetricStream(
-            new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
-            output,
-            ivarr,
-            HmacKey.Maybe(it=>it.HashLength, ()=>0),
-            (iv, cipher, encrypt) => cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
-            encrypt: true);
-
+                new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
+                output,
+                ivarr,
+                HmacKey.Maybe(it => it.HashLength, () => 0),
+                (iv, cipher, encrypt) =>
+                cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
+                encrypt: true);
         }
 
         /// <summary>
@@ -161,17 +160,16 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public virtual FinishingStream GetDecryptingStream(Stream output)
+        public virtual FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar)
         {
-
             return new SymmetricStream(
-                 new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
-                 output,
-                 new byte[BlockLength],
-                 HmacKey.Maybe(it => it.HashLength, () => 0),
-                 (iv, cipher, encrypt) => cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
-                 encrypt: false);
+                new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
+                output,
+                new byte[BlockLength],
+                HmacKey.Maybe(it => it.HashLength, () => 0),
+                (iv, cipher, encrypt) =>
+                cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
+                encrypt: false);
         }
-
     }
 }

@@ -35,9 +35,8 @@ namespace Keyczar
         /// <param name="keySetLocation">The key set location.</param>
         /// <param name="crypter">The crypter.</param>
         public EncryptedKeySet(string keySetLocation, Crypter crypter)
-            :this(new KeySet(keySetLocation), crypter )
+            : this(new KeySet(keySetLocation), crypter)
         {
-            
         }
 
         /// <summary>
@@ -64,9 +63,9 @@ namespace Keyczar
             {
                 return cipherData;
             }
-         
-           var cipherString = Keyczar.RawStringEncoding.GetString(cipherData);
-           return _crypter.Decrypt(WebSafeBase64.Decode(cipherString.ToCharArray()));
+
+            var cipherString = Keyczar.RawStringEncoding.GetString(cipherData);
+            return _crypter.Decrypt(WebSafeBase64.Decode(cipherString.ToCharArray()));
         }
 
         /// <summary>
@@ -77,6 +76,5 @@ namespace Keyczar
         {
             get { return _keySet.Metadata; }
         }
-
     }
 }

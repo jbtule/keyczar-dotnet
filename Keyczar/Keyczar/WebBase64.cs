@@ -21,63 +21,70 @@ using Keyczar.Util;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Bson;
 
-namespace Keyczar{
-
+namespace Keyczar
+{
     /// <summary>
     /// WebBased64 forced type of string
     /// </summary> 
-     [JsonConverter(typeof(WebBase64JsonConverter))]
-	public class WebBase64{
-
+    [JsonConverter(typeof (WebBase64JsonConverter))]
+    public class WebBase64
+    {
         /// <summary>
         /// Strings the specified bytes.
         /// </summary>
         /// <param name="rawValue">The bytes.</param>
         /// <returns></returns>
-		public static implicit operator string(WebBase64 rawValue){
-			return rawValue.ToString();
-		}
+        public static implicit operator string(WebBase64 rawValue)
+        {
+            return rawValue.ToString();
+        }
 
         /// <summary>
         /// Webs the base64.
         /// </summary>
         /// <param name="encodedValue">The web base64.</param>
         /// <returns></returns>
-		public static explicit operator WebBase64(string encodedValue){
-			return new WebBase64(encodedValue);
-		}
+        public static explicit operator WebBase64(string encodedValue)
+        {
+            return new WebBase64(encodedValue);
+        }
+
         /// <summary>
         /// Froms the bytes.
         /// </summary>
         /// <param name="rawValue">The bytes.</param>
         /// <returns></returns>
-		public static WebBase64 FromBytes(byte[] rawValue){
-			return new WebBase64(rawValue);
-		}
+        public static WebBase64 FromBytes(byte[] rawValue)
+        {
+            return new WebBase64(rawValue);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebBase64" /> class.
         /// </summary>
         /// <param name="rawValue">The bytes.</param>
-		public WebBase64(byte[] rawValue){
-			_rawValue = rawValue;
-		}
+        public WebBase64(byte[] rawValue)
+        {
+            _rawValue = rawValue;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebBase64" /> class.
         /// </summary>
         /// <param name="encodedValue">The web base64 encoded Value.</param>
-		public WebBase64(string encodedValue){
-			_rawValue  = Util.WebSafeBase64.Decode(encodedValue.ToCharArray());
-		}
+        public WebBase64(string encodedValue)
+        {
+            _rawValue = Util.WebSafeBase64.Decode(encodedValue.ToCharArray());
+        }
 
         /// <summary>
         /// To the bytes.
         /// </summary>
         /// <returns></returns>
-		public byte[] ToBytes(){
-			return (byte[])_rawValue.Clone();
-		}
+        public byte[] ToBytes()
+        {
+            return (byte[]) _rawValue.Clone();
+        }
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
@@ -85,21 +92,21 @@ namespace Keyczar{
         /// <returns>
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
-		public override string ToString()
-		{
-			return new String(Util.WebSafeBase64.Encode(_rawValue));
-		}
+        public override string ToString()
+        {
+            return new String(Util.WebSafeBase64.Encode(_rawValue));
+        }
 
-		private byte[] _rawValue;
+        private byte[] _rawValue;
 
         /// <summary>
         /// Clears this instance.
         /// </summary>
         /// <returns></returns>
-		public WebBase64 Clear(){
-			Util.Secure.Clear(_rawValue);
-			return null;
-		}
-
-	}
+        public WebBase64 Clear()
+        {
+            Util.Secure.Clear(_rawValue);
+            return null;
+        }
+    }
 }

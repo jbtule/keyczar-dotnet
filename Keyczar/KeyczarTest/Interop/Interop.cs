@@ -13,6 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+
 using System;
 using NUnit.Framework;
 using System.IO;
@@ -20,28 +21,25 @@ using System.IO;
 namespace KeyczarTest.Interop
 {
     [Category("Iterop")]
-    [TestFixture("j")]
     public abstract class BasicInterop : Interop
     {
-        public BasicInterop (string implementation):base(implementation)
-		{
-			
-		}
+        public BasicInterop(string implementation) : base(implementation)
+        {
+        }
     }
-
-	[TestFixture("cs")]
-	[TestFixture("py")]
-	public abstract class Interop:AssertionHelper
-	{
-
+   
+    [TestFixture("py3")]
+    [TestFixture("cs")]
+    [TestFixture("py")]
+    [TestFixture("j")]
+    [TestFixture("go")]
+    public abstract class Interop : AssertionHelper
+    {
         private string _implementation;
 
         public String Input
         {
-            get
-            {
-                return "This is some test data";
-            }
+            get { return "This is some test data"; }
         }
 
 
@@ -52,9 +50,7 @@ namespace KeyczarTest.Interop
 
         public string TestData(string dir)
         {
-            return Path.Combine("interop-data", _implementation + "_data", dir);
+            return Util.TestDataPath(Path.Combine("remote-testdata", "interop-data", _implementation + "_data"), dir);
         }
-
-	}
+    }
 }
-

@@ -58,7 +58,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Sign(String rawData)
         {
-			return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData)));
+            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData)));
            
         }
 
@@ -83,11 +83,11 @@ namespace Keyczar
         /// <returns></returns>
         public byte[] Sign(Stream input, long inputLength=-1)
         {
-			using(var stream = new MemoryStream()){
+            using(var stream = new MemoryStream()){
                 Sign(input, stream, prefixData: null, postfixData: null, signatureData: null, inputLength:inputLength);
-				stream.Flush();
-				return stream.ToArray();
-			}
+                stream.Flush();
+                return stream.ToArray();
+            }
         }
 
         /// <summary>
@@ -105,7 +105,7 @@ namespace Keyczar
             var key = GetPrimaryKey() as ISignerKey;
             using (var reader = new NondestructiveBinaryReader(input))
             {
-                using (var signingStream = key.GetSigningStream())
+                using (var signingStream = key.GetSigningStream(this))
                 {
                     PrefixDataSign(signingStream, prefixData);
                     while (reader.Peek() != -1 && input.Position < stopLength)
@@ -147,15 +147,15 @@ namespace Keyczar
         /// Pads the signature with extra data.
         /// </summary>
         /// <param name="signature">The signature.</param>
-		/// <param name="outputStream">The padded signature.</param>
+        /// <param name="outputStream">The padded signature.</param>
         /// <param name="extra">The extra data passed by sigData.</param>
         /// <returns></returns>
         protected virtual void PadSignature(byte[] signature, Stream outputStream, object extra)
         {
             var key = GetPrimaryKey() as ISignerKey;
-			outputStream.Write(FormatBytes,0,FormatBytes.Length);
-			outputStream.Write(key.GetKeyHash(),0,KeyHashLength);
-			outputStream.Write(signature,0,signature.Length);
+            outputStream.Write(FormatBytes,0,FormatBytes.Length);
+            outputStream.Write(key.GetKeyHash(),0,KeyHashLength);
+            outputStream.Write(signature,0,signature.Length);
         }
 
     }

@@ -23,7 +23,7 @@ namespace Keyczar.Util
     /// <summary>
     /// Caches a password prompt result so it doesn't prompt for multiple uses.
     /// </summary>
-    public class CachedPrompt:IDisposable
+    public class CachedPrompt : IDisposable
     {
         /// <summary>
         /// Returns a cached version of the prompt

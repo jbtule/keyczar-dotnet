@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using Keyczar.Crypto;
+using Keyczar.Unofficial;
 
 namespace Keyczar
 {
@@ -27,44 +28,41 @@ namespace Keyczar
     [ImmutableObject(true)]
     public class KeyType : Util.StringType
     {
-
         /// <summary>
         /// Aes key
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType Aes = "AES";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType Aes = "AES";
+
         /// <summary>
         /// Hmac Sha1 key
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType HmacSha1 = "HMAC_SHA1";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType HmacSha1 = "HMAC_SHA1";
+
         /// <summary>
         /// DSA Private Key
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType DsaPriv = "DSA_PRIV";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType DsaPriv = "DSA_PRIV";
+
         /// <summary>
         /// Dsa Public key
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType DsaPub = "DSA_PUB";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType DsaPub = "DSA_PUB";
+
         /// <summary>
         /// RSA private key
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType RsaPriv = "RSA_PRIV";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType RsaPriv = "RSA_PRIV";
+
         /// <summary>
         /// Rsa public key type
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType RsaPub = "RSA_PUB";
-
-        //Unofficial
-        /// <summary>
-        /// Unofficial type AES Authenticated Encryption with Associated Data
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly KeyType AesAead = "C#_AES_AEAD";
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType RsaPub = "RSA_PUB";
 
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace Keyczar
         /// <returns></returns>
         public static KeyType ForType(Type type)
         {
-            return _specs.Where(it => it.Value.RepresentedType == type).Select(it=>it.Key).FirstOrDefault();
+            return _specs.Where(it => it.Value.RepresentedType == type).Select(it => it.Key).FirstOrDefault();
         }
 
         /// <summary>
@@ -82,25 +80,34 @@ namespace Keyczar
         /// </summary>
         /// <param name="spec">The spec.</param>
         /// <returns></returns>
-		protected static bool DefineSpec(KeyTypeSpec spec){
-			if(_specs.ContainsKey(spec.Name.Identifier))
-				return false;
-			_specs.Add(spec.Name.Identifier, spec);
-			return true;
-		}
 
-		static KeyType(){
-			Aes.KeySizes<AesKey>(128,192,256).DefineSpec();
-			HmacSha1.KeySizes<HmacSha1Key>(256).WithDigestSizes(20).DefineSpec();
-			DsaPriv.KeySizes<DsaPrivateKey>(1024).WithDigestSizes(48).IsAsymmetric().DefineSpec();
-            DsaPub.KeySizes<DsaPublicKey>(1024).WithDigestSizes(48).IsAsymmetric().IsPublic().DefineSpec();
-			RsaPriv.KeySizes<RsaPrivateKey>(2048, 1024, 4096).WithDigestSizes(256, 128, 512).IsAsymmetric().DefineSpec();
-			RsaPub.KeySizes<RsaPublicKey>(2048, 1024, 4096 ).WithDigestSizes(256, 128, 512).IsAsymmetric().IsPublic().DefineSpec();
-			//Unofficial
-			AesAead.KeySizes<Unofficial.AesAeadKey>(256,192,128).IsUnofficial().DefineSpec();
-		}
+        protected static bool DefineSpec(KeyTypeSpec spec)
+        {
+            if (_specs.ContainsKey(spec.Name.Identifier))
+                return false;
+            _specs.Add(spec.Name.Identifier, spec);
+            return true;
+        }
 
-		private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();
+        static KeyType()
+        {
+            Aes.KeySizes<AesKey>(128, 192, 256).DefineSpec();
+            HmacSha1.KeySizes<HmacSha1Key>(256).DefineSpec();
+            DsaPriv.KeySizes<DsaPrivateKey>(1024).IsAsymmetric().DefineSpec();
+            DsaPub.KeySizes<DsaPublicKey>(1024).IsAsymmetric().IsPublic().DefineSpec();
+            RsaPriv.KeySizes<RsaPrivateKey>(2048, 1024, 4096).IsAsymmetric().DefineSpec();
+            RsaPub.KeySizes<RsaPublicKey>(2048, 1024, 4096).IsAsymmetric().IsPublic().DefineSpec();
+
+#pragma warning disable 219
+            KeyType see;
+#pragma warning restore 219
+            see = UnofficialKeyType.AesAead;
+            see = UnofficialKeyType.RSAPrivSign;
+            see = UnofficialKeyType.RSAPubSign;
+        }
+
+        private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();
+
 
         /// <summary>
         /// Describes the sizes and algorithms.
@@ -108,15 +115,14 @@ namespace Keyczar
         /// <typeparam name="T"></typeparam>
         /// <param name="keySizes">The key sizes.</param>
         /// <returns></returns>
-        public KeyTypeSpec KeySizes<T>(params int[] keySizes) where T: Key
+        public KeyTypeSpec KeySizes<T>(params int[] keySizes) where T : Key
         {
-
             return new KeyTypeSpec
-            {
-                Name =  Identifier,
-                RepresentedType = typeof(T),
-                KeySizes = keySizes,
-            };
+                       {
+                           Name = Identifier,
+                           RepresentedType = typeof (T),
+                           KeySizes = keySizes,
+                       };
         }
 
         /// <summary>
@@ -124,46 +130,42 @@ namespace Keyczar
         /// </summary>
         public class KeyTypeSpec
         {
-			internal KeyTypeSpec(){
-                DigestSizes = new int[]{0};
-			    
-			}
+            internal KeyTypeSpec()
+            {
+            }
 
-            
+
             /// <summary>
             /// Gets or sets the name.
             /// </summary>
             /// <value>The name.</value>
             public KeyType Name { get; internal set; }
-          
+
             /// <summary>
             /// Gets or sets the type.
             /// </summary>
             /// <value>The type.</value>
-            public Type RepresentedType{ get; internal set; }
+            public Type RepresentedType { get; internal set; }
 
             /// <summary>
             /// Gets or sets the key sizes.
             /// </summary>
             /// <value>The key sizes.</value>
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-            public int[] KeySizes{ get; internal set; }
-            /// <summary>
-            /// Gets or sets the digest sizes.
-            /// </summary>
-            /// <value>The digest sizes.</value>
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
-            public int[] DigestSizes{ get; internal set; }
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+                "CA1819:PropertiesShouldNotReturnArrays")]
+            public int[] KeySizes { get; internal set; }
+
             /// <summary>
             /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is unofficial.
             /// </summary>
             /// <value><c>true</c> if unofficial; otherwise, <c>false</c>.</value>
-            public bool Unofficial{ get; internal set; }
+            public bool Unofficial { get; internal set; }
+
             /// <summary>
             /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is asymmetric.
             /// </summary>
             /// <value><c>true</c> if asymmetric; otherwise, <c>false</c>.</value>
-            public bool Asymmetric{ get; internal set; }
+            public bool Asymmetric { get; internal set; }
 
             /// <summary>
             /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is asymmetric.
@@ -171,16 +173,6 @@ namespace Keyczar
             /// <value><c>true</c> if asymmetric; otherwise, <c>false</c>.</value>
             public bool Public { get; internal set; }
 
-            /// <summary>
-            /// Describes the digest sizes.
-            /// </summary>
-            /// <param name="sizes">The sig sizes.</param>
-            /// <returns></returns>
-            public KeyTypeSpec WithDigestSizes(params int[] sizes)
-            {
-                DigestSizes = sizes;
-                return this;
-            }
             /// <summary>
             /// Specifies this  instance is unofficial.
             /// </summary>
@@ -216,11 +208,12 @@ namespace Keyczar
             /// Defines the spec.
             /// </summary>
             /// <returns></returns>
-			public KeyType DefineSpec(){
-				if(KeyType.DefineSpec(this))
-					return Name;
-				return null;
-			}
+            public KeyType DefineSpec()
+            {
+                if (KeyType.DefineSpec(this))
+                    return Name;
+                return null;
+            }
         }
 
         /// <summary>
@@ -228,11 +221,12 @@ namespace Keyczar
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns>The result of the conversion.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Constructor is alternative")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+            "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Constructor is alternative")]
         public static implicit operator KeyType(string identifier)
         {
-			if(String.IsNullOrWhiteSpace(identifier))
-			   return null;
+            if (String.IsNullOrWhiteSpace(identifier))
+                return null;
             return new KeyType(identifier);
         }
 
@@ -243,8 +237,6 @@ namespace Keyczar
         public KeyType(string identifier)
             : base(identifier)
         {
-
-
         }
 
         /// <summary>
@@ -252,9 +244,10 @@ namespace Keyczar
         /// </summary>
         /// <param name="identifier">The identifier.</param>
         /// <returns></returns>
-		public static KeyType Name(string identifier){
-			return identifier;
-		}
+        public static KeyType Name(string identifier)
+        {
+            return identifier;
+        }
 
         private Type _representedType;
         private int[] _keySizeOptions;
@@ -262,11 +255,13 @@ namespace Keyczar
         private bool? _asymmetric;
         private bool? _public;
 
+
         /// <summary>
         /// Gets the key size options.
         /// </summary>
         /// <value>The key size options.</value>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays")]
         public int[] KeySizeOptions
         {
             get
@@ -292,7 +287,8 @@ namespace Keyczar
                     _representedType = _specs[Identifier].RepresentedType;
                 }
                 return _representedType;
-			}set{}
+            }
+            set { }
         }
 
         /// <summary>
@@ -355,14 +351,14 @@ namespace Keyczar
         /// <value><c>true</c> if unofficial; otherwise, <c>false</c>.</value>
         public bool Unofficial
         {
-           get
-           {
-               if (!_unofficial.HasValue)
-               {
-                   _unofficial = _specs[Identifier].Unofficial;
-               }
-               return _unofficial.Value;
-           }
+            get
+            {
+                if (!_unofficial.HasValue)
+                {
+                    _unofficial = _specs[Identifier].Unofficial;
+                }
+                return _unofficial.Value;
+            }
         }
 
         /// <summary>

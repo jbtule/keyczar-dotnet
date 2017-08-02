@@ -20,6 +20,9 @@ test-results
 *.sln.docstates
 *.userprefs
 
+# Ignore Mono Develop temp files
+*.pidb
+
 # Build results
 [Dd]ebug/
 [Rr]elease/
@@ -28,3 +31,11 @@ test-results
 _ReSharper*
 #compressed dll
 *.dep-lzma
+
+#Temp files
+tmp/
+
+#misc temp files
+*~
+.metadata
+.DS_Store

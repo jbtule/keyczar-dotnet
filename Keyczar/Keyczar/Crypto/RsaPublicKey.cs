@@ -25,37 +25,25 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
-using BouncyBigInteger =Org.BouncyCastle.Math.BigInteger;
+using BouncyBigInteger = Org.BouncyCastle.Math.BigInteger;
 using Org.BouncyCastle.Security;
-using System.Numerics;
+
 namespace Keyczar.Crypto
 {
     /// <summary>
     /// The RSA public key
     /// </summary>
-    public class RsaPublicKey : Key,IEncrypterKey,IVerifierKey
+    public class RsaPublicKey : RsaPublicSignKeyBase, IEncrypterKey, IRsaPublicKey
     {
         /// <summary>
         /// PkcsPadding identifier
         /// </summary>
         public static readonly string PkcsPadding = "PKCS";
+
         /// <summary>
         /// OaepPadding identifer
         /// </summary>
         public static readonly string OaepPadding = "OAEP";
-
-        /// <summary>
-        /// Gets or sets the modulus.
-        /// </summary>
-        /// <value>The modulus.</value>
-        [JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
-        public BigInteger Modulus { get; set; }
-        /// <summary>
-        /// Gets or sets the public exponent.
-        /// </summary>
-        /// <value>The public exponent.</value>
-		[JsonConverter(typeof(BigIntegerWebSafeBase64ByteConverter))]
-		public BigInteger PublicExponent { get; set; }
 
         /// <summary>
         /// Gets or sets the padding.
@@ -65,17 +53,27 @@ namespace Keyczar.Crypto
         public string Padding { get; set; }
 
         /// <summary>
+        /// Gets the length of the tag.
+        /// </summary>
+        /// <param name="header">The header.</param>
+        /// <returns></returns>
+        public int GetTagLength(byte[] header)
+        {
+            return 0;
+        }
+
+        /// <summary>
         /// Gets the key hash.
         /// </summary>
         /// <returns></returns>
         public override byte[] GetKeyHash()
-        {      
-			var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
-			var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
-            if (Padding == PkcsPadding)
+        {
+            var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
+            var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
+            if (Padding == RsaPublicKey.PkcsPadding)
             {
-				magModulus = Utility.GetBytes(Modulus); 
-				magPublicExponent = Utility.GetBytes(PublicExponent); 
+                magModulus = Utility.GetBytes(Modulus);
+                magPublicExponent = Utility.GetBytes(PublicExponent);
             }
 
             var hash = Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, magModulus, magPublicExponent);
@@ -84,73 +82,40 @@ namespace Keyczar.Crypto
             return hash;
         }
 
-		/// <summary>
-		/// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
-		/// </summary>
-		/// <returns></returns>
-		public override IEnumerable<byte[]> GetFallbackKeyHash ()
-		{
-			var list =new List<byte[]>();
 
-			if(Padding == PkcsPadding){
-				//C++ version would always append zeros whether they were needed or not to byte reps of big integers
-				var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
-				var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
-				var destModulus = new byte[magModulus.Length+1];
-				var destPublicExponent = new byte[magPublicExponent.Length+1];
-				Array.Copy(magModulus,0,destModulus,1, magModulus.Length);
-				Array.Copy(magPublicExponent,0,destPublicExponent,1, magPublicExponent.Length);
-				list.Add(Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, destModulus, destPublicExponent));
-				magModulus.Clear();
-				magPublicExponent.Clear();
-				destModulus.Clear();
-				destPublicExponent.Clear();
-			}
-
-			return list;
-		}
-
-        /// <summary>
-        /// Generates the key.
-        /// </summary>
-        /// <param name="size">The size.</param>
-        /// <exception cref="System.NotSupportedException"></exception>
-        protected override void GenerateKey(int size)
+        internal override ISigner GetSigner()
         {
-            throw new NotSupportedException();
+            var digest = new Sha1Digest();
+
+            return new RsaDigestSigner(digest);
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        protected override void Dispose(bool disposing)
-        {
-			Modulus = default(BigInteger);
-			PublicExponent = default(BigInteger);
-            Size = 0;
-        }
 
         /// <summary>
-        /// Gets the verifying stream.
+        /// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream()
+        public override IEnumerable<byte[]> GetFallbackKeyHash()
         {
-            var signer = new RsaDigestSigner(new Sha1Digest());
-            signer.Init(forSigning:false,parameters:new RsaKeyParameters(false,
-			                                                             Modulus.ToBouncyBigInteger(),
-			                                                             PublicExponent.ToBouncyBigInteger()));
-            return new DigestStream(signer);
-        }
+            var list = new List<byte[]>();
 
-        /// <summary>
-        /// Gets the length of the tag.
-        /// </summary>
-        /// <param name="header">The header.</param>
-        /// <returns></returns>
-        public int GetTagLength(byte[] header)
-        {
-            return 0;
+            if (Padding == RsaPublicKey.PkcsPadding)
+            {
+                //C++ version would always append zeros whether they were needed or not to byte reps of big integers
+                var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
+                var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
+                var destModulus = new byte[magModulus.Length + 1];
+                var destPublicExponent = new byte[magPublicExponent.Length + 1];
+                Array.Copy(magModulus, 0, destModulus, 1, magModulus.Length);
+                Array.Copy(magPublicExponent, 0, destPublicExponent, 1, magPublicExponent.Length);
+                list.Add(Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, destModulus, destPublicExponent));
+                magModulus.Clear();
+                magPublicExponent.Clear();
+                destModulus.Clear();
+                destPublicExponent.Clear();
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -177,26 +142,26 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output)
+        public FinishingStream GetEncryptingStream(Stream output, Keyczar keyczar)
         {
             var rsa = new RsaEngine();
 
-            var oaep =  UpdatePadding(rsa);
-    
+            var oaep = UpdatePadding(rsa);
+
             return new AsymmetricStream(
                 oaep,
                 output,
-                (cipher,encrypt)=>  cipher.Init(encrypt,new RsaKeyParameters(false,
-			                                                             Modulus.ToBouncyBigInteger(), 
-			                                                             PublicExponent.ToBouncyBigInteger())),
-                encrypt:true);
+                (cipher, encrypt) => cipher.Init(encrypt, new RsaKeyParameters(false,
+                                                                               Modulus.ToBouncyBigInteger(),
+                                                                               PublicExponent.ToBouncyBigInteger())),
+                encrypt: true);
         }
 
         /// <summary>
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null</returns>
-        public HashingStream GetAuthSigningStream()
+        public HashingStream GetAuthSigningStream(Keyczar keyczar)
         {
             return null; //not signing
         }

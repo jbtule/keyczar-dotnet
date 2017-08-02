@@ -29,16 +29,15 @@ namespace Keyczar
     public class MutableKeySet : IKeySet, IDisposable
     {
         private KeyMetadata _metadata;
-        private IDictionary<int,Key> _keys = new Dictionary<int, Key>();
+        private IDictionary<int, Key> _keys = new Dictionary<int, Key>();
         private bool onlyMetaChanged = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MutableKeySet" /> class.
         /// </summary>
         /// <param name="location">The location.</param>
-        public MutableKeySet(string location):this(new KeySet(location))
+        public MutableKeySet(string location) : this(new KeySet(location))
         {
-
         }
 
         /// <summary>
@@ -96,7 +95,7 @@ namespace Keyczar
             writer.Write(_metadata);
 
             if (!onlyMetaChanged || writer is INonSeparatedMetadataAndKey)
-            { 
+            {
                 for (int i = 1; i <= _keys.Count; i++)
                 {
                     var key = _keys[i];
@@ -114,6 +113,7 @@ namespace Keyczar
         /// <param name="type">The Key type.</param>
         /// <param name="options">The options. dictionary or annoymous type of properties to set</param>
         /// <returns></returns>
+
         public int AddKey(KeyStatus status, int keySize =0, KeyType type =null,object options=null)
         {
             if (type != null && type.Kind != Metadata.Kind)
@@ -121,29 +121,32 @@ namespace Keyczar
                 throw new InvalidKeyTypeException(String.Format("Keyset only supports {0} keys", Metadata.Kind));
             }
 
-			Key key;
-			bool loop;
-			do{
-				loop = false;
+		      	Key key;
+		      	bool loop;
+		      	do{
+			        	loop = false;
                 key = Key.Generate(type??_metadata.DefaultKeyType, keySize);
 	            if (options != null)
 	            {
 	                var dict = options as IDictionary<string, object>;
                     if(dict ==null)
 	                    Utility.CopyProperties(options, key);
+
                     else
-                        Utility.CopyProperties(dict,key);
-	            }
-				foreach(var existingkey in _keys){
-					var newhash =Util.Utility.ToInt32(key.GetKeyHash());
-					var existhash = Utility.ToInt32(existingkey.Value.GetKeyHash());
-					if(newhash == existhash){
-						loop = true;
-						break;
-					}
-				}
-			}while(loop);
-			return AddKey(status, key);
+                        Utility.CopyProperties(dict, key);
+                }
+                foreach (var existingkey in _keys)
+                {
+                    var newhash = Util.Utility.ToInt32(key.GetKeyHash());
+                    var existhash = Utility.ToInt32(existingkey.Value.GetKeyHash());
+                    if (newhash == existhash)
+                    {
+                        loop = true;
+                        break;
+                    }
+                }
+            } while (loop);
+            return AddKey(status, key);
         }
 
         /// <summary>
@@ -166,8 +169,8 @@ namespace Keyczar
                     version.Status = KeyStatus.Active;
                 lastVersion = Math.Max(lastVersion, version.VersionNumber);
             }
+
             _metadata.Versions.Add(new KeyVersion() { Status = status, VersionNumber = ++lastVersion, KeyType = key.KeyType});
-     
             _keys.Add(lastVersion, key);
             onlyMetaChanged = false;
             return lastVersion;
@@ -180,24 +183,24 @@ namespace Keyczar
         /// <returns></returns>
         public KeyStatus Promote(int version)
         {
-           var ver = Metadata.Versions.FirstOrDefault(it => it.VersionNumber == version);
-           if (ver == null)
-               return null;
+            var ver = Metadata.Versions.FirstOrDefault(it => it.VersionNumber == version);
+            if (ver == null)
+                return null;
 
-           if (ver.Status == KeyStatus.Active)
-           {
-               foreach (var verPrim in Metadata.Versions.Where(it=>it.Status == KeyStatus.Primary))
-               {
-                   verPrim.Status = KeyStatus.Active;
-               }
-               ver.Status = KeyStatus.Primary;
-           }
-           else if (ver.Status == KeyStatus.Inactive)
-           {
-               ver.Status = KeyStatus.Active;
-           }
+            if (ver.Status == KeyStatus.Active)
+            {
+                foreach (var verPrim in Metadata.Versions.Where(it => it.Status == KeyStatus.Primary))
+                {
+                    verPrim.Status = KeyStatus.Active;
+                }
+                ver.Status = KeyStatus.Primary;
+            }
+            else if (ver.Status == KeyStatus.Inactive)
+            {
+                ver.Status = KeyStatus.Active;
+            }
 
-           return ver.Status;
+            return ver.Status;
         }
 
         /// <summary>
@@ -241,7 +244,7 @@ namespace Keyczar
             var ver = Metadata.Versions.FirstOrDefault(it => it.VersionNumber == version);
             if (ver == null)
                 return false;
-            if(ver.Status != KeyStatus.Inactive)
+            if (ver.Status != KeyStatus.Inactive)
                 return false;
             Metadata.Versions.Remove(ver);
             return true;
@@ -253,6 +256,7 @@ namespace Keyczar
         /// <returns></returns>
         public MutableKeySet PublicKey()
         {
+
             if(Metadata.Kind != KeyKind.Private)
             {
                 return null;
@@ -260,14 +264,16 @@ namespace Keyczar
 
             var newMeta = new KeyMetadata(Metadata);
             newMeta.Purpose = newMeta.Purpose == KeyPurpose.SignAndVerify
-                ? KeyPurpose.Verify 
-                : KeyPurpose.Encrypt;
+                                  ? KeyPurpose.Verify
+                                  : KeyPurpose.Encrypt;
+
 
             newMeta.Kind = KeyKind.Public;
 
-           var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
+            var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
                 .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = Keyczar.RawStringEncoding.GetBytes(p.PublicKey.ToJson())})
                 .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value)}).ToList();
+
 
             //Update versions to public key type
             foreach (var key in copiedKeys)
@@ -276,7 +282,7 @@ namespace Keyczar
                 newVersion.KeyType = key.Value.KeyType;
             }
 
-           return new MutableKeySet(newMeta, copiedKeys.ToDictionary(k => k.Key, v => v.Value));
+            return new MutableKeySet(newMeta, copiedKeys.ToDictionary(k => k.Key, v => v.Value));
         }
 
         /// <summary>
@@ -329,6 +335,4 @@ namespace Keyczar
             _metadata = null;
         }
     }
-
-   
 }

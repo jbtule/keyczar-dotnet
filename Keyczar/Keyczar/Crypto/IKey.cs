@@ -35,8 +35,7 @@ namespace Keyczar.Crypto
         /// Gets the fallback key hash.
         /// </summary>
         /// <returns></returns>
-		IEnumerable<byte[]> GetFallbackKeyHash();
-
+        IEnumerable<byte[]> GetFallbackKeyHash();
     }
 
     /// <summary>
@@ -44,8 +43,6 @@ namespace Keyczar.Crypto
     /// </summary>
     internal interface IPbeKey
     {
-        CipherTextOnlyFinishingStream GetRawEncryptingStream(Stream output);
-        CipherTextOnlyFinishingStream GetRawDecryptingStream(Stream output);
     }
 
     /// <summary>
@@ -57,7 +54,7 @@ namespace Keyczar.Crypto
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        HashingStream GetSigningStream();
+        HashingStream GetSigningStream(Keyczar keyczar);
     }
 
     /// <summary>
@@ -69,7 +66,7 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        VerifyingStream GetVerifyingStream();
+        VerifyingStream GetVerifyingStream(Keyczar keyczar);
     }
 
     /// <summary>
@@ -82,13 +79,13 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        FinishingStream GetEncryptingStream(Stream output);
+        FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar);
 
         /// <summary>
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns></returns>
-        HashingStream GetAuthSigningStream();
+        HashingStream GetAuthSigningStream(Keyczar keyczar);
     }
 
     /// <summary>
@@ -101,13 +98,13 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        FinishingStream GetDecryptingStream(Stream output);
+        FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar);
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns></returns>
-        VerifyingStream GetAuthVerifyingStream();
+        VerifyingStream GetAuthVerifyingStream(Keyczar keyczar);
     }
 
     /// <summary>
@@ -121,5 +118,4 @@ namespace Keyczar.Crypto
         /// <value>The public key.</value>
         Key PublicKey { get; }
     }
-
 }

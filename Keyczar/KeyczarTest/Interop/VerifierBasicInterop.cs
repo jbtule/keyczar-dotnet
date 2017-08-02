@@ -21,12 +21,12 @@ using System.Linq;
 namespace KeyczarTest.Interop
 {
     public abstract class VerifierBasicInterop : BasicInterop
-	{
-		protected string Location;
+    {
+        protected string Location;
 
-		public VerifierBasicInterop (string imp):base(imp)
-		{
-		}
+        public VerifierBasicInterop(string imp) : base(imp)
+        {
+        }
 
 
         protected void HelperVerifyVariousSizes(string size)
@@ -34,24 +34,23 @@ namespace KeyczarTest.Interop
             var path = TestData(Location) + "-size";
             using (var verifier = new Verifier(path))
             {
-                var activeSignature = (WebBase64)File.ReadAllLines(Path.Combine(path, size+ ".out")).First();
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(path, size + ".out")).First();
                 Expect(verifier.Verify(Input, activeSignature), Is.True);
             }
         }
 
 
-		[Test]
-		public void Verify(){
-
-			var path = TestData(Location);
-			using (var verifier = new Verifier(path))
-			{
-				var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(path, "1.out")).First();
-				var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.out")).First();
-				Expect(verifier.Verify(Input, activeSignature), Is.True);
-				Expect(verifier.Verify(Input, primarySignature), Is.True);
-			}
-		}
-	}
+        [Test]
+        public void Verify()
+        {
+            var path = TestData(Location);
+            using (var verifier = new Verifier(path))
+            {
+                var activeSignature = (WebBase64) File.ReadAllLines(Path.Combine(path, "1.out")).First();
+                var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.out")).First();
+                Expect(verifier.Verify(Input, activeSignature), Is.True);
+                Expect(verifier.Verify(Input, primarySignature), Is.True);
+            }
+        }
+    }
 }
-

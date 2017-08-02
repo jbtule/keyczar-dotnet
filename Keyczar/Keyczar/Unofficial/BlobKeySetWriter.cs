@@ -29,7 +29,7 @@ namespace Keyczar.Unofficial
     public class BlobKeySetWriter : IKeySetWriter, IDisposable, INonSeparatedMetadataAndKey
     {
         private Stream _writeStream;
-        ZipFile _zipFile = new NondestructiveZipFile();
+        private ZipFile _zipFile = new NondestructiveZipFile();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlobKeySetWriter"/> class.
@@ -49,7 +49,7 @@ namespace Keyczar.Unofficial
         {
             _zipFile.AddEntry(version.ToString(CultureInfo.InvariantCulture), keyData);
         }
-  
+
 
         /// <summary>
         /// Writes the specified metadata.
@@ -91,7 +91,8 @@ namespace Keyczar.Unofficial
         /// Releases unmanaged and - optionally - managed resources
         /// </summary>
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "_zipFile")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
+            MessageId = "_zipFile")]
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
@@ -100,7 +101,7 @@ namespace Keyczar.Unofficial
             }
             _writeStream = null;
 
-            _zipFile = _zipFile.SafeDispose(); 
+            _zipFile = _zipFile.SafeDispose();
         }
     }
 }
