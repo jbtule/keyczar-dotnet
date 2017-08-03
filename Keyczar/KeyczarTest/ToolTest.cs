@@ -237,7 +237,7 @@ namespace KeyczarTest
                 Directory.Delete(pathc, true);
 
 
-            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt", unofficial: null);
+            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool("cartman", "cartman", addkey: null, location: path, password: null,
