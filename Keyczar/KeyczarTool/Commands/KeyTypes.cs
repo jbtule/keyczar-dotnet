@@ -34,6 +34,10 @@ namespace KeyczarTool.Commands
             Console.WriteLine("  Asymmetric:");
             Console.WriteLine("    DSA_SHA1*  (1024*)");
             Console.WriteLine("    RSA_SHA1  (2048*, 4096, 1024)");
+            if (_unofficial)
+            {
+                Console.WriteLine("    RSA_PSS  (2048*, 4096, 3072, 1024) -unofficial");
+            }
             Console.WriteLine();
             Console.WriteLine(" * denotes default.");
             return 0;

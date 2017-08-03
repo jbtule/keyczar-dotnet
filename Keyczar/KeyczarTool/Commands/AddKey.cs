@@ -66,6 +66,8 @@ namespace KeyczarTool
                     return KeyType.HmacSha1;
                 case "AES_GCM":
                     return UnofficialKeyType.AesAead;
+                case "RSA_PSS":
+                    return UnofficialKeyType.RSAPrivSign;
                 default:
                     throw new ConsoleHelpAsException(string.Format(Localized.MsgInvalidType, type));
             }
