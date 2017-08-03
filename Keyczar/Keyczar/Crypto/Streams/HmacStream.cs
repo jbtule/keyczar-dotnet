@@ -40,7 +40,7 @@ namespace Keyczar.Crypto.Streams
         /// Initializes a new instance of the <see cref="HmacStream"/> class.
         /// </summary>
         /// <param name="algorithm">The algorithm.</param>
-        public HmacStream(HMac algorithm)
+        public   HmacStream(HMac algorithm)
         {
             _hmacAlg = algorithm;
             _hashValue = new byte[(_hmacAlg.GetMacSize())];

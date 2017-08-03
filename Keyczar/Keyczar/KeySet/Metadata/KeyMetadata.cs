@@ -20,6 +20,7 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Keyczar.Unofficial;
 using Newtonsoft.Json;
 
 namespace Keyczar
@@ -40,15 +41,34 @@ namespace Keyczar
         {
             return JsonConvert.DeserializeObject<KeyMetadata>(metadata);
         }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyMetadata"/> class.
         /// </summary>
         public KeyMetadata()
         {
             Name = String.Empty;
+            Versions = new List<KeyVersion>();
+            Format = Keyczar.MetaDataFormat;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyMetadata" /> class.
+        /// </summary>
+        /// <param name="officialMetaDataKeyType">Uses official meta data, requires specifying key, if null uses new metadata format</param>
+        public KeyMetadata(KeyType officialMetaDataKeyType)
+        {
+            Name = String.Empty;
             Versions= new List<KeyVersion>();
             Format = Keyczar.MetaDataFormat;
+
+            if (officialMetaDataKeyType != null)
+            {
+                Format = OfficialKeyMetadata.MetaDataFormat;
+                OriginallyOffical = true;
+#pragma warning disable 618
+                KeyType = officialMetaDataKeyType;
+#pragma warning restore 618
+            }
         }
 
       
@@ -63,8 +83,10 @@ namespace Keyczar
             Purpose = metadata.Purpose;
             Encrypted = metadata.Encrypted;
             Versions = metadata.Versions.Select(it => new KeyVersion(it)).ToList();
-            if (metadata.Format == "0") //Version 0
+            OriginallyOffical = metadata.OriginallyOffical;
+            if (metadata.Format == OfficialKeyMetadata.MetaDataFormat) //Version 0
             {
+                OriginallyOffical = true;
 #pragma warning disable 612,618
                 var keyType = metadata.KeyType;
 #pragma warning restore 612,618
@@ -83,13 +105,16 @@ namespace Keyczar
 
         }
 
+        [JsonIgnore]
+        public bool OriginallyOffical { get; set; }
+
         /// <summary>
         /// Gets or sets the metadata format version.
         /// </summary>
         /// <value>
         /// The format version.
         /// </value>
-        [DefaultValue("0")]
+        [DefaultValue(OfficialKeyMetadata.MetaDataFormat)]
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore, 
             DefaultValueHandling = DefaultValueHandling.IgnoreAndPopulate)]
         public string Format { get; set; }
@@ -145,7 +170,14 @@ namespace Keyczar
 #pragma warning restore 612,618
                 }else if (Kind == KeyKind.Symmetric && Purpose == KeyPurpose.DecryptAndEncrypt)
                 {
-                    return KeyType.Aes;
+                    if (OriginallyOffical)
+                    {
+                        return KeyType.Aes;
+                    }
+                    else
+                    {
+                        return UnofficialKeyType.AesAead;
+                    }
                 }
                 else if (Kind == KeyKind.Symmetric && Purpose == KeyPurpose.SignAndVerify)
                 {
@@ -157,7 +189,14 @@ namespace Keyczar
                 }
                 else if (Kind == KeyKind.Private && Purpose == KeyPurpose.SignAndVerify)
                 {
-                    return KeyType.DsaPriv;
+                    if (OriginallyOffical)
+                    {
+                        return KeyType.DsaPriv;
+                    }
+                    else
+                    {
+                        return UnofficialKeyType.RSAPrivSign;
+                    }
                 }
                 else
                 {
@@ -190,5 +229,23 @@ namespace Keyczar
         /// </summary>
         /// <value>The versions.</value>
         public IList<KeyVersion> Versions { get; internal set; }
+
+        public bool ValidOfficial()
+        {
+
+            return !Versions.Any()
+                   || Versions.Select(it => it.KeyType).Distinct().Count() == 1;
+        }
+
+        public KeyType OfficialKeyType()
+        {
+#pragma warning disable 618
+            return (KeyType != null)
+                ? KeyType
+#pragma warning restore 618
+                : Versions.Any()
+                    ? Versions.Select(it => it.KeyType).Distinct().Single()
+                    : DefaultKeyType;
+        }
     }
 }

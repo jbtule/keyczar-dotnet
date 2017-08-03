@@ -33,6 +33,7 @@ namespace KeyczarTool
         private string _padding;
         private bool _password;
         private string _type;
+        private bool _force;
 
         public AddKey()
         {
@@ -41,7 +42,8 @@ namespace KeyczarTool
 
             this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
             this.HasOption<int>("b|size=", Localized.Size, v => { _size = v; }); 
-            this.HasOption("t|type=", Localized.KeyType, v => { _type = v; });
+            this.HasOption("t|type:", Localized.KeyType, v => { _type = v; });
+            this.HasOption("f|force", Localized.KeyType, v => { _force = true; });
             this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
             this.HasOption("p|password", Localized.Password, v => { _password = true; });
             this.HasOption("g|padding=", Localized.Padding, v => { _padding = v; });
@@ -126,6 +128,20 @@ namespace KeyczarTool
 
                 int ver;
                 var type = KeyTypeForString(_type);
+
+                if (ks.Metadata.OriginallyOffical && ks.Metadata.ValidOfficial())
+                {
+                    var keytype = ks.Metadata.OfficialKeyType();
+                    if (type == null)
+                    {
+                        type = keytype;
+                    } else if (type != keytype && !_force)
+                    {
+                        throw new ConsoleHelpAsException(String.Format(Localized.MsgMismatchedType, type, keytype));
+                    }
+                }
+
+
                 try
                 {
                     

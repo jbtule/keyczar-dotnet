@@ -30,6 +30,7 @@ namespace Keyczar
     {
         private readonly string _location;
         private readonly bool _overwrite;
+        private readonly bool _legacyOfficialFormat;
         private List<string> _filePaths = new List<string>();
         private List<Exception> _exceptions = new List<Exception>();
         private bool success = true;
@@ -111,7 +112,16 @@ namespace Keyczar
                 using (var stream = new FileStream(file, FileMode.Create))
                 using (var writer = new StreamWriter(stream))
                 {
-                    writer.Write(metadata.ToJson());
+                    if (metadata.OriginallyOffical && metadata.ValidOfficial())
+                    {
+                        writer.Write(new OfficialKeyMetadata(metadata).ToJson());
+                    }
+                    else
+                    {
+                        writer.Write(metadata.ToJson());
+                    }
+
+                    
                 }
             }
             catch (Exception ex)

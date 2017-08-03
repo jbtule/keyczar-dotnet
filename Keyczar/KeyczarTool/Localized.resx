@@ -385,4 +385,7 @@
   <data name="MsgMismatchedKind" xml:space="preserve">
     <value>Kind of key, {0}, does not match key set kind, {1}.</value>
   </data>
+  <data name="MsgMismatchedType" xml:space="preserve">
+    <value>Type of key, {0}, does not match key set type of key, {1}. If you want to switch to the unofficial keyset format that allows for this, use --force.</value>
+  </data>
 </root>

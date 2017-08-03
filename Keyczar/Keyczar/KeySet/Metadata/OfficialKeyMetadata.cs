@@ -9,7 +9,7 @@ namespace Keyczar
 {
     internal class OfficialKeyMetadata
     {
-
+        internal const string MetaDataFormat = "0";
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyMetadata"/> class.
         /// </summary>
@@ -30,14 +30,14 @@ namespace Keyczar
 #pragma warning disable 618
             KeyType = metadata.KeyType;
 #pragma warning restore 618
-            if (KeyType == null &&  metadata.Versions.Select(it => it.KeyType).Distinct().Count() == 1)
+
+            if (!metadata.ValidOfficial())
             {
-                KeyType = metadata.Versions.Select(it => it.KeyType).FirstOrDefault();
+                throw new InvalidDataException("Official KeySet must only have one keytype");
             }
-            if (KeyType == null) {
-            
-              throw new InvalidDataException("Official KeySet requires wholeset KeyType");  
-            }
+
+            KeyType = metadata.OfficialKeyType();
+           
 
             Encrypted = metadata.Encrypted;
             Versions = metadata.Versions.Select(it => new OfficialKeyVersion(it)).ToList();

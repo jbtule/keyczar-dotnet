@@ -31,15 +31,23 @@ namespace KeyczarTool
         private string _pupose;
         private string _name;
         private bool _asymm;
-
+        private bool _unofficial;
+        private string _asymmAlg;
         public Create()
         {
             this.IsCommand("create", Localized.Create);
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
             this.HasRequiredOption("o|purpose=", Localized.Purpose, v => { _pupose = v; });
             this.HasOption("n|name=", Localized.Name, v => { _name = v; });
-            this.HasOption("a|asymmetric:", Localized.Asymmetric, v => { _asymm = true;});
-
+            this.HasOption("a|asymmetric:", Localized.Asymmetric, v =>
+                                                                  {
+                                                                      _asymm = true;
+                                                                      _asymmAlg = v;
+                                                                  });
+            this.HasOption("u|unofficial:", Localized.UnofficialCreate, v =>
+                                                                        {
+                                                                            _unofficial = true;
+                                                                        });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -47,7 +55,14 @@ namespace KeyczarTool
         {
             KeyPurpose purpose = _pupose == "sign" ? KeyPurpose.SignAndVerify : KeyPurpose.DecryptAndEncrypt;
 
-            var meta =new KeyMetadata()
+            KeyType officalKeyType = null;
+            if(!_unofficial)
+            {
+                officalKeyType = PickKeyTypeOfficialKeyczar(purpose);
+            }
+
+
+            var meta =new KeyMetadata(officialMetaDataKeyType: officalKeyType)
                 {
                     Name = _name,
                     Purpose = purpose,
@@ -65,6 +80,38 @@ namespace KeyczarTool
             Console.WriteLine("{0} {1}.", Localized.MsgExistingKeySet, _location);
 
             return -1;
+        }
+
+        private KeyType PickKeyTypeOfficialKeyczar(KeyPurpose purpose)
+        {
+            KeyType type;
+            if (_asymm)
+            {
+                if (purpose == KeyPurpose.DecryptAndEncrypt)
+                {
+                    type = KeyType.RsaPriv;
+                }
+                else
+                {
+                    if (_asymmAlg == "rsa")
+                    {
+                        type = KeyType.RsaPriv;
+                    }
+                    else
+                    {
+                        type = KeyType.DsaPriv;
+                    }
+                }
+            }
+            else if (purpose == KeyPurpose.DecryptAndEncrypt)
+            {
+                type = KeyType.Aes;
+            }
+            else
+            {
+                type = KeyType.HmacSha1;
+            }
+            return type;
         }
 
     }
