@@ -150,7 +150,7 @@ namespace KeyczarTest
 
             }
 
-            var path = Util.TestDataPath(WRITE_DATA, topDir);
+            var path = Util.TestDataPath(WRITE_DATA, topDir, subDir);
 
             if (Directory.Exists(path))
                 Directory.Delete(path,recursive:true);
