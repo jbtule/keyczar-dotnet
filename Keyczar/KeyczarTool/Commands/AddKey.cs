@@ -129,7 +129,7 @@ namespace KeyczarTool
                 int ver;
                 var type = KeyTypeForString(_type);
 
-                if (ks.Metadata.OriginallyOffical && ks.Metadata.ValidOfficial())
+                if (ks.Metadata.OriginallyOfficial && ks.Metadata.ValidOfficial())
                 {
                     var keytype = ks.Metadata.OfficialKeyType();
                     if (type == null)

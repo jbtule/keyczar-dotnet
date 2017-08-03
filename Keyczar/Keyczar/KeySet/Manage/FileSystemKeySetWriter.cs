@@ -112,7 +112,7 @@ namespace Keyczar
                 using (var stream = new FileStream(file, FileMode.Create))
                 using (var writer = new StreamWriter(stream))
                 {
-                    if (metadata.OriginallyOffical && metadata.ValidOfficial())
+                    if (metadata.OriginallyOfficial && metadata.ValidOfficial())
                     {
                         writer.Write(new OfficialKeyMetadata(metadata).ToJson());
                     }

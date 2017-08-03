@@ -64,7 +64,7 @@ namespace Keyczar
             if (officialMetaDataKeyType != null)
             {
                 Format = OfficialKeyMetadata.MetaDataFormat;
-                OriginallyOffical = true;
+                OriginallyOfficial = true;
 #pragma warning disable 618
                 KeyType = officialMetaDataKeyType;
 #pragma warning restore 618
@@ -83,10 +83,10 @@ namespace Keyczar
             Purpose = metadata.Purpose;
             Encrypted = metadata.Encrypted;
             Versions = metadata.Versions.Select(it => new KeyVersion(it)).ToList();
-            OriginallyOffical = metadata.OriginallyOffical;
+            OriginallyOfficial = metadata.OriginallyOfficial;
             if (metadata.Format == OfficialKeyMetadata.MetaDataFormat) //Version 0
             {
-                OriginallyOffical = true;
+                OriginallyOfficial = true;
 #pragma warning disable 612,618
                 var keyType = metadata.KeyType;
 #pragma warning restore 612,618
@@ -106,7 +106,7 @@ namespace Keyczar
         }
 
         [JsonIgnore]
-        public bool OriginallyOffical { get; set; }
+        public bool OriginallyOfficial { get; set; }
 
         /// <summary>
         /// Gets or sets the metadata format version.
@@ -170,7 +170,7 @@ namespace Keyczar
 #pragma warning restore 612,618
                 }else if (Kind == KeyKind.Symmetric && Purpose == KeyPurpose.DecryptAndEncrypt)
                 {
-                    if (OriginallyOffical)
+                    if (OriginallyOfficial)
                     {
                         return KeyType.Aes;
                     }
@@ -189,7 +189,7 @@ namespace Keyczar
                 }
                 else if (Kind == KeyKind.Private && Purpose == KeyPurpose.SignAndVerify)
                 {
-                    if (OriginallyOffical)
+                    if (OriginallyOfficial)
                     {
                         return KeyType.DsaPriv;
                     }
