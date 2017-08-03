@@ -233,8 +233,12 @@ namespace Keyczar
         public bool ValidOfficial()
         {
 
-            return !Versions.Any()
-                   || Versions.Select(it => it.KeyType).Distinct().Count() == 1;
+            return (!Versions.Any()
+#pragma warning disable 618
+                   && !(KeyType?.Unofficial ?? false))
+#pragma warning restore 618
+                   || (Versions.All(it=>!it.KeyType.Unofficial)
+                   && Versions.Select(it => it.KeyType).Distinct().Count() == 1);
         }
 
         public KeyType OfficialKeyType()
