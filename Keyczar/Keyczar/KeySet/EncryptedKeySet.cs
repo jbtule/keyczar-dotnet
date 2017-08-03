@@ -35,7 +35,7 @@ namespace Keyczar
         /// <param name="keySetLocation">The key set location.</param>
         /// <param name="crypter">The crypter.</param>
         public EncryptedKeySet(string keySetLocation, Crypter crypter)
-            : this(new KeySet(keySetLocation), crypter)
+            : this(new FileSystemKeySet(keySetLocation), crypter)
         {
         }
 

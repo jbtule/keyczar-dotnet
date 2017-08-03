@@ -18,7 +18,7 @@ namespace KeyczarTest
         [Test]
         public void TestSymetricKeyExport()
         {
-            var ks = new KeySet(Util.TestDataPath(TEST_DATA, "aes"));
+            var ks = new FileSystemKeySet(Util.TestDataPath(TEST_DATA, "aes"));
             Expect(() => ks.ExportPrimaryAsPkcs(Path.Combine(Path.GetTempPath(), "dummy.pem"), () => "dummy"),
                    Throws.InstanceOf<InvalidKeyTypeException>());
         }
@@ -26,7 +26,7 @@ namespace KeyczarTest
         [Test]
         public void TestPublicKeyExport()
         {
-            var ks = new KeySet(Util.TestDataPath(TEST_DATA, "rsa.public"));
+            var ks = new FileSystemKeySet(Util.TestDataPath(TEST_DATA, "rsa.public"));
             var path = Path.Combine(Path.GetTempPath(), "dummy.pem");
             Console.WriteLine(path);
             ks.ExportPrimaryAsPkcs(path, () => "dummy");

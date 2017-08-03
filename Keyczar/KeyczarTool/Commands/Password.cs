@@ -23,7 +23,7 @@ namespace KeyczarTool.Commands
 
         public override int Run(string[] remainingArguments)
         {
-            IKeySet ks = new KeySet(_location);
+            IKeySet ks = new FileSystemKeySet(_location);
 
 
             bool add = !ks.Metadata.Encrypted;

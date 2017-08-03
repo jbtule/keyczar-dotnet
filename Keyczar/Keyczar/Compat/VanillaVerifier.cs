@@ -33,7 +33,7 @@ namespace Keyczar.Compat
         /// Initializes a new instance of the <see cref="VanillaVerifier"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        public VanillaVerifier(string keySetLocation) : this(new KeySet(keySetLocation))
+        public VanillaVerifier(string keySetLocation) : this(new FileSystemKeySet(keySetLocation))
         {
         }
 

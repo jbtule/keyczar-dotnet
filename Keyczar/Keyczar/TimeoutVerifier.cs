@@ -53,7 +53,7 @@ namespace Keyczar
         /// <param name="keySetLocation">The keyset location.</param>
         /// <param name="currentDateTime">The current date time providers.</param>
         public TimeoutVerifier(string keySetLocation, Func<DateTime> currentDateTime = null)
-            : this(new KeySet(keySetLocation), currentDateTime)
+            : this(new FileSystemKeySet(keySetLocation), currentDateTime)
         {
         }
 

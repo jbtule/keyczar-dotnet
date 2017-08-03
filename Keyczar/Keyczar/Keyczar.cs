@@ -142,7 +142,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="Keyczar"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        protected Keyczar(string keySetLocation):this(new KeySet(keySetLocation))
+        protected Keyczar(string keySetLocation):this(new FileSystemKeySet(keySetLocation))
         {
             
         }

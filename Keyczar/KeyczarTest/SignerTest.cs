@@ -88,7 +88,7 @@ namespace KeyczarTest
         public void TestPublicVerifySizes(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
-            var ks = new KeySet(subPath);
+            var ks = new FileSystemKeySet(subPath);
             using (var verifier = new Verifier(subPath))
             using (var publicVerifier = new Verifier(subPath + ".public"))
             {

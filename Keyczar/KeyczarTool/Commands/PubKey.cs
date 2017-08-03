@@ -44,7 +44,7 @@ namespace KeyczarTool
         {
             var ret = 0;
             Crypter crypter = null;
-            IKeySet ks = new KeySet(_location);
+            IKeySet ks = new FileSystemKeySet(_location);
 
             Func<string> prompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
 

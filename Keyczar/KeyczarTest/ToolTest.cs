@@ -502,7 +502,7 @@ namespace KeyczarTest
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
 
-            var ks = new KeySet(path);
+            var ks = new FileSystemKeySet(path);
             dynamic key = ks.GetKey(1);
             Expect((int) key.Size, Is.EqualTo(1024));
             Expect((string) key.Padding, Is.EqualTo("PKCS"));
@@ -512,7 +512,7 @@ namespace KeyczarTest
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
 
-            var ks2 = new KeySet(path);
+            var ks2 = new FileSystemKeySet(path);
             dynamic key2 = ks2.GetKey(1);
             Expect((int)key2.Size, Is.EqualTo(1024));
             Expect((string)key2.Padding, Is.EqualTo("PKCS"));
@@ -549,7 +549,7 @@ namespace KeyczarTest
             result = Util.KeyczarTool(revoke: null, location: path, version: 1);
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgRevokedVersion));
 
-            var ks = new KeySet(path);
+            var ks = new FileSystemKeySet(path);
             Expect(ks.Metadata.Versions.Any(), Is.False);
 
             Directory.Delete(path, true);

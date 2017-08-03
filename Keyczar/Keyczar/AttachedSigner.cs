@@ -31,7 +31,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="AttachedSigner"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        public AttachedSigner(string keySetLocation) : this(new KeySet(keySetLocation))
+        public AttachedSigner(string keySetLocation) : this(new FileSystemKeySet(keySetLocation))
         {
         }
 

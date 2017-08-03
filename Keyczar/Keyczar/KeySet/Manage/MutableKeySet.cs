@@ -36,7 +36,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="MutableKeySet" /> class.
         /// </summary>
         /// <param name="location">The location.</param>
-        public MutableKeySet(string location) : this(new KeySet(location))
+        public MutableKeySet(string location) : this(new FileSystemKeySet(location))
         {
         }
 

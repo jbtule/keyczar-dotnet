@@ -34,7 +34,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="TimeoutSigner"/> class.
         /// </summary>
         /// <param name="keySetLocation">The keyset location.</param>
-        public TimeoutSigner(string keySetLocation) : this(new KeySet(keySetLocation))
+        public TimeoutSigner(string keySetLocation) : this(new FileSystemKeySet(keySetLocation))
         {
         }
 

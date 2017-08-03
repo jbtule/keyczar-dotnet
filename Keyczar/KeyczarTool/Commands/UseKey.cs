@@ -214,7 +214,7 @@ namespace KeyczarTool
             }
            
             Crypter crypter = null;
-            IKeySet ks = new KeySet(location);
+            IKeySet ks = new FileSystemKeySet(location);
             Func<string> prompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
 
             IDisposable dks =null;

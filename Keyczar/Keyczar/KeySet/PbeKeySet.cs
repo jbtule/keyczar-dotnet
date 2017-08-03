@@ -35,7 +35,7 @@ namespace Keyczar
         /// <param name="keySetLocation">The key set location.</param>
         /// <param name="passwordPrompt">The password prompt.</param>
         public PbeKeySet(string keySetLocation, Func<string> passwordPrompt)
-            : this(new KeySet(keySetLocation), passwordPrompt)
+            : this(new FileSystemKeySet(keySetLocation), passwordPrompt)
         {
         }
 

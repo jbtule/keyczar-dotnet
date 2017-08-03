@@ -46,7 +46,7 @@ namespace KeyczarTest
           [Test]
           public void TestGetPrimary(){
                 // based on the checked in files, we know version 2 is primary.
-              var reader = new KeySet(Util.TestDataPath(TEST_DATA, "rsa"));
+              var reader = new FileSystemKeySet(Util.TestDataPath(TEST_DATA, "rsa"));
                 var knownPrimaryKey = reader.GetKey(2 /* primary key version */);
                 var readerKey = new GetPrimary(reader).GetPrimaryExposed();
                 Expect(readerKey.GetKeyHash(), Is.EqualTo(knownPrimaryKey.GetKeyHash()));
@@ -76,7 +76,7 @@ namespace KeyczarTest
           [Test]
           public void TestPbeKeysetRead(){
               Func<string> password = ()=>"cartman"; //Hardcoded because this is a test
-              using (var reader = new PbeKeySet(new KeySet(Util.TestDataPath(TEST_DATA, "pbe_json")), password))
+              using (var reader = new PbeKeySet(new FileSystemKeySet(Util.TestDataPath(TEST_DATA, "pbe_json")), password))
               {
 
                 Expect(reader.Metadata.Encrypted, Is.True);
@@ -144,7 +144,7 @@ namespace KeyczarTest
           [Test]
           public void TestGetPrimaryFails()
           {
-              var reader = new KeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"));
+              var reader = new FileSystemKeySet(Util.TestDataPath(TEST_DATA, "aes-noprimary"));
               Expect(() => new GetPrimary(reader).GetPrimaryExposed(), Throws.TypeOf<MissingPrimaryKeyException>());
 
           }
@@ -161,7 +161,7 @@ namespace KeyczarTest
         protected class GetPrimary:Keyczar.Keyczar
         {
             public GetPrimary(string keySetLocation)
-                : base(new KeySet(keySetLocation))
+                : base(new FileSystemKeySet(keySetLocation))
             {
             }
 

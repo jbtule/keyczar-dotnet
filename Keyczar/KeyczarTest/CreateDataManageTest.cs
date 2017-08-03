@@ -58,7 +58,7 @@ namespace KeyczarTest
             }
 
 
-            HelperCryptCreate(writer, new KeySet(kspath), kspath, type);
+            HelperCryptCreate(writer, new FileSystemKeySet(kspath), kspath, type);
 
 
             var kscryptpath = Util.TestDataPath(WRITE_DATA, topDir + "-crypted", subDir);
@@ -76,7 +76,7 @@ namespace KeyczarTest
                 var cryptedwriter = new EncryptedKeySetWriter(baseWriter, encrypter);
 
                 HelperCryptCreate(cryptedwriter, new EncryptedKeySet(kscryptpath, encrypter), kscryptpath, type, 
-                                  new KeySet(kscryptpath), baseWriter);
+                                  new FileSystemKeySet(kscryptpath), baseWriter);
             }
         }
 

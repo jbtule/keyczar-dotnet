@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -21,18 +22,27 @@ using System.Text;
 
 namespace Keyczar
 {
+
+    [Obsolete("Use `FileSystemKeyset` instead")]
+    public class KeySet : FileSystemKeySet
+    {
+        public KeySet(string keySetLocation) : base(keySetLocation)
+        {
+        }
+    }
+
     /// <summary>
     /// standard key set
     /// </summary>
-    public class KeySet : IKeySet
+    public class FileSystemKeySet : IKeySet
     {
         private readonly string _location;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeySet"/> class.
+        /// Initializes a new instance of the <see cref="FileSystemKeySet"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        public KeySet(string keySetLocation)
+        public FileSystemKeySet(string keySetLocation)
         {
             _location = keySetLocation;
         }
