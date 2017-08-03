@@ -6,7 +6,7 @@ username: jbtule
 heading: Keyczar high level encryption toolkit in C#
 ---
 
-# Keyczar dotnet 
+# Keyczar dotnet [![Nugut Install](https://img.shields.io/nuget/v/Keyczar.svg)](https://www.nuget.org/packages/Keyczar)
 Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features
 and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
 
