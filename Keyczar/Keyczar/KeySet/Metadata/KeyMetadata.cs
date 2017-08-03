@@ -29,6 +29,8 @@ namespace Keyczar
     /// </summary>
     public class KeyMetadata
     {
+        private KeyType _keyType;
+
         /// <summary>
         /// Reads the specified meta data.
         /// </summary>
@@ -118,7 +120,7 @@ namespace Keyczar
         /// Gets or sets the key type. for version 0 format only
         /// </summary>
         /// <value>The key type.</value>
-        [Obsolete("Use GetKeyType Instead")] 
+        [Obsolete("Use DefaultKeyType or GetKeyType Instead")]
         [JsonProperty(PropertyName = "Type", NullValueHandling = NullValueHandling.Ignore)]
         public KeyType KeyType { get; set; }
 
@@ -130,7 +132,7 @@ namespace Keyczar
         /// The default type of the key.
         /// </value>
         /// <exception cref="InvalidKeySetException">No default type for public keysets</exception>
-        
+
         [JsonIgnore]
         public KeyType DefaultKeyType
         {

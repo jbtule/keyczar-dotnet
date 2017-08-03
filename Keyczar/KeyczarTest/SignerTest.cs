@@ -92,7 +92,7 @@ namespace KeyczarTest
             using (var verifier = new Verifier(subPath))
             using (var publicVerifier = new Verifier(subPath + ".public"))
             {
-                foreach (var size in ks.Metadata.KeyType.KeySizeOptions)
+                foreach (var size in ks.Metadata.GetKeyType(1).KeySizeOptions)
                 {
                     var activeSignature =
                         (WebBase64) File.ReadAllLines(Path.Combine(subPath, String.Format("{0}.out", size))).First();
