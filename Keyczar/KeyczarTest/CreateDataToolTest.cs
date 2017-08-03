@@ -45,10 +45,14 @@ namespace KeyczarTest
             if (Directory.Exists(path))
                 Directory.Delete(path, recursive: true);
 
-            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
+            result = Util.KeyczarTool(create: null, location: path, purpose: purpose);
             var type = !unofficial
                            ? "AES_HMAC_SHA1"
                            : "AES_GCM";
+            if (purpose == "sign")
+            {
+                type = "HMAC_SHA1";
+            }
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
@@ -91,7 +95,7 @@ namespace KeyczarTest
 
 
 
-            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath, type:type);
+                result = Util.KeyczarTool(addkey: null, location: path, status: "primary", crypter: crypterpath, type:type);
 
 
                 Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
