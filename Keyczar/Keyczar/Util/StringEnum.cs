@@ -188,7 +188,7 @@ namespace Keyczar.Util
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (StringType)) return false;
+            if (!(obj is StringType)) return false;
             return Equals((StringType) obj);
         }
 
