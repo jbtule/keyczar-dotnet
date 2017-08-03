@@ -80,7 +80,7 @@ namespace KeyczarTool
                 {
                     using (pubKeySet)
                     {
-                        IKeySetWriter writer = new KeySetWriter(_destination, overwrite: false);
+                        IKeySetWriter writer = new FileSystemKeySetWriter(_destination, overwrite: false);
 
                         if (pubKeySet.Save(writer))
                         {

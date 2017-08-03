@@ -47,7 +47,7 @@ namespace KeyczarTool
                 }
                 try
                 {
-                    if (keySet.Save(new KeySetWriter(_location, overwrite: true)))
+                    if (keySet.Save(new FileSystemKeySetWriter(_location, overwrite: true)))
                     {
                         Console.WriteLine("{0} {1}.", Localized.MsgRevokedVersion, _version);
                         return 0;

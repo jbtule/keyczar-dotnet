@@ -49,7 +49,7 @@ namespace KeyczarTest
         {
             KeyType type = keyType;
             var kspath = Util.TestDataPath(WRITE_DATA, topDir, subDir);
-            var writer = new KeySetWriter(kspath, overwrite: true);
+            var writer = new FileSystemKeySetWriter(kspath, overwrite: true);
 
             using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
             {
@@ -64,7 +64,7 @@ namespace KeyczarTest
             var kscryptpath = Util.TestDataPath(WRITE_DATA, topDir + "-crypted", subDir);
 
 
-            var baseWriter = new KeySetWriter(kscryptpath, overwrite: true);
+            var baseWriter = new FileSystemKeySetWriter(kscryptpath, overwrite: true);
             using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
             {
                 var success = ks.Save(baseWriter);
@@ -96,7 +96,7 @@ namespace KeyczarTest
 
             IDictionary<int, Key> keys = new Dictionary<int, Key>();
             var kspath = Util.TestDataPath(WRITE_DATA, dir, "key-collision");
-            var writer = new KeySetWriter(kspath, overwrite: true);
+            var writer = new FileSystemKeySetWriter(kspath, overwrite: true);
 
             using (var ks = CreateNewKeySet(ktype.Kind, purp))
             {
@@ -215,7 +215,7 @@ namespace KeyczarTest
         public void CreatePbeKeySet()
         {
             var kspath = Util.TestDataPath(WRITE_DATA, "pbe_json");
-            var writer = new KeySetWriter(kspath, overwrite: true);
+            var writer = new FileSystemKeySetWriter(kspath, overwrite: true);
             Func<string> passPrompt = () => "cartman"; //hardcoded because this is a test;
             using (var encwriter = new PbeKeySetWriter(writer, passPrompt))
             {
@@ -236,7 +236,7 @@ namespace KeyczarTest
         {
             KeyType type = keyType;
             var kspath = Util.TestDataPath(WRITE_DATA, topDir);
-            var writer = new KeySetWriter(kspath, overwrite: true);
+            var writer = new FileSystemKeySetWriter(kspath, overwrite: true);
 
 
             using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
@@ -272,7 +272,7 @@ namespace KeyczarTest
         {
             KeyType type = keyType;
             var kspath = Util.TestDataPath(WRITE_DATA, topDir, nestDir);
-            var writer = new KeySetWriter(kspath, overwrite: true);
+            var writer = new FileSystemKeySetWriter(kspath, overwrite: true);
 
             using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.SignAndVerify))
             {
@@ -307,7 +307,7 @@ namespace KeyczarTest
             if (type.Asymmetric)
             {
                 var kspath2 = Util.TestDataPath(WRITE_DATA, topDir + ".public", nestDir);
-                var writer2 = new KeySetWriter(kspath2, overwrite: true);
+                var writer2 = new FileSystemKeySetWriter(kspath2, overwrite: true);
                 using (var ks = new MutableKeySet(kspath))
                 {
                     var pubKs = ks.PublicKey();
@@ -327,7 +327,7 @@ namespace KeyczarTest
             KeyType type = keyType;
             topDir += "-sizes";
             var kspath = Util.TestDataPath(WRITE_DATA, topDir, nestDir);
-            var writer = new KeySetWriter(kspath, overwrite: true);
+            var writer = new FileSystemKeySetWriter(kspath, overwrite: true);
 
 
             using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.SignAndVerify))
@@ -359,7 +359,7 @@ namespace KeyczarTest
             if (type.Asymmetric)
             {
                 var kspath2 = Util.TestDataPath(WRITE_DATA, topDir + ".public", nestDir);
-                var writer2 = new KeySetWriter(kspath2, overwrite: true);
+                var writer2 = new FileSystemKeySetWriter(kspath2, overwrite: true);
                 using (var ks = new MutableKeySet(kspath))
                 {
                     var pubKs = ks.PublicKey();
@@ -375,7 +375,7 @@ namespace KeyczarTest
         {
             KeyType type = keyType;
             var kspath = Util.TestDataPath(WRITE_DATA, topDir);
-            var writer = new KeySetWriter(kspath, overwrite: true);
+            var writer = new FileSystemKeySetWriter(kspath, overwrite: true);
 
             using (var ks = CreateNewKeySet(type.Kind, KeyPurpose.DecryptAndEncrypt))
             {
@@ -410,7 +410,7 @@ namespace KeyczarTest
             if (type.Asymmetric)
             {
                 var kspath2 = Util.TestDataPath(WRITE_DATA, topDir + ".public");
-                var writer2 = new KeySetWriter(kspath2, overwrite: true);
+                var writer2 = new FileSystemKeySetWriter(kspath2, overwrite: true);
                 using (var ks = new MutableKeySet(kspath))
                 {
                     var pubKs = ks.PublicKey();
@@ -435,8 +435,8 @@ namespace KeyczarTest
             var exportPath = path + "-pkcs8.pem";
             var exportPubPath = path + "-public.pem";
 
-            var writer = new KeySetWriter(path, overwrite: true);
-            var pubWriter = new KeySetWriter(pubPath, overwrite: true);
+            var writer = new FileSystemKeySetWriter(path, overwrite: true);
+            var pubWriter = new FileSystemKeySetWriter(pubPath, overwrite: true);
             using (var ks = CreateNewKeySet(kt.Kind, p))
             {
                 var ver = ks.AddKey(KeyStatus.Primary, type: kt);

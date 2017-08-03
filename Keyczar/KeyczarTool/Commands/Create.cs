@@ -56,7 +56,7 @@ namespace KeyczarTool
 
             using (var keySet = new MutableKeySet(meta))
             {
-                if (keySet.Save(new KeySetWriter(_location)))
+                if (keySet.Save(new FileSystemKeySetWriter(_location)))
                 {
                     Console.WriteLine(Localized.MsgCreatedKeySet);
                     return 0;

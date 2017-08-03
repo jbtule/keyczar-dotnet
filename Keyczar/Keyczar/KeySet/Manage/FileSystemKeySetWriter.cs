@@ -26,7 +26,7 @@ namespace Keyczar
     /// <summary>
     /// Writes a keyset using the standard storage format
     /// </summary>
-    public class KeySetWriter : IKeySetWriter
+    public class FileSystemKeySetWriter : IKeySetWriter
     {
         private readonly string _location;
         private readonly bool _overwrite;
@@ -35,11 +35,11 @@ namespace Keyczar
         private bool success = true;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KeySetWriter"/> class.
+        /// Initializes a new instance of the <see cref="FileSystemKeySetWriter"/> class.
         /// </summary>
         /// <param name="location">The location.</param>
         /// <param name="overwrite">if set to <c>true</c> [overwrite].</param>
-        public KeySetWriter(string location, bool overwrite = false)
+        public FileSystemKeySetWriter(string location, bool overwrite = false)
         {
             _location = location;
             _overwrite = overwrite;

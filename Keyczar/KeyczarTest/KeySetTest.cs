@@ -101,7 +101,7 @@ namespace KeyczarTest
               using (var ks = new MutableKeySet(new KeyMetadata { Name = "Don't Write", Purpose = KeyPurpose.DecryptAndEncrypt, Kind = KeyKind.Symmetric }))
               {
                   ks.AddKey(KeyStatus.Primary);
-                  var writer = new KeySetWriter(Util.TestDataPath(TEST_DATA, "pbe_json"),overwrite:false);
+                  var writer = new FileSystemKeySetWriter(Util.TestDataPath(TEST_DATA, "pbe_json"),overwrite:false);
                   
                   Expect(() => ks.Save(writer), Is.False);
 

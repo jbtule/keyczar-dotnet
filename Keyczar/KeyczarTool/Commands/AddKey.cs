@@ -137,7 +137,7 @@ namespace KeyczarTool
                 }
 
 
-                IKeySetWriter writer = new KeySetWriter(_location, overwrite: true);
+                IKeySetWriter writer = new FileSystemKeySetWriter(_location, overwrite: true);
 
                 if (crypter != null)
                 {

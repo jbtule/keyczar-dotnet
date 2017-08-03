@@ -42,7 +42,7 @@ namespace KeyczarTool.Commands
             {
                 keySet.ForceKeyDataChange();
 
-                IKeySetWriter writer = new KeySetWriter(_location, overwrite: true);
+                IKeySetWriter writer = new FileSystemKeySetWriter(_location, overwrite: true);
                 if (!_remove)
                 {
                     Console.WriteLine(Localized.PasswordPromptNewPassword);

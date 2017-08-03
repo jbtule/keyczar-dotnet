@@ -124,7 +124,7 @@ namespace KeyczarTool
                             var ver = keySet.AddKey(_status, importedKeySet.GetKey(1));
 
 
-                            IKeySetWriter writer = new KeySetWriter(_location, overwrite: true);
+                            IKeySetWriter writer = new FileSystemKeySetWriter(_location, overwrite: true);
 
                             if (crypter != null)
                             {
