@@ -47,7 +47,7 @@ namespace KeyczarTest
         private static String input = "This is some test data";
         private static byte[] inputBytes = Encoding.UTF8.GetBytes(input);
 
-        [TestCase("hmac")]
+        [TestCase("hmac", "")]
         [TestCase("hmac_sha2", "unofficial")]
         public void TestSignerVerify(String subDir, string nestDir)
         {
