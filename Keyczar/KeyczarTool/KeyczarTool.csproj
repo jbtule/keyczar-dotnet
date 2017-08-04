@@ -7,7 +7,7 @@
     <Authors> jbtule </Authors>
     <Copyright>Copyright © Contributors 2012-2017"</Copyright>
     <AssemblyVersion>0.8.0.1</AssemblyVersion>
-    <FileVersion>0.8.0.1<</FileVersion>
+    <FileVersion>0.8.0.1</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ManyConsole" Version="0.4.2.*" PrivateAssets="All" />
