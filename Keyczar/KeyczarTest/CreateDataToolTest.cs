@@ -143,7 +143,6 @@ namespace KeyczarTest
             KeyType keyType = type;
 
             bool unofficial = keyType.Unofficial;
-            var cmdType = "";
             if (unofficial)
             {
                 subDir = "unofficial";

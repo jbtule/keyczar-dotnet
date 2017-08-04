@@ -74,9 +74,12 @@ namespace KeyczarTest
             using (var encrypter = new Crypter(kspath))
             {
                 var cryptedwriter = new EncryptedKeySetWriter(baseWriter, encrypter);
-
-                HelperCryptCreate(cryptedwriter, new EncryptedKeySet(kscryptpath, encrypter), kscryptpath, type, 
-                                  new FileSystemKeySet(kscryptpath), baseWriter);
+                using (var eks = KeySet.LayerSecurity(FileSystemKeySet.Creator(kscryptpath),
+                                                      EncryptedKeySet.Creator(encrypter)))
+                {
+                    HelperCryptCreate(cryptedwriter, eks, kscryptpath, type,
+                                      new FileSystemKeySet(kscryptpath), baseWriter);
+                }
             }
         }
 
@@ -224,7 +227,9 @@ namespace KeyczarTest
                     var success = ks.Save(writer);
                     Expect(success, Is.True);
                 }
-                using (var eks = new PbeKeySet(kspath, passPrompt))
+                using (var eks = KeySet.LayerSecurity(
+                    FileSystemKeySet.Creator(kspath),
+                    PbeKeySet.Creator(passPrompt)))
                 {
                     HelperCryptCreate(encwriter, eks, kspath, KeyType.Aes);
                 }

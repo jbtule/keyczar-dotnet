@@ -23,19 +23,16 @@ using System.Text;
 namespace Keyczar
 {
 
-    [Obsolete("Use `FileSystemKeyset` instead")]
-    public class KeySet : FileSystemKeySet
-    {
-        public KeySet(string keySetLocation) : base(keySetLocation)
-        {
-        }
-    }
-
     /// <summary>
     /// standard key set
     /// </summary>
-    public class FileSystemKeySet : IKeySet
+    public class FileSystemKeySet : IRootProviderKeySet
     {
+
+        public static Func<FileSystemKeySet> Creator(string keySetLocation){
+            return () => new FileSystemKeySet(keySetLocation);
+        }
+
         private readonly string _location;
 
         /// <summary>
@@ -58,6 +55,8 @@ namespace Keyczar
             return File.ReadAllBytes(path);
         }
 
+    
+
         /// <summary>
         /// Gets the metadata.
         /// </summary>
@@ -70,5 +69,21 @@ namespace Keyczar
                 return KeyMetadata.Read(File.ReadAllText(path, Keyczar.RawStringEncoding));
             }
         }
+
+        #region IDisposable Support
+
+        protected virtual void Dispose(bool disposing)
+        {
+      
+        }
+
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

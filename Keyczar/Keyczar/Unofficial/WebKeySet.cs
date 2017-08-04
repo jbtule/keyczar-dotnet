@@ -27,7 +27,7 @@ namespace Keyczar.Unofficial
     /// <summary>
     /// Access and Public Key Set or Encrypted KeySet from the web.
     /// </summary>
-    public class WebKeySet : IKeySet
+    public class WebKeySet : IRootProviderKeySet
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="WebKeySet" /> class.
@@ -138,5 +138,20 @@ namespace Keyczar.Unofficial
             var data = WebClient.DownloadData(version.ToString(CultureInfo.InvariantCulture));
             return data;
         }
+
+        #region IDisposable Support
+
+        protected virtual void Dispose(bool disposing)
+        {
+          
+        }
+
+   
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            Dispose(true);
+        }
+        #endregion
     }
 }

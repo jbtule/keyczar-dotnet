@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Linq;
 using Keyczar;
 using Keyczar.Util;
@@ -23,10 +24,16 @@ namespace Keyczar
     /// <summary>
     /// Encrypts a keys before passing them to another keysetwriter
     /// </summary>
-    public class EncryptedKeySetWriter : IKeySetWriter
+    public class EncryptedKeySetWriter : ILayeredKeySetWriter
     {
         private readonly Encrypter _encrypter;
         private readonly IKeySetWriter _writer;
+
+
+		public static Func<IKeySetWriter,EncryptedKeySetWriter> Creator(Encrypter encrypter)
+		{
+			return writer => new EncryptedKeySetWriter(writer, encrypter);
+		}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EncryptedKeySetWriter"/> class.
@@ -67,6 +74,11 @@ namespace Keyczar
         public bool Finish()
         {
             return _writer.Finish();
+        }
+
+        public void Dispose()
+        {
+            _writer.Dispose();
         }
     }
 }

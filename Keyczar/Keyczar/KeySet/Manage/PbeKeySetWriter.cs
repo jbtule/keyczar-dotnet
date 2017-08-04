@@ -24,12 +24,17 @@ namespace Keyczar
     /// <summary>
     /// Password Based Encrypted Key Set
     /// </summary>
-    public class PbeKeySetWriter : IKeySetWriter, IDisposable
+    public class PbeKeySetWriter : ILayeredKeySetWriter, IDisposable
     {
         private IKeySetWriter _writer;
         private readonly int _iterationCount;
         private CachedPrompt _password;
 
+
+		public static Func<IKeySetWriter, PbeKeySetWriter> Creator(Func<string> passwordPrompt, int iterationCount = 4096)
+		{
+            return writer => new PbeKeySetWriter(writer, passwordPrompt, iterationCount);
+		}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PbeKeySetWriter"/> class.

@@ -23,17 +23,25 @@ using Newtonsoft.Json;
 
 namespace Keyczar
 {
+
+
     /// <summary>
     /// Writes a keyset using the standard storage format
     /// </summary>
-    public class FileSystemKeySetWriter : IKeySetWriter
+    public class FileSystemKeySetWriter : IRootProviderKeySetWriter
     {
+
         private readonly string _location;
         private readonly bool _overwrite;
         private readonly bool _legacyOfficialFormat;
         private List<string> _filePaths = new List<string>();
         private List<Exception> _exceptions = new List<Exception>();
         private bool success = true;
+
+
+        public static Func<FileSystemKeySetWriter> Creator(string location, bool overwrite = false){
+            return () => new FileSystemKeySetWriter(location, overwrite);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemKeySetWriter"/> class.
@@ -167,6 +175,11 @@ namespace Keyczar
                 throw newEx;
 
             return success;
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

@@ -210,12 +210,14 @@ namespace KeyczarTest
 
             using (var kcrypter = new Crypter(path))
             {
-                var eks = new EncryptedKeySet(pathc, kcrypter);
-                Expect(eks.Metadata.Encrypted, Is.True);
-                using (var crypter = new Crypter(eks))
-                {
-                    result = crypter.Decrypt((WebBase64) File.ReadAllText(patho));
-                    Expect(result, Is.EqualTo(input));
+                using (var eks = KeySet.LayerSecurity(FileSystemKeySet.Creator(pathc),
+                                                      EncryptedKeySet.Creator(kcrypter))){
+                    Expect(eks.Metadata.Encrypted, Is.True);
+                    using (var crypter = new Crypter(eks))
+                    {
+                        result = crypter.Decrypt((WebBase64)File.ReadAllText(patho));
+                        Expect(result, Is.EqualTo(input));
+                    }
                 }
             }
 
@@ -301,10 +303,13 @@ namespace KeyczarTest
                 additionalArgs: new[] {input}
                 );
 
-            using (var pks = new PbeKeySet(path, () => "cartman" /*hardcoding because this is a test*/))
+            using (var pks = KeySet.LayerSecurity(
+                                FileSystemKeySet.Creator(path),
+                                PbeKeySet.Creator(() => "cartman" /*hardcoding because this is a test*/)))
             using (var kcrypter = new Crypter(pks))
             {
-                var eks = new EncryptedKeySet(pathc, kcrypter);
+                using(var eks = KeySet.LayerSecurity(FileSystemKeySet.Creator(pathc),
+                                                     EncryptedKeySet.Creator(kcrypter))) 
                 using (var crypter = new Crypter(eks))
                 {
                     Expect(pks.Metadata.Encrypted, Is.True);
@@ -377,7 +382,9 @@ namespace KeyczarTest
                 destination: patho,
                 additionalArgs: new[] {input}
                 );
-            using (var pks = new PbeKeySet(pathc, () => "cartman" /*hardcoding because this is a test*/))
+            using (var pks = KeySet.LayerSecurity(
+                    FileSystemKeySet.Creator(pathc),
+                    PbeKeySet.Creator(() => "cartman" /*hardcoding because this is a test*/))) 
             using (var crypter = new Crypter(pks))
             {
                 Expect(pks.Metadata.Encrypted, Is.True);

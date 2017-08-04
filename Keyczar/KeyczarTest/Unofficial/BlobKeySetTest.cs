@@ -37,8 +37,11 @@ namespace KeyczarTest.Unofficial
             using (var keySet = new BlobKeySet(stream))
             using (var crypter = new Crypter(keySet))
             using (var signstream = File.OpenRead(Util.TestDataPath(TEST_DATA, "signkey.zip")))
-            using (var signkeySet = new BlobKeySet(signstream))
-            using (var verifier = new Verifier(new EncryptedKeySet(signkeySet, crypter)))
+            using (var signkeySet = KeySet.LayerSecurity(
+                     BlobKeySet.Creator(signstream),
+                     EncryptedKeySet.Creator(crypter)
+                   ))
+            using (var verifier = new Verifier(signkeySet))
             {
                 var sig = (WebBase64) File.ReadAllText(Util.TestDataPath(TEST_DATA, "sign.out"));
                 Expect(verifier.Verify(input, sig), Is.True);

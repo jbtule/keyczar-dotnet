@@ -47,10 +47,19 @@ namespace Keyczar
     {
     }
 
+    public interface IRootProviderKeySetWriter : IKeySetWriter{
+        
+    }
+
+	public interface ILayeredKeySetWriter : IKeySetWriter
+	{
+
+	}
+
     /// <summary>
     /// Interface for mechanisms to store keysets
     /// </summary>
-    public interface IKeySetWriter
+    public interface IKeySetWriter:IDisposable
 
     {
         /// <summary>

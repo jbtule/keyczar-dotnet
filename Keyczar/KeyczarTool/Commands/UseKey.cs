@@ -222,7 +222,9 @@ namespace KeyczarTool
             {
                 if (password)
                 {
-                    var cks = new PbeKeySet(crypterLocation, prompt);
+                    var cks = KeySet.LayerSecurity(FileSystemKeySet.Creator(crypterLocation),
+                                                   PbeKeySet.Creator(prompt)
+                                                  );
                     crypter = new Crypter(cks);
                     dks = cks;
                 }
@@ -239,7 +241,7 @@ namespace KeyczarTool
        
             d1 = crypter;
             d2 = dks;
-            d3 = ks as IDisposable;
+            d3 = ks;
             return ks;
         }
         

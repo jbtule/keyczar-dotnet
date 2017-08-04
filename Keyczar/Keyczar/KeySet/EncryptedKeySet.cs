@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,16 +25,23 @@ namespace Keyczar
     /// <summary>
     /// Wraps a key set to decrypt it
     /// </summary>
-    public class EncryptedKeySet : IKeySet
+    public class EncryptedKeySet : ILayeredKeySet
     {
-        private readonly IKeySet _keySet;
-        private readonly Crypter _crypter;
+
+		public static Func<IKeySet,EncryptedKeySet> Creator(Crypter crypter)
+		{
+			return keySet => new EncryptedKeySet(keySet, crypter);
+		}
+
+        private IKeySet _keySet;
+        private Crypter _crypter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EncryptedKeySet"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
         /// <param name="crypter">The crypter.</param>
+        [Obsolete("Use `KeySet.LayerSecurity` with `FileSystemKeyset.Creator` and `EncryptedKeySet.Creator`")]
         public EncryptedKeySet(string keySetLocation, Crypter crypter)
             : this(new FileSystemKeySet(keySetLocation), crypter)
         {
@@ -68,6 +76,8 @@ namespace Keyczar
             return _crypter.Decrypt(WebSafeBase64.Decode(cipherString.ToCharArray()));
         }
 
+
+
         /// <summary>
         /// Gets the metadata.
         /// </summary>
@@ -76,5 +86,31 @@ namespace Keyczar
         {
             get { return _keySet.Metadata; }
         }
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _keySet = _keySet.SafeDispose();
+                    _crypter = _crypter.SafeDispose();
+			    }
+
+                disposedValue = true;
+            }
+        }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+
+        }
+        #endregion
     }
 }

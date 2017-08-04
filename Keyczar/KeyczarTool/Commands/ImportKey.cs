@@ -53,7 +53,8 @@ namespace KeyczarTool
             {
                 if (_password)
                 {
-                    var cks = new PbeKeySet(_crypterLocation, singlePrompt);
+                    var cks =  KeySet.LayerSecurity(FileSystemKeySet.Creator(_crypterLocation),
+                                              PbeKeySet.Creator(singlePrompt));
                     crypter = new Crypter(cks);
                     dks = cks;
                 }

@@ -171,7 +171,9 @@ namespace KeyczarTest
             var keyPath = Path.Combine(basePath, subDir);
             var dataPath = Path.Combine(basePath, subDir + "-crypted");
             using (var keyDecrypter = new Crypter(keyPath))
-            using (var dataDecrypter = new Crypter(new EncryptedKeySet(dataPath, keyDecrypter)))
+            using (var ks = KeySet.LayerSecurity(FileSystemKeySet.Creator(dataPath),
+                                                 EncryptedKeySet.Creator(keyDecrypter)))    
+            using (var dataDecrypter = new Crypter(ks))
             {
                 HelperDecrypt(dataDecrypter, dataPath);
             }

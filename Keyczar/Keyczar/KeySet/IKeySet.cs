@@ -42,11 +42,19 @@ namespace Keyczar
         }
     }
 
+    public interface IRootProviderKeySet:IKeySet{
+        
+    }
+
+	public interface ILayeredKeySet : IKeySet
+	{
+
+	}
 
     /// <summary>
     /// Defines methods for getting keys out of a key set
     /// </summary>
-    public interface IKeySet
+    public interface IKeySet:IDisposable
     {
         /// <summary>
         /// Gets the metadata.

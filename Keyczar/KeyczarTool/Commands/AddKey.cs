@@ -86,12 +86,18 @@ namespace KeyczarTool
                              ? new Func<string>(CachedPrompt.Password(Util.PromptForPassword).Prompt)
                              : new Func<string>(CachedPrompt.Password(Util.DoublePromptForPassword).Prompt);
 
+            var encOrNone = new List<Func<IKeySet, ILayeredKeySet>>();
+
             IDisposable dks = null;
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
             {
                 if (_password)
                 {
-                    var cks = new PbeKeySet(_crypterLocation, crypterPrompt);
+                    var cks = KeySet.LayerSecurity(
+                                FileSystemKeySet.Creator(_crypterLocation),
+                                PbeKeySet.Creator(crypterPrompt)
+                    );
+
                     crypter = new Crypter(cks);
                     dks = cks;
                 }
@@ -147,7 +153,7 @@ namespace KeyczarTool
                     
                     ver = keySet.AddKey(_status, _size, type, options);
                 }
-                catch (InvalidKeyTypeException e)
+                catch (InvalidKeyTypeException)
                 {
                     throw new ConsoleHelpAsException(String.Format(Localized.MsgMismatchedKind, type.Kind, keySet.Metadata.Kind));
                 }

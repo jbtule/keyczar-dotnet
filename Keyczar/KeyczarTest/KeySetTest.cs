@@ -52,47 +52,56 @@ namespace KeyczarTest
                 Expect(readerKey.GetKeyHash(), Is.EqualTo(knownPrimaryKey.GetKeyHash()));
           }
 
-           [Test]
-           public void TestEncryptedKeysetForNonEncryptedData()
-           {
-               var nonencryptedpath = Util.TestDataPath(TEST_DATA, "rsa");
-               using (var pbereader = new PbeKeySet(nonencryptedpath,()=>"dummy"))
+          [Test]
+          public void TestEncryptedKeysetForNonEncryptedData()
+          {
+               var nonEncryptedPath = Util.TestDataPath(TEST_DATA, "rsa");
+               using (var pbereader = KeySet.LayerSecurity(
+                                         FileSystemKeySet.Creator(nonEncryptedPath),
+                                         PbeKeySet.Creator(()=>"dummy")
+                                    
+                 ))
                {
                         var key = pbereader.GetKey(1);
                         Expect(key, Is.Not.Null);
                }
 
     
-               using (var crypter = new Crypter(nonencryptedpath))
+               using (var crypter = new Crypter(nonEncryptedPath))
+               using (var encreader = KeySet.LayerSecurity(
+                          FileSystemKeySet.Creator(nonEncryptedPath),
+                          EncryptedKeySet.Creator(crypter)
+                         ))
                {
-                   var encreader = new EncryptedKeySet(nonencryptedpath, crypter);
                    var key = encreader.GetKey(1);
                    Expect(key, Is.Not.Null);
                }
 
               
-           }
+          }
 
           [Test]
           public void TestPbeKeysetRead(){
-              Func<string> password = ()=>"cartman"; //Hardcoded because this is a test
-              using (var reader = new PbeKeySet(new FileSystemKeySet(Util.TestDataPath(TEST_DATA, "pbe_json")), password))
-              {
+                Func<string> password = ()=>"cartman"; //Hardcoded because this is a test
+                using (var reader = KeySet.LayerSecurity(FileSystemKeySet.Creator(Util.TestDataPath(TEST_DATA, "pbe_json")),
+                                                         PbeKeySet.Creator(password)
+                                                        ))
+                {
 
-                Expect(reader.Metadata.Encrypted, Is.True);
+                    Expect(reader.Metadata.Encrypted, Is.True);
 
-                  var data1 = Encoding.UTF8.GetString(reader.GetKeyData(1));
-                  var data2 = Encoding.UTF8.GetString(reader.GetKeyData(1));
+                    var data1 = Encoding.UTF8.GetString(reader.GetKeyData(1));
+                    var data2 = Encoding.UTF8.GetString(reader.GetKeyData(1));
 
-                  var token1 = JToken.Parse(data1);
+                    var token1 = JToken.Parse(data1);
 
-                  var size = token1["size"];
-                  Expect(size.ToString(), Is.EqualTo("128"));
+                    var size = token1["size"];
+                    Expect(size.ToString(), Is.EqualTo("128"));
 
-                  var token2 = JToken.Parse(data2);
-                  var mode = token2["mode"];
-                  Expect(mode.ToString(), Is.EqualTo("CBC"));
-              }
+                    var token2 = JToken.Parse(data2);
+                    var mode = token2["mode"];
+                    Expect(mode.ToString(), Is.EqualTo("CBC"));
+                }
           }
 
           [Test]

@@ -28,8 +28,14 @@ namespace Keyczar.Unofficial
     /// <summary>
     /// Reads key set from a single zipped up blob
     /// </summary>
-    public class BlobKeySet : IKeySet, IDisposable
+    public class BlobKeySet : IRootProviderKeySet, IDisposable
     {
+        public static Func<BlobKeySet> Creator(Stream readStream)
+        {
+            return () => new BlobKeySet(readStream);
+        }
+
+
         private ZipFile _zipFile;
 
         /// <summary>
@@ -76,22 +82,28 @@ namespace Keyczar.Unofficial
             }
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
+        #region IDisposable Support
+        private bool _disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    _zipFile = _zipFile.SafeDispose();
+                }
+                _disposedValue = true;
+            }
+        }
+
+
+        // This code added to correctly implement the disposable pattern.
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
+        #endregion
 
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            _zipFile = _zipFile.SafeDispose();
-        }
     }
 }

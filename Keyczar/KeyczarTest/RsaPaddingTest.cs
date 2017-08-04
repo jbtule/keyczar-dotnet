@@ -47,7 +47,6 @@ namespace KeyczarTest
 
         private static readonly String oaepPaddingString = ",\"padding\":\"OAEP\"";
         private static readonly String pkcsPaddingString = ",\"padding\":\"PKCS\"";
-        private static readonly String invalidPaddingString = ",\"padding\":\"INVALID\"";
 
         private static readonly String privKeyStringPrefix = "{\"publicKey\":";
 
