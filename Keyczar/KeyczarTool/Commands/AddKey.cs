@@ -70,6 +70,10 @@ namespace KeyczarTool
                     return UnofficialKeyType.AesAead;
                 case "RSA_PSS":
                     return UnofficialKeyType.RSAPrivSign;
+                case "HMAC_SHA2":
+                    return UnofficialKeyType.HmacSha2;
+                case "AES_HMAC_SHA2":
+                    return UnofficialKeyType.AesHmacSha2;
                 default:
                     throw new ConsoleHelpAsException(string.Format(Localized.MsgInvalidType, type));
             }
@@ -153,7 +157,9 @@ namespace KeyczarTool
                     
                     ver = keySet.AddKey(_status, _size, type, options);
                 }
-                catch (InvalidKeyTypeException)
+#pragma warning disable 168
+                catch (InvalidKeyTypeException ex)
+#pragma warning restore 168
                 {
                     throw new ConsoleHelpAsException(String.Format(Localized.MsgMismatchedKind, type.Kind, keySet.Metadata.Kind));
                 }

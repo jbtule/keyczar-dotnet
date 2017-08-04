@@ -388,4 +388,27 @@
   <data name="MsgMismatchedType" xml:space="preserve">
     <value>Type of key, {0}, does not match key set type of key, {1}. If you want to switch to the unofficial keyset format that allows for this, use --force.</value>
   </data>
+  <data name="KeyTypes_Run_Encrypt_and_Decrypt_" xml:space="preserve">
+    <value>Encrypt and Decrypt:</value>
+  </data>
+  <data name="KeyTypes_Run___Symmetric_" xml:space="preserve">
+    <value>  Symmetric:</value>
+  </data>
+  <data name="KeyTypes" xml:space="preserve">
+    <value>List available key types.</value>
+    <comment>command description</comment>
+  </data>
+  <data name="KeyTypes_Unofficial" xml:space="preserve">
+    <value>Also list available unofficial key types.</value>
+    <comment>unofficial flag description on KeyTypes command</comment>
+  </data>
+  <data name="KeyTypes_Run___Asymmetric_" xml:space="preserve">
+    <value>  Asymmetric:</value>
+  </data>
+  <data name="KeyTypes_Run____denotes_default_" xml:space="preserve">
+    <value> * denotes default.</value>
+  </data>
+  <data name="KeyTypes_Run_Sign_and_Verify_" xml:space="preserve">
+    <value>Sign and Verify:</value>
+  </data>
 </root>

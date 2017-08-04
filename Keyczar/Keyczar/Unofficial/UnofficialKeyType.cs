@@ -26,6 +26,21 @@ namespace Keyczar.Unofficial
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType AesAead = "C#_AES_AEAD";
 
+
+        /// <summary>
+        /// Unofficial type Hmac Sha2
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly KeyType HmacSha2 = "C#_HMAC_SHA2";
+
+        /// <summary>
+        /// Unofficial type AES Hmac Sha2
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+        public static readonly KeyType AesHmacSha2 = "C#_AES_HMAC_SHA2";
+
         /// <summary>
         /// The Unofficial RSA priv sign
         /// </summary>
@@ -44,6 +59,8 @@ namespace Keyczar.Unofficial
         {
             //Unofficial
             AesAead.KeySizes<AesAeadKey>(256, 192, 128).IsUnofficial().DefineSpec();
+            HmacSha2.KeySizes<HmacSha2Key>(128, 192, 256).IsUnofficial().DefineSpec();
+            AesHmacSha2.KeySizes<AesHmacSha2Key>(128, 192, 256).IsUnofficial().DefineSpec();
             RSAPrivSign.KeySizes<RsaPrivateSignKey>(2048, 3072, 4096, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
             RSAPubSign.KeySizes<RsaPublicSignKey>(2048, 3072, 4096, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
         }

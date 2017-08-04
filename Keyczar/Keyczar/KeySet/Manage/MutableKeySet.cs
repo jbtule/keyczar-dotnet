@@ -116,7 +116,7 @@ namespace Keyczar
 
         public int AddKey(KeyStatus status, int keySize =0, KeyType type =null,object options=null)
         {
-            if (type != null && type.Kind != Metadata.Kind)
+            if (type != null && Metadata.Kind != null && type.Kind != Metadata.Kind)
             {
                 throw new InvalidKeyTypeException(String.Format("Keyset only supports {0} keys", Metadata.Kind));
             }
@@ -157,10 +157,18 @@ namespace Keyczar
         /// <returns></returns>
         public int AddKey(KeyStatus status, Key key)
         {
-            if (key.KeyType.Kind != Metadata.Kind)
+            if (key.KeyType.Kind != Metadata.Kind && Metadata.Kind != null)
             {
                 throw new InvalidKeyTypeException(String.Format("Keyset only supports {0} keys", Metadata.Kind));
             }
+
+#pragma warning disable 618
+            if (Metadata.KeyType != null)
+            {
+                //Once We add a key our new format shouldn't track the old one anymore
+                Metadata.KeyType = null;
+            }
+#pragma warning restore 618
 
             int lastVersion = 0;
             foreach (var version in _metadata.Versions)
@@ -267,6 +275,9 @@ namespace Keyczar
                                   ? KeyPurpose.Verify
                                   : KeyPurpose.Encrypt;
 
+#pragma warning disable 618
+            newMeta.KeyType = null; //Keytype only matters to old style empty keysets 
+#pragma warning restore 618
 
             newMeta.Kind = KeyKind.Public;
 

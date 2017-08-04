@@ -16,24 +16,22 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
 using Org.BouncyCastle.Crypto.Parameters;
 
-namespace Keyczar.Crypto
+namespace Keyczar.Unofficial
 {
     /// <summary>
     /// The Hmac 256 Sha1 key
     /// </summary>
-    public class HmacSha1Key : Key, ISignerKey, IVerifierKey
+    public class HmacSha2Key : Key, ISignerKey, IVerifierKey
     {
-        /// <summary>
-        /// The hash size is 160 bits
-        /// </summary>
-        [JsonIgnore] public readonly int HashLength = 20;
 
         /// <summary>
         /// Gets or sets the hmac key bytes.
@@ -51,7 +49,7 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KeyHashLength, HmacKeyBytes);
+            return Utility.HashKey(Keyczar.KeyHashLength, HmacKeyBytes, Utility.GetBytes(HashLength),  Digest.ToBytes());
         }
 
         /// <summary>
@@ -77,7 +75,26 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public VerifyingStream GetVerifyingStream(Keyczar keyczar)
         {
-            var hmac = new HMac(new Sha1Digest());
+
+            IDigest digest;
+            if (Digest == DigestAlg.Sha256)
+            {
+                digest = new Sha256Digest();
+            }
+            else if (Digest == DigestAlg.Sha384)
+            {
+                digest = new Sha384Digest();
+            }
+            else if (Digest == DigestAlg.Sha512)
+            {
+                digest = new Sha512Digest();
+            }
+            else
+            {
+                throw new InvalidKeyTypeException(string.Format("Unsupported digest type :{0}", Digest));
+            }
+
+            var hmac = new HMac(digest);
             hmac.Init(new KeyParameter(HmacKeyBytes));
             return new HmacStream(hmac, HashLength);
         }
@@ -89,7 +106,44 @@ namespace Keyczar.Crypto
         protected override void GenerateKey(int size)
         {
             HmacKeyBytes = new byte[size/8];
+
+            Digest = DigestForSize(size);
+            HashLength = size / 8;
+
             Secure.Random.NextBytes(HmacKeyBytes);
+        }
+
+        /// <summary>
+        /// Gets or sets the digest.
+        /// </summary>
+        /// <value>
+        /// The digest.
+        /// </value>
+        public DigestAlg Digest { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hash length in bytes.
+        /// </summary>
+        /// <value>
+        /// The hash length.
+        /// </value>
+        public int HashLength { get; set; }
+
+        /// <summary>
+        /// Picks the digests based on key size and relative strengths as described in https://tools.ietf.org/html/rfc7518#section-5.2.3
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <returns></returns>
+        protected DigestAlg DigestForSize(int size)
+        {
+            //Based on convention from
+            //https://tools.ietf.org/html/rfc7518#section-5.2.3
+
+            if (size <= 128)
+                return DigestAlg.Sha256; 
+            if (size <= 192)
+                return DigestAlg.Sha384; 
+            return DigestAlg.Sha512; 
         }
     }
 }

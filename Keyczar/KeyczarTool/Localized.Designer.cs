@@ -214,6 +214,69 @@ namespace KeyczarTool {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to List available key types..
+        /// </summary>
+        internal static string KeyTypes {
+            get {
+                return ResourceManager.GetString("KeyTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to  * denotes default..
+        /// </summary>
+        internal static string KeyTypes_Run____denotes_default_ {
+            get {
+                return ResourceManager.GetString("KeyTypes_Run____denotes_default_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to   Asymmetric:.
+        /// </summary>
+        internal static string KeyTypes_Run___Asymmetric_ {
+            get {
+                return ResourceManager.GetString("KeyTypes_Run___Asymmetric_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to   Symmetric:.
+        /// </summary>
+        internal static string KeyTypes_Run___Symmetric_ {
+            get {
+                return ResourceManager.GetString("KeyTypes_Run___Symmetric_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Encrypt and Decrypt:.
+        /// </summary>
+        internal static string KeyTypes_Run_Encrypt_and_Decrypt_ {
+            get {
+                return ResourceManager.GetString("KeyTypes_Run_Encrypt_and_Decrypt_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sign and Verify:.
+        /// </summary>
+        internal static string KeyTypes_Run_Sign_and_Verify_ {
+            get {
+                return ResourceManager.GetString("KeyTypes_Run_Sign_and_Verify_", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Also list available unofficial key types..
+        /// </summary>
+        internal static string KeyTypes_Unofficial {
+            get {
+                return ResourceManager.GetString("KeyTypes_Unofficial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The location of the key set..
         /// </summary>
         internal static string Location {

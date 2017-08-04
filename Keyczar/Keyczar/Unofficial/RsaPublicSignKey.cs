@@ -29,30 +29,7 @@ namespace Keyczar.Unofficial
     /// </summary>
     public class RsaPublicSignKey : RsaPublicSignKeyBase
     {
-        /// <summary>
-        /// The sha1 digest
-        /// </summary>
-        public static readonly string Sha1Digest = "SHA1";
 
-        /// <summary>
-        /// The sha224 digest
-        /// </summary>
-        public static readonly string Sha224Digest = "SHA224";
-
-        /// <summary>
-        /// The sha256 digest
-        /// </summary>
-        public static readonly string Sha256Digest = "SHA256";
-
-        /// <summary>
-        /// The sha384 digest
-        /// </summary>
-        public static readonly string Sha384Digest = "SHA384";
-
-        /// <summary>
-        /// The sha512 digest
-        /// </summary>
-        public static readonly string Sha512Digest = "SHA512";
 
 
         /// <summary>
@@ -80,29 +57,29 @@ namespace Keyczar.Unofficial
         /// <value>
         /// The digest.
         /// </value>
-        public string Digest { get; set; }
+        public DigestAlg Digest { get; set; }
 
 
         internal override ISigner GetSigner()
         {
             IDigest digest;
-            if (Digest == Sha224Digest)
+            if (Digest == DigestAlg.Sha224)
             {
                 digest = new Sha224Digest();
             }
-            else if (Digest == Sha256Digest)
+            else if (Digest == DigestAlg.Sha256)
             {
                 digest = new Sha256Digest();
             }
-            else if (Digest == Sha384Digest)
+            else if (Digest == DigestAlg.Sha384)
             {
                 digest = new Sha384Digest();
             }
-            else if (Digest == Sha512Digest)
+            else if (Digest == DigestAlg.Sha512)
             {
                 digest = new Sha512Digest();
             }
-            else if (Digest == Sha1Digest)
+            else if (Digest == DigestAlg.Sha1)
             {
                 digest = new Sha1Digest();
             }
@@ -131,7 +108,7 @@ namespace Keyczar.Unofficial
                 magModulus,
                 magPublicExponent,
                 Encoding.UTF8.GetBytes(Padding),
-                Encoding.UTF8.GetBytes(Digest)
+                Encoding.UTF8.GetBytes(Digest.ToString())
                 );
             magModulus.Clear();
             magPublicExponent.Clear();

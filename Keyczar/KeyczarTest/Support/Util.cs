@@ -65,6 +65,20 @@ namespace KeyczarTest
         }
     }
 
+    internal class NoArgFlag
+    {
+        public bool Show { get; }
+
+        public NoArgFlag()
+        {
+            Show = true;
+        }
+
+        public NoArgFlag(bool show)
+        {
+            Show = show;
+        }
+    }
 
     internal class InProcessKeyczarToolRunner : KeyczarToolRunner
     {
@@ -132,19 +146,35 @@ namespace KeyczarTest
             var processArgs = args.Skip(stdInArgCount);
 
             var count = 0;
+
+            string resultSelector(string n, object p)
+            {
+                switch (count++)
+                {
+                    case 0:
+                        return n;
+                    default:
+                        switch (p)
+                        {
+                            case null:
+                                return $"--{n}";
+                            case NoArgFlag x:
+                                if (x.Show)
+                                    return $"--{n}";
+                                else
+                                    return null;
+                                    
+                            default:
+                                if (n.Equals("additionalArgs"))
+                                    return String.Join(" ", ((string[]) p).Select(i => $"\"{i}\""));
+                                else return $"--{n}=\"{p}\"";
+                        }
+                }
+            }
+
             var separateArgs = binder.CallInfo.ArgumentNames.Zip(processArgs,
-                                                                 (n, p) =>
-                                                                 count++ == 0
-                                                                     ? n
-                                                                     : p == null
-                                                                           ? String.Format("--{0}", n)
-                                                                           : n.Equals("additionalArgs")
-                                                                                 ? String.Join(" ",
-                                                                                               ((string[]) p).Select(
-                                                                                                   i =>
-                                                                                                   string.Format(
-                                                                                                       "\"{0}\"", i)))
-                                                                                 : string.Format("--{0}=\"{1}\"", n, p))
+                                                                 resultSelector)
+                                     .Where(it=>!String.IsNullOrEmpty(it))
                                      .ToList();
 
 

@@ -45,6 +45,7 @@ namespace KeyczarTest
 
         [TestCase("aes", "aes", "")]
         [TestCase("c#_aes_aead", "aes_aead", "unofficial", Category = "Unofficial")]
+        [TestCase("c#_aes_hmac_sha2", "aes_hmac_sha2", "unofficial", Category = "Unofficial")]
         public void CreateAndCrypted(string keyType, string topDir, string subDir)
         {
             KeyType type = keyType;
@@ -273,6 +274,7 @@ namespace KeyczarTest
         [TestCase("dsa_priv", "dsa", "")]
         [TestCase("rsa_priv", "rsa-sign", "")]
         [TestCase("c#_rsa_sign_priv", "rsa-sign", "unofficial", Category = "Unofficial")]
+        [TestCase("c#_hmac_sha2", "hmac_sha2", "unofficial", Category = "Unofficial")]
         public void CreateSignAndPublic(string keyType, string topDir, string nestDir)
         {
             KeyType type = keyType;
@@ -327,6 +329,7 @@ namespace KeyczarTest
         [TestCase("dsa_priv", "dsa", "")]
         [TestCase("rsa_priv", "rsa-sign", "")]
         [TestCase("c#_rsa_sign_priv", "rsa-sign", "unofficial", Category = "Unofficial")]
+        [TestCase("c#_hmac_sha2", "hmac_sha2", "unofficial", Category = "Unofficial")]
         public void CreateSignAndPublicSized(string keyType, string topDir, string nestDir)
         {
             KeyType type = keyType;

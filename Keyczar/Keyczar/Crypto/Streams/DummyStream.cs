@@ -28,7 +28,7 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// Initializes a new instance of the <see cref="DummyStream" /> class.
         /// </summary>
-        public DummyStream() : base(new HMac(new Sha1Digest()))
+        public DummyStream() : base(new HMac(new Sha1Digest()), 20)
         {
         }
 

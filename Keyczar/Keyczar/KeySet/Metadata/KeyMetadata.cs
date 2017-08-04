@@ -19,7 +19,9 @@ using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
+using Keyczar;
 using Keyczar.Unofficial;
 using Newtonsoft.Json;
 
@@ -41,6 +43,7 @@ namespace Keyczar
         {
             return JsonConvert.DeserializeObject<KeyMetadata>(metadata);
         }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyMetadata"/> class.
         /// </summary>
@@ -58,7 +61,7 @@ namespace Keyczar
         public KeyMetadata(KeyType officialMetaDataKeyType)
         {
             Name = String.Empty;
-            Versions= new List<KeyVersion>();
+            Versions = new List<KeyVersion>();
             Format = Keyczar.MetaDataFormat;
 
             if (officialMetaDataKeyType != null)
@@ -71,7 +74,28 @@ namespace Keyczar
             }
         }
 
-      
+
+       [OnDeserialized]
+       internal void OnDeserializedMethod(StreamingContext context) {
+           if (Format == OfficialKeyMetadata.MetaDataFormat) //Version 0
+           {
+               OriginallyOfficial = true;
+#pragma warning disable 612,618
+               var keyType = KeyType;
+#pragma warning restore 612,618
+               if (keyType == null)
+               {
+                   throw  new InvalidKeySetException("Official KeySet needs KeyType set");
+               }
+
+               Kind = keyType.Kind;
+               foreach (var version in Versions)
+               {
+                   version.KeyType = keyType;
+               }
+           }
+        }
+    
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyMetadata"/> class.
@@ -83,23 +107,11 @@ namespace Keyczar
             Purpose = metadata.Purpose;
             Encrypted = metadata.Encrypted;
             Versions = metadata.Versions.Select(it => new KeyVersion(it)).ToList();
+#pragma warning disable 618
+            KeyType = metadata?.KeyType;
+#pragma warning restore 618
             OriginallyOfficial = metadata.OriginallyOfficial;
-            if (metadata.Format == OfficialKeyMetadata.MetaDataFormat) //Version 0
-            {
-                OriginallyOfficial = true;
-#pragma warning disable 612,618
-                var keyType = metadata.KeyType;
-#pragma warning restore 612,618
-                Kind = keyType.Kind;
-                foreach (var version in Versions)
-                {
-                    version.KeyType = keyType;
-                }
-            }
-            else
-            {
-                Kind = metadata.Kind;
-            }
+            Kind = metadata.Kind;
 
             Format = Keyczar.MetaDataFormat;
 
@@ -181,7 +193,14 @@ namespace Keyczar
                 }
                 else if (Kind == KeyKind.Symmetric && Purpose == KeyPurpose.SignAndVerify)
                 {
-                    return KeyType.HmacSha1;
+                    if (OriginallyOfficial)
+                    {
+                        return KeyType.HmacSha1;
+                    }
+                    else
+                    {
+                        return UnofficialKeyType.HmacSha2;
+                    }
                 }
                 else if (Kind == KeyKind.Private && Purpose == KeyPurpose.DecryptAndEncrypt)
                 {

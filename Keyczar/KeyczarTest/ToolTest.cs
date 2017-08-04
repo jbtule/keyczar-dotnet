@@ -25,6 +25,7 @@ using System.IO;
 using System.Linq;
 using NUnit.Framework;
 using Keyczar;
+using Keyczar.Unofficial;
 
 namespace KeyczarTest
 {
@@ -98,7 +99,7 @@ namespace KeyczarTest
             if (Directory.Exists(path))
                 Directory.Delete(path, true);
 
-            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
+            result = Util.KeyczarTool(create: null, location: path, purpose: "sign", asymmetric:"rsa");
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool("pass",
@@ -239,11 +240,11 @@ namespace KeyczarTest
                 Directory.Delete(pathc, true);
 
 
-            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
+            result = Util.KeyczarTool(create: null, location: path, purpose: "crypt", unofficial:null);
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool("cartman", "cartman", addkey: null, location: path, password: null,
-                                      status: "primary", type:"AES_GCM");
+                                      status: "primary");
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
@@ -419,6 +420,110 @@ namespace KeyczarTest
 
             Directory.Delete(path, true);
         }
+
+
+
+        [Test]
+        public void TestTestForceFail()
+        {
+            string result;
+
+            var path = Util.TestDataPath(TEST_DATA, "force");
+
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+
+
+            result = Util.KeyczarTool(create: null, location: path, purpose: "sign", asymmetric: null);
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary" , type:"RSA_PSS");
+
+            Expect(result, Is.StringContaining(String.Format(KeyczarTool.Localized.MsgMismatchedType,  UnofficialKeyType.RSAPrivSign, KeyType.DsaPriv)));
+
+            result = Util.KeyczarTool("pass",
+                importkey: null,
+                location: path,
+                status: "primary",
+                importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"));
+
+            Expect(result, Is.StringContaining(String.Format(KeyczarTool.Localized.MsgMismatchedType, KeyType.RsaPriv, KeyType.DsaPriv)));
+
+        }
+
+        [Test]
+        public void TestTestForceAdd()
+        {
+            string result;
+
+            var path = Util.TestDataPath(TEST_DATA, "force-add");
+
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+
+
+            result = Util.KeyczarTool(create: null, location: path, purpose: "sign", asymmetric: null);
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type: "RSA_PSS", force:null);
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+
+            result = Util.KeyczarTool("pass",
+                importkey: null,
+                location: path,
+                status: "primary",
+                importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"));
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+
+        }
+
+        [Test]
+        public void TestTestForceImport()
+        {
+            string result;
+
+            var path = Util.TestDataPath(TEST_DATA, "force-import");
+
+            if (Directory.Exists(path))
+                Directory.Delete(path, true);
+
+
+            result = Util.KeyczarTool(create: null, location: path, purpose: "sign", asymmetric: null);
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+
+
+            result = Util.KeyczarTool("pass",
+                importkey: null,
+                location: path,
+                status: "primary",
+                importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"),
+                force:null);
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+
+            result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type: "RSA_PSS");
+
+            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+
+        }
+
 
         [Test]
         public void TestInvalid()

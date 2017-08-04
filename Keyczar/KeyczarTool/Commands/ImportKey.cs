@@ -16,11 +16,13 @@ namespace KeyczarTool
         private KeyStatus _status;
         private string _crypterLocation;
         private bool _password;
+        private bool _force;
 
         public ImportKey()
         {
             this.IsCommand("importkey", Localized.ImportKey);
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
+            this.HasOption("f|force", Localized.KeyType, v => { _force = true; });
             this.HasRequiredOption("i|importlocation=", Localized.ImportLocation, v => { _importLocation = v; });
             this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
             this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
@@ -103,6 +105,21 @@ namespace KeyczarTool
                 }
                 else
                 {
+
+
+                    if (keySet.Metadata.OriginallyOfficial && keySet.Metadata.ValidOfficial())
+                    {
+                        var importedKeyType = importedKeySet.Metadata.OfficialKeyType();
+                        var keySetKeyType = keySet.Metadata.OfficialKeyType();
+                        if (importedKeyType != keySetKeyType && !_force)
+                        {
+                            ret = -1;
+                            Console.WriteLine(Localized.MsgMismatchedType,
+                                importedKeyType,
+                                keySetKeyType);
+                        }
+                    }
+
                     if (keySet.Metadata.Kind != importedKeySet.Metadata.Kind)
                     {
                         if (!keySet.Metadata.Versions.Any())

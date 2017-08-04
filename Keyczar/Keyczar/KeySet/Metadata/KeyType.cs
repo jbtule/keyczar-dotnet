@@ -84,7 +84,13 @@ namespace Keyczar
         protected static bool DefineSpec(KeyTypeSpec spec)
         {
             if (_specs.ContainsKey(spec.Name.Identifier))
+            {
                 return false;
+            }
+            if (_specs.Select(it => it.Value.RepresentedType).Any(it => it == spec.RepresentedType))
+            {
+                throw new InvalidKeyTypeException($"KeyType's spec already exists for {spec.RepresentedType}");
+            }
             _specs.Add(spec.Name.Identifier, spec);
             return true;
         }

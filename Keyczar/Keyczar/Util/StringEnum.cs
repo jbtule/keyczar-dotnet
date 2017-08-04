@@ -130,6 +130,11 @@ namespace Keyczar.Util
             return Identifier;
         }
 
+        public byte[] ToBytes()
+        {
+            return Encoding.UTF8.GetBytes(Identifier);
+        }
+
         /// <summary>
         /// Implements the operator ==.
         /// </summary>

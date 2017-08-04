@@ -33,7 +33,6 @@ namespace Keyczar
 
         private readonly string _location;
         private readonly bool _overwrite;
-        private readonly bool _legacyOfficialFormat;
         private List<string> _filePaths = new List<string>();
         private List<Exception> _exceptions = new List<Exception>();
         private bool success = true;

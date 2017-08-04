@@ -124,6 +124,11 @@ namespace Keyczar
            
             var cryptKey = key as IEncrypterKey;
 
+            if (cryptKey == null)
+            {
+                throw new InvalidKeyTypeException($"Encryption requires and Encrypting key, this key is {key.KeyType}");
+            }
+
             var resetStream = Utility.ResetStreamWhenFinished(output);
             using (var reader = new NondestructiveBinaryReader(input))
             {

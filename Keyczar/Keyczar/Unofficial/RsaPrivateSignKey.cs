@@ -34,7 +34,7 @@ namespace Keyczar.Unofficial
         /// The digest.
         /// </value>
         [JsonIgnore]
-        public string Digest
+        public DigestAlg Digest
         {
             get { return PublicKey.Digest; }
             set { PublicKey.Digest = value; }
@@ -64,20 +64,20 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="size">The size.</param>
         /// <returns></returns>
-        protected string DigestForSize(int size)
+        protected DigestAlg DigestForSize(int size)
         {
             //Based on matching up digest strength equal or above key strength from
             //http://csrc.nist.gov/publications/nistpubs/800-57/sp800-57_part1_rev3_general.pdf
 
             if (size <= 1024)
-                return RsaPublicSignKey.Sha1Digest; //80 Bits of security
+                return DigestAlg.Sha1; //80 Bits of security
             if (size <= 2048)
-                return RsaPublicSignKey.Sha224Digest; //112 Bits of security
+                return DigestAlg.Sha224; //112 Bits of security
             if (size <= 3072)
-                return RsaPublicSignKey.Sha256Digest; //128 Bits of security
+                return DigestAlg.Sha256; //128 Bits of security
             if (size <= 7680)
-                return RsaPublicSignKey.Sha384Digest; //192 Bits of security
-            return RsaPublicSignKey.Sha512Digest; //256 Bits of security
+                return DigestAlg.Sha384; //192 Bits of security
+            return DigestAlg.Sha512; //256 Bits of security
         }
     }
 }
