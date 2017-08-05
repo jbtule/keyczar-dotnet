@@ -139,7 +139,21 @@ namespace KeyczarTool
                     {
                         if (ret != -1)
                         {
-                            var ver = keySet.AddKey(_status, importedKeySet.GetKey(1));
+                            var count = importedKeySet.Metadata.Versions.Count();
+                            var outMsg = "";
+                            foreach (var v in importedKeySet.Metadata.Versions)
+                            {
+                                var status = v.Status;
+                                if(count == 1 || _status != KeyStatus.Primary ){
+                                    status = _status;
+                                }
+
+                                var ver = keySet.AddKey(status, importedKeySet.GetKey(v.VersionNumber));
+                                outMsg = ver.ToString();
+                            }
+                            if(count>1){
+                                outMsg = $"{count} keys";
+                            }
 
 
                             IKeySetWriter writer = new FileSystemKeySetWriter(_location, overwrite: true);
@@ -155,7 +169,7 @@ namespace KeyczarTool
 
                             if (keySet.Save(writer))
                             {
-                                Console.WriteLine("{0} {1}.", Localized.MsgImportedNewKey, ver);
+                                Console.WriteLine("{0} {1}.", Localized.MsgImportedNewKey, outMsg);
                                 ret = 0;
                             }
                             else
