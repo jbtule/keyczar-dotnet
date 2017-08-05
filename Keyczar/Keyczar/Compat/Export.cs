@@ -27,7 +27,8 @@ namespace Keyczar.Compat
 
         public static bool ExportAsPkcs12(this IKeySet keySet, string location, Func<string> passwordPrompt)
         {
-            using (var stream = new FileStream(location, FileMode.Create)){
+            Directory.CreateDirectory(Path.GetDirectoryName(location));
+			using (var stream = new FileStream(location, FileMode.Create)){
                 return ExportAsPkcs12(keySet, stream, passwordPrompt);
             }
         }
@@ -192,7 +193,8 @@ namespace Keyczar.Compat
             "CA2202:Do not dispose objects multiple times")]
         public static bool ExportPrimaryAsPkcs(this IKeySet keySet, string location, Func<string> passwordPrompt)
         {
-            var i = keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
+			Directory.CreateDirectory(Path.GetDirectoryName(location));
+			var i = keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
             using (var key = keySet.GetKey(i))
             {
                 using (var stream = new FileStream(location, FileMode.Create))
