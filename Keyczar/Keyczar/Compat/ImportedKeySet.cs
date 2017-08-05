@@ -31,7 +31,7 @@ using Org.BouncyCastle.Pkcs;
 namespace Keyczar.Compat
 {
     /// <summary>
-    /// Imported Keyset, can be used for compatiblity with keys stored as PEM,DER or X509 certificates
+    /// Imported Keyset, can be used for compatiblity with keys stored as PEM,DER,X509,PFX certificates
     /// </summary>
     public class ImportedKeySet : IKeySet, IDisposable
     {
@@ -56,7 +56,7 @@ namespace Keyczar.Compat
             var keyType = key.KeyType;
             _metadata = new KeyMetadata()
             {
-                Name = description ?? "Imported" + key.KeyType.Identifier,
+                Name = description ?? "Imported " + key.KeyType.Identifier,
                 Purpose = purpose,
                 Kind = key.KeyType.Kind,
                 Versions = new List<KeyVersion>
@@ -83,7 +83,8 @@ namespace Keyczar.Compat
                 Versions = keys.Select((it, i) => new KeyVersion
                 {
                     KeyType = it.KeyType,
-                    VersionNumber = i,
+                    VersionNumber = i+1,
+                    Status = i == 0 ? KeyStatus.Primary : KeyStatus.Active,
                     Exportable = false
                 }).ToList()
             };
@@ -98,7 +99,7 @@ namespace Keyczar.Compat
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.RawStringEncoding.GetBytes(_key[version-1].ToJson());
+            return Keyczar.RawStringEncoding.GetBytes(_key[version - 1].ToJson());
         }
 
         /// <summary>
@@ -116,15 +117,6 @@ namespace Keyczar.Compat
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="ImportedKeySet" /> class.
-        /// </summary>
-        ~ImportedKeySet()
-        {
-            Dispose(false);
         }
 
         /// <summary>
@@ -133,7 +125,7 @@ namespace Keyczar.Compat
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            _key = _key.Select(k=>k.SafeDispose()).ToList();
+            _key = _key.Select(k => k.SafeDispose()).ToList();
             _key = new List<Key>();
         }
 
@@ -172,8 +164,66 @@ namespace Keyczar.Compat
                 }
             }
 
+            private Key KeyFromBouncyCastle(RsaPrivateCrtKeyParameters keyParam)
+            {
+                return new RsaPrivateKey()
+                {
+                    PublicKey = new RsaPublicKey()
+                    {
+                        Modulus = keyParam.Modulus.ToSystemBigInteger(),
+                        PublicExponent = keyParam.PublicExponent.ToSystemBigInteger(),
+                        Size = keyParam.Modulus.BitLength,
+                    },
+                    PrimeP = keyParam.P.ToSystemBigInteger(),
+                    PrimeExponentP = keyParam.DP.ToSystemBigInteger(),
+                    PrimeExponentQ = keyParam.DQ.ToSystemBigInteger(),
+                    PrimeQ = keyParam.Q.ToSystemBigInteger(),
+                    CrtCoefficient = keyParam.QInv.ToSystemBigInteger(),
+                    PrivateExponent = keyParam.Exponent.ToSystemBigInteger(),
+                    Size = keyParam.Modulus.BitLength,
+                };
+            }
+            private Key KeyFromBouncyCastle(DsaPrivateKeyParameters keyParam)
+            {
 
-         
+                return new DsaPrivateKey()
+                {
+                    X = keyParam.X.ToSystemBigInteger(),
+                    PublicKey = new DsaPublicKey
+                    {
+                        Y = keyParam.Parameters.G.ModPow(keyParam.X, keyParam.Parameters.P).ToSystemBigInteger(),
+                        G = keyParam.Parameters.G.ToSystemBigInteger(),
+                        P = keyParam.Parameters.P.ToSystemBigInteger(),
+                        Q = keyParam.Parameters.Q.ToSystemBigInteger(),
+                        Size = keyParam.Parameters.P.BitLength
+                    },
+                    Size = keyParam.Parameters.P.BitLength
+                };
+
+            }
+
+            private Key KeyFromBouncyCastle(RsaKeyParameters keyParam)
+            {
+                return new RsaPublicKey
+                {
+                    Modulus = keyParam.Modulus.ToSystemBigInteger(),
+                    PublicExponent = keyParam.Exponent.ToSystemBigInteger(),
+                    Size = keyParam.Modulus.BitLength,
+                };
+            }
+
+            private Key KeyFromBouncyCastle(DsaPublicKeyParameters keyParam)
+            {
+                return new DsaPublicKey
+                {
+                    Y = keyParam.Y.ToSystemBigInteger(),
+                    G = keyParam.Parameters.G.ToSystemBigInteger(),
+                    P = keyParam.Parameters.P.ToSystemBigInteger(),
+                    Q = keyParam.Parameters.Q.ToSystemBigInteger(),
+                    Size = keyParam.Parameters.P.BitLength
+                };
+            }
+
 
             /// <summary>
             /// Import the PKCS key.
@@ -190,7 +240,7 @@ namespace Keyczar.Compat
 
             public virtual ImportedKeySet Pkcs12Keys(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null)
             {
-                
+
                 using (var password = CachedPrompt.Password(passwordPrompt))
                 {
                     var keyStore = new Pkcs12Store(input, password.Prompt().ToCharArray());
@@ -204,103 +254,44 @@ namespace Keyczar.Compat
 
                             if (key.Key.IsPrivate)
                             {
-                                switch(key.Key){
+                                switch (key.Key)
+                                {
                                     case RsaPrivateCrtKeyParameters rsa:
-                                        {
-                                            var newKey = new RsaPrivateKey()
-                                            {
-                                                PublicKey = new RsaPublicKey()
-                                                {
-                                                    Modulus = rsa.Modulus.ToSystemBigInteger(),
-                                                    PublicExponent = rsa.PublicExponent.ToSystemBigInteger(),
-                                                    Size = rsa.Modulus.BitLength,
-                                                },
-                                                PrimeP = rsa.P.ToSystemBigInteger(),
-                                                PrimeExponentP = rsa.DP.ToSystemBigInteger(),
-                                                PrimeExponentQ = rsa.DQ.ToSystemBigInteger(),
-                                                PrimeQ = rsa.Q.ToSystemBigInteger(),
-                                                CrtCoefficient = rsa.QInv.ToSystemBigInteger(),
-                                                PrivateExponent = rsa.Exponent.ToSystemBigInteger(),
-                                                Size = rsa.Modulus.BitLength,
-                                            };  
-                                            keys.Add(newKey);
-                                        }
-
-                                    break;
+                                        keys.Add(KeyFromBouncyCastle(rsa));
+                                        break;
 
                                     case DsaPrivateKeyParameters dsa:
-                                        {
-                                            var dsaKey = new DsaPrivateKey()
-                                            {
-                                                X = dsa.X.ToSystemBigInteger(),
-                                                PublicKey = new DsaPublicKey
-                                                {
-                                                    Y =
-                                                              dsa.Parameters.G.ModPow(dsa.X,
-                                                                                           dsa.Parameters.P)
-                                                                      .ToSystemBigInteger(),
-                                                    G = dsa.Parameters.G.ToSystemBigInteger(),
-                                                    P = dsa.Parameters.P.ToSystemBigInteger(),
-                                                    Q = dsa.Parameters.Q.ToSystemBigInteger(),
-                                                    Size = dsa.Parameters.P.BitLength
-                                                },
-                                                Size = dsa.Parameters.P.BitLength
-                                            }; 
-                                            keys.Add(dsaKey);
-                                        }
-
-                                    break;
+                                        keys.Add(KeyFromBouncyCastle(dsa));
+                                        break;
                                 }
-
-
                             }
                         }
                     }
-                    if(!keys.Any()){
+                    if (!keys.Any())
+                    {
                         kind = KeyKind.Public;
 
                         foreach (string n in keyStore.Aliases)
                         {
                             if (keyStore.IsCertificateEntry(n))
                             {
-
                                 var entry = keyStore.GetCertificate(n);
-
                                 var pubKey = entry.Certificate.GetPublicKey();
-                               
-                                switch(pubKey){
+                                switch (pubKey)
+                                {
                                     case RsaKeyParameters rsa:
-                                        {
-                                            var rsaKey = new RsaPublicKey
-                                            {
-                                                Modulus = rsa.Modulus.ToSystemBigInteger(),
-                                                PublicExponent = rsa.Exponent.ToSystemBigInteger(),
-                                                Size = rsa.Modulus.BitLength,
-                                            };
-                                            keys.Add(rsaKey);
-                                        }
+                                        keys.Add(KeyFromBouncyCastle(rsa));
                                         break;
                                     case DsaPublicKeyParameters dsa:
-                                        {
-                                            var dsaKey = new DsaPublicKey
-                                            {
-                                                Y = dsa.Y.ToSystemBigInteger(),
-                                                G = dsa.Parameters.G.ToSystemBigInteger(),
-                                                P = dsa.Parameters.P.ToSystemBigInteger(),
-                                                Q = dsa.Parameters.Q.ToSystemBigInteger(),
-                                                Size = dsa.Parameters.P.BitLength
-                                            };
-                                            keys.Add(dsaKey);
-                                        }
+                                        keys.Add(KeyFromBouncyCastle(dsa));
                                         break;
                                 }
-
-
                             }
-                        } 
+                        }
                     }
 
-                    if(keys.Any()){
+                    if (keys.Any())
+                    {
                         return new ImportedKeySet(keys, purpose, "imported keys");
                     }
                     throw new InvalidKeySetException("couldn't find any keys in file");
@@ -343,57 +334,24 @@ namespace Keyczar.Compat
 
                     Key key;
 
-                    if (bouncyKey is RsaPrivateCrtKeyParameters)
+                    switch (bouncyKey)
                     {
-                        var keyParam = bouncyKey as RsaPrivateCrtKeyParameters;
-                        key = new RsaPrivateKey()
-                                  {
-                                      PublicKey = new RsaPublicKey()
-                                                      {
-                                                          Modulus = keyParam.Modulus.ToSystemBigInteger(),
-                                                          PublicExponent = keyParam.PublicExponent.ToSystemBigInteger(),
-                                                          Size = keyParam.Modulus.BitLength,
-                                                      },
-                                      PrimeP = keyParam.P.ToSystemBigInteger(),
-                                      PrimeExponentP = keyParam.DP.ToSystemBigInteger(),
-                                      PrimeExponentQ = keyParam.DQ.ToSystemBigInteger(),
-                                      PrimeQ = keyParam.Q.ToSystemBigInteger(),
-                                      CrtCoefficient = keyParam.QInv.ToSystemBigInteger(),
-                                      PrivateExponent = keyParam.Exponent.ToSystemBigInteger(),
-                                      Size = keyParam.Modulus.BitLength,
-                                  };
-                    }
-                    else if (bouncyKey is DsaPrivateKeyParameters)
-                    {
-                        var keyParam = bouncyKey as DsaPrivateKeyParameters;
-                        if (KeyPurpose.DecryptAndEncrypt == purpose)
-                        {
-                            throw new InvalidKeySetException("DSA key cannot be used for encryption and decryption!");
-                        }
+                        case RsaPrivateCrtKeyParameters rsa:
+                            key = KeyFromBouncyCastle(rsa);
+                            break;
+                        case DsaPrivateKeyParameters dsa:
 
+                            if (KeyPurpose.DecryptAndEncrypt == purpose)
+                            {
+                                throw new InvalidKeySetException("DSA key cannot be used for encryption and decryption!");
+                            }
 
-                        key = new DsaPrivateKey()
-                                  {
-                                      X = keyParam.X.ToSystemBigInteger(),
-                                      PublicKey = new DsaPublicKey
-                                                      {
-                                                          Y =
-                                                              keyParam.Parameters.G.ModPow(keyParam.X,
-                                                                                           keyParam.Parameters.P)
-                                                                      .ToSystemBigInteger(),
-                                                          G = keyParam.Parameters.G.ToSystemBigInteger(),
-                                                          P = keyParam.Parameters.P.ToSystemBigInteger(),
-                                                          Q = keyParam.Parameters.Q.ToSystemBigInteger(),
-                                                          Size = keyParam.Parameters.P.BitLength
-                                                      },
-                                      Size = keyParam.Parameters.P.BitLength
-                                  };
-                    }
-                    else
-                    {
-                        throw new InvalidKeySetException("Unsupported key type!");
-                    }
+                            key = KeyFromBouncyCastle(dsa);
+                            break;
+                        default:
+                            throw new InvalidKeySetException("Unsupported key type!");
 
+                    }
 
                     return new ImportedKeySet(key, purpose, "imported from pkcs file");
                 }
@@ -424,37 +382,21 @@ namespace Keyczar.Compat
                 var parser = new X509CertificateParser();
                 var cert = parser.ReadCertificate(input);
                 var bouncyKey = cert.GetPublicKey();
-
                 Key key;
-                if (bouncyKey is RsaKeyParameters)
+                switch (bouncyKey)
                 {
-                    var keyParam = bouncyKey as RsaKeyParameters;
-                    key = new RsaPublicKey
-                              {
-                                  Modulus = keyParam.Modulus.ToSystemBigInteger(),
-                                  PublicExponent = keyParam.Exponent.ToSystemBigInteger(),
-                                  Size = keyParam.Modulus.BitLength,
-                              };
-                }
-                else if (bouncyKey is DsaPublicKeyParameters)
-                {
-                    var keyParam = bouncyKey as DsaPublicKeyParameters;
-                    if (KeyPurpose.Encrypt == purpose)
-                    {
-                        throw new InvalidKeySetException("DSA key cannot be used for encryption!");
-                    }
-                    key = new DsaPublicKey
-                              {
-                                  Y = keyParam.Y.ToSystemBigInteger(),
-                                  G = keyParam.Parameters.G.ToSystemBigInteger(),
-                                  P = keyParam.Parameters.P.ToSystemBigInteger(),
-                                  Q = keyParam.Parameters.Q.ToSystemBigInteger(),
-                                  Size = keyParam.Parameters.P.BitLength
-                              };
-                }
-                else
-                {
-                    throw new InvalidKeySetException("Unsupported key type!");
+                    case RsaKeyParameters rsa:
+                        key = KeyFromBouncyCastle(rsa);
+                        break;
+                    case DsaPublicKeyParameters dsa:
+                        if (KeyPurpose.Encrypt == purpose)
+                        {
+                            throw new InvalidKeySetException("DSA key cannot be used for encryption!");
+                        }
+                        key = KeyFromBouncyCastle(dsa);
+                        break;
+                    default:
+                        throw new InvalidKeySetException("Unsupported key type!");
                 }
                 return new ImportedKeySet(key, purpose, "imported from certificate");
             }

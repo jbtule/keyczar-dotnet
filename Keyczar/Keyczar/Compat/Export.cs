@@ -28,7 +28,8 @@ namespace Keyczar.Compat
         public static bool ExportAsPkcs12(this IKeySet keySet, string location, Func<string> passwordPrompt)
         {
             Directory.CreateDirectory(Path.GetDirectoryName(location));
-			using (var stream = new FileStream(location, FileMode.Create)){
+            using (var stream = new FileStream(location, FileMode.Create))
+            {
                 return ExportAsPkcs12(keySet, stream, passwordPrompt);
             }
         }
@@ -60,9 +61,9 @@ namespace Keyczar.Compat
             var store = builder.Build();
 
             var issueEntryCert = new X509CertificateEntry(issuerCert);
-			var hasPrivateKeys = false;
+            var hasPrivateKeys = false;
 
-			foreach (var version in keySet.Metadata.Versions)
+            foreach (var version in keySet.Metadata.Versions)
             {
                 using (var key = keySet.GetKey(version.VersionNumber))
                 {
@@ -81,22 +82,8 @@ namespace Keyczar.Compat
                         case IRsaPrivateKey k:
                             {
                                 hasPrivateKeys = true;
-                                var publicKey = new RsaKeyParameters(false,
-                                                                     k.PublicKey.Modulus.ToBouncyBigInteger(),
-                                                                     k.PublicKey.PublicExponent.ToBouncyBigInteger());
-
-                                var privateKey = new RsaPrivateCrtKeyParameters(
-                                                      k.PublicKey.Modulus
-                                                               .ToBouncyBigInteger(),
-                                                      k.PublicKey.PublicExponent
-                                                               .ToBouncyBigInteger(),
-                                                      k.PrivateExponent.ToBouncyBigInteger
-                                                          (),
-                                                      k.PrimeP.ToBouncyBigInteger(),
-                                                      k.PrimeQ.ToBouncyBigInteger(),
-                                                      k.PrimeExponentP.ToBouncyBigInteger(),
-                                                      k.PrimeExponentQ.ToBouncyBigInteger(),
-                                                        k.CrtCoefficient.ToBouncyBigInteger());
+                                var publicKey = BouncyCastleFromKey(k.PublicKey);
+                                var privateKey = BouncyCastleFromKey(k);
 
                                 certificateGenerator.SetPublicKey(publicKey);
                                 var certificate = certificateGenerator.Generate(signatureFactory);
@@ -110,9 +97,7 @@ namespace Keyczar.Compat
                             break;
                         case IRsaPublicKey rsaPub:
                             {
-                                var publicKey = new RsaKeyParameters(false,
-                                                                     rsaPub.Modulus.ToBouncyBigInteger(),
-                                                                     rsaPub.PublicExponent.ToBouncyBigInteger());
+                                var publicKey = BouncyCastleFromKey(rsaPub);
                                 certificateGenerator.SetPublicKey(publicKey);
                                 var certificate = certificateGenerator.Generate(signatureFactory);
                                 var entryCert = new X509CertificateEntry(certificate);
@@ -123,19 +108,8 @@ namespace Keyczar.Compat
                         case DsaPrivateKey dsaKey:
                             {
                                 hasPrivateKeys = true;
-
-                                var publicKey = new DsaPublicKeyParameters(dsaKey.PublicKey.Y.ToBouncyBigInteger(),
-                                                               new DsaParameters(
-                                                                   dsaKey.PublicKey.P.ToBouncyBigInteger(),
-                                                                   dsaKey.PublicKey.Q.ToBouncyBigInteger(),
-                                                                   dsaKey.PublicKey.G.ToBouncyBigInteger()));
-
-                                var privateKey = new DsaPrivateKeyParameters(dsaKey.X.ToBouncyBigInteger(),
-                                                                   new DsaParameters(
-                                                                       dsaKey.PublicKey.P.ToBouncyBigInteger(),
-                                                                       dsaKey.PublicKey.Q.ToBouncyBigInteger(),
-                                                                       dsaKey.PublicKey.G.ToBouncyBigInteger()));
-
+                                var publicKey = BouncyCastleFromKey(dsaKey.PublicKey);
+                                var privateKey = BouncyCastleFromKey(dsaKey);
                                 certificateGenerator.SetPublicKey(publicKey);
                                 var certificate = certificateGenerator.Generate(signatureFactory);
 
@@ -148,11 +122,7 @@ namespace Keyczar.Compat
                             break;
                         case DsaPublicKey dsaKey:
                             {
-                                var publicKey = new DsaPublicKeyParameters(dsaKey.Y.ToBouncyBigInteger(),
-                                                             new DsaParameters(
-                                                                 dsaKey.P.ToBouncyBigInteger(),
-                                                                 dsaKey.Q.ToBouncyBigInteger(),
-                                                                 dsaKey.G.ToBouncyBigInteger()));
+                                var publicKey = BouncyCastleFromKey(dsaKey);
                                 certificateGenerator.SetPublicKey(publicKey);
                                 var certificate = certificateGenerator.Generate(signatureFactory);
                                 var entryCert = new X509CertificateEntry(certificate);
@@ -169,7 +139,8 @@ namespace Keyczar.Compat
                 passwordPrompt = null;
             }
             var password = passwordPrompt?.Invoke();
-            if (String.IsNullOrEmpty(password)){
+            if (String.IsNullOrEmpty(password))
+            {
                 password = null;
             }
 
@@ -193,8 +164,8 @@ namespace Keyczar.Compat
             "CA2202:Do not dispose objects multiple times")]
         public static bool ExportPrimaryAsPkcs(this IKeySet keySet, string location, Func<string> passwordPrompt)
         {
-			Directory.CreateDirectory(Path.GetDirectoryName(location));
-			var i = keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
+            Directory.CreateDirectory(Path.GetDirectoryName(location));
+            var i = keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
             using (var key = keySet.GetKey(i))
             {
                 using (var stream = new FileStream(location, FileMode.Create))
@@ -205,69 +176,84 @@ namespace Keyczar.Compat
                     AsymmetricKeyParameter writeKey;
                     if (!(key is IPrivateKey))
                     {
-                        if (key.KeyType == KeyType.DsaPub)
+
+                        switch (key)
                         {
-                            var dsaKey = (DsaPublicKey) key;
-                            writeKey = new DsaPublicKeyParameters(dsaKey.Y.ToBouncyBigInteger(),
-                                                                  new DsaParameters(
-                                                                      dsaKey.P.ToBouncyBigInteger(),
-                                                                      dsaKey.Q.ToBouncyBigInteger(),
-                                                                      dsaKey.G.ToBouncyBigInteger()));
-                        }
-                        else if (key is IRsaPublicKey)
-                        {
-                            var rsaKey = (IRsaPublicKey) key;
-                            writeKey = new RsaKeyParameters(false,
-                                                            rsaKey.Modulus.ToBouncyBigInteger(),
-                                                            rsaKey.PublicExponent.ToBouncyBigInteger());
-                        }
-                        else
-                        {
-                            throw new InvalidKeyTypeException("Non exportable key type.");
+                            case DsaPublicKey dsa:
+                                writeKey = BouncyCastleFromKey(dsa);
+                                break;
+                            case IRsaPublicKey rsa:
+                                writeKey = BouncyCastleFromKey(rsa);
+                                break;
+                            default:
+                                throw new InvalidKeyTypeException("Non exportable key type.");
                         }
 
                         pemWriter.WriteObject(new MiscPemGenerator(writeKey));
                     }
                     else
                     {
-                        if (key.KeyType == KeyType.DsaPriv)
+                        switch (key)
                         {
-                            var dsaKey = (DsaPrivateKey) key;
-                            writeKey = new DsaPrivateKeyParameters(dsaKey.X.ToBouncyBigInteger(),
-                                                                   new DsaParameters(
-                                                                       dsaKey.PublicKey.P.ToBouncyBigInteger(),
-                                                                       dsaKey.PublicKey.Q.ToBouncyBigInteger(),
-                                                                       dsaKey.PublicKey.G.ToBouncyBigInteger()));
-                        }
-                        else if (key is IRsaPrivateKey)
-                        {
-                            var rsaKey = (IRsaPrivateKey) key;
-                            writeKey = new RsaPrivateCrtKeyParameters(
-                                rsaKey.PublicKey.Modulus.ToBouncyBigInteger(),
-                                rsaKey.PublicKey.PublicExponent.ToBouncyBigInteger(),
-                                rsaKey.PrivateExponent.ToBouncyBigInteger(),
-                                rsaKey.PrimeP.ToBouncyBigInteger(),
-                                rsaKey.PrimeQ.ToBouncyBigInteger(),
-                                rsaKey.PrimeExponentP.ToBouncyBigInteger(),
-                                rsaKey.PrimeExponentQ.ToBouncyBigInteger(),
-                                rsaKey.CrtCoefficient.ToBouncyBigInteger());
-                        }
-                        else
-                        {
-                            throw new InvalidKeyTypeException("Non exportable key type.");
+                            case DsaPrivateKey dsa:
+                                writeKey = BouncyCastleFromKey(dsa);
+                                break;
+                            case IRsaPrivateKey rsa:
+                                writeKey = BouncyCastleFromKey(rsa);
+                                break;
+                            default:
+                                throw new InvalidKeyTypeException("Non exportable key type.");
                         }
 
                         pemWriter.WriteObject(new Pkcs8Generator(writeKey, Pkcs8Generator.PbeSha1_RC2_128)
-                                                  {
-                                                      Password = (passwordPrompt() ?? String.Empty).ToCharArray(),
-                                                      SecureRandom = Secure.Random,
-                                                      IterationCount = 4096
-                                                  });
+                        {
+                            Password = (passwordPrompt() ?? String.Empty).ToCharArray(),
+                            SecureRandom = Secure.Random,
+                            IterationCount = 4096
+                        });
                     }
                 }
             }
 
             return true;
+        }
+
+        internal static RsaPrivateCrtKeyParameters BouncyCastleFromKey(IRsaPrivateKey key)
+        {
+            return new RsaPrivateCrtKeyParameters(
+                                key.PublicKey.Modulus.ToBouncyBigInteger(),
+                                key.PublicKey.PublicExponent.ToBouncyBigInteger(),
+                                key.PrivateExponent.ToBouncyBigInteger(),
+                                key.PrimeP.ToBouncyBigInteger(),
+                                key.PrimeQ.ToBouncyBigInteger(),
+                                key.PrimeExponentP.ToBouncyBigInteger(),
+                                key.PrimeExponentQ.ToBouncyBigInteger(),
+                                key.CrtCoefficient.ToBouncyBigInteger());
+        }
+
+        internal static RsaKeyParameters BouncyCastleFromKey(IRsaPublicKey key)
+        {
+            return new RsaKeyParameters(false,
+                                        key.Modulus.ToBouncyBigInteger(),
+                                        key.PublicExponent.ToBouncyBigInteger()); ;
+        }
+
+        internal static DsaPublicKeyParameters BouncyCastleFromKey(DsaPublicKey key)
+        {
+            return new DsaPublicKeyParameters(key.Y.ToBouncyBigInteger(),
+                                                                  new DsaParameters(
+                                                                      key.P.ToBouncyBigInteger(),
+                                                                      key.Q.ToBouncyBigInteger(),
+                                                                      key.G.ToBouncyBigInteger()));
+        }
+
+        internal static DsaPrivateKeyParameters BouncyCastleFromKey(DsaPrivateKey key)
+        {
+            return new DsaPrivateKeyParameters(key.X.ToBouncyBigInteger(),
+                                                                   new DsaParameters(
+                                                                       key.PublicKey.P.ToBouncyBigInteger(),
+                                                                       key.PublicKey.Q.ToBouncyBigInteger(),
+                                                                       key.PublicKey.G.ToBouncyBigInteger()));
         }
     }
 }
