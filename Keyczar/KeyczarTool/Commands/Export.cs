@@ -15,12 +15,14 @@ namespace KeyczarTool
         private string _location;
         private string _crypterLocation;
         private bool _password;
+        private bool _pkcs12;
 
         public Export()
         {
             this.IsCommand("export", Localized.Export);
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
             this.HasRequiredOption("d|destination=", Localized.Destination, v => { _destination = v; });
+            this.HasOption("pkcs12", Localized.Pksc12Flag, v => { _pkcs12 = true; } );
             this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
             this.HasOption("p|password", Localized.Password, v => { _password = true; });
             this.SkipsCommandSummaryBeforeRunning();
@@ -66,20 +68,34 @@ namespace KeyczarTool
             using (dks)
             using (d2ks)
             {
-                if (!ks.ExportPrimaryAsPkcs(_destination, CachedPrompt.Password(() =>
-                                                                                    {
-                                                                                        Console.WriteLine(
-                                                                                            Localized.MsgForExport);
-                                                                                        return
-                                                                                            Util.DoublePromptForPassword
-                                                                                                ();
-                                                                                    }).Prompt))
+                if (_pkcs12)
                 {
-                    ret = -1;
-                }
-                else
-                {
-                    Console.WriteLine(Localized.MsgExportedPem);
+                    if (!ks.ExportAsPkcs12(_destination, CachedPrompt.Password(() =>
+                                                    {
+                                                        Console.WriteLine(Localized.MsgForExport);
+                                                        return Util.DoublePromptForPassword
+                                                                ();
+                                                    }).Prompt))
+                    {
+                        ret = -1;
+                    }
+                    else
+                    {
+                        Console.WriteLine(Localized.MsgExportedPem);
+                    }
+                } else {
+                    if (!ks.ExportPrimaryAsPkcs(_destination, CachedPrompt.Password(() =>
+                    {
+                        Console.WriteLine(Localized.MsgForExport);
+                        return Util.DoublePromptForPassword();
+                    }).Prompt))
+                    {
+                        ret = -1;
+                    }
+                    else
+                    {
+                        Console.WriteLine(Localized.MsgExportedPem);
+                    }
                 }
             }
 

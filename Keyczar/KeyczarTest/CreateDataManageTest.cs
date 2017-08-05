@@ -441,7 +441,10 @@ namespace KeyczarTest
             var path = Util.TestDataPath(WRITE_DATA, topDir, "certificates");
             var pubPath = path + ".public";
             var exportPath = path + "-pkcs8.pem";
-            var exportPubPath = path + "-public.pem";
+			var exportPath2 = path + "-pkcs12.pfx";
+			var exportPubPath2 = path + "-public.pfx";
+
+			var exportPubPath = path + "-public.pem";
 
             var writer = new FileSystemKeySetWriter(path, overwrite: true);
             var pubWriter = new FileSystemKeySetWriter(pubPath, overwrite: true);
@@ -452,10 +455,8 @@ namespace KeyczarTest
 
                 using (var pubks = ks.PublicKey())
                 {
-                    var pubsuccess = pubks.Save(pubWriter);
-                    Expect(pubsuccess, Is.True);
 
-                    pubsuccess = pubks.ExportPrimaryAsPkcs(exportPubPath, () => null);
+                    var pubsuccess = pubks.ExportPrimaryAsPkcs(exportPubPath, () => null);
                     Expect(pubsuccess, Is.True);
                 }
                 Func<string> password = () => "pass"; //Hardcoding because this is a test
@@ -463,7 +464,21 @@ namespace KeyczarTest
                 var success = ks.ExportPrimaryAsPkcs(exportPath, password);
                 Expect(success, Is.True);
 
-                success = ks.Save(writer);
+                var ver2 = ks.AddKey(KeyStatus.Active, type: kt);
+				Expect(ver2, Is.EqualTo(2));
+                success = ks.ExportAsPkcs12(exportPath2, password);
+				Expect(success, Is.True);
+
+				using (var pubks = ks.PublicKey())
+				{
+					var pubsuccess = pubks.Save(pubWriter);
+					Expect(pubsuccess, Is.True);
+
+					pubsuccess = pubks.ExportAsPkcs12(exportPubPath2, () => null);
+					Expect(pubsuccess, Is.True);
+				}
+
+				success = ks.Save(writer);
                 Expect(success, Is.True);
             }
         }

@@ -32,7 +32,6 @@ namespace Keyczar
     /// </summary>
     public class KeyMetadata
     {
-        private KeyType _keyType;
 
         /// <summary>
         /// Reads the specified meta data.

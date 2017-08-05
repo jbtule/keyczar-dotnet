@@ -51,7 +51,7 @@ namespace KeyczarTool
                 Console.WriteLine(Localized.MsgPleaseReenterPassword);
                 var phrase2 = Console.ReadLine();
 
-                if (phrase1.Equals(phrase2))
+                if (phrase1?.Equals(phrase2) ?? false)
                 {
                     return phrase1;
                 }

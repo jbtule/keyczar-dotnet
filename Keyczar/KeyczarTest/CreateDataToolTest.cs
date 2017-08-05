@@ -286,29 +286,42 @@ namespace KeyczarTest
                 : Util.KeyczarTool(create: null, name: "Test", location: path, purpose: purpose,
                     asymmetric: asymmetric, unofficial: null);
 
+
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type: type);
 
             Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
+			result = Util.KeyczarTool(addkey: null, location: path, status: "active", type: type);
+
+			Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
 
             var exportpath = Util.TestDataPath(WRITE_DATA, topDir + "-pkcs8.pem", "certificates");
             //send password via std in
             result = Util.KeyczarTool("pass", "pass", export: null, location: path, destination: exportpath);
+			
+            var exportpath2 = Util.TestDataPath(WRITE_DATA, topDir + "-pkcs12.pfx", "certificates");
+			//send password via std in
+			result = Util.KeyczarTool("pass", "pass", export: null, location: path, destination: exportpath2, pkcs12: null);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
+			Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
 
             if (!string.IsNullOrWhiteSpace(asymmetric))
             {
                 var exportpubpath = Util.TestDataPath(WRITE_DATA, topDir + "-public.pem", "certificates");
-                var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public", "certificates");
+				var exportpubpath2 = Util.TestDataPath(WRITE_DATA, topDir + "-public.pfx", "certificates");
+
+				var pubpath = Util.TestDataPath(WRITE_DATA, topDir + ".public", "certificates");
                 if (Directory.Exists(pubpath))
                     Directory.Delete(pubpath, true);
                 result = Util.KeyczarTool(pubKey: null, location: path, destination: pubpath);
                 Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
                 result = Util.KeyczarTool(export: null, location: pubpath, destination: exportpubpath);
                 Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
+
+                result = Util.KeyczarTool(export: null, location: pubpath, destination: exportpubpath2, pkcs12:null);
+				Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
             }
         }
 
