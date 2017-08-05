@@ -26,6 +26,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.X509;
 using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Pkcs;
 
 namespace Keyczar.Compat
 {
@@ -41,7 +42,7 @@ namespace Keyczar.Compat
 
 
         private readonly KeyMetadata _metadata;
-        private Key _key;
+        private IList<Key> _key = new List<Key>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportedKeySet"/> class.
@@ -51,7 +52,7 @@ namespace Keyczar.Compat
         /// <param name="description">The description.</param>
         public ImportedKeySet(Key key, KeyPurpose purpose, string description = null)
         {
-            _key = key;
+            _key.Add(key);
             var keyType = key.KeyType;
             _metadata = new KeyMetadata()
             {
@@ -71,6 +72,24 @@ namespace Keyczar.Compat
             };
         }
 
+        public ImportedKeySet(IEnumerable<Key> keys, KeyPurpose purpose, string description = null)
+        {
+            _key = keys.ToList();
+            _metadata = new KeyMetadata()
+            {
+                Name = description,
+                Purpose = purpose,
+                Kind = keys.First().KeyType.Kind,
+                Versions = keys.Select((it, i) => new KeyVersion
+                {
+                    KeyType = it.KeyType,
+                    VersionNumber = i,
+                    Exportable = false
+                }).ToList()
+            };
+        }
+
+
 
         /// <summary>
         /// Gets the binary data that the key is stored in.
@@ -79,7 +98,7 @@ namespace Keyczar.Compat
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.RawStringEncoding.GetBytes(_key.ToJson());
+            return Keyczar.RawStringEncoding.GetBytes(_key[version-1].ToJson());
         }
 
         /// <summary>
@@ -114,7 +133,8 @@ namespace Keyczar.Compat
         /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            _key = _key.SafeDispose();
+            _key = _key.Select(k=>k.SafeDispose()).ToList();
+            _key = new List<Key>();
         }
 
         /// <summary>
@@ -167,6 +187,128 @@ namespace Keyczar.Compat
                 using (var stream = File.OpenRead(path))
                     return PkcsKey(purpose, stream, passwordPrompt);
             }
+
+            public virtual ImportedKeySet Pkcs12Keys(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null)
+            {
+                
+                using (var password = CachedPrompt.Password(passwordPrompt))
+                {
+                    var keyStore = new Pkcs12Store(input, password.Prompt().ToCharArray());
+                    var keys = new List<Key>();
+                    var kind = KeyKind.Private;
+                    foreach (string n in keyStore.Aliases)
+                    {
+                        if (keyStore.IsKeyEntry(n))
+                        {
+                            AsymmetricKeyEntry key = keyStore.GetKey(n);
+
+                            if (key.Key.IsPrivate)
+                            {
+                                switch(key.Key){
+                                    case RsaPrivateCrtKeyParameters rsa:
+                                        {
+                                            var newKey = new RsaPrivateKey()
+                                            {
+                                                PublicKey = new RsaPublicKey()
+                                                {
+                                                    Modulus = rsa.Modulus.ToSystemBigInteger(),
+                                                    PublicExponent = rsa.PublicExponent.ToSystemBigInteger(),
+                                                    Size = rsa.Modulus.BitLength,
+                                                },
+                                                PrimeP = rsa.P.ToSystemBigInteger(),
+                                                PrimeExponentP = rsa.DP.ToSystemBigInteger(),
+                                                PrimeExponentQ = rsa.DQ.ToSystemBigInteger(),
+                                                PrimeQ = rsa.Q.ToSystemBigInteger(),
+                                                CrtCoefficient = rsa.QInv.ToSystemBigInteger(),
+                                                PrivateExponent = rsa.Exponent.ToSystemBigInteger(),
+                                                Size = rsa.Modulus.BitLength,
+                                            };  
+                                            keys.Add(newKey);
+                                        }
+
+                                    break;
+
+                                    case DsaPrivateKeyParameters dsa:
+                                        {
+                                            var dsaKey = new DsaPrivateKey()
+                                            {
+                                                X = dsa.X.ToSystemBigInteger(),
+                                                PublicKey = new DsaPublicKey
+                                                {
+                                                    Y =
+                                                              dsa.Parameters.G.ModPow(dsa.X,
+                                                                                           dsa.Parameters.P)
+                                                                      .ToSystemBigInteger(),
+                                                    G = dsa.Parameters.G.ToSystemBigInteger(),
+                                                    P = dsa.Parameters.P.ToSystemBigInteger(),
+                                                    Q = dsa.Parameters.Q.ToSystemBigInteger(),
+                                                    Size = dsa.Parameters.P.BitLength
+                                                },
+                                                Size = dsa.Parameters.P.BitLength
+                                            }; 
+                                            keys.Add(dsaKey);
+                                        }
+
+                                    break;
+                                }
+
+
+                            }
+                        }
+                    }
+                    if(!keys.Any()){
+                        kind = KeyKind.Public;
+
+                        foreach (string n in keyStore.Aliases)
+                        {
+                            if (keyStore.IsCertificateEntry(n))
+                            {
+
+                                var entry = keyStore.GetCertificate(n);
+
+                                var pubKey = entry.Certificate.GetPublicKey();
+                               
+                                switch(pubKey){
+                                    case RsaKeyParameters rsa:
+                                        {
+                                            var rsaKey = new RsaPublicKey
+                                            {
+                                                Modulus = rsa.Modulus.ToSystemBigInteger(),
+                                                PublicExponent = rsa.Exponent.ToSystemBigInteger(),
+                                                Size = rsa.Modulus.BitLength,
+                                            };
+                                            keys.Add(rsaKey);
+                                        }
+                                        break;
+                                    case DsaPublicKeyParameters dsa:
+                                        {
+                                            var dsaKey = new DsaPublicKey
+                                            {
+                                                Y = dsa.Y.ToSystemBigInteger(),
+                                                G = dsa.Parameters.G.ToSystemBigInteger(),
+                                                P = dsa.Parameters.P.ToSystemBigInteger(),
+                                                Q = dsa.Parameters.Q.ToSystemBigInteger(),
+                                                Size = dsa.Parameters.P.BitLength
+                                            };
+                                            keys.Add(dsaKey);
+                                        }
+                                        break;
+                                }
+
+
+                            }
+                        } 
+                    }
+
+                    if(keys.Any()){
+                        return new ImportedKeySet(keys, purpose, "imported keys");
+                    }
+                    throw new InvalidKeySetException("couldn't find any keys in file");
+
+                }
+            }
+
+
 
             /// <summary>
             /// Import the PKCS key.
