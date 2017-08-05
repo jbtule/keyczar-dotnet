@@ -78,6 +78,8 @@ namespace KeyczarTool
             using (d2ks)
             using (var keySet = new MutableKeySet(ks))
             {
+                var official = keySet.Metadata.OriginallyOfficial && keySet.Metadata.ValidOfficial() && !_force;
+
                 if (_status != KeyStatus.Primary && _status != KeyStatus.Active)
                 {
                     Console.WriteLine("{0} {1}.", Localized.Status, _status.Identifier);
@@ -86,7 +88,7 @@ namespace KeyczarTool
                 ImportedKeySet importedKeySet = null;
                 try
                 {
-                    importedKeySet = ImportedKeySet.Import.X509Certificate(keySet.Metadata.Purpose, _importLocation);
+                    importedKeySet = ImportedKeySet.Import.X509Certificate(keySet.Metadata.Purpose, _importLocation, official);
                 }
                 catch
                 {
@@ -95,12 +97,12 @@ namespace KeyczarTool
                        )
                     {
                         importedKeySet = ImportedKeySet.Import.Pkcs12Keys(
-                			  keySet.Metadata.Purpose, _importLocation,
-                			  CachedPrompt.Password(() =>
-                			  {
-                				  Console.WriteLine(Localized.MsgForImport);
-                				  return Util.PromptForPassword();
-                			  }).Prompt);
+                              keySet.Metadata.Purpose, _importLocation,
+                              CachedPrompt.Password(() =>
+                              {
+                                  Console.WriteLine(Localized.MsgForImport);
+                                  return Util.PromptForPassword();
+                              }).Prompt, official);
                     }
                     else
                     {
@@ -111,7 +113,7 @@ namespace KeyczarTool
                                                       {
                                                           Console.WriteLine(Localized.MsgForImport);
                                                           return Util.PromptForPassword();
-                                                      }).Prompt);
+                                                      }).Prompt, official);
                     }
                 }
                 if (importedKeySet == null)
@@ -123,16 +125,24 @@ namespace KeyczarTool
                 {
 
 
-                    if (keySet.Metadata.OriginallyOfficial && keySet.Metadata.ValidOfficial())
+                    if (keySet.Metadata.OriginallyOfficial &&keySet.Metadata.ValidOfficial())
                     {
-                        var importedKeyType = importedKeySet.Metadata.OfficialKeyType();
-                        var keySetKeyType = keySet.Metadata.OfficialKeyType();
-                        if (importedKeyType != keySetKeyType && !_force)
-                        {
+                        if(!_force && !importedKeySet.Metadata.ValidOfficial()){
+                            var keySetKeyType = keySet.Metadata.OfficialKeyType();
                             ret = -1;
                             Console.WriteLine(Localized.MsgMismatchedType,
-                                importedKeyType,
-                                keySetKeyType);
+                                    "Multiple Types",
+                                    keySetKeyType);
+                        }else{
+                            var importedKeyType = importedKeySet.Metadata.OfficialKeyType();
+                            var keySetKeyType = keySet.Metadata.OfficialKeyType();
+                            if (importedKeyType != keySetKeyType && !_force)
+                            {
+                                ret = -1;
+                                Console.WriteLine(Localized.MsgMismatchedType,
+                                    importedKeyType,
+                                    keySetKeyType);
+                            }
                         }
                     }
 
