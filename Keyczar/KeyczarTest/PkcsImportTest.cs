@@ -44,19 +44,32 @@ namespace KeyczarTest
 
         private Stream HelperOpenPkcsStream(String keyType, String fileFormat, String keyPurpose)
         {
-            return File.OpenRead(Util.TestDataPath(TEST_DATA, keyType + "-" + keyPurpose + "-pkcs8." + fileFormat));
+            return fileFormat == "pfx"
+                ? File.OpenRead(Util.TestDataPath(TEST_DATA, keyType + "-" + keyPurpose + "-pkcs12." + fileFormat))
+                : File.OpenRead(Util.TestDataPath(TEST_DATA, keyType + "-" + keyPurpose + "-pkcs8." + fileFormat));
+        }
+
+        private ImportedKeySet HelperImportKeySet(String fileFormat, KeyPurpose keyPurpose, Stream keystream)
+        {
+            switch (fileFormat)
+            {
+                case "pfx":
+                    return ImportedKeySet.Import.Pkcs12Keys(keyPurpose, keystream, () => "pass"
+                                                         /* hard coding for test only!!!!*/);
+                default:
+                    return ImportedKeySet.Import.PkcsKey(keyPurpose, keystream, () => "pass"
+                                                       /* hard coding for test only!!!!*/);
+            }
         }
 
 
         [Test]
         public void TestCryptImport(
             [Values("rsa")] string keyType,
-            [Values("pem", "der")] string format)
+            [Values("pem", "der", "pfx")] string format)
         {
             using (var keystream = HelperOpenPkcsStream(keyType, format, "crypt"))
-            using (
-                var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.DecryptAndEncrypt, keystream, () => "pass"
-                    /* hard coding for test only!!!!*/))
+            using (var keyset = HelperImportKeySet(format, KeyPurpose.DecryptAndEncrypt, keystream))
             using (var crypter = new Crypter(keyset))
             using (var encrypter = new Encrypter(Util.TestDataPath(TEST_DATA, "rsa-crypt")))
             {
@@ -69,26 +82,24 @@ namespace KeyczarTest
         [Test]
         public void TestCryptImportBadKey(
             [Values("dsa")] string keyType,
-            [Values("pem", "der")] string format)
+            [Values("pem", "der", "pfx")] string format)
         {
             using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
             {
-                Expect(
-                    () =>
-                    ImportedKeySet.Import.PkcsKey(KeyPurpose.DecryptAndEncrypt, keystream, () => "pass"
-                        /* hard coding for test only!!!!*/), Throws.InstanceOf<InvalidKeySetException>());
+                Expect(() => HelperImportKeySet(format, KeyPurpose.DecryptAndEncrypt, keystream),
+                       Throws.InstanceOf<InvalidKeySetException>());
+
             }
         }
 
         [Test]
         public void TestSignImport(
             [Values("rsa", "dsa")] string keyType,
-            [Values("pem", "der")] string format)
+            [Values("pem", "der", "pfx")] string format)
         {
             using (var keystream = HelperOpenPkcsStream(keyType, format, "sign"))
             using (
-                var keyset = ImportedKeySet.Import.PkcsKey(KeyPurpose.SignAndVerify, keystream, () => "pass"
-                    /* hard coding for test only!!!!*/))
+                var keyset = HelperImportKeySet(format, KeyPurpose.SignAndVerify, keystream))
             using (var signer = new Signer(keyset))
 
             {

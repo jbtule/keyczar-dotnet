@@ -150,25 +150,41 @@ namespace Keyczar.Compat
         }
 
 
+		/// <summary>
+		/// Exports the primary key as PKCS.
+		/// </summary>
+		/// <param name="keySet">The keyset.</param>
+		/// <param name="location">The location.</param>
+		/// <param name="passwordPrompt">The password prompt.</param>
+		/// <returns></returns>
+		/// <exception cref="InvalidKeyTypeException">Needs to be a private key.</exception>
+		/// <exception cref="InvalidKeyTypeException">Non exportable key type.</exception>
+		public static bool ExportPrimaryAsPkcs(this IKeySet keySet, string location, Func<string> passwordPrompt)
+		{
+			Directory.CreateDirectory(Path.GetDirectoryName(location));
+			using (var stream = new FileStream(location, FileMode.Create))
+			{
+				return ExportPrimaryAsPkcs(keySet, stream, passwordPrompt);
+			}
+		}
 
-        /// <summary>
-        /// Exports the primary key as PKCS.
-        /// </summary>
-        /// <param name="keySet">The keyset.</param>
-        /// <param name="location">The location.</param>
-        /// <param name="passwordPrompt">The password prompt.</param>
-        /// <returns></returns>
-        /// <exception cref="InvalidKeyTypeException">Needs to be a private key.</exception>
-        /// <exception cref="InvalidKeyTypeException">Non exportable key type.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
+
+		/// <summary>
+		/// Exports the primary key as PKCS.
+		/// </summary>
+		/// <param name="keySet">The keyset.</param>
+		/// <param name="stream">The stream to write too.</param>
+		/// <param name="passwordPrompt">The password prompt.</param>
+		/// <returns></returns>
+		/// <exception cref="InvalidKeyTypeException">Needs to be a private key.</exception>
+		/// <exception cref="InvalidKeyTypeException">Non exportable key type.</exception>
+		[System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2202:Do not dispose objects multiple times")]
-        public static bool ExportPrimaryAsPkcs(this IKeySet keySet, string location, Func<string> passwordPrompt)
+        public static bool ExportPrimaryAsPkcs(this IKeySet keySet, Stream stream, Func<string> passwordPrompt)
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(location));
             var i = keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
             using (var key = keySet.GetKey(i))
             {
-                using (var stream = new FileStream(location, FileMode.Create))
                 using (var writer = new StreamWriter(stream))
                 {
                     var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);

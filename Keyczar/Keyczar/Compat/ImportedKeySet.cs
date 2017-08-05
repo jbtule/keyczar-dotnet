@@ -238,6 +238,12 @@ namespace Keyczar.Compat
                     return PkcsKey(purpose, stream, passwordPrompt);
             }
 
+			public ImportedKeySet Pkcs12Keys(KeyPurpose purpose, string path, Func<string> passwordPrompt = null)
+			{
+				using (var stream = File.OpenRead(path))
+					return Pkcs12Keys(purpose, stream, passwordPrompt);
+			}
+
             public virtual ImportedKeySet Pkcs12Keys(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null)
             {
 
@@ -261,7 +267,9 @@ namespace Keyczar.Compat
                                         break;
 
                                     case DsaPrivateKeyParameters dsa:
-                                        keys.Add(KeyFromBouncyCastle(dsa));
+                                        if(purpose == KeyPurpose.SignAndVerify){
+                                            keys.Add(KeyFromBouncyCastle(dsa));
+                                        }
                                         break;
                                 }
                             }
@@ -283,7 +291,9 @@ namespace Keyczar.Compat
                                         keys.Add(KeyFromBouncyCastle(rsa));
                                         break;
                                     case DsaPublicKeyParameters dsa:
-                                        keys.Add(KeyFromBouncyCastle(dsa));
+                                        if(purpose == KeyPurpose.SignAndVerify){
+                                            keys.Add(KeyFromBouncyCastle(dsa));
+                                        }
                                         break;
                                 }
                             }

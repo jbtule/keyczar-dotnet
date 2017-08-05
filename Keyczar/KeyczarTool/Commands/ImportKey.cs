@@ -90,13 +90,29 @@ namespace KeyczarTool
                 }
                 catch
                 {
-                    importedKeySet = ImportedKeySet.Import.PkcsKey(
-                        keySet.Metadata.Purpose, _importLocation,
-                        CachedPrompt.Password(() =>
-                                                  {
-                                                      Console.WriteLine(Localized.MsgForImport);
-                                                      return Util.PromptForPassword();
-                                                  }).Prompt);
+                    if (_importLocation.EndsWith("pfx", StringComparison.Ordinal)
+                       || _importLocation.EndsWith("p12", StringComparison.Ordinal)
+                       )
+                    {
+                        importedKeySet = ImportedKeySet.Import.Pkcs12Keys(
+                			  keySet.Metadata.Purpose, _importLocation,
+                			  CachedPrompt.Password(() =>
+                			  {
+                				  Console.WriteLine(Localized.MsgForImport);
+                				  return Util.PromptForPassword();
+                			  }).Prompt);
+                    }
+                    else
+                    {
+
+                        importedKeySet = ImportedKeySet.Import.PkcsKey(
+                            keySet.Metadata.Purpose, _importLocation,
+                            CachedPrompt.Password(() =>
+                                                      {
+                                                          Console.WriteLine(Localized.MsgForImport);
+                                                          return Util.PromptForPassword();
+                                                      }).Prompt);
+                    }
                 }
                 if (importedKeySet == null)
                 {
