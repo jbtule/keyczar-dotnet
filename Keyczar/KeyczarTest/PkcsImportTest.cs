@@ -55,10 +55,10 @@ namespace KeyczarTest
             {
                 case "pfx":
                     return ImportedKeySet.Import.Pkcs12Keys(keyPurpose, keystream, () => "pass"
-                                                         /* hard coding for test only!!!!*/);
+                                                         /* hard coding for test only!!!!*/, official:true));
                 default:
                     return ImportedKeySet.Import.PkcsKey(keyPurpose, keystream, () => "pass"
-                                                       /* hard coding for test only!!!!*/);
+                                                       /* hard coding for test only!!!!*/, official:true);
             }
         }
 
