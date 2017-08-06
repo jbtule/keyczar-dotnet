@@ -5,7 +5,6 @@ project: keyczar-dotnet
 username: jbtule
 heading: Keyczar high level encryption toolkit in C#
 ---
-
 # Keyczar dotnet [![Nugut Install](https://img.shields.io/nuget/v/Keyczar.svg)](https://www.nuget.org/packages/Keyczar)
 Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features
 and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
@@ -41,7 +40,7 @@ Source code can be obtained with
 
     git clone --recursive https://github.com/jbtule/keyczar-dotnet.git
 
-Source can be built with Visual Studio 2017, Visual Studio for Mac 7.1, or msbuild 15. More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
+Source can be built with msbuild 15, [Rider](https://www.jetbrains.com/rider/), Visual Studio for Mac 7.1, or Visual Studio 2017. More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
 
 Windows | Mac | Linux
 ------ | ------ | --------
@@ -65,6 +64,7 @@ Windows | Mac | Linux
  - The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
  - You can use the AppSetting `keyczar.strict_dsa_verification` if you don't need java Keyczar compatiblity and need stricter verification of dsa sigs.
 
+
 ## Contribute ##
 
-Code contribution, reported issues or code reviews welcome! Pull requests are automatically built and tested with [Travis CI](https://travis-ci.org/jbtule/keyczar-dotnet).
+Code contribution, reported issues or code reviews welcome! Pull requests are automatically built and tested with [Travis CI][MacLinkMaster] and [AppVeyor][WinLinkMaster].
