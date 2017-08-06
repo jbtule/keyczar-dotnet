@@ -1,6 +1,6 @@
 # Keyczar dotnet [![Nugut Install](https://img.shields.io/nuget/v/Keyczar.svg)](https://www.nuget.org/packages/Keyczar)
 Implmemented in C# to match up with the Java/Python/C++ Keyczar standard features
-and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
+and will interoperate with them by default, however also has stronger crypto and more flexable features when compatiblity is not necessary. Uses BouncyCastle as backend for most encryption.
 
  - Keyczar-dotnet: http://jbtule.github.io/keyczar-dotnet
  - Official keyczar site: http://keyczar.org
@@ -51,7 +51,8 @@ Windows | Mac | Linux
 ## Compatibility
 
  - Should interoperate with java/python/c++ with offical api how ever the offical versions of keyczar are very behind in crypto algorithms. If you don't need compatiblity I recommend using the unofficial key types.
- - All unofficial/incompatible api changes are under the unofficial names space to be clear what is provided that won't interoperate with java/python/c++.
+ - Unofficial/incompatible api changes are under the unofficial names space to be clear what is provided that won't interoperate with java/python/c++.
+ - MutableKeySet is only backward compatible with official keysets stores when reading keys. While it will store the keys differently than official keyczar, it still can produce and decrypt ciphertext compatible with official keyczar.
  - Unofficial algorithms included are *AES-GCM* (`KeyType=C#_AES_AEAD`), RSA-PSS (`KeyType=C#_RSA_SIGN_PRIV`),HMAC-SHA2 (`KeyType=C#_HMAC_SHA2`), and AES-HMAC-SHA2 (`KeyType=C#_HMAC_SHA2`). To use them use unofficial flag on the KeyczarTool.
  - If you have an existing keyset and you didn't create with the --unofficial flag, `--force` will be required to add an unofficial key type.
  - `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionVerifer`
