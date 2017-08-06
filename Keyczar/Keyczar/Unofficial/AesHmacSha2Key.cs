@@ -63,11 +63,9 @@ namespace Keyczar.Unofficial
         /// Gets the key hash.
         /// </summary>
         /// <returns></returns>
-        public override byte[] GetKeyHash()
-        {
-            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
-                                   HmacKey.HmacKeyBytes, Utility.GetBytes(HmacKey.HashLength), HmacKey.Digest.ToBytes());
-        }
+        public override byte[] GetKeyHash() 
+            => Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
+                    HmacKey.HmacKeyBytes, Utility.GetBytes(HmacKey.HashLength), HmacKey.Digest.ToBytes());
 
         /// <summary>
         /// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
@@ -122,19 +120,15 @@ namespace Keyczar.Unofficial
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar)
-        {
-            return HmacKey.GetSigningStream(keyczar);
-        }
+        public HashingStream GetAuthSigningStream(Keyczar keyczar) 
+            => HmacKey.GetSigningStream(keyczar);
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
-        {
-            return HmacKey.GetVerifyingStream(keyczar);
-        }
+        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar) 
+            => HmacKey.GetVerifyingStream(keyczar);
 
 
         /// <summary>

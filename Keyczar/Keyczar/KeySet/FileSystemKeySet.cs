@@ -29,9 +29,8 @@ namespace Keyczar
     public class FileSystemKeySet : IRootProviderKeySet
     {
 
-        public static Func<FileSystemKeySet> Creator(string keySetLocation){
-            return () => new FileSystemKeySet(keySetLocation);
-        }
+        public static Func<FileSystemKeySet> Creator(string keySetLocation) 
+            => () => new FileSystemKeySet(keySetLocation);
 
         private readonly string _location;
 
@@ -74,16 +73,15 @@ namespace Keyczar
 
         protected virtual void Dispose(bool disposing)
         {
-      
+            
         }
 
 
         // This code added to correctly implement the disposable pattern.
         public void Dispose()
-        {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-        }
+           => Dispose(true);
+        
         #endregion
     }
 }

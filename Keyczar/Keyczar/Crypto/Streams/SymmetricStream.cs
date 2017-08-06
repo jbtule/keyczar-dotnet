@@ -170,8 +170,8 @@ namespace Keyczar.Crypto.Streams
         /// <value>The IV.</value>
         public override byte[] IV
         {
-            get { return _iv; }
-            set { _iv = value; }
+            get => _iv;
+            set => _iv = value;
         }
     }
 }

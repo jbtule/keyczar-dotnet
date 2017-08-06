@@ -102,10 +102,7 @@ namespace Keyczar.Crypto.Streams
         /// Gets the hash value.
         /// </summary>
         /// <value>The hash value.</value>
-        public override byte[] HashValue
-        {
-            get { return _digestSigner.GenerateSignature(); }
-        }
+        public override byte[] HashValue => _digestSigner.GenerateSignature();
 
         /// <summary>
         /// Verifies the signature.

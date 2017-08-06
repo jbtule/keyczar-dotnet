@@ -50,9 +50,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <returns></returns>
         public override byte[] GetKeyHash()
-        {
-            return Utility.HashKey(Keyczar.KeyHashLength, HmacKeyBytes);
-        }
+            => Utility.HashKey(Keyczar.KeyHashLength, HmacKeyBytes);
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -66,10 +64,8 @@ namespace Keyczar.Crypto
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetSigningStream(Keyczar keyczar)
-        {
-            return GetVerifyingStream(keyczar);
-        }
+        public HashingStream GetSigningStream(Keyczar keyczar) 
+            => GetVerifyingStream(keyczar);
 
         /// <summary>
         /// Gets the verifying stream.

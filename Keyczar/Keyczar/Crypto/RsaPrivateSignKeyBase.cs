@@ -85,28 +85,19 @@ namespace Keyczar.Crypto
         /// Gets the public key.
         /// </summary>
         /// <value>The public key.</value>
-        Key IPrivateKey.PublicKey
-        {
-            get { return PublicKey; }
-        }
+        Key IPrivateKey.PublicKey => PublicKey;
 
         /// <summary>
         /// Gets the public key.
         /// </summary>
         /// <value>The public key.</value>
-        IRsaPublicKey IRsaPrivateKey.PublicKey
-        {
-            get { return PublicKey; }
-        }
+        IRsaPublicKey IRsaPrivateKey.PublicKey => PublicKey;
 
         /// <summary>
         /// Gets the key hash.
         /// </summary>
         /// <returns></returns>
-        public override byte[] GetKeyHash()
-        {
-            return PublicKey.GetKeyHash();
-        }
+        public override byte[] GetKeyHash() => PublicKey.GetKeyHash();
 
         /// <summary>
         /// Generates the key.
@@ -158,10 +149,8 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
-        {
-            return PublicKey.GetVerifyingStream(keyczar);
-        }
+        public VerifyingStream GetVerifyingStream(Keyczar keyczar) 
+            => PublicKey.GetVerifyingStream(keyczar);
 
 
         /// <summary>

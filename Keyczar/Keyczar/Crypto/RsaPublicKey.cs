@@ -161,9 +161,6 @@ namespace Keyczar.Crypto
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null</returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar)
-        {
-            return null; //not signing
-        }
+        public HashingStream GetAuthSigningStream(Keyczar keyczar) => null;
     }
 }

@@ -79,10 +79,7 @@ namespace Keyczar
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
-        public KeyMetadata Metadata
-        {
-            get { return _keySet.Metadata; }
-        }
+        public KeyMetadata Metadata => _keySet.Metadata;
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls

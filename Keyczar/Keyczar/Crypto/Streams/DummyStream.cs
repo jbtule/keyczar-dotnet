@@ -36,9 +36,6 @@ namespace Keyczar.Crypto.Streams
         /// Returns Blank Hash Value because this is a dummy operation
         /// </summary>
         /// <value>The blank shash value.</value>
-        public override byte[] HashValue
-        {
-            get { return new byte[] {}; }
-        }
+        public override byte[] HashValue => new byte[] {};
     }
 }

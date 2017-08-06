@@ -371,9 +371,6 @@ namespace Keyczar
         /// Gets the default size.
         /// </summary>
         /// <value>The default size.</value>
-        public int DefaultSize
-        {
-            get { return KeySizeOptions.FirstOrDefault(); }
-        }
+        public int DefaultSize => KeySizeOptions.FirstOrDefault();
     }
 }

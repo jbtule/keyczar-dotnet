@@ -15,12 +15,10 @@ namespace Keyczar.Unofficial
         /// <returns>The result of the conversion.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
             "CA2225:OperatorOverloadsHaveNamedAlternates", Justification = "Constructor is alternative")]
-        public static implicit operator DigestAlg(string identifier)
-        {
-            if (String.IsNullOrWhiteSpace(identifier))
-                return null;
-            return new DigestAlg(identifier);
-        }
+        public static implicit operator DigestAlg(string identifier) 
+            => String.IsNullOrWhiteSpace(identifier) 
+                ? null 
+                : new DigestAlg(identifier);
 
 
         /// <summary>

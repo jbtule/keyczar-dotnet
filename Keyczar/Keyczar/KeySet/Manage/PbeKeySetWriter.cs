@@ -76,10 +76,7 @@ namespace Keyczar
         /// Finishes this writing of the key.
         /// </summary>
         /// <returns></returns>
-        public bool Finish()
-        {
-            return _writer.Finish();
-        }
+        public bool Finish() => _writer.Finish();
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -87,16 +84,8 @@ namespace Keyczar
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="PbeKeySetWriter" /> class.
-        /// </summary>
-        ~PbeKeySetWriter()
-        {
-            Dispose(false);
-        }
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.

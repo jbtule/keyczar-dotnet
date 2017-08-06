@@ -42,7 +42,6 @@ namespace Keyczar
         public AttachedSigner(IKeySet keySet) : base(keySet)
         {
             _signer = new AttachedSignerHelper(keySet, this);
-
         }
 
         /// <summary>
@@ -54,7 +53,6 @@ namespace Keyczar
         public WebBase64 Sign(String rawData,Byte[] hidden =null)
         {
             return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), hidden));
-
         }
 
 
@@ -83,9 +81,7 @@ namespace Keyczar
         /// <param name="hidden">The hidden data that can be used to generate the signature.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
         public void Sign(Stream input, Stream signedData, Byte[] hidden =null, long inputLength =-1)
-        {
-            _signer.Sign(input, signedData, hidden, inputLength);
-        }
+            => _signer.Sign(input, signedData, hidden, inputLength);
 
         /// <summary>
         /// Helper subclass to sign correctly

@@ -138,12 +138,7 @@ namespace Keyczar.Unofficial
 
         private KeyParameter GetKeyParameters()
         {
-            if (_keyParm == null)
-            {
-                _keyParm = new KeyParameter(AesKeyBytes);
-            }
-
-            return _keyParm;
+            return _keyParm ?? (_keyParm = new KeyParameter(AesKeyBytes));
         }
 
 
@@ -173,37 +168,29 @@ namespace Keyczar.Unofficial
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null as authentication is built in to the encryption</returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar)
-        {
-            return null; //One stop encrypting and signing;
-        }
+        public HashingStream GetAuthSigningStream(Keyczar keyczar) => null;
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns>null as authentication is built in to the decryption</returns>
-        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
-        {
-            return null; //One stop verifying and decrypting
-        }
+        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar) => null;
 
         /// <summary>
         /// Gets the decrypting stream.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar)
-        {
-            return new SymmetricAeadStream(
-                GetMode(),
-                output,
-                new byte[IVLength],
-                TagLength,
-                (nonce, cipher, additionalData, encrypt) =>
-                cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength*8, nonce, additionalData)),
-                encrypt: false
+        public FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar) 
+            => new SymmetricAeadStream(
+                    GetMode(),
+                    output,
+                    new byte[IVLength],
+                    TagLength,
+                    (nonce, cipher, additionalData, encrypt) =>
+                        cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength*8, nonce, additionalData)),
+                    encrypt: false
                 );
-        }
 
 
         /// <summary>

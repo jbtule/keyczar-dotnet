@@ -36,8 +36,8 @@ namespace Keyczar.Unofficial
         [JsonIgnore]
         public DigestAlg Digest
         {
-            get { return PublicKey.Digest; }
-            set { PublicKey.Digest = value; }
+            get => PublicKey.Digest;
+            set => PublicKey.Digest = value;
         }
 
         /// <summary>

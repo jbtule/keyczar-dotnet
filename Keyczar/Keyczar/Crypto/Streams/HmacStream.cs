@@ -113,10 +113,7 @@ namespace Keyczar.Crypto.Streams
         /// Gets the hash value.
         /// </summary>
         /// <value>The hash value.</value>
-        public override byte[] HashValue
-        {
-            get { return (byte[]) _hashValue.Clone(); }
-        }
+        public override byte[] HashValue => (byte[]) _hashValue.Clone();
 
 
         /// <summary>

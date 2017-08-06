@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Linq;
 
 namespace Keyczar
 {
@@ -23,17 +24,12 @@ namespace Keyczar
 								   params Func<IKeySetWriter, ILayeredKeySetWriter>[] layeredKeySetWriterCreators)
 		{
 			IKeySetWriter writer = rootKeySetWriterCreator();
-			foreach (var layered in layeredKeySetWriterCreators)
-			{
-				writer = layered(writer);
-			}
-			return writer;
+			return layeredKeySetWriterCreators.Aggregate(writer, (current, layered) => layered(current));
 		}
 
         [Obsolete("KeySetWriter.Creator doesn't exist", error:true)]
-        public static new Func<FileSystemKeySetWriter> Creator(string location, bool overwrite = false){
-            throw new NotSupportedException();
-        }
+        public new static Func<FileSystemKeySetWriter> Creator(string location, bool overwrite = false) 
+	        => throw new NotSupportedException();
 
 
         [Obsolete("Use FileSystemKeySetWriter instead")]

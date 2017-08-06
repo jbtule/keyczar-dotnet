@@ -48,9 +48,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <returns></returns>
         public override byte[] GetKeyHash()
-        {
-            return Utility.HashKey(Keyczar.KeyHashLength, HmacKeyBytes, Utility.GetBytes(HashLength),  Digest.ToBytes());
-        }
+            => Utility.HashKey(Keyczar.KeyHashLength, HmacKeyBytes, Utility.GetBytes(HashLength),  Digest.ToBytes());
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -65,9 +63,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <returns></returns>
         public HashingStream GetSigningStream(Keyczar keyczar)
-        {
-            return GetVerifyingStream(keyczar);
-        }
+            => GetVerifyingStream(keyczar);
 
         /// <summary>
         /// Gets the verifying stream.

@@ -121,19 +121,15 @@ namespace Keyczar.Crypto
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar)
-        {
-            return HmacKey.Maybe(h => h.GetSigningStream(keyczar), () => null);
-        }
+        public HashingStream GetAuthSigningStream(Keyczar keyczar) 
+            => HmacKey.Maybe(h => h.GetSigningStream(keyczar), () => null);
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns></returns>
         public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
-        {
-            return HmacKey.Maybe(h => h.GetVerifyingStream(keyczar), () => null);
-        }
+            => HmacKey.Maybe(h => h.GetVerifyingStream(keyczar), () => null);
 
 
         /// <summary>
@@ -168,7 +164,8 @@ namespace Keyczar.Crypto
                 new byte[BlockLength],
                 HmacKey.Maybe(it => it.HashLength, () => 0),
                 (iv, cipher, encrypt) =>
-                cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
+                    cipher.Init(forEncryption: encrypt,
+                        parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
                 encrypt: false);
         }
     }

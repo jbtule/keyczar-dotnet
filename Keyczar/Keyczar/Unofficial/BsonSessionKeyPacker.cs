@@ -61,19 +61,15 @@ namespace Keyczar.Unofficial
         }
 
         private static KeyPack PackIt(Key key)
-        {
-            return new KeyPack(key);
-        }
+            => new KeyPack(key);
 
         /// <summary>
         /// Packs the specified key into bytes
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        public byte[] Pack(Key key)
-        {
-            return Utility.ToBson(PackIt(key));
-        }
+        public byte[] Pack(Key key) 
+            => Utility.ToBson(PackIt(key));
 
         /// <summary>
         /// Unpacks the specified bytes into a key.

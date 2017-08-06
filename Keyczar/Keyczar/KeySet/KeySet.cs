@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Linq;
 
 namespace Keyczar
 {
@@ -23,17 +24,12 @@ namespace Keyczar
                                       params Func<IKeySet, ILayeredKeySet>[] layeredKeysetCreators)
         {
             IKeySet keyset = rootKeyetCreator();
-            foreach(var layered in layeredKeysetCreators){
-                keyset = layered(keyset);
-            }
-            return keyset;
+            return layeredKeysetCreators.Aggregate(keyset, (current, layered) => layered(current));
         }
 
 		[Obsolete("KeySet.Creator doesn't exist", error: true)]
-		public static new Func<FileSystemKeySet> Creator(string location)
-		{
-			throw new NotSupportedException();
-		}
+		public new static Func<FileSystemKeySet> Creator(string location)
+		    => throw new NotSupportedException();
 
         [Obsolete("Use `FileSystemKeyset` instead")]
         public KeySet(string keySetLocation) : base(keySetLocation)

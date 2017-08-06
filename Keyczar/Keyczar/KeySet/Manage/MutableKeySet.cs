@@ -310,10 +310,7 @@ namespace Keyczar
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
-        public KeyMetadata Metadata
-        {
-            get { return _metadata; }
-        }
+        public KeyMetadata Metadata => _metadata;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -321,15 +318,6 @@ namespace Keyczar
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="MutableKeySet" /> class.
-        /// </summary>
-        ~MutableKeySet()
-        {
-            Dispose(false);
         }
 
         /// <summary>

@@ -28,10 +28,8 @@ namespace Keyczar
     public class EncryptedKeySet : ILayeredKeySet
     {
 
-		public static Func<IKeySet,EncryptedKeySet> Creator(Crypter crypter)
-		{
-			return keySet => new EncryptedKeySet(keySet, crypter);
-		}
+		public static Func<IKeySet,EncryptedKeySet> Creator(Crypter crypter) 
+		    => keySet => new EncryptedKeySet(keySet, crypter);
 
         private IKeySet _keySet;
         private Crypter _crypter;
@@ -55,7 +53,6 @@ namespace Keyczar
         public EncryptedKeySet(IKeySet keySet, Crypter crypter)
         {
             _keySet = keySet;
-
             _crypter = crypter;
         }
 
@@ -82,10 +79,7 @@ namespace Keyczar
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
-        public KeyMetadata Metadata
-        {
-            get { return _keySet.Metadata; }
-        }
+        public KeyMetadata Metadata => _keySet.Metadata;
 
         #region IDisposable Support
         private bool disposedValue = false; // To detect redundant calls
@@ -106,11 +100,9 @@ namespace Keyczar
 
         // This code added to correctly implement the disposable pattern.
         public void Dispose()
-        {
             // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
-            Dispose(true);
-
-        }
+            => Dispose(true);
+        
         #endregion
     }
 }

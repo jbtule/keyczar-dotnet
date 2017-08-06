@@ -32,7 +32,7 @@ namespace Keyczar
         /// <summary>
         /// Binary length of expiration in signature
         /// </summary>
-        public readonly static int TimeoutLength = 8;
+        public static readonly int TimeoutLength = 8;
 
         /// <summary>
         /// Gets binary format of the date time.
@@ -85,11 +85,8 @@ namespace Keyczar
         /// <param name="rawData">The raw data.</param>
         /// <param name="signature">The signature.</param>
         /// <returns></returns>
-        public bool Verify(string rawData, WebBase64 signature)
-        {
-
-            return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
-        }
+        public bool Verify(string rawData, WebBase64 signature) 
+            => Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
 
         /// <summary>
         /// Verifies the specified raw data.

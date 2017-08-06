@@ -41,37 +41,29 @@ namespace Keyczar.Crypto
         [JsonIgnore]
         public string Padding
         {
-            get { return PublicKey.Padding; }
-            set { PublicKey.Padding = value; }
+            get => PublicKey.Padding;
+            set => PublicKey.Padding = value;
         }
 
         /// <summary>
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null</returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar)
-        {
-            return null; //not signed
-        }
+        public HashingStream GetAuthSigningStream(Keyczar keyczar) => null;
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns>null</returns>
-        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
-        {
-            return null; //not signed
-        }
+        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar) => null;
 
         /// <summary>
         /// Gets the encrypting stream.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar)
-        {
-            return PublicKey.GetEncryptingStream(output,keyczar);
-        }
+        public FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar) 
+            => PublicKey.GetEncryptingStream(output,keyczar);
 
         /// <summary>
         /// Generates the pub key.

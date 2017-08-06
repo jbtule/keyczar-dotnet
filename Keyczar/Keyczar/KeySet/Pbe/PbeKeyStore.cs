@@ -184,15 +184,12 @@ namespace Keyczar.Pbe
 			        _kind = kind;
 			     }
 
-           public override KeyKind Kind
-           {
-               get { return _kind; }
-           }
+           public override KeyKind Kind => _kind;
 
-            public override Type RepresentedType
+		       public override Type RepresentedType
             {
-                get { return _representedType; }
-                set { _representedType = value; }
+                get => _representedType;
+                set => _representedType = value;
             }
         }
 
@@ -211,19 +208,13 @@ namespace Keyczar.Pbe
             [JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
             public override KeyType KeyType
             {
-                get { return _keyType; }
-                set { _keyType = value; }
+                get => _keyType;
+                set => _keyType = value;
             }
 
-            public override byte[] GetKeyHash()
-            {
-                return Utility.GetBytes(0);
-            }
+            public override byte[] GetKeyHash() => Utility.GetBytes(0);
 
-            public override IEnumerable<byte[]> GetFallbackKeyHash()
-            {
-                return Enumerable.Empty<byte[]>();
-            }
+            public override IEnumerable<byte[]> GetFallbackKeyHash() => Enumerable.Empty<byte[]>();
 
             public byte[] IV { get; set; }
 

@@ -63,11 +63,8 @@ namespace Keyczar
         /// <param name="rawData">The raw data.</param>
         /// <param name="expiration">The expiration.</param>
         /// <returns></returns>
-        public WebBase64 Sign(String rawData, DateTime expiration)
-        {
-            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
-
-        }
+        public WebBase64 Sign(String rawData, DateTime expiration) 
+            => WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
 
         /// <summary>
         /// Signs the specified raw data.
@@ -91,18 +88,13 @@ namespace Keyczar
         /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
         public byte[] Sign(Stream input, DateTime expiration, long inputLength =-1)
-        {
-            return _signer.Sign(input, expiration,inputLength);
-        }
+            => _signer.Sign(input, expiration,inputLength);
 
         /// <summary>
         /// Helper subclass of signer that prefixes the data with the expiration time and then pads it into the signature
         /// </summary>
         protected class TimeoutSignerHelper:Signer
         {
-
-
-          
             /// <summary>
             /// Initializes a new instance of the <see cref="TimeoutSignerHelper"/> class.
             /// </summary>

@@ -102,10 +102,7 @@ namespace Keyczar.Compat
         /// Gets the meta data.
         /// </summary>
         /// <value>The meta data.</value>
-        public KeyMetadata Metadata
-        {
-            get { return _metadata; }
-        }
+        public KeyMetadata Metadata => _metadata;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

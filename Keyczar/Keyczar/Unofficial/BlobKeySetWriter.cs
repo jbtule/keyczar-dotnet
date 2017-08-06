@@ -29,10 +29,8 @@ namespace Keyczar.Unofficial
     public class BlobKeySetWriter : IRootProviderKeySetWriter, IDisposable, INonSeparatedMetadataAndKey
     {
 
-        public static Func<BlobKeySetWriter> Creator(Stream writeStream)
-        {
-            return () => new BlobKeySetWriter(writeStream);
-        }
+        public static Func<BlobKeySetWriter> Creator(Stream writeStream) 
+            => () => new BlobKeySetWriter(writeStream);
 
         private Stream _writeStream;
         private ZipFile _zipFile = new NondestructiveZipFile();

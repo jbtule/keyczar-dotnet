@@ -159,10 +159,7 @@ namespace Keyczar
         /// Gets the session material.
         /// </summary>
         /// <value>The session material.</value>
-        public WebBase64 SessionMaterial
-        {
-            get { return _sessionMaterial; }
-        }
+        public WebBase64 SessionMaterial => _sessionMaterial;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

@@ -60,10 +60,8 @@ namespace Keyczar
 		/// <param name="rawData">The raw data.</param>
 		/// <param name="signature">The signature.</param>
 		/// <returns></returns>
-		public bool Verify(string rawData, WebBase64 signature)
-        {
-			return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
-        }
+		public bool Verify(string rawData, WebBase64 signature) 
+		    => Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
 
         /// <summary>
         /// Verifies the specified raw data.
@@ -106,10 +104,8 @@ namespace Keyczar
         /// <param name="signature">The signature.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
-        public bool Verify(Stream input, byte[] signature, long inputLength = -1)
-        {
-            return Verify(input, signature, inputLength:inputLength, prefixData: null, postfixData: null);
-        }
+        public bool Verify(Stream input, byte[] signature, long inputLength = -1) 
+            => Verify(input, signature, inputLength:inputLength, prefixData: null, postfixData: null);
 
         /// <summary>
         /// Prefixes the data before verifying.

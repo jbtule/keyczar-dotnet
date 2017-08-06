@@ -52,7 +52,7 @@ namespace Keyczar
         /// </summary>
         public static Encoding RawStringEncoding
         {
-            get { return _rawStringEncoding ?? (_rawStringEncoding = Encoding.UTF8); }
+            get => _rawStringEncoding ?? (_rawStringEncoding = Encoding.UTF8);
             set
             {
                    if (_rawStringEncoding != null)
@@ -113,16 +113,9 @@ namespace Keyczar
         public void Dispose()
         {
            Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="Keyczar" /> class.
-        /// </summary>
-        ~Keyczar()
-        {
-            Dispose(false);
-        }
+      
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
         /// </summary>
@@ -212,9 +205,7 @@ namespace Keyczar
         /// </summary>
         /// <returns></returns>
         protected IEnumerable<Key> GetAllKeys()
-        {
-           return _versions.OrderByDescending(it => it.Key).Select(it => it.Value);
-        }
+            => _versions.OrderByDescending(it => it.Key).Select(it => it.Value);
 
         /// <summary>
         /// Gets the key using a hash.

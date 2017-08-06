@@ -45,10 +45,7 @@ namespace Keyczar.Crypto
         /// Gets the public key.
         /// </summary>
         /// <value>The public key.</value>
-        Key IPrivateKey.PublicKey
-        {
-            get { return PublicKey; }
-        }
+        Key IPrivateKey.PublicKey => PublicKey;
 
         /// <summary>
         /// Gets or sets the X.

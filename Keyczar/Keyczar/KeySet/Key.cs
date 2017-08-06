@@ -41,10 +41,8 @@ namespace Keyczar
         /// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
         /// </summary>
         /// <returns></returns>
-        public virtual IEnumerable<byte[]> GetFallbackKeyHash()
-        {
-            return Enumerable.Empty<byte[]>();
-        }
+        public virtual IEnumerable<byte[]> GetFallbackKeyHash() 
+            => Enumerable.Empty<byte[]>();
 
         private KeyType _type;
 
@@ -55,14 +53,8 @@ namespace Keyczar
         [JsonIgnore]
         public virtual KeyType KeyType
         {
-            get
-            {
-                if (_type == null)
-                {
-                    _type = KeyType.ForType(GetType());
-                }
-                return _type;
-            }
+            get => _type ?? (_type = KeyType.ForType(GetType()));
+            // ReSharper disable once ValueParameterNotUsed
             set { }
         }
 
@@ -80,7 +72,7 @@ namespace Keyczar
         /// <returns></returns>
         public static Key Read(KeyType type, byte[] keyData)
         {
-            string json = Keyczar.RawStringEncoding.GetString(keyData);
+            var json = Keyczar.RawStringEncoding.GetString(keyData);
             var key = (Key) JsonConvert.DeserializeObject(json, type.RepresentedType);
             return key;
         }
