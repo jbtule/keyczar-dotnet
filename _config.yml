@@ -1,9 +1,4 @@
 google-analytics: "UA-74886-9"
 
-markdown: redcarpet
+markdown: kramdown
 
-redcarpet:
-    extensions: ["no_intra_emphasis", "fenced_code_blocks", "autolink", "tables", "with_toc_data"]
-    render_options:
-      - with_toc_data # add HTML anchors to each header in the output HTML for hyper linking
-      - hard_wrap      # translate \n to <br>
