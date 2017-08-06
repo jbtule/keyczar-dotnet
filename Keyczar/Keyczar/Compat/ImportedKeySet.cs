@@ -53,7 +53,6 @@ namespace Keyczar.Compat
         public ImportedKeySet(Key key, KeyPurpose purpose, string description = null)
         {
             _key.Add(key);
-            var keyType = key.KeyType;
             _metadata = new KeyMetadata()
             {
                 Name = description ?? "Imported " + key.KeyType.Identifier,
@@ -61,13 +60,11 @@ namespace Keyczar.Compat
                 Kind = key.KeyType.Kind,
                 Versions = new List<KeyVersion>
                                   {
-                                      new KeyVersion
-                                      {
-                                          KeyType = keyType,
-                                          VersionNumber = 1,
-                                          Status = KeyStatus.Primary,
-                                          Exportable = false
-                                      }
+                                      new KeyVersion(
+                                              KeyStatus.Primary,
+                                              1,
+                                              key
+                                          )
                                   }
             };
         }
@@ -80,13 +77,12 @@ namespace Keyczar.Compat
                 Name = description,
                 Purpose = purpose,
                 Kind = keys.First().KeyType.Kind,
-                Versions = keys.Select((it, i) => new KeyVersion
-                {
-                    KeyType = it.KeyType,
-                    VersionNumber = i+1,
-                    Status = i == 0 ? KeyStatus.Primary : KeyStatus.Active,
-                    Exportable = false
-                }).ToList()
+                Versions = keys.Select((it, i) =>
+                    new KeyVersion(
+                         i == 0 ? KeyStatus.Primary : KeyStatus.Active,
+                         i +1,
+                         it
+                    )).ToList()
             };
         }
 

@@ -178,7 +178,7 @@ namespace Keyczar
                 lastVersion = Math.Max(lastVersion, version.VersionNumber);
             }
 
-            _metadata.Versions.Add(new KeyVersion() { Status = status, VersionNumber = ++lastVersion, KeyType = key.KeyType});
+            _metadata.Versions.Add(new KeyVersion(status, ++lastVersion, key));
             _keys.Add(lastVersion, key);
             onlyMetaChanged = false;
             return lastVersion;
