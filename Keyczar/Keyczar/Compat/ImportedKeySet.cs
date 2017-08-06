@@ -191,6 +191,8 @@ namespace Keyczar.Compat
                             Modulus = keyParam.Modulus.ToSystemBigInteger(),
                             PublicExponent = keyParam.PublicExponent.ToSystemBigInteger(),
                             Size = keyParam.Modulus.BitLength,
+                            Digest =  Unofficial.RsaPrivateSignKey.DigestForSize(keyParam.Modulus.BitLength)
+
                         },
                         PrimeP = keyParam.P.ToSystemBigInteger(),
                         PrimeExponentP = keyParam.DP.ToSystemBigInteger(),
@@ -230,6 +232,7 @@ namespace Keyczar.Compat
                             Modulus = keyParam.Modulus.ToSystemBigInteger(),
                             PublicExponent = keyParam.Exponent.ToSystemBigInteger(),
                             Size = keyParam.Modulus.BitLength,
+                            
                         };
                 }else{
                     return new Unofficial.RsaPublicSignKey
@@ -237,6 +240,7 @@ namespace Keyczar.Compat
                             Modulus = keyParam.Modulus.ToSystemBigInteger(),
                             PublicExponent = keyParam.Exponent.ToSystemBigInteger(),
                             Size = keyParam.Modulus.BitLength,
+                            Digest =  Unofficial.RsaPrivateSignKey.DigestForSize(keyParam.Modulus.BitLength)
                         };
                 }
             }

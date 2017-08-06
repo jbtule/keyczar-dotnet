@@ -64,7 +64,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="size">The size.</param>
         /// <returns></returns>
-        protected DigestAlg DigestForSize(int size)
+        internal static DigestAlg DigestForSize(int size)
         {
             //Based on matching up digest strength equal or above key strength from
             //http://csrc.nist.gov/publications/nistpubs/800-57/sp800-57_part1_rev3_general.pdf
