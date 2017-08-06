@@ -69,7 +69,7 @@ namespace KeyczarTest
                 var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.Verify,
                     Util.TestDataPath(TEST_DATA,
                         keyType + "-sign-crt." +
-                        fileFormat));
+                        fileFormat), official:true);
                 using (keyset)
                 using (var verifier = new Verifier(keyset))
                 {
