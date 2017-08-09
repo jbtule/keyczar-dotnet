@@ -74,6 +74,8 @@ namespace Keyczar
         {
             return _specs.Where(it => it.Value.RepresentedType == type).Select(it => it.Key).FirstOrDefault();
         }
+        
+        
 
         /// <summary>
         /// Defines the spec.
@@ -114,6 +116,8 @@ namespace Keyczar
 
         private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();
 
+
+        public static IEnumerable<KeyTypeSpec> Specs => _specs.Values;
 
         /// <summary>
         /// Describes the sizes and algorithms.

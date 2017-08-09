@@ -61,8 +61,8 @@ namespace Keyczar.Unofficial
             AesAead.KeySizes<AesAeadKey>(256, 192, 128).IsUnofficial().DefineSpec();
             HmacSha2.KeySizes<HmacSha2Key>(128, 192, 256).IsUnofficial().DefineSpec();
             AesHmacSha2.KeySizes<AesHmacSha2Key>(128, 192, 256).IsUnofficial().DefineSpec();
-            RSAPrivSign.KeySizes<RsaPrivateSignKey>(2048, 3072, 4096, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
-            RSAPubSign.KeySizes<RsaPublicSignKey>(2048, 3072, 4096, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
+            RSAPrivSign.KeySizes<RsaPrivateSignKey>(3072, 4096, 2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
+            RSAPubSign.KeySizes<RsaPublicSignKey>(3072, 4096, 2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
         }
     }
 }

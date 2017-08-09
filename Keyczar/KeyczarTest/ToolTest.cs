@@ -113,6 +113,21 @@ namespace KeyczarTest
 
             Directory.Delete(path, true);
         }
+        
+        
+        [Test]
+        public void TestKeyTypes()
+        {
+            string result;
+
+            result = Util.KeyczarTool(keytypes: null);
+            Expect(result, Is.StringContaining("AES_HMAC_SHA1*"));
+
+            result = Util.KeyczarTool(keytypes: null, unofficial:null);
+
+
+            Expect(result, Is.StringContaining("AES_GCM*"));
+        }
 
         [Test]
         public void TestImportPrivate()

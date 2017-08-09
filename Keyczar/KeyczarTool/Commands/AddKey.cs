@@ -50,34 +50,43 @@ namespace KeyczarTool
             this.SkipsCommandSummaryBeforeRunning();
         }
 
+        public static readonly IEnumerable<Tuple<KeyType, string>> KeyTypeMaps = new[]
+        {
+            Tuple.Create(KeyType.Aes, "AES_HMAC_SHA1"),
+            Tuple.Create(KeyType.RsaPriv, "RSA_SHA1"),
+            Tuple.Create(KeyType.DsaPriv, "DSA_SHA1"),
+            Tuple.Create(KeyType.HmacSha1, "HMAC_SHA1"),
+            Tuple.Create(UnofficialKeyType.AesAead, "AES_GCM"),
+            Tuple.Create(UnofficialKeyType.RSAPrivSign, "RSA_PSS"),
+            Tuple.Create(UnofficialKeyType.HmacSha2, "HMAC_SHA2"),
+            Tuple.Create(UnofficialKeyType.AesHmacSha2, "AES_HMAC_SHA2"),
+
+
+        };
+
+
+
         private KeyType KeyTypeForString(string type)
         {
             if (String.IsNullOrWhiteSpace(type))
                 return null;
-            switch (type)
+
+            var found = KeyTypeMaps.FirstOrDefault(it =>
+                String.Equals(it.Item2, type, StringComparison.InvariantCultureIgnoreCase));
+
+            if (found != null) return found.Item1;
+            
+            switch (type.ToUpper())
             {
-                case "AES_HMAC_SHA1":
-                    return KeyType.Aes;
-                case "RSA_SHA1":
                 case "RSA":
                     return KeyType.RsaPriv;
                 case "DSA":
-                case "DSA_SHA1":
                     return KeyType.DsaPriv;
-                case "HMAC_SHA1":
-                    return KeyType.HmacSha1;
-                case "AES_GCM":
-                    return UnofficialKeyType.AesAead;
-                case "RSA_PSS":
-                    return UnofficialKeyType.RSAPrivSign;
-                case "HMAC_SHA2":
-                    return UnofficialKeyType.HmacSha2;
-                case "AES_HMAC_SHA2":
-                    return UnofficialKeyType.AesHmacSha2;
                 default:
                     throw new ConsoleHelpAsException(string.Format(Localized.MsgInvalidType, type));
             }
         }
+        
         public override int Run(string[] remainingArguments)
         {
             var ret = 0;
