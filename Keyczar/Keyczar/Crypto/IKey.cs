@@ -25,6 +25,7 @@ namespace Keyczar.Crypto
     /// </summary>
     public interface IKey
     {
+
         /// <summary>
         /// Gets the key hash.
         /// </summary>

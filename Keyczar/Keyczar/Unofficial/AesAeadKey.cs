@@ -94,7 +94,7 @@ namespace Keyczar.Unofficial
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
-        protected override void GenerateKey(int size)
+        protected override void GenerateKey(int size, KeyczarConfig config)
         {
             AesKeyBytes = new byte[size/8];
             Secure.Random.NextBytes(AesKeyBytes);

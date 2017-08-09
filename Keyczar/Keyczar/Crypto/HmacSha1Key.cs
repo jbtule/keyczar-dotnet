@@ -82,7 +82,7 @@ namespace Keyczar.Crypto
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
-        protected override void GenerateKey(int size)
+        protected override void GenerateKey(int size, KeyczarConfig config)
         {
             HmacKeyBytes = new byte[size/8];
             Secure.Random.NextBytes(HmacKeyBytes);

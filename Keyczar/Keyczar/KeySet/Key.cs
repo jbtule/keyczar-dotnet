@@ -75,7 +75,16 @@ namespace Keyczar
             config = config ?? KeyczarDefaults.DefaultConfig;
             var json = config.RawStringEncoding.GetString(keyData);
             var key = (Key) JsonConvert.DeserializeObject(json, type.RepresentedType);
+            key.Setup(config);
             return key;
+        }
+        
+        /// <summary>
+        /// Called after Key is read from keyset (optionally implmented
+        /// </summary>
+        public virtual void Setup(KeyczarConfig config)
+        {
+           
         }
 
         /// <summary>
@@ -85,18 +94,19 @@ namespace Keyczar
         /// <param name="size">The size.</param>
         /// <returns></returns>
         /// <exception cref="InvalidKeyTypeException"></exception>
-        public static Key Generate(KeyType type, int size = 0)
+        public static Key Generate(KeyType type, int size = 0, KeyczarConfig config =null)
         {
+            config = config ?? KeyczarDefaults.DefaultConfig;
             if (size == 0)
             {
                 size = type.DefaultSize;
             }
             if (!type.KeySizeOptions.Contains(size))
             {
-                throw new InvalidKeyTypeException(string.Format("Invalid Size: {0}!", size));
+                throw new InvalidKeyTypeException($"Invalid Size: {size}!");
             }
             var key = (Key) Activator.CreateInstance(type.RepresentedType);
-            key.GenerateKey(size);
+            key.GenerateKey(size, config);
             key.Size = size;
             return key;
         }
@@ -105,7 +115,7 @@ namespace Keyczar
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
-        protected abstract void GenerateKey(int size);
+        protected abstract void GenerateKey(int size, KeyczarConfig config);
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

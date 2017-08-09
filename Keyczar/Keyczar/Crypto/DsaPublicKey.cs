@@ -82,7 +82,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="size">The size.</param>
         /// <exception cref="System.NotSupportedException"></exception>
-        protected override void GenerateKey(int size) 
+        protected override void GenerateKey(int size, KeyczarConfig config) 
             => throw new NotSupportedException();
 
         /// <summary>

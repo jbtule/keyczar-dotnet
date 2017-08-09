@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Text;
 
@@ -10,7 +11,7 @@ namespace Keyczar
         public KeyczarConfig(){
             StrictDsaVerification = Convert.ToBoolean(ConfigurationManager.AppSettings["keyczar.strict_dsa_verification"] ?? "false");
             RawStringEncoding = Encoding.GetEncoding(ConfigurationManager.AppSettings["keyczar.raw_string_encoding"] ?? "utf-8");
-
+            Other = new Dictionary<string,object>();
         }
 
         /// <summary>
@@ -19,5 +20,7 @@ namespace Keyczar
         /// </summary>
         public bool StrictDsaVerification { get; set; }
         public Encoding RawStringEncoding { get; set; }
+        
+        public IDictionary<string,object> Other { get; }
     }
 }

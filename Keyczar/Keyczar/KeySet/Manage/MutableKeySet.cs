@@ -117,8 +117,8 @@ namespace Keyczar
         /// <param name="keySize">Size of the key.</param>
         /// <param name="type">The Key type.</param>
         /// <param name="options">The options. dictionary or annoymous type of properties to set</param>
+        /// <param name="comment"></param>
         /// <returns></returns>
-
         public int AddKey(KeyStatus status, int keySize =0, KeyType type =null,object options=null, string comment = null)
         {
             if (type != null && Metadata.Kind != null && type.Kind != Metadata.Kind)

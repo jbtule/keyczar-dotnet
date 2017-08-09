@@ -68,7 +68,7 @@ namespace Keyczar.Crypto
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
-        protected override void GenerateKey(int size)
+        protected override void GenerateKey(int size, KeyczarConfig config)
         {
             var paramgen = new DsaParametersGenerator();
             paramgen.Init(size, 100, Secure.Random);
