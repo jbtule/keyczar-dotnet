@@ -154,11 +154,7 @@ namespace Keyczar.Compat
                 /// <returns></returns>
                 public char[] GetPassword()
                 {
-                    if (_password == null)
-                    {
-                        return null;
-                    }
-                    return _password().ToCharArray();
+                    return _password?.Invoke().ToCharArray();
                 }
             }
 
