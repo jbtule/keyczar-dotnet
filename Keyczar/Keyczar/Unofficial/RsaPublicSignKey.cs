@@ -135,7 +135,7 @@ namespace Keyczar.Unofficial
                     magModulus,
                     magPublicExponent,
                     Padding.ToBytes(),
-                    Encoding.UTF8.GetBytes(Digest.ToString())
+                    Digest.ToBytes()
                 );
                 magModulus.Clear();
                 magPublicExponent.Clear();

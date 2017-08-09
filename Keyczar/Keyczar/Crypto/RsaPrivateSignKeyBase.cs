@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Numerics;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
@@ -21,6 +22,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
+using Org.BouncyCastle.Utilities.Encoders;
 
 namespace Keyczar.Crypto
 {
@@ -99,6 +101,9 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public override byte[] GetKeyHash() => PublicKey.GetKeyHash();
 
+
+        public override IEnumerable<byte[]> GetFallbackKeyHash() => PublicKey.GetFallbackKeyHash();
+        
         /// <summary>
         /// Generates the key.
         /// </summary>
