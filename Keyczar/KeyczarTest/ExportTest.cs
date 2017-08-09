@@ -30,6 +30,31 @@ namespace KeyczarTest
             var path = Path.Combine(Path.GetTempPath(), "dummy.pem");
             Console.WriteLine(path);
             ks.ExportPrimaryAsPkcs(path, () => "dummy");
+            var contents = File.ReadAllText(path);
+            Expect(contents, Is.StringContaining("END PUBLIC KEY"));
+        }
+        
+        [Test]
+        public void TestPrivateKeyExport()
+        {
+            var ks = new FileSystemKeySet(Util.TestDataPath(TEST_DATA, "rsa"));
+            var path = Path.Combine(Path.GetTempPath(), "dummy-private-withpass.pem");
+            Console.WriteLine(path);
+            ks.ExportPrimaryAsPkcs(path, () => "dummy");
+            var contents = File.ReadAllText(path);
+            Expect(contents, Is.StringContaining("END ENCRYPTED PRIVATE KEY"));
+        }
+        
+        [Test]
+        public void TestPriveKeyNoPassExport()
+        {
+            var ks = new FileSystemKeySet(Util.TestDataPath(TEST_DATA, "rsa"));
+            var path = Path.Combine(Path.GetTempPath(), "dummy-private-nopass.pem");
+            Console.WriteLine(path);
+            ks.ExportPrimaryAsPkcs(path, null);
+            var contents = File.ReadAllText(path);
+            Expect(contents, Is.StringContaining("END PUBLIC KEY"));
+            Expect(contents, Is.StringContaining("END RSA PRIVATE KEY"));
         }
     }
 }

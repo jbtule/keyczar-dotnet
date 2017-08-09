@@ -182,15 +182,16 @@ namespace Keyczar.Compat
             "CA2202:Do not dispose objects multiple times")]
         public static bool ExportPrimaryAsPkcs(this IKeySet keySet, Stream stream, Func<string> passwordPrompt)
         {
-            var i = keySet.Metadata.Versions.First(it => it.Status == KeyStatus.Primary).VersionNumber;
-            using (var key = keySet.GetKey(i))
+          
+            using (var key = keySet.GetPrimaryKey())
             {
                 using (var writer = new StreamWriter(stream))
                 {
                     var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);
 
+                    var password = (passwordPrompt?.Invoke() ?? String.Empty);
                     AsymmetricKeyParameter writeKey;
-                    if (!(key is IPrivateKey))
+                    if (!(key is IPrivateKey) || String.IsNullOrWhiteSpace(password))
                     {
 
                         switch (key)
@@ -199,6 +200,16 @@ namespace Keyczar.Compat
                                 writeKey = BouncyCastleFromKey(dsa);
                                 break;
                             case IRsaPublicKey rsa:
+                                writeKey = BouncyCastleFromKey(rsa);
+                                break;
+                            case DsaPrivateKey dsa:
+                                writeKey = BouncyCastleFromKey(dsa.PublicKey);
+                                pemWriter.WriteObject(new MiscPemGenerator(writeKey));
+                                writeKey = BouncyCastleFromKey(dsa);
+                                break;
+                            case IRsaPrivateKey rsa:
+                                writeKey = BouncyCastleFromKey(rsa.PublicKey);
+                                pemWriter.WriteObject(new MiscPemGenerator(writeKey));
                                 writeKey = BouncyCastleFromKey(rsa);
                                 break;
                             default:
@@ -223,7 +234,7 @@ namespace Keyczar.Compat
 
                         pemWriter.WriteObject(new Pkcs8Generator(writeKey, Pkcs8Generator.PbeSha1_RC2_128)
                         {
-                            Password = (passwordPrompt() ?? String.Empty).ToCharArray(),
+                            Password = (password).ToCharArray(),
                             SecureRandom = Secure.Random,
                             IterationCount = 4096
                         });
