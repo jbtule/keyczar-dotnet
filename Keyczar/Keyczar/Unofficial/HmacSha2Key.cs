@@ -87,7 +87,7 @@ namespace Keyczar.Unofficial
             }
             else
             {
-                throw new InvalidKeyTypeException(string.Format("Unsupported digest type :{0}", Digest));
+                throw new InvalidKeyTypeException($"Unsupported digest type :{Digest}");
             }
 
             var hmac = new HMac(digest);

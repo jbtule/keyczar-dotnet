@@ -64,26 +64,32 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <returns></returns>
         public override byte[] GetKeyHash() 
-            => Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
-                    HmacKey.HmacKeyBytes, Utility.GetBytes(HmacKey.HashLength), HmacKey.Digest.ToBytes());
-
+            => GenerateKeyHash(AesKeyBytes, HmacKey.HmacKeyBytes, HmacKey.HashLength, HmacKey.Digest);
+        
+        public static byte[] GenerateKeyHash(byte[] aesKeyBytes, byte[] hmacKeyBytes, int hashlength, DigestAlg digest)
+        {
+            return Utility.UnofficalHashKey(KeyczarConst.KeyHashLength, 
+                                    Utility.GetBytes(aesKeyBytes.Length),
+                                    aesKeyBytes,
+                                    Utility.GetBytes(hmacKeyBytes.Length),
+                                    hmacKeyBytes,
+                                    Utility.GetBytes(hashlength), digest.ToBytes());
+        }
+        
         /// <summary>
         /// Gets the fallback key hashes. old/buggy hashes from old/other keyczar implementations
         /// </summary>
         /// <returns></returns>
         public override IEnumerable<byte[]> GetFallbackKeyHash()
         {
-            var trimmedKeyBytes = Utility.StripLeadingZeros(AesKeyBytes);
-            return new byte[][]
-                       {
-                           //Java keyczar uses block length instead of keylength for hash
-                           Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
-                                           HmacKey.HmacKeyBytes, HmacKey.Digest.ToBytes()),
-                           //c++ keyczar used to strip leading zeros from key bytes
-                           Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(trimmedKeyBytes.Length),
-                                           trimmedKeyBytes,
-                                           HmacKey.HmacKeyBytes),
-                       };
+            return new[]
+            {
+                   Utility.HashKey(KeyczarConst.KeyHashLength, 
+                       Utility.GetBytes(AesKeyBytes.Length),
+                       AesKeyBytes,
+                       HmacKey.HmacKeyBytes,
+                       Utility.GetBytes(HmacKey.HashLength), HmacKey.Digest.ToBytes())
+            };
         }
 
         /// <summary>

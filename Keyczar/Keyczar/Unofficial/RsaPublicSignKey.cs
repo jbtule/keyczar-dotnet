@@ -21,6 +21,8 @@ using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Signers;
 using System;
+using System.Collections.Generic;
+using System.Numerics;
 
 namespace Keyczar.Unofficial
 {
@@ -35,6 +37,7 @@ namespace Keyczar.Unofficial
         /// <summary>
         /// Pss Padding identifer
         /// </summary>
+        [Obsolete("Use PaddingAlg.Pss instead")]
         public static readonly string PssPadding = "PSS";
 
         /// <summary>
@@ -42,14 +45,14 @@ namespace Keyczar.Unofficial
         /// </summary>
         public RsaPublicSignKey()
         {
-            Padding = PssPadding;
+            Padding = PaddingAlg.Pss;
         }
 
         /// <summary>
         /// Gets or sets the Padding (Only PSS is supported).
         /// </summary>
         /// <value>The Padding.</value>
-        public string Padding { get; set; }
+        public PaddingAlg Padding { get; set; }
 
         /// <summary>
         /// Gets or sets the digest.
@@ -85,13 +88,13 @@ namespace Keyczar.Unofficial
             }
             else
             {
-                throw new InvalidKeyTypeException(string.Format("Unknown digest type :{0}", Digest));
+                throw new InvalidKeyTypeException($"Unknown digest type :{Digest}");
             }
-            if (Padding == PssPadding)
+            if (Padding == PaddingAlg.Pss)
             {
                 return new PssSigner(new RsaBlindedEngine(), digest);
             }
-            throw new InvalidKeyTypeException(string.Format("Unknown padding type :{0}", Padding));
+            throw new InvalidKeyTypeException($"Unknown padding type :{Padding}");
         }
 
         /// <summary>
@@ -100,19 +103,51 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
-            var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
+            return GenerateKeyHash(Modulus, PublicExponent, Padding, Digest);
+        }
 
-            var hash = Utility.HashKeyLengthPrefix(
+        public static byte[] GenerateKeyHash(BigInteger modulus, BigInteger publicExp, PaddingAlg padding, DigestAlg digest)
+        {
+            var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(modulus));
+            var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(publicExp));
+
+            var hash = Utility.UnofficialHashKeyLengthPrefix(
                 KeyczarConst.KeyHashLength,
                 magModulus,
                 magPublicExponent,
-                Encoding.UTF8.GetBytes(Padding),
-                Encoding.UTF8.GetBytes(Digest.ToString())
-                );
+                padding.ToBytes(),
+                digest.ToBytes()
+            );
             magModulus.Clear();
             magPublicExponent.Clear();
             return hash;
         }
+
+        public override IEnumerable<byte[]> GetFallbackKeyHash()
+        {
+            byte[] getFallBack1()
+            {
+                var magModulus = Utility.StripLeadingZeros(Utility.GetBytes(Modulus));
+                var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
+
+                var hash = Utility.HashKeyLengthPrefix(
+                    KeyczarConst.KeyHashLength,
+                    magModulus,
+                    magPublicExponent,
+                    Padding.ToBytes(),
+                    Encoding.UTF8.GetBytes(Digest.ToString())
+                );
+                magModulus.Clear();
+                magPublicExponent.Clear();
+                return hash;
+            }
+            
+            return new[]
+            {
+                getFallBack1()
+            };
+        }
+
+      
     }
 }

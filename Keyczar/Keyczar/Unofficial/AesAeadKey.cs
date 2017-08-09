@@ -62,12 +62,13 @@ namespace Keyczar.Unofficial
         /// Gets or sets the mode (Only GCM is supported).
         /// </summary>
         /// <value>The mode.</value>
-        public string Mode { get; set; }
+        public AesMode Mode { get; set; }
 
 
         /// <summary>
         /// The GCM mode
         /// </summary>
+        [Obsolete("Use AesMode.Gcm instead.")]
         public static readonly string GcmMode = "GCM";
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         public AesAeadKey()
         {
-            Mode = GcmMode; //Default Mode
+            Mode = AesMode.Gcm; //Default Mode
             IVLength = 12;
         }
 
@@ -105,8 +106,14 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
-                                   Encoding.UTF8.GetBytes(Mode), Utility.GetBytes(IVLength), AesKeyBytes);
+            return GenerateKeyHash(AesKeyBytes, IVLength, Mode);
+    
+        }
+
+        public static byte[] GenerateKeyHash(byte[] keyBytes, int ivLength, AesMode mode)
+        {
+            return Utility.UnofficalHashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(keyBytes.Length),
+                mode.ToBytes(), Utility.GetBytes(ivLength), keyBytes);
         }
 
         /// <summary>
@@ -116,18 +123,22 @@ namespace Keyczar.Unofficial
         public override IEnumerable<byte[]> GetFallbackKeyHash()
         {
             var list = new List<byte[]>();
-            if (IVLength == 16 && Mode == GcmMode)
+            if (IVLength == 16 && Mode == AesMode.Gcm)
             {
                 //Pre IVLength property existing key hash
                 list.Add(Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
-                                         Encoding.UTF8.GetBytes(Mode), AesKeyBytes));
+                                         Mode.ToBytes(), AesKeyBytes));
             }
+            
+            list.Add(Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
+                Mode.ToBytes(), Utility.GetBytes(IVLength), AesKeyBytes));
+            
             return list;
         }
 
         private Func<IAeadBlockCipher> GetMode()
         {
-            if (Mode == GcmMode)
+            if (Mode == AesMode.Gcm)
             {
                 return () => _cipher;
             }

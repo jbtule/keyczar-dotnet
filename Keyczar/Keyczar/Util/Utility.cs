@@ -296,6 +296,29 @@ namespace Keyczar.Util
             Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
             return outBytes;
         }
+        
+        /// <summary>
+        /// Hashes the key for keyczar version look ups.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="components">The components.</param>
+        /// <returns></returns>
+        public static byte[] UnofficalHashKey(int size, params byte[][] components)
+        {
+            var sha1 = new Sha256Digest();
+
+            foreach (var data in components)
+            {
+                sha1.BlockUpdate(data, 0, data.Length);
+            }
+
+            var hash = new byte[sha1.GetDigestSize()];
+            sha1.DoFinal(hash, 0);
+            sha1.Reset();
+            var outBytes = new byte[size];
+            Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
+            return outBytes;
+        }
 
         /// <summary>
         /// Hashes each component of the key hash with it's length first.
@@ -320,6 +343,31 @@ namespace Keyczar.Util
             Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
             return outBytes;
         }
+        
+        /// <summary>
+        /// Hashes each component of the key hash with it's length first.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="components">The components.</param>
+        /// <returns></returns>
+        public static byte[] UnofficialHashKeyLengthPrefix(int size, params byte[][] components)
+        {
+            var sha1 = new Sha256Digest();
+
+            foreach (var data in components)
+            {
+                byte[] length = GetBytes(data.Length);
+                sha1.BlockUpdate(length, 0, length.Length);
+                sha1.BlockUpdate(data, 0, data.Length);
+            }
+            var hash = new byte[sha1.GetDigestSize()];
+            sha1.DoFinal(hash, 0);
+            sha1.Reset();
+            var outBytes = new byte[size];
+            Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
+            return outBytes;
+        }
+
 
 
         /// <summary>
