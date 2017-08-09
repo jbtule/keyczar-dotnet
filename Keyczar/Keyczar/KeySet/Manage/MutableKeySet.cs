@@ -119,11 +119,11 @@ namespace Keyczar
         /// <param name="options">The options. dictionary or annoymous type of properties to set</param>
         /// <returns></returns>
 
-        public int AddKey(KeyStatus status, int keySize =0, KeyType type =null,object options=null)
+        public int AddKey(KeyStatus status, int keySize =0, KeyType type =null,object options=null, string comment = null)
         {
             if (type != null && Metadata.Kind != null && type.Kind != Metadata.Kind)
             {
-                throw new InvalidKeyTypeException(String.Format("Keyset only supports {0} keys", Metadata.Kind));
+                throw new InvalidKeyTypeException($"Keyset only supports {Metadata.Kind} keys");
             }
 
 		      	Key key;
@@ -151,7 +151,7 @@ namespace Keyczar
                     }
                 }
             } while (loop);
-            return AddKey(status, key);
+            return AddKey(status, key, comment);
         }
 
         /// <summary>
@@ -160,11 +160,11 @@ namespace Keyczar
         /// <param name="status">The status.</param>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        public int AddKey(KeyStatus status, Key key)
+        public int AddKey(KeyStatus status, Key key, string comment = null)
         {
             if (key.KeyType.Kind != Metadata.Kind && Metadata.Kind != null)
             {
-                throw new InvalidKeyTypeException(String.Format("Keyset only supports {0} keys", Metadata.Kind));
+                throw new InvalidKeyTypeException($"Keyset only supports {Metadata.Kind} keys");
             }
 
 #pragma warning disable 618
@@ -183,7 +183,7 @@ namespace Keyczar
                 lastVersion = Math.Max(lastVersion, version.VersionNumber);
             }
 
-            _metadata.Versions.Add(new KeyVersion(status, ++lastVersion, key));
+            _metadata.Versions.Add(new KeyVersion(status, ++lastVersion, key, comment));
             _keys.Add(lastVersion, key);
             onlyMetaChanged = false;
             return lastVersion;

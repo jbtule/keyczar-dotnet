@@ -36,13 +36,14 @@ namespace Keyczar
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyVersion"/> class.
         /// </summary>
-        public KeyVersion(KeyStatus status, int versionNumber, Key key)
+        public KeyVersion(KeyStatus status, int versionNumber, Key key, string comment = null)
         {
             Status = status;
             VersionNumber = versionNumber;
             KeyType = key.KeyType;
             KeyId = KeyczarConst.FormatBytes.Concat(key.GetKeyHash()).ToArray();
             Exportable = false;
+            Comment = comment;
         }
 
         /// <summary>
@@ -56,6 +57,7 @@ namespace Keyczar
             Status = keyVersion.Status;
             KeyType = keyVersion.KeyType;
             KeyId = keyVersion.KeyId;
+            Comment = keyVersion.Comment;
         }
 
         /// <summary>
@@ -66,8 +68,6 @@ namespace Keyczar
         /// </value>
         [JsonProperty(PropertyName = "Type", NullValueHandling = NullValueHandling.Ignore)]
         public KeyType KeyType { get; set; }
-        
-        
         
         
         /// <summary>
@@ -86,6 +86,9 @@ namespace Keyczar
         /// </summary>
         /// <value>The version number.</value>
         public int VersionNumber { get; set; }
+        
+        
+        public string Comment { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="KeyVersion"/> is exportable.
@@ -221,7 +224,14 @@ namespace Keyczar
         /// </returns>
         public override int GetHashCode()
         {
-            return VersionNumber;
+          
+            unchecked
+            {
+                // ReSharper disable once NonReadonlyMemberInGetHashCode
+                var result = VersionNumber;
+                result = (result * 397) ^ GetType().ToString().GetHashCode();
+                return result;
+            }
         }
     }
 }
