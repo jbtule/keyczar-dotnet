@@ -100,7 +100,7 @@ namespace Keyczar
                             })
                 .ToList();
 
-            _primaryVersion = metadata.Versions.SingleOrDefault(it => it.Status == KeyStatus.Primary);
+            _primaryVersion = metadata.GetPrimaryKeyVersion();
 
             _versions = versions.ToDictionary(k => k.Item2.VersionNumber, v => v.Item3);
 

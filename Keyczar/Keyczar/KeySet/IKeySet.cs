@@ -41,6 +41,19 @@ namespace Keyczar
             return key;
         }
 
+        private static Key GetPrimaryKey(this IKeySet keySet)
+        {
+            var version = keySet.Metadata.GetPrimaryKeyVersion();
+            return version == null 
+                ? null 
+                : keySet.GetKey(version.VersionNumber);
+        }
+        
+        public static KeyVersion GetPrimaryKeyVersion(this KeyMetadata metadata)
+        {
+            return metadata.Versions.SingleOrDefault(it => it.Status == KeyStatus.Primary);
+        }
+
         public static KeyczarConfig GetConfig(this IKeySet keySet)
         {
             return keySet.Config ?? KeyczarDefaults.DefaultConfig;
