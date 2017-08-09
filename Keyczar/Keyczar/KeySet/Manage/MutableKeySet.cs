@@ -72,7 +72,7 @@ namespace Keyczar
                 //Easy way to deep copy keys
                 var keyData = keySet.GetKeyData(version.VersionNumber);
                 var keyType = _metadata.GetKeyType(version.VersionNumber);
-                var key = Key.Read(keyType, keyData);
+                var key = Key.Read(keyType, keyData, Config);
                 keyData.Clear();
                 _keys.Add(version.VersionNumber, key);
             }
@@ -288,7 +288,7 @@ namespace Keyczar
 
             var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
                 .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = this.GetConfig().RawStringEncoding.GetBytes(p.PublicKey.ToJson())})
-                .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value)}).ToList();
+                .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value, Config)}).ToList();
 
 
             //Update versions to public key type
