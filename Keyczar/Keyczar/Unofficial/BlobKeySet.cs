@@ -47,6 +47,12 @@ namespace Keyczar.Unofficial
             _zipFile = ZipFile.Read(readStream);
         }
 
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
+
+
 
         /// <summary>
         /// Gets the binary data that the key is stored in.

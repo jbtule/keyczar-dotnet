@@ -98,6 +98,8 @@ namespace KeyczarTool
             IDisposable d4 = null;
             IDisposable d5 = null;
             IDisposable d6 = null;
+            
+            var config = new KeyczarConfig();
 
             IKeySet ks = ProduceKeySet(_location, _crypterLocation, _password, out d1, out d2, out d3);
             IKeySet ks2 = ProduceKeySet(_location2, _crypterLocation2, _password2, out d4, out d5, out d6);
@@ -131,7 +133,7 @@ namespace KeyczarTool
                         inStream = File.OpenRead(_message);
                     }else
                     {
-                        inStream = new MemoryStream(Keyczar.KeyczarBase.RawStringEncoding.GetBytes(_message));
+                        inStream = new MemoryStream(config.RawStringEncoding.GetBytes(_message));
                     }
           
                 Stream outstream;
@@ -307,7 +309,7 @@ namespace KeyczarTool
                 {
                     byte[] hidden = null;
                     if (!String.IsNullOrWhiteSpace(_attachedHidden))
-                        hidden = Keyczar.KeyczarBase.RawStringEncoding.GetBytes(_attachedHidden);
+                        hidden = signer.Config.RawStringEncoding.GetBytes(_attachedHidden);
                     signer.Sign(inStream, outStream, hidden);
                 }
             }

@@ -44,6 +44,8 @@ namespace Keyczar.Compat
         private readonly KeyMetadata _metadata;
         private IList<Key> _key = new List<Key>();
 
+        
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ImportedKeySet"/> class.
         /// </summary>
@@ -86,7 +88,10 @@ namespace Keyczar.Compat
             };
         }
 
-
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
 
         /// <summary>
         /// Gets the binary data that the key is stored in.
@@ -95,7 +100,7 @@ namespace Keyczar.Compat
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return KeyczarBase.RawStringEncoding.GetBytes(_key[version - 1].ToJson());
+            return this.GetConfig().RawStringEncoding.GetBytes(_key[version - 1].ToJson());
         }
 
         /// <summary>

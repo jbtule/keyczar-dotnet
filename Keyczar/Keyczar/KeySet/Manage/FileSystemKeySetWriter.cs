@@ -58,6 +58,11 @@ namespace Keyczar
             if (!Directory.Exists(_location))
                 Directory.CreateDirectory(_location);
         }
+        
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
 
         /// <summary>
         /// Writes the specified key data.

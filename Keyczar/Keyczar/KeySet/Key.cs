@@ -70,9 +70,10 @@ namespace Keyczar
         /// <param name="type">The type.</param>
         /// <param name="keyData">The key data.</param>
         /// <returns></returns>
-        public static Key Read(KeyType type, byte[] keyData)
+        public static Key Read(KeyType type, byte[] keyData, KeyczarConfig config = null)
         {
-            var json = KeyczarBase.RawStringEncoding.GetString(keyData);
+            config = config ?? new KeyczarConfig();
+            var json = config.RawStringEncoding.GetString(keyData);
             var key = (Key) JsonConvert.DeserializeObject(json, type.RepresentedType);
             return key;
         }

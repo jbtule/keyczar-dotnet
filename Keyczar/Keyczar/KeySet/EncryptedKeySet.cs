@@ -55,6 +55,11 @@ namespace Keyczar
             _keySet = keySet;
             _crypter = crypter;
         }
+        
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
 
         /// <summary>
         /// Gets the binary data that the key is stored in.
@@ -69,7 +74,7 @@ namespace Keyczar
                 return cipherData;
             }
 
-            var cipherString = KeyczarBase.RawStringEncoding.GetString(cipherData);
+            var cipherString = this.GetConfig().RawStringEncoding.GetString(cipherData);
             return _crypter.Decrypt(WebSafeBase64.Decode(cipherString.ToCharArray()));
         }
 

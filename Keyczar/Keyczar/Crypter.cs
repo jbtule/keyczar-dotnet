@@ -60,7 +60,7 @@ namespace Keyczar
         /// <returns></returns>
         public string Decrypt(WebBase64 data)
         {
-            return RawStringEncoding.GetString(Decrypt(data.ToBytes()));
+            return Config.RawStringEncoding.GetString(Decrypt(data.ToBytes()));
         }
 
         /// <summary>

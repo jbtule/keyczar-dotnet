@@ -54,6 +54,12 @@ namespace Keyczar.Unofficial
             _zipFile.AddEntry(version.ToString(CultureInfo.InvariantCulture), keyData);
         }
 
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
+
+
 
         /// <summary>
         /// Writes the specified metadata.

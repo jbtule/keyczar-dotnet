@@ -126,6 +126,11 @@ namespace Keyczar.Unofficial
                 return JsonConvert.DeserializeObject<KeyMetadata>(meta);
             }
         }
+        
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
 
 
         /// <summary>

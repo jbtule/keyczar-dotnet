@@ -52,7 +52,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Sign(String rawData,Byte[] hidden =null)
         {
-            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), hidden));
+            return WebBase64.FromBytes(Sign(Config.RawStringEncoding.GetBytes(rawData), hidden));
         }
 
 

@@ -69,11 +69,18 @@ namespace Keyczar
                 return cipherData;
             }
 
-            var cipherString = KeyczarBase.RawStringEncoding.GetString(cipherData);
+            var cipherString = this.GetConfig().RawStringEncoding.GetString(cipherData);
             var store = JsonConvert.DeserializeObject<PbeKeyStore>(cipherString);
 
             return store.DecryptKeyData(_password.Prompt);
         }
+        
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
+
+
 
         /// <summary>
         /// Gets the metadata.

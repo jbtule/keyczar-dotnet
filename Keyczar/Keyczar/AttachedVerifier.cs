@@ -93,7 +93,7 @@ namespace Keyczar
         /// <returns></returns>
         /// <exception cref="InvalidCryptoDataException">Data Doesn't Match Signature!</exception>
          public string VerifiedMessage(WebBase64 rawData, byte[] hidden = null) 
-            => RawStringEncoding.GetString(VerifiedMessage(rawData.ToBytes(), hidden));
+            => Config.RawStringEncoding.GetString(VerifiedMessage(rawData.ToBytes(), hidden));
 
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Keyczar
         {
             byte[] output;
             var verified = TryGetVerifiedMessage(signedMessage.ToBytes(), out output, hidden);
-            verifiedMessage = RawStringEncoding.GetString(output);
+            verifiedMessage = Config.RawStringEncoding.GetString(output);
             return verified;
         }
 

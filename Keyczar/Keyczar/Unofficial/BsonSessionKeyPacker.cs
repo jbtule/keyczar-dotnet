@@ -68,7 +68,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        public byte[] Pack(Key key) 
+        public byte[] Pack(Key key, KeyczarConfig config) 
             => Utility.ToBson(PackIt(key));
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="data">The bytes.</param>
         /// <returns></returns>
-        public Key Unpack(byte[] data)
+        public Key Unpack(byte[] data, KeyczarConfig config)
         {
             using (var input = new MemoryStream(data))
             {

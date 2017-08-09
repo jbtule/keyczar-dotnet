@@ -47,25 +47,7 @@ namespace Keyczar
     /// </summary>
     public abstract class KeyczarBase:IDisposable
     {
-        private static Encoding _rawStringEncoding;
-        /// <summary>
-        /// Default encoding used through out (UTF8)
-        /// </summary>
-        public static Encoding RawStringEncoding
-        {
-            get => _rawStringEncoding ?? (_rawStringEncoding = Encoding.UTF8);
-            set
-            {
-                   if (_rawStringEncoding != null)
-                   {
-                      throw new ReadOnlyException("Once the encoding has been set or called, it cannot be changed. Defaults to UTF-8");
-                   }
-                _rawStringEncoding = value;
-            }
-        }
-
-        
-
+      
 
         /// <summary>
         /// Config Options

@@ -64,7 +64,7 @@ namespace Keyczar
         /// <param name="expiration">The expiration.</param>
         /// <returns></returns>
         public WebBase64 Sign(String rawData, DateTime expiration) 
-            => WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
+            => WebBase64.FromBytes(Sign(Config.RawStringEncoding.GetBytes(rawData), expiration));
 
         /// <summary>
         /// Signs the specified raw data.

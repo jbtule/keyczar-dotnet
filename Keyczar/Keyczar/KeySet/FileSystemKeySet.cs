@@ -54,7 +54,10 @@ namespace Keyczar
             return File.ReadAllBytes(path);
         }
 
-    
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
 
         /// <summary>
         /// Gets the metadata.
@@ -65,7 +68,7 @@ namespace Keyczar
             get
             {
                 var path = Path.Combine(_location, "meta");
-                return KeyMetadata.Read(File.ReadAllText(path, KeyczarBase.RawStringEncoding));
+                return KeyMetadata.Read(File.ReadAllText(path, this.GetConfig().RawStringEncoding));
             }
         }
 

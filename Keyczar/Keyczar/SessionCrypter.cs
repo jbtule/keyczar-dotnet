@@ -37,14 +37,14 @@ namespace Keyczar
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        byte[] Pack(Key key);
+        byte[] Pack(Key key, KeyczarConfig config);
 
         /// <summary>
         /// Unpacks the specified bytes into a key.
         /// </summary>
         /// <param name="data">The bytes.</param>
         /// <returns></returns>
-        Key Unpack(byte[] data);
+        Key Unpack(byte[] data, KeyczarConfig config);
     }
 
     /// <summary>
@@ -52,12 +52,19 @@ namespace Keyczar
     /// </summary>
     public class SessionCrypter : IDisposable
     {
-        private Crypter _crypter;
-        private WebBase64 _sessionMaterial;
-        private ImportedKeySet _keyset;
-        private AttachedSigner _signer;
-        private AttachedVerifier _verifier;
-        private byte[] _nonce;
+        protected class Workings
+        {
+
+            public  Crypter _crypter;
+            public WebBase64 _sessionMaterial;
+            public ImportedKeySet _keyset;
+            public AttachedSigner _signer;
+            public AttachedVerifier _verifier;
+            public byte[] _nonce;
+        }
+
+        private Lazy<Workings> _working;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SessionCrypter" /> class.
@@ -71,44 +78,50 @@ namespace Keyczar
         public SessionCrypter(Encrypter keyEncrypter, AttachedSigner signer = null, int? keySize = null,
                               KeyType symmetricKeyType = null, ISessionKeyPacker keyPacker = null)
         {
-            symmetricKeyType = symmetricKeyType ?? KeyType.Aes;
-            if (keyPacker == null && symmetricKeyType != KeyType.Aes)
+            Workings initLazy()
             {
-                throw new ArgumentException("Without a supplying a keypacker you may only use KeyType.AES",
-                                            "symmetricKeyType");
+                var workings = new Workings();
+                symmetricKeyType = symmetricKeyType ?? KeyType.Aes;
+                if (keyPacker == null && symmetricKeyType != KeyType.Aes)
+                {
+                    throw new ArgumentException("Without a supplying a keypacker you may only use KeyType.AES",
+                        "symmetricKeyType");
+                }
+
+                if (signer != null)
+                {
+                    keyPacker = keyPacker ?? new NonceSignedSessionPacker();
+                }
+                keyPacker = keyPacker ?? new SimpleAesHmacSha1KeyPacker();
+
+                var key = Key.Generate(symmetricKeyType, keySize ?? symmetricKeyType.DefaultSize);
+                workings._keyset = new ImportedKeySet(key, KeyPurpose.DecryptAndEncrypt);
+                workings._crypter = new Crypter(workings._keyset);
+                workings._signer = signer;
+
+
+                byte[] packedKey;
+                var sessionPacker = keyPacker as IInteroperableSessionMaterialPacker;
+
+                if (sessionPacker == null)
+                {
+                    packedKey = keyPacker.Pack(key, Config);
+                }
+                else
+                {
+                    var nonceSession = new NonceSessionMaterial((AesKey) key);
+                    packedKey = sessionPacker.PackMaterial(nonceSession, Config);
+                    workings._nonce = nonceSession.Nonce.ToBytes();
+                }
+
+                workings._sessionMaterial = WebBase64.FromBytes(keyEncrypter.Encrypt(packedKey));
+                if (sessionPacker == null && workings._signer != null)
+                {
+                    workings._sessionMaterial = WebBase64.FromBytes(workings._signer.Sign(workings._sessionMaterial.ToBytes()));
+                }
+                return workings;
             }
-
-            if (signer != null)
-            {
-                keyPacker = keyPacker ?? new NonceSignedSessionPacker();
-            }
-            keyPacker = keyPacker ?? new SimpleAesHmacSha1KeyPacker();
-
-            var key = Key.Generate(symmetricKeyType, keySize ?? symmetricKeyType.DefaultSize);
-            _keyset = new ImportedKeySet(key, KeyPurpose.DecryptAndEncrypt);
-            _crypter = new Crypter(_keyset);
-            _signer = signer;
-
-
-            byte[] packedKey;
-            var sessionPacker = keyPacker as IInteroperableSessionMaterialPacker;
-
-            if (sessionPacker == null)
-            {
-                packedKey = keyPacker.Pack(key);
-            }
-            else
-            {
-                var nonceSession = new NonceSessionMaterial((AesKey) key);
-                packedKey = sessionPacker.PackMaterial(nonceSession);
-                _nonce = nonceSession.Nonce.ToBytes();
-            }
-
-            _sessionMaterial = WebBase64.FromBytes(keyEncrypter.Encrypt(packedKey));
-            if (sessionPacker == null && _signer != null)
-            {
-                _sessionMaterial = WebBase64.FromBytes(_signer.Sign(_sessionMaterial.ToBytes()));
-            }
+            _working = new Lazy<Workings>(initLazy);
         }
 
         /// <summary>
@@ -121,45 +134,53 @@ namespace Keyczar
         public SessionCrypter(Crypter keyDecrypter, WebBase64 sessionMaterial, AttachedVerifier verifier = null,
                               ISessionKeyPacker keyPacker = null)
         {
-            if (verifier != null)
+            Workings initLazy()
             {
-                keyPacker = keyPacker ?? new NonceSignedSessionPacker();
+                var workings = new Workings();
+
+                if (verifier != null)
+                {
+                    keyPacker = keyPacker ?? new NonceSignedSessionPacker();
+                }
+                keyPacker = keyPacker ?? new SimpleAesHmacSha1KeyPacker();
+
+                var sessionMaterialBytes = sessionMaterial.ToBytes();
+                var sessionPacker = keyPacker as IInteroperableSessionMaterialPacker;
+
+                workings._verifier = verifier;
+
+                if (sessionPacker == null && workings._verifier != null)
+                {
+                    sessionMaterialBytes = workings._verifier.VerifiedMessage(sessionMaterialBytes);
+                }
+                var packedBytes = keyDecrypter.Decrypt(sessionMaterialBytes);
+
+                Key key;
+                if (sessionPacker == null)
+                {
+                    key = keyPacker.Unpack(packedBytes, Config);
+                }
+                else
+                {
+                    var nonceSession = sessionPacker.UnpackMaterial(packedBytes, Config);
+                    key = nonceSession.Key;
+                    workings._nonce = nonceSession.Nonce.ToBytes();
+                }
+
+                workings._keyset = new ImportedKeySet(key, KeyPurpose.DecryptAndEncrypt);
+                workings._crypter = new Crypter(workings._keyset);
+                workings._sessionMaterial = sessionMaterial;
+                return workings;
             }
-            keyPacker = keyPacker ?? new SimpleAesHmacSha1KeyPacker();
+            _working = new Lazy<Workings>(initLazy);
 
-            var sessionMaterialBytes = sessionMaterial.ToBytes();
-            var sessionPacker = keyPacker as IInteroperableSessionMaterialPacker;
-
-            _verifier = verifier;
-
-            if (sessionPacker == null && _verifier != null)
-            {
-                sessionMaterialBytes = _verifier.VerifiedMessage(sessionMaterialBytes);
-            }
-            var packedBytes = keyDecrypter.Decrypt(sessionMaterialBytes);
-
-            Key key;
-            if (sessionPacker == null)
-            {
-                key = keyPacker.Unpack(packedBytes);
-            }
-            else
-            {
-                var nonceSession = sessionPacker.UnpackMaterial(packedBytes);
-                key = nonceSession.Key;
-                _nonce = nonceSession.Nonce.ToBytes();
-            }
-
-            _keyset = new ImportedKeySet(key, KeyPurpose.DecryptAndEncrypt);
-            _crypter = new Crypter(_keyset);
-            _sessionMaterial = sessionMaterial;
         }
 
         /// <summary>
         /// Gets the session material.
         /// </summary>
         /// <value>The session material.</value>
-        public WebBase64 SessionMaterial => _sessionMaterial;
+        public WebBase64 SessionMaterial => _working.Value._sessionMaterial;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -167,16 +188,9 @@ namespace Keyczar
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="SessionCrypter" /> class.
-        /// </summary>
-        ~SessionCrypter()
-        {
-            Dispose(false);
-        }
+   
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.
@@ -190,12 +204,12 @@ namespace Keyczar
             MessageId = "_verifier")]
         protected virtual void Dispose(bool disposing)
         {
-            _keyset = _keyset.SafeDispose();
-            _crypter = _crypter.SafeDispose();
-            _signer = _signer.SafeDispose();
-            _verifier = _verifier.SafeDispose();
-            _nonce = _nonce.Clear();
-            _sessionMaterial = _sessionMaterial.Clear();
+            _working.Value._keyset = _working.Value._keyset.SafeDispose();
+            _working.Value._crypter = _working.Value._crypter.SafeDispose();
+            _working.Value._signer = _working.Value._signer.SafeDispose();
+            _working.Value._verifier = _working.Value._verifier.SafeDispose();
+            _working.Value._nonce = _working.Value._nonce.Clear();
+            _working.Value._sessionMaterial = _working.Value._sessionMaterial.Clear();
         }
 
         /// <summary>
@@ -211,7 +225,7 @@ namespace Keyczar
         /// <returns></returns>
         public string Decrypt(WebBase64 data)
         {
-            return KeyczarBase.RawStringEncoding.GetString(Decrypt(data.ToBytes()));
+            return Config.RawStringEncoding.GetString(Decrypt(data.ToBytes()));
         }
 
         /// <summary>
@@ -238,20 +252,20 @@ namespace Keyczar
         /// <exception cref="InvalidCryptoDataException">Can't decrypted, when in signer is provided</exception>
         public void Decrypt(Stream input, Stream output, long inputLength = -1)
         {
-            if (_signer != null)
+            if (_working.Value._signer != null)
             {
                 throw new InvalidCryptoDataException("Can't decrypted, when in signer is provided");
             }
             var finalinput = input;
-            if (_verifier != null)
+            if (_working.Value._verifier != null)
             {
                 finalinput = new MemoryStream();
-                _verifier.VerifiedMessage(input, finalinput, hidden: _nonce, inputLength: inputLength);
+                _working.Value._verifier.VerifiedMessage(input, finalinput, hidden: _working.Value._nonce, inputLength: inputLength);
                 inputLength = -1;
                 finalinput.Seek(0, SeekOrigin.Begin);
             }
-            _crypter.Compression = Compression;
-            _crypter.Decrypt(finalinput, output, inputLength);
+            _working.Value._crypter.Compression = Compression;
+            _working.Value._crypter.Decrypt(finalinput, output, inputLength);
         }
 
         /// <summary>
@@ -261,8 +275,15 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Encrypt(string rawData)
         {
-            return WebBase64.FromBytes(Encrypt(KeyczarBase.RawStringEncoding.GetBytes(rawData)));
+            return WebBase64.FromBytes(Encrypt(Config.RawStringEncoding.GetBytes(rawData)));
         }
+        
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; } = new KeyczarConfig();
+
+
 
         /// <summary>
         /// Encrypts the specified data.
@@ -288,22 +309,22 @@ namespace Keyczar
         /// <exception cref="InvalidCryptoDataException">Can't encrypt, when verifier is provided</exception>
         public void Encrypt(Stream input, Stream output, long inputLength = -1)
         {
-            if (_verifier != null)
+            if (_working.Value._verifier != null)
             {
                 throw new InvalidCryptoDataException("Can't encrypt, when verifier is provided");
             }
-            _crypter.Compression = Compression;
+            _working.Value._crypter.Compression = Compression;
 
             Stream finaloutput = output;
-            if (_signer != null)
+            if (_working.Value._signer != null)
             {
                 output = new MemoryStream();
             }
-            _crypter.Encrypt(input, output, inputLength);
-            if (_signer != null)
+            _working.Value._crypter.Encrypt(input, output, inputLength);
+            if (_working.Value._signer != null)
             {
                 output.Seek(0, SeekOrigin.Begin);
-                _signer.Sign(output, finaloutput, hidden: _nonce);
+                _working.Value._signer.Sign(output, finaloutput, hidden: _working.Value._nonce);
             }
         }
 
@@ -361,14 +382,14 @@ namespace Keyczar
             /// </summary>
             /// <param name="material">The material.</param>
             /// <returns></returns>
-            byte[] PackMaterial(NonceSessionMaterial material);
+            byte[] PackMaterial(NonceSessionMaterial material, KeyczarConfig config);
 
             /// <summary>
             /// Unpacks the material.
             /// </summary>
             /// <param name="data">The data.</param>
             /// <returns></returns>
-            NonceSessionMaterial UnpackMaterial(byte[] data);
+            NonceSessionMaterial UnpackMaterial(byte[] data, KeyczarConfig config);
         }
 
         /// <summary>
@@ -381,9 +402,9 @@ namespace Keyczar
             /// </summary>
             /// <param name="key">The key.</param>
             /// <returns></returns>
-            byte[] ISessionKeyPacker.Pack(Key key)
+            byte[] ISessionKeyPacker.Pack(Key key, KeyczarConfig config)
             {
-                return PackMaterial(new NonceSessionMaterial(key as AesKey));
+                return PackMaterial(new NonceSessionMaterial(key as AesKey),config);
             }
 
             /// <summary>
@@ -391,9 +412,9 @@ namespace Keyczar
             /// </summary>
             /// <param name="data">The bytes.</param>
             /// <returns></returns>
-            Key ISessionKeyPacker.Unpack(byte[] data)
+            Key ISessionKeyPacker.Unpack(byte[] data, KeyczarConfig config)
             {
-                return UnpackMaterial(data).Key;
+                return UnpackMaterial(data, config).Key;
             }
 
 
@@ -402,10 +423,10 @@ namespace Keyczar
             /// </summary>
             /// <param name="material">The material.</param>
             /// <returns></returns>
-            public byte[] PackMaterial(NonceSessionMaterial material)
+            public byte[] PackMaterial(NonceSessionMaterial material, KeyczarConfig config)
             {
                 string json = material.ToJson();
-                return KeyczarBase.RawStringEncoding.GetBytes(json);
+                return config.RawStringEncoding.GetBytes(json);
             }
 
             /// <summary>
@@ -413,11 +434,11 @@ namespace Keyczar
             /// </summary>
             /// <param name="data">The data.</param>
             /// <returns></returns>
-            public NonceSessionMaterial UnpackMaterial(byte[] data)
+            public NonceSessionMaterial UnpackMaterial(byte[] data, KeyczarConfig config)
             {
                 return
                     (NonceSessionMaterial)
-                    JsonConvert.DeserializeObject(KeyczarBase.RawStringEncoding.GetString(data),
+                    JsonConvert.DeserializeObject(config.RawStringEncoding.GetString(data),
                                                   typeof (NonceSessionMaterial));
             }
         }
@@ -432,7 +453,7 @@ namespace Keyczar
             /// </summary>
             /// <param name="key">The key.</param>
             /// <returns></returns>
-            public byte[] Pack(Key key)
+            public byte[] Pack(Key key, KeyczarConfig config)
             {
                 var aesKey = key as AesKey;
                 var inputArrays = new byte[][] {aesKey.AesKeyBytes, aesKey.HmacKey.HmacKeyBytes};
@@ -467,7 +488,7 @@ namespace Keyczar
             /// </summary>
             /// <param name="data">The bytes.</param>
             /// <returns></returns>
-            public Key Unpack(byte[] data)
+            public Key Unpack(byte[] data, KeyczarConfig config)
             {
                 using (Stream input = new MemoryStream(data))
                 {

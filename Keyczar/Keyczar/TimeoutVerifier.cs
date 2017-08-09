@@ -86,7 +86,7 @@ namespace Keyczar
         /// <param name="signature">The signature.</param>
         /// <returns></returns>
         public bool Verify(string rawData, WebBase64 signature) 
-            => Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
+            => Verify(Config.RawStringEncoding.GetBytes(rawData), signature.ToBytes());
 
         /// <summary>
         /// Verifies the specified raw data.

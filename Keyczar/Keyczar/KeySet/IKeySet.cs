@@ -36,9 +36,14 @@ namespace Keyczar
         {
             var keyData = keySet.GetKeyData(version);
             var keyType = keySet.Metadata.GetKeyType(version);
-            var key = Key.Read(keyType, keyData);
+            var key = Key.Read(keyType, keyData, keySet.Config);
             keyData.Clear();
             return key;
+        }
+
+        public static KeyczarConfig GetConfig(this IKeySet keySet)
+        {
+            return keySet.Config = keySet.Config ?? new KeyczarConfig();
         }
     }
 
@@ -56,6 +61,10 @@ namespace Keyczar
     /// </summary>
     public interface IKeySet:IDisposable
     {
+        
+        KeyczarConfig Config { get; set; }
+
+        
         /// <summary>
         /// Gets the metadata.
         /// </summary>
