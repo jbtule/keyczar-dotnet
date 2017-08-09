@@ -85,7 +85,7 @@ namespace Keyczar
                 if (keyPacker == null && symmetricKeyType != KeyType.Aes)
                 {
                     throw new ArgumentException("Without a supplying a keypacker you may only use KeyType.AES",
-                        "symmetricKeyType");
+                        nameof(symmetricKeyType));
                 }
 
                 if (signer != null)
@@ -281,9 +281,11 @@ namespace Keyczar
         /// <summary>
         /// Config Options
         /// </summary>
-        public KeyczarConfig Config { get; set; } = new KeyczarConfig();
-
-
+        public KeyczarConfig Config
+        {
+            get => _config ?? KeyczarDefaults.DefaultConfig;
+            set => _config = value;
+        }
 
         /// <summary>
         /// Encrypts the specified data.
@@ -330,6 +332,7 @@ namespace Keyczar
 
 
         private static readonly int SessionNonceSize = 16;
+        private KeyczarConfig _config;
 
         /// <summary>
         /// Nonce Json Session Material;

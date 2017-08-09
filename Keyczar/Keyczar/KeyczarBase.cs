@@ -18,44 +18,24 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text;
 using Keyczar.Util;
-using System.Configuration;
 
 namespace Keyczar
 {
-
-    public class KeyczarConfig
-    {
-
-        public KeyczarConfig(){
-            StrictDsaVerification = Convert.ToBoolean(ConfigurationManager.AppSettings["keyczar.strict_dsa_verification"] ?? "false");
-            RawStringEncoding = Encoding.GetEncoding(ConfigurationManager.AppSettings["keyczar.raw_string_encoding"] ?? "utf-8");
-
-        }
-
-		/// <summary>
-		/// To be compatable with Java, by default ignores specific parsable, but bad DSA sigs. 
-		/// Can turn on strit checking with the App Setting "keyczar.strict_dsa_verification"
-		/// </summary>
-		public bool StrictDsaVerification { get; set; }
-        public Encoding RawStringEncoding { get; set; }
-	}
-
     /// <summary>
     /// Base class for standard crypt/sign API
     /// </summary>
     public abstract class KeyczarBase:IDisposable
     {
-      
-
         /// <summary>
         /// Config Options
         /// </summary>
-        public KeyczarConfig Config { get; set; } = new KeyczarConfig();
+        public KeyczarConfig Config
+        {
+            get => _config ?? KeyczarDefaults.DefaultConfig;
+            set => _config = value;
+        }
 
-
-     
 
         /// <summary>
         /// Buffer size used throughout
@@ -67,6 +47,7 @@ namespace Keyczar
 
         private readonly Dictionary<int, Key> _versions;
         private readonly KeyVersion _primaryVersion;
+        private KeyczarConfig _config = new KeyczarConfig();
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

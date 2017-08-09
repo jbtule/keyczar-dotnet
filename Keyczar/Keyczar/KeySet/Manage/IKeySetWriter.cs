@@ -40,7 +40,7 @@ namespace Keyczar
         
         public static KeyczarConfig GetConfig(this IKeySetWriter writer)
         {
-            return writer.Config = writer.Config ?? new KeyczarConfig();
+            return writer.Config ?? KeyczarDefaults.DefaultConfig;
         }
     }
 

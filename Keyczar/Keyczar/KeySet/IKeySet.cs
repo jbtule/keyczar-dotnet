@@ -43,7 +43,7 @@ namespace Keyczar
 
         public static KeyczarConfig GetConfig(this IKeySet keySet)
         {
-            return keySet.Config = keySet.Config ?? new KeyczarConfig();
+            return keySet.Config ?? KeyczarDefaults.DefaultConfig;
         }
     }
 
