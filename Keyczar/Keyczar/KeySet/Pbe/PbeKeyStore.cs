@@ -61,8 +61,8 @@ namespace Keyczar.Pbe
             using (var crypter = new Crypter(ks))
             {
                 var data = crypter.Encrypt(key);
-                byte[] justciphertext = new byte[data.Length - Keyczar.HeaderLength];
-                Array.Copy(data, Keyczar.HeaderLength, justciphertext, 0, justciphertext.Length);
+                byte[] justciphertext = new byte[data.Length - KeyczarConst.HeaderLength];
+                Array.Copy(data, KeyczarConst.HeaderLength, justciphertext, 0, justciphertext.Length);
                 pks.Key = justciphertext;
             }
 
@@ -167,8 +167,8 @@ namespace Keyczar.Pbe
             using (var crypter = new Crypter(ks))
             using (var memstream = new MemoryStream())
             {
-                memstream.Write(Keyczar.FormatBytes, 0, Keyczar.FormatBytes.Length);
-                memstream.Write(new byte[Keyczar.KeyHashLength], 0, Keyczar.KeyHashLength);
+                memstream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
+                memstream.Write(new byte[KeyczarConst.KeyHashLength], 0, KeyczarConst.KeyHashLength);
                 memstream.Write(Key, 0, Key.Length);
                 return crypter.Decrypt(memstream.ToArray());
             }
@@ -218,7 +218,7 @@ namespace Keyczar.Pbe
 
             public byte[] IV { get; set; }
 
-            public override FinishingStream GetEncryptingStream(Stream output, Keyczar keyczar)
+            public override FinishingStream GetEncryptingStream(Stream output, KeyczarBase keyczar)
             {
                 var stream = (CipherTextOnlyFinishingStream) base.GetEncryptingStream(output, keyczar);
                 stream.CipherTextOnly = true;
@@ -226,7 +226,7 @@ namespace Keyczar.Pbe
                 return stream;
             }
 
-            public override FinishingStream GetDecryptingStream(Stream output, Keyczar keyczar)
+            public override FinishingStream GetDecryptingStream(Stream output, KeyczarBase keyczar)
             {
                 var stream = (CipherTextOnlyFinishingStream) base.GetDecryptingStream(output, keyczar);
                 stream.CipherTextOnly = true;

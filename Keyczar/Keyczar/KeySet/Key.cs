@@ -72,7 +72,7 @@ namespace Keyczar
         /// <returns></returns>
         public static Key Read(KeyType type, byte[] keyData)
         {
-            var json = Keyczar.RawStringEncoding.GetString(keyData);
+            var json = KeyczarBase.RawStringEncoding.GetString(keyData);
             var key = (Key) JsonConvert.DeserializeObject(json, type.RepresentedType);
             return key;
         }

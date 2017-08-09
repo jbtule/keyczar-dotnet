@@ -17,7 +17,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar.Util;
@@ -31,6 +30,8 @@ namespace Keyczar
 
         public KeyczarConfig(){
             StrictDsaVerification = Convert.ToBoolean(ConfigurationManager.AppSettings["keyczar.strict_dsa_verification"] ?? "false");
+            RawStringEncoding = Encoding.GetEncoding(ConfigurationManager.AppSettings["keyczar.raw_string_encoding"] ?? "utf-8");
+
         }
 
 		/// <summary>
@@ -38,13 +39,13 @@ namespace Keyczar
 		/// Can turn on strit checking with the App Setting "keyczar.strict_dsa_verification"
 		/// </summary>
 		public bool StrictDsaVerification { get; set; }
-
+        public Encoding RawStringEncoding { get; set; }
 	}
 
     /// <summary>
     /// Base class for standard crypt/sign API
     /// </summary>
-    public abstract class Keyczar:IDisposable
+    public abstract class KeyczarBase:IDisposable
     {
         private static Encoding _rawStringEncoding;
         /// <summary>
@@ -63,38 +64,16 @@ namespace Keyczar
             }
         }
 
+        
 
-
-    		/// <summary>
-    		/// The meta data format
-    		/// </summary>
-    		public static readonly string MetaDataFormat = "1";
-
-				/// <summary>
-				/// Config Options
-				/// </summary>
-				public KeyczarConfig Config { get; set; } = new KeyczarConfig();
-
-
-				/// <summary>
-				/// Key hash length
-				/// </summary>
-				public static readonly int KeyHashLength = 4;
-    
-        /// <summary>
-        /// Keyczar format version
-        /// </summary>
-        public static readonly byte FormatVersion = 0;
 
         /// <summary>
-        /// Keyczar format version bytes for header
+        /// Config Options
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
-        public static readonly ReadOnlyArray<byte> FormatBytes = ReadOnlyArray.Create(FormatVersion);
-        /// <summary>
-        /// Full keyczar format header length
-        /// </summary>
-        public static readonly int HeaderLength = FormatBytes.Length + KeyHashLength;
+        public KeyczarConfig Config { get; set; } = new KeyczarConfig();
+
+
+     
 
         /// <summary>
         /// Buffer size used throughout
@@ -132,19 +111,19 @@ namespace Keyczar
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Keyczar"/> class.
+        /// Initializes a new instance of the <see cref="KeyczarBase"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        protected Keyczar(string keySetLocation):this(new FileSystemKeySet(keySetLocation))
+        protected KeyczarBase(string keySetLocation):this(new FileSystemKeySet(keySetLocation))
         {
             
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Keyczar"/> class.
+        /// Initializes a new instance of the <see cref="KeyczarBase"/> class.
         /// </summary>
         /// <param name="keySet">The key set.</param>
-        protected Keyczar(IKeySet keySet)
+        protected KeyczarBase(IKeySet keySet)
         {
 
             var metadata = keySet.Metadata;

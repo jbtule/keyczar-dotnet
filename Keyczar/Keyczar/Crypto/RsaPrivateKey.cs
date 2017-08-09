@@ -49,20 +49,20 @@ namespace Keyczar.Crypto
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null</returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar) => null;
+        public HashingStream GetAuthSigningStream(KeyczarBase keyczar) => null;
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns>null</returns>
-        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar) => null;
+        public VerifyingStream GetAuthVerifyingStream(KeyczarBase keyczar) => null;
 
         /// <summary>
         /// Gets the encrypting stream.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar) 
+        public FinishingStream GetEncryptingStream(Stream output,KeyczarBase keyczar) 
             => PublicKey.GetEncryptingStream(output,keyczar);
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar)
+        public FinishingStream GetDecryptingStream(Stream output,KeyczarBase keyczar)
         {
             var rsa = new RsaEngine();
             var oaep = PublicKey.UpdatePadding(rsa);

@@ -69,7 +69,7 @@ namespace Keyczar
                 return cipherData;
             }
 
-            var cipherString = Keyczar.RawStringEncoding.GetString(cipherData);
+            var cipherString = KeyczarBase.RawStringEncoding.GetString(cipherData);
             return _crypter.Decrypt(WebSafeBase64.Decode(cipherString.ToCharArray()));
         }
 

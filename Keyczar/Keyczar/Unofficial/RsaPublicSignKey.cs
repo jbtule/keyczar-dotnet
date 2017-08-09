@@ -104,7 +104,7 @@ namespace Keyczar.Unofficial
             var magPublicExponent = Utility.StripLeadingZeros(Utility.GetBytes(PublicExponent));
 
             var hash = Utility.HashKeyLengthPrefix(
-                Keyczar.KeyHashLength,
+                KeyczarConst.KeyHashLength,
                 magModulus,
                 magPublicExponent,
                 Encoding.UTF8.GetBytes(Padding),

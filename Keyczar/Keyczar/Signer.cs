@@ -137,7 +137,7 @@ namespace Keyczar
         /// <param name="extra">The extra data passed by postfixData.</param>
         protected virtual void PostfixDataSign(HashingStream signingStream, object extra)
         {
-            signingStream.Write(FormatBytes, 0, FormatBytes.Length);
+            signingStream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
         }
 
         /// <summary>
@@ -150,8 +150,8 @@ namespace Keyczar
         protected virtual void PadSignature(byte[] signature, Stream outputStream, object extra)
         {
             var key = GetPrimaryKey() as ISignerKey;
-            outputStream.Write(FormatBytes,0,FormatBytes.Length);
-            outputStream.Write(key.GetKeyHash(),0,KeyHashLength);
+            outputStream.Write(KeyczarConst.FormatBytes,0,KeyczarConst.FormatBytes.Length);
+            outputStream.Write(key.GetKeyHash(),0,KeyczarConst.KeyHashLength);
             outputStream.Write(signature,0,signature.Length);
         }
 

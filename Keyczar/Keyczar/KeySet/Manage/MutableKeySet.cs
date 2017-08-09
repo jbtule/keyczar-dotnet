@@ -282,7 +282,7 @@ namespace Keyczar
             newMeta.Kind = KeyKind.Public;
 
             var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
-                .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = Keyczar.RawStringEncoding.GetBytes(p.PublicKey.ToJson())})
+                .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = KeyczarBase.RawStringEncoding.GetBytes(p.PublicKey.ToJson())})
                 .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value)}).ToList();
 
 
@@ -303,7 +303,7 @@ namespace Keyczar
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.RawStringEncoding.GetBytes(_keys[version].ToJson());
+            return KeyczarBase.RawStringEncoding.GetBytes(_keys[version].ToJson());
         }
 
         /// <summary>

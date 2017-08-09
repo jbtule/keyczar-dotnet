@@ -95,7 +95,7 @@ namespace Keyczar.Compat
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.RawStringEncoding.GetBytes(_key[version - 1].ToJson());
+            return KeyczarBase.RawStringEncoding.GetBytes(_key[version - 1].ToJson());
         }
 
         /// <summary>

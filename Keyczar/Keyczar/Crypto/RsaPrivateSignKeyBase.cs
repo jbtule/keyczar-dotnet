@@ -149,7 +149,7 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream(Keyczar keyczar) 
+        public VerifyingStream GetVerifyingStream(KeyczarBase keyczar) 
             => PublicKey.GetVerifyingStream(keyczar);
 
 
@@ -157,7 +157,7 @@ namespace Keyczar.Crypto
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetSigningStream(Keyczar keyczar)
+        public HashingStream GetSigningStream(KeyczarBase keyczar)
         {
             var signer = PublicKey.GetSigner();
 

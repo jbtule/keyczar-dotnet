@@ -58,7 +58,7 @@ namespace Keyczar
         public void Write(byte[] keyData, int version)
         {
             var keyStore = PbeKeyStore.EncryptKeyData(keyData, _password.Prompt, _iterationCount);
-            _writer.Write(Keyczar.RawStringEncoding.GetBytes(keyStore.ToJson()), version);
+            _writer.Write(KeyczarBase.RawStringEncoding.GetBytes(keyStore.ToJson()), version);
         }
 
 

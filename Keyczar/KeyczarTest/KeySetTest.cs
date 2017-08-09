@@ -167,7 +167,7 @@ namespace KeyczarTest
               }
           }
 
-        protected class GetPrimary:Keyczar.Keyczar
+        protected class GetPrimary:Keyczar.KeyczarBase
         {
             public GetPrimary(string keySetLocation)
                 : base(new FileSystemKeySet(keySetLocation))

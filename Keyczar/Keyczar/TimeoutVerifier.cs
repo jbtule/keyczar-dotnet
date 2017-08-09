@@ -27,7 +27,7 @@ namespace Keyczar
     /// <summary>
     /// Verifies signatures with an expiration date &amp; time
     /// </summary>
-    public class TimeoutVerifier:Keyczar
+    public class TimeoutVerifier:KeyczarBase
     {
         /// <summary>
         /// Binary length of expiration in signature
@@ -121,7 +121,7 @@ namespace Keyczar
             using(var stream = new MemoryStream(signature))
             using (var reader = new NondestructiveBinaryReader(stream))
             {
-                reader.ReadBytes(HeaderLength);
+                reader.ReadBytes(KeyczarConst.HeaderLength);
                 var expiration =reader.ReadBytes(TimeoutLength);
                 var expMilliseconds = Utility.ToInt64(expiration);
                 return milliseconds < expMilliseconds;
@@ -139,7 +139,7 @@ namespace Keyczar
             /// Initializes a new instance of the <see cref="TimeoutVerifierHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public TimeoutVerifierHelper(IKeySet keySet, Keyczar parent) : base(keySet)
+            public TimeoutVerifierHelper(IKeySet keySet, KeyczarBase parent) : base(keySet)
             {
                 Config = parent.Config;
             }
@@ -156,10 +156,10 @@ namespace Keyczar
             protected override bool Verify(Stream input, byte[] signature, object prefixData, object postfixData, long inputLength)
             {
                 var newsig = new byte[signature.Length - TimeoutLength];
-                Array.Copy(signature,0,newsig,0,HeaderLength);
-                Array.Copy(signature,HeaderLength+TimeoutLength,newsig,HeaderLength,newsig.Length - HeaderLength);
+                Array.Copy(signature,0,newsig,0,KeyczarConst.HeaderLength);
+                Array.Copy(signature,KeyczarConst.HeaderLength+TimeoutLength,newsig,KeyczarConst.HeaderLength,newsig.Length - KeyczarConst.HeaderLength);
                 var expireBytes = new byte[TimeoutLength];
-                Array.Copy(signature,HeaderLength, expireBytes,0,TimeoutLength);
+                Array.Copy(signature,KeyczarConst.HeaderLength, expireBytes,0,TimeoutLength);
 
                 return base.Verify(input, newsig, expireBytes, postfixData, inputLength);
             }

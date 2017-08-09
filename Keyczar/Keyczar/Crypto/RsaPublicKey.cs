@@ -76,7 +76,7 @@ namespace Keyczar.Crypto
                 magPublicExponent = Utility.GetBytes(PublicExponent);
             }
 
-            var hash = Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, magModulus, magPublicExponent);
+            var hash = Utility.HashKeyLengthPrefix(KeyczarConst.KeyHashLength, magModulus, magPublicExponent);
             magModulus.Clear();
             magPublicExponent.Clear();
             return hash;
@@ -108,7 +108,7 @@ namespace Keyczar.Crypto
                 var destPublicExponent = new byte[magPublicExponent.Length + 1];
                 Array.Copy(magModulus, 0, destModulus, 1, magModulus.Length);
                 Array.Copy(magPublicExponent, 0, destPublicExponent, 1, magPublicExponent.Length);
-                list.Add(Utility.HashKeyLengthPrefix(Keyczar.KeyHashLength, destModulus, destPublicExponent));
+                list.Add(Utility.HashKeyLengthPrefix(KeyczarConst.KeyHashLength, destModulus, destPublicExponent));
                 magModulus.Clear();
                 magPublicExponent.Clear();
                 destModulus.Clear();
@@ -142,7 +142,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output, Keyczar keyczar)
+        public FinishingStream GetEncryptingStream(Stream output, KeyczarBase keyczar)
         {
             var rsa = new RsaEngine();
 
@@ -161,6 +161,6 @@ namespace Keyczar.Crypto
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null</returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar) => null;
+        public HashingStream GetAuthSigningStream(KeyczarBase keyczar) => null;
     }
 }

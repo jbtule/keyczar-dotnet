@@ -23,7 +23,7 @@ namespace Keyczar
     /// <summary>
     /// Verifies a message with an attached signature.
     /// </summary>
-    public class AttachedVerifier:Keyczar
+    public class AttachedVerifier:KeyczarBase
     {
         private HelperAttachedVerify _verifier;
 
@@ -193,7 +193,7 @@ namespace Keyczar
             /// Initializes a new instance of the <see cref="HelperAttachedVerify"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public HelperAttachedVerify(IKeySet keySet, Keyczar parent) : base(keySet)
+            public HelperAttachedVerify(IKeySet keySet, KeyczarBase parent) : base(keySet)
             {
                 Config = parent.Config;
             }
@@ -213,7 +213,7 @@ namespace Keyczar
                 var fullLength = inputLength < 0 ? input.Length : inputLength + input.Position;
                 using (var reader = new NondestructiveBinaryReader(input))
                 {
-                    var header = reader.ReadBytes(HeaderLength);
+                    var header = reader.ReadBytes(KeyczarConst.HeaderLength);
                     var length = Utility.ToInt32(reader.ReadBytes(4));
 
                     if (fullLength < input.Position + length)

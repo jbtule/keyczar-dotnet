@@ -64,7 +64,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <returns></returns>
         public override byte[] GetKeyHash() 
-            => Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
+            => Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
                     HmacKey.HmacKeyBytes, Utility.GetBytes(HmacKey.HashLength), HmacKey.Digest.ToBytes());
 
         /// <summary>
@@ -77,10 +77,10 @@ namespace Keyczar.Unofficial
             return new byte[][]
                        {
                            //Java keyczar uses block length instead of keylength for hash
-                           Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
+                           Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
                                            HmacKey.HmacKeyBytes, HmacKey.Digest.ToBytes()),
                            //c++ keyczar used to strip leading zeros from key bytes
-                           Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(trimmedKeyBytes.Length),
+                           Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(trimmedKeyBytes.Length),
                                            trimmedKeyBytes,
                                            HmacKey.HmacKeyBytes),
                        };
@@ -120,14 +120,14 @@ namespace Keyczar.Unofficial
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar) 
+        public HashingStream GetAuthSigningStream(KeyczarBase keyczar) 
             => HmacKey.GetSigningStream(keyczar);
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar) 
+        public VerifyingStream GetAuthVerifyingStream(KeyczarBase keyczar) 
             => HmacKey.GetVerifyingStream(keyczar);
 
 
@@ -136,7 +136,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public virtual FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar)
+        public virtual FinishingStream GetEncryptingStream(Stream output,KeyczarBase keyczar)
         {
             var ivarr = new byte[BlockLength];
             Secure.Random.NextBytes(ivarr);
@@ -155,7 +155,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public virtual FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar)
+        public virtual FinishingStream GetDecryptingStream(Stream output,KeyczarBase keyczar)
         {
             return new SymmetricStream(
                 new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),

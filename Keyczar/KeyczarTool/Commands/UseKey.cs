@@ -131,7 +131,7 @@ namespace KeyczarTool
                         inStream = File.OpenRead(_message);
                     }else
                     {
-                        inStream = new MemoryStream(Keyczar.Keyczar.RawStringEncoding.GetBytes(_message));
+                        inStream = new MemoryStream(Keyczar.KeyczarBase.RawStringEncoding.GetBytes(_message));
                     }
           
                 Stream outstream;
@@ -307,7 +307,7 @@ namespace KeyczarTool
                 {
                     byte[] hidden = null;
                     if (!String.IsNullOrWhiteSpace(_attachedHidden))
-                        hidden = Keyczar.Keyczar.RawStringEncoding.GetBytes(_attachedHidden);
+                        hidden = Keyczar.KeyczarBase.RawStringEncoding.GetBytes(_attachedHidden);
                     signer.Sign(inStream, outStream, hidden);
                 }
             }

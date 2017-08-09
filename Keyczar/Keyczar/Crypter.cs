@@ -156,7 +156,7 @@ namespace Keyczar
                         FinishingStream crypterStream; 
                         resetStream.Reset();
                        
-                        input.Seek(HeaderLength, SeekOrigin.Current);
+                        input.Seek(KeyczarConst.HeaderLength, SeekOrigin.Current);
                         crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper, this), () => new DummyStream());
                         
                         try

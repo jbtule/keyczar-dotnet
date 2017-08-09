@@ -69,7 +69,7 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
+        public VerifyingStream GetVerifyingStream(KeyczarBase keyczar)
         {
             var signer = GetSigner();
             signer.Init(forSigning: false, parameters: new RsaKeyParameters(false,

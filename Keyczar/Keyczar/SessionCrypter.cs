@@ -211,7 +211,7 @@ namespace Keyczar
         /// <returns></returns>
         public string Decrypt(WebBase64 data)
         {
-            return Keyczar.RawStringEncoding.GetString(Decrypt(data.ToBytes()));
+            return KeyczarBase.RawStringEncoding.GetString(Decrypt(data.ToBytes()));
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Encrypt(string rawData)
         {
-            return WebBase64.FromBytes(Encrypt(Keyczar.RawStringEncoding.GetBytes(rawData)));
+            return WebBase64.FromBytes(Encrypt(KeyczarBase.RawStringEncoding.GetBytes(rawData)));
         }
 
         /// <summary>
@@ -405,7 +405,7 @@ namespace Keyczar
             public byte[] PackMaterial(NonceSessionMaterial material)
             {
                 string json = material.ToJson();
-                return Keyczar.RawStringEncoding.GetBytes(json);
+                return KeyczarBase.RawStringEncoding.GetBytes(json);
             }
 
             /// <summary>
@@ -417,7 +417,7 @@ namespace Keyczar
             {
                 return
                     (NonceSessionMaterial)
-                    JsonConvert.DeserializeObject(Keyczar.RawStringEncoding.GetString(data),
+                    JsonConvert.DeserializeObject(KeyczarBase.RawStringEncoding.GetString(data),
                                                   typeof (NonceSessionMaterial));
             }
         }

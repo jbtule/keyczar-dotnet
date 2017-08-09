@@ -54,7 +54,7 @@ namespace Keyczar
         public void Write(byte[] keyData, int version)
         {
             var cipherData = _encrypter.Encrypt(keyData);
-            _writer.Write(Keyczar.RawStringEncoding.GetBytes(WebSafeBase64.Encode(cipherData)), version);
+            _writer.Write(KeyczarBase.RawStringEncoding.GetBytes(WebSafeBase64.Encode(cipherData)), version);
         }
 
         /// <summary>

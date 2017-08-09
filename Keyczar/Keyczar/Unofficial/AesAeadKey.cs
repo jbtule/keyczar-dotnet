@@ -105,7 +105,7 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
+            return Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
                                    Encoding.UTF8.GetBytes(Mode), Utility.GetBytes(IVLength), AesKeyBytes);
         }
 
@@ -119,7 +119,7 @@ namespace Keyczar.Unofficial
             if (IVLength == 16 && Mode == GcmMode)
             {
                 //Pre IVLength property existing key hash
-                list.Add(Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
+                list.Add(Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
                                          Encoding.UTF8.GetBytes(Mode), AesKeyBytes));
             }
             return list;
@@ -149,7 +149,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar)
+        public FinishingStream GetEncryptingStream(Stream output,KeyczarBase keyczar)
         {
             var randomNonce = new byte[IVLength];
             Secure.Random.NextBytes(randomNonce);
@@ -168,20 +168,20 @@ namespace Keyczar.Unofficial
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null as authentication is built in to the encryption</returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar) => null;
+        public HashingStream GetAuthSigningStream(KeyczarBase keyczar) => null;
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns>null as authentication is built in to the decryption</returns>
-        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar) => null;
+        public VerifyingStream GetAuthVerifyingStream(KeyczarBase keyczar) => null;
 
         /// <summary>
         /// Gets the decrypting stream.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar) 
+        public FinishingStream GetDecryptingStream(Stream output,KeyczarBase keyczar) 
             => new SymmetricAeadStream(
                     GetMode(),
                     output,

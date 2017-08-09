@@ -102,7 +102,7 @@ namespace Keyczar.Crypto
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetSigningStream(Keyczar keyczar)
+        public HashingStream GetSigningStream(KeyczarBase keyczar)
         {
             var digest = PublicKey.GetDigest();
             var signer = new DsaDigestSigner(new DsaSigner(), digest);
@@ -119,7 +119,7 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
+        public VerifyingStream GetVerifyingStream(KeyczarBase keyczar)
         {
             return PublicKey.GetVerifyingStream(keyczar);
         }

@@ -28,7 +28,7 @@ namespace Keyczar
     /// <summary>
     /// Verifies signed data using a given key set.
     /// </summary>
-    public class Verifier:Keyczar
+    public class Verifier:KeyczarBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Verifier"/> class.
@@ -86,13 +86,13 @@ namespace Keyczar
         /// <exception cref="InvalidCryptoDataException">Signature missing header information.</exception>
         protected virtual IEnumerable<IVerifierKey> GetKeys( byte[] signature, out byte[] trimmedSignature)
         {
-            if(signature.Length < HeaderLength)
+            if(signature.Length < KeyczarConst.HeaderLength)
                 throw new InvalidCryptoDataException("Signature missing header information.");
 
             byte[] keyHash;
             Utility.ReadHeader(signature, out keyHash);
-            trimmedSignature = new byte[signature.Length - HeaderLength];
-            Array.Copy(signature, HeaderLength, trimmedSignature, 0, trimmedSignature.Length);
+            trimmedSignature = new byte[signature.Length - KeyczarConst.HeaderLength];
+            Array.Copy(signature, KeyczarConst.HeaderLength, trimmedSignature, 0, trimmedSignature.Length);
             var keys = GetKey(keyHash);
             return keys.Select(it=>it as IVerifierKey);
         }
@@ -123,7 +123,7 @@ namespace Keyczar
         /// <param name="extra">The extra data passed by postfixData</param>
         protected virtual void PostfixDataVerify(VerifyingStream verifyingStream, object extra)
         {
-            verifyingStream.Write(FormatBytes, 0, FormatBytes.Length);
+            verifyingStream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
         }
 
         /// <summary>

@@ -50,7 +50,7 @@ namespace Keyczar
         {
             Name = String.Empty;
             Versions = new List<KeyVersion>();
-            Format = Keyczar.MetaDataFormat;
+            Format = KeyczarConst.MetaDataFormat;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace Keyczar
         {
             Name = String.Empty;
             Versions = new List<KeyVersion>();
-            Format = Keyczar.MetaDataFormat;
+            Format = KeyczarConst.MetaDataFormat;
 
             if (officialMetaDataKeyType != null)
             {
@@ -112,7 +112,7 @@ namespace Keyczar
             OriginallyOfficial = metadata.OriginallyOfficial;
             Kind = metadata.Kind;
 
-            Format = Keyczar.MetaDataFormat;
+            Format = KeyczarConst.MetaDataFormat;
 
         }
 

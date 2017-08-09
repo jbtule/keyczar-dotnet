@@ -99,7 +99,7 @@ namespace Keyczar
             /// Initializes a new instance of the <see cref="TimeoutSignerHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public TimeoutSignerHelper(IKeySet keySet, Keyczar parent)
+            public TimeoutSignerHelper(IKeySet keySet, KeyczarBase parent)
                 : base(keySet)
             {
                 Config = parent.Config;

@@ -65,7 +65,7 @@ namespace Keyczar
             get
             {
                 var path = Path.Combine(_location, "meta");
-                return KeyMetadata.Read(File.ReadAllText(path, Keyczar.RawStringEncoding));
+                return KeyMetadata.Read(File.ReadAllText(path, KeyczarBase.RawStringEncoding));
             }
         }
 

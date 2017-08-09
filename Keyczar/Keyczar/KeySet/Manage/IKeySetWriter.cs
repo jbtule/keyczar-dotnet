@@ -35,7 +35,7 @@ namespace Keyczar
         /// <param name="version">The version.</param>
         public static void Write(this IKeySetWriter writer, Key key, int version)
         {
-            writer.Write(Keyczar.RawStringEncoding.GetBytes(key.ToJson()), version);
+            writer.Write(KeyczarBase.RawStringEncoding.GetBytes(key.ToJson()), version);
         }
     }
 

@@ -47,7 +47,7 @@ namespace Keyczar
     /// <summary>
     ///  Encrypts data using a given key set.
     /// </summary>
-    public class Encrypter:Keyczar
+    public class Encrypter:KeyczarBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Encrypter"/> class.
@@ -116,9 +116,9 @@ namespace Keyczar
         {
             var stopLength = inputLength < 0 ? long.MaxValue : input.Position + inputLength;
             var key = GetPrimaryKey();
-            var header = new byte[HeaderLength];
-            Array.Copy(FormatBytes,0,header,0,FormatBytes.Length);
-            Array.Copy(key.GetKeyHash(), 0, header, FormatBytes.Length, KeyHashLength);
+            var header = new byte[KeyczarConst.HeaderLength];
+            Array.Copy(KeyczarConst.FormatBytes,0,header,0,KeyczarConst.FormatBytes.Length);
+            Array.Copy(key.GetKeyHash(), 0, header, KeyczarConst.FormatBytes.Length, KeyczarConst.KeyHashLength);
            
             var cryptKey = key as IEncrypterKey;
 

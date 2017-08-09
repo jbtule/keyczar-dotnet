@@ -92,7 +92,7 @@ namespace Keyczar
             /// Initializes a new instance of the <see cref="AttachedSignerHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public AttachedSignerHelper(IKeySet keySet,Keyczar parent)
+            public AttachedSignerHelper(IKeySet keySet,KeyczarBase parent)
                 : base(keySet)
             {
                 Config = parent.Config;
@@ -157,8 +157,8 @@ namespace Keyczar
                 var input = padData.Item3;
 
                 var key = GetPrimaryKey() as ISignerKey;
-                outputStream.Write(FormatBytes, 0, FormatBytes.Length);
-                outputStream.Write(key.GetKeyHash(), 0, KeyHashLength);
+                outputStream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
+                outputStream.Write(key.GetKeyHash(), 0, KeyczarConst.KeyHashLength);
 
                 var lengthBytes = Utility.GetBytes((int)(stopLength - position));
                 outputStream.Write(lengthBytes, 0, lengthBytes.Length);

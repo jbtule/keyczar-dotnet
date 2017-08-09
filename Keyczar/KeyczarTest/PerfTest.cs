@@ -119,7 +119,7 @@ namespace KeyczarTest
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public override FinishingStream GetEncryptingStream(Stream output,Keyczar.Keyczar keyczar)
+        public override FinishingStream GetEncryptingStream(Stream output,Keyczar.KeyczarBase keyczar)
         {
             var alg = new AesManaged
                           {
@@ -140,7 +140,7 @@ namespace KeyczarTest
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public override FinishingStream GetDecryptingStream(Stream output, Keyczar.Keyczar keyczar)
+        public override FinishingStream GetDecryptingStream(Stream output, Keyczar.KeyczarBase keyczar)
         {
             var alg = new AesManaged
                           {
