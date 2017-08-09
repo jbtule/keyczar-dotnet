@@ -98,8 +98,8 @@ namespace KeyczarTool
             IDisposable d4 = null;
             IDisposable d5 = null;
             IDisposable d6 = null;
-            
-            var config = new KeyczarConfig();
+
+            var config = KeyczarDefaults.DefaultConfig;
 
             IKeySet ks = ProduceKeySet(_location, _crypterLocation, _password, out d1, out d2, out d3);
             IKeySet ks2 = ProduceKeySet(_location2, _crypterLocation2, _password2, out d4, out d5, out d6);
