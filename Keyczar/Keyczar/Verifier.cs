@@ -155,12 +155,10 @@ namespace Keyczar
                             byte[] buffer = reader.ReadBytes(adjustedBufferSize);
                             verifyStream.Write(buffer, 0, buffer.Length);
                         }
-                            PostfixDataVerify(verifyStream,postfixData);
+                        PostfixDataVerify(verifyStream,postfixData);
 
                         try
                         {
-
-
                             if (verifyStream.VerifySignature(trimmedSig))
                             {
                                 return true;

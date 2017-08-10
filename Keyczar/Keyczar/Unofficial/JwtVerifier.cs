@@ -27,6 +27,12 @@ namespace Keyczar.Unofficial
             return _verifier.VerifyCompact(input, out payload);
         }
         
+        protected override void Dispose(bool disposing)
+        {
+            _verifier = _verifier.SafeDispose();
+            base.Dispose(disposing);
+        }
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="AttachedSigner" /> class.
         /// </summary>
@@ -50,13 +56,13 @@ namespace Keyczar.Unofficial
             {
                 _parent = parent;
             }
-            
+
             public override KeyczarConfig Config
             {
                 get => _parent.Config;
-                set {}
+                set { }
             }
-             
+
             public bool VerifyCompact(string input, out JObject payload)
             {
 
@@ -66,22 +72,22 @@ namespace Keyczar.Unofficial
                 {
                     throw new InvalidCryptoDataException("Not a JWT Compact Token");
                 }
-                
+
                 var message = Encoding.UTF8.GetBytes(string.Join(".", pieces.Take(2)));
 
 
                 var verify = Verify(message, Encoding.UTF8.GetBytes(input));
 
-                payload = verify 
-                    ? JObject.Parse(JwtUtil.DecodeToJsonString(pieces[1]))
+                payload = verify
+                    ? JObject.Parse(Jwt.DecodeToJsonString(pieces[1]))
                     : null;
                 return verify;
 
             }
-            
+
             protected override void PrefixDataVerify(VerifyingStream verifyingStream, object extra)
             {
-            
+
             }
 
             /// <summary>
@@ -91,10 +97,10 @@ namespace Keyczar.Unofficial
             /// <param name="extra">The extra data passed by postFixData</param>
             protected override void PostfixDataVerify(VerifyingStream verifyingStream, object extra)
             {
-           
+
             }
-     
-            
+
+
             /// <summary>
             /// Gets the keys.
             /// </summary>
@@ -103,26 +109,9 @@ namespace Keyczar.Unofficial
             /// <returns></returns>
             protected override IEnumerable<IVerifierKey> GetKeys(byte[] signature, out byte[] trimmedSignature)
             {
-                var input = Encoding.UTF8.GetString(signature);
-                var pieces = input.Split('.');
-                trimmedSignature = ((WebBase64)pieces.Last()).ToBytes();
-
-                var header =JsonConvert.DeserializeObject<JwtHeader>(
-                    JwtUtil.DecodeToJsonString(pieces.First()));
-
-                if (header.typ != "JWT" || String.IsNullOrEmpty(header.kid))
-                {
-                    return Enumerable.Empty<IVerifierKey>();
-                }
-
-                var kid = (WebBase64) header.kid;
-
-                return GetKey(kid.ToBytes())
-                            .Where(it=>JwtUtil.AlgVerifier(header.alg,it))
-                    .OfType<IVerifierKey>();
+                return Jwt.VerifierKeys(this, signature, out trimmedSignature);
             }
-
-           
         }
+
     }
 }

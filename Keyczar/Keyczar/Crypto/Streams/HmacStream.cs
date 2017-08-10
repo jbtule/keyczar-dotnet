@@ -123,7 +123,7 @@ namespace Keyczar.Crypto.Streams
         {
             if (!_final)
             {
-                _hmacAlg.DoFinal(_fullHashValue, 0);
+                _hmacAlg.DoFinal(_fullHashValue, 0);  
                 Array.Copy(_fullHashValue, _hashValue, _hashLength);
                 _final = true;
             }

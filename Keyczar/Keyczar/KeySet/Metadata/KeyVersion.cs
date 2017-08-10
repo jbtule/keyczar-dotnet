@@ -41,7 +41,7 @@ namespace Keyczar
             Status = status;
             VersionNumber = versionNumber;
             KeyType = key.KeyType;
-            KeyId = KeyczarConst.FormatBytes.Concat(key.GetKeyHash()).ToArray();
+            KeyId = key.GetKeyHash();
             Exportable = false;
             Comment = comment;
         }

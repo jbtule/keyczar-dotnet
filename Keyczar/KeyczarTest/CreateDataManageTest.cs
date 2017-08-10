@@ -22,6 +22,7 @@ using Keyczar;
 using Keyczar.Compat;
 using Keyczar.Unofficial;
 using Keyczar.Util;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace KeyczarTest
@@ -31,6 +32,7 @@ namespace KeyczarTest
     {
         private static string WRITE_DATA = Path.Combine("gen-testdata", "cstestdata");
         private static String input = "This is some test data";
+        private static string jsonInput = "{\"sub\": \"1234567890\",\"name\": \"John Doe\",\"admin\": true}";
 
 
         private MutableKeySet CreateNewKeySet(KeyKind type, KeyPurpose purpose, string name = null)
@@ -357,10 +359,20 @@ namespace KeyczarTest
                     Expect(success, Is.True);
                 }
 
-                using (var encrypter = new Signer(kspath))
+                using(var ks = new FileSystemKeySet(kspath))
+                using (var signer = new Signer(ks))
+                using (var jwtSigner = new JwtSigner(ks))
                 {
-                    var ciphertext = encrypter.Sign(input);
-                    File.WriteAllText(Path.Combine(kspath, String.Format("{0}.out", size)), ciphertext);
+                    var ciphertext = signer.Sign(input);
+                    File.WriteAllText(Path.Combine(kspath, $"{size}.out"), ciphertext);
+
+
+                    var key = ks.GetPrimaryKey();
+                    if (Jwt.AlgForKey(key) != null)
+                    {
+                        var token = jwtSigner.SignCompact(JObject.Parse(jsonInput));
+                        File.WriteAllText(Path.Combine(kspath, $"{size}.jwt"), token);
+                    }
                 }
             }
 

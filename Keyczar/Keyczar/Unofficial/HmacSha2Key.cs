@@ -20,6 +20,7 @@ using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using Newtonsoft.Json;
+using Org.BouncyCastle.Asn1.X9;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Macs;
@@ -104,7 +105,7 @@ namespace Keyczar.Unofficial
             HmacKeyBytes = new byte[size/8];
 
             Digest = DigestForSize(size);
-            HashLength = size / 8;
+            HashLength = HashLengthForDigest(Digest);
 
             Secure.Random.NextBytes(HmacKeyBytes);
         }
@@ -140,6 +141,22 @@ namespace Keyczar.Unofficial
             if (size <= 192)
                 return DigestAlg.Sha384; 
             return DigestAlg.Sha512; 
+        }
+        
+        
+        protected int HashLengthForDigest(DigestAlg digestAlg)
+        {
+            switch (digestAlg)
+            {
+               case DigestAlg alg when digestAlg == DigestAlg.Sha256:
+                   return 256 / 8;
+               case DigestAlg alg when alg == DigestAlg.Sha384:
+                   return 384 / 8;
+               case DigestAlg alg when alg == DigestAlg.Sha512:
+                   return 512 / 8;
+               default:
+                   return 0;
+            }
         }
     }
 }

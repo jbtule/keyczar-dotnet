@@ -109,6 +109,8 @@ namespace Keyczar.Unofficial
             AesKeyBytes = new byte[size/8];
             Secure.Random.NextBytes(AesKeyBytes);
             HmacKey = (HmacSha2Key) Generate(UnofficialKeyType.HmacSha2, size);
+            HmacKey.HashLength = size / 8;  //Truncate hash length to match JWE
+            //https://tools.ietf.org/html/rfc7518#page-23
         }
 
         /// <summary>

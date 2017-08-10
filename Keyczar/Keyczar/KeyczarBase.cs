@@ -146,7 +146,7 @@ namespace Keyczar
         /// Gets all keys.
         /// </summary>
         /// <returns></returns>
-        protected IEnumerable<Key> GetAllKeys()
+        internal IEnumerable<Key> GetAllKeys()
             => _versions.OrderByDescending(it => it.Key).Select(it => it.Value);
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="hash">The hash.</param>
         /// <returns>List of keys that match the hash</returns>
-        protected IEnumerable<Key> GetKey(byte[] hash)
+        internal IEnumerable<Key> GetKey(byte[] hash)
         {
             var hashIndex =Utility.ToInt32(hash);
             SortedList<KeyVersion, Key> list;
