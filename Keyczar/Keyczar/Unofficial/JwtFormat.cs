@@ -104,11 +104,11 @@ namespace Keyczar.Unofficial
                     return JwtAlg.RsaPssSha384;
                 case Unofficial.RsaPublicSignPssKey k when k.Digest == DigestAlg.Sha512:
                     return JwtAlg.RsaPssSha512;
-                case Unofficial.RsaPrivateSignPkcs15Key k when k.Digest == DigestAlg.Sha256:
+                case Unofficial.RsaPublicSignPkcs15Key k when k.Digest == DigestAlg.Sha256:
                     return JwtAlg.RsaPkcs15Sha256;
-                case Unofficial.RsaPrivateSignPkcs15Key k when k.Digest == DigestAlg.Sha384:
+                case Unofficial.RsaPublicSignPkcs15Key k when k.Digest == DigestAlg.Sha384:
                     return JwtAlg.RsaPkcs15Sha384;
-                case Unofficial.RsaPrivateSignPkcs15Key k when k.Digest == DigestAlg.Sha512:
+                case Unofficial.RsaPublicSignPkcs15Key k when k.Digest == DigestAlg.Sha512:
                     return JwtAlg.RsaPkcs15Sha512;
                 case Unofficial.HmacSha2Key k when k.Digest == DigestAlg.Sha256:
                     return JwtAlg.HmacSha256;

@@ -18,8 +18,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar;
+using Keyczar.Unofficial;
 using ManyConsole;
 using Keyczar.Util;
+using Newtonsoft.Json.Linq;
 
 namespace KeyczarTool
 {
@@ -294,6 +296,27 @@ namespace KeyczarTool
                         var sig = signer.Sign(inStream);
                         outStream.Write(sig, 0, sig.Length);
                     }
+            }  
+            else if (_format == WireFormat.SignJwt)
+            {
+                try
+                {
+                    using (var signer = new JwtSigner(keyset))
+                    using (var reader =new StreamReader(inStream))
+                    {
+                        
+                            var sig = signer.SignCompact(JObject.Parse(reader.ReadToEnd()));
+                            outStream.Write(Encoding.UTF8.GetBytes(sig), 0, sig.Length);
+                      
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    return -1;
+                }
             }
             else if (_format == WireFormat.SignTimeout)
             {
@@ -376,6 +399,7 @@ namespace KeyczarTool
             public static readonly WireFormat SignVanilla = "SIGN-VANILLA";
             public static readonly WireFormat SignUnversioned = "SIGN-UNVERSIONED"; 
             public static readonly WireFormat SignAttached = "SIGN-ATTACHED";
+            public static readonly WireFormat SignJwt = "SIGN-JWT";
             public static readonly WireFormat CryptSession = "CRYPT-SESSION";
             public static readonly WireFormat CryptSignedSession = "CRYPT-SIGNEDSESSION";
 

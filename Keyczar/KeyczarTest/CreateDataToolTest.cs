@@ -32,6 +32,7 @@ namespace KeyczarTest
         private static string WRITE_DATA = Path.Combine("gen-testdata", "tool_cstestdata");
 
         private static String input = "This is some test data";
+        private static string jsonInput = "{'sub': '1234567890','name': 'John Doe','admin': true}";
 
         [TestCase("HMAC_SHA1", "hmac", "sign", "")]
         [TestCase("HMAC_SHA2", "hmac_sha2", "sign", "unofficial", Category = "Unofficial")]
@@ -233,9 +234,21 @@ namespace KeyczarTest
                 result = Util.KeyczarTool(addkey: null, location: path, status: "primary", size: size, type:algId);
 
                 Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
-                var outPath = Path.Combine(path, String.Format("{0}.out", size));
+                var outPath = Path.Combine(path, $"{size}.out");
                 File.Delete(outPath); //Delete if already exists
                 Util.KeyczarTool(usekey: null, location: path, destination: outPath, additionalArgs: new[] {input});
+
+                try
+                {
+                    var outPath2 = Path.Combine(path, $"{size}.jwt");
+                    File.Delete(outPath2); //Delete if already exists
+                    Util.KeyczarTool(usekey: null, location: path, destination: outPath2, format: "SIGN-JWT",
+                        additionalArgs: new[] {jsonInput});
+                }
+                catch 
+                {
+                    
+                }
             }
             if (keyType.Asymmetric)
             {
