@@ -16,8 +16,8 @@ namespace Keyczar.Unofficial
         {
         }
         
-#pragma warning disable 612
-        public static readonly PaddingAlg Pss = RsaPublicSignKey.PssPadding;
-#pragma warning restore 612
+        public static readonly PaddingAlg Pss = "PSS";
+        
+        public static readonly PaddingAlg Pkcs15 = "PKCS15";
     }
 }

@@ -136,6 +136,7 @@ namespace KeyczarTest
         [TestCase("rsa_priv", "DSA_SHA1", "rsa-sign", "sign")]
         [TestCase("rsa_priv", "RSA", "rsa", "crypt")]
         [TestCase("c#_rsa_sign_priv", "RSA_PSS", "rsa-sign", "sign")]
+        [TestCase("c#_rsa_sign_pkcs15_priv", "RSA_PKCS15", "rsa-sign", "sign")]
         public void CreateUseAndPublic(string type, string algId, string topDir, string purpose)
         {
             string result;
@@ -190,6 +191,7 @@ namespace KeyczarTest
         [TestCase("rsa_priv", "RSA_SHA1", "rsa-sign", "sign")]
         [TestCase("rsa_priv", "RSA", "rsa", "crypt")]
         [TestCase("c#_rsa_sign_priv", "RSA_PSS", "rsa-sign", "sign")]
+        [TestCase("c#_rsa_sign_pkcs15_priv", "RSA_PKCS15", "rsa-sign", "sign")]
         [TestCase("c#_hmac_sha2", "HMAC_SHA2", "hmac_sha2", "sign")]
         public void CreateUseAndPublicSized(string type, string algId, string topDir, string purpose)
         {

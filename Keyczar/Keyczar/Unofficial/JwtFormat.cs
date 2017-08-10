@@ -33,6 +33,10 @@ namespace Keyczar.Unofficial
         public static readonly JwtAlg RsaPssSha256 = "PS256";
         public static readonly JwtAlg RsaPssSha384 = "PS384";
         public static readonly JwtAlg RsaPssSha512 = "PS512";
+        
+        public static readonly JwtAlg RsaPkcs15Sha256 = "RS256";
+        public static readonly JwtAlg RsaPkcs15Sha384 = "RS384";
+        public static readonly JwtAlg RsaPkcs15Sha512 = "RS512";
 
         public static readonly JwtAlg HmacSha256 = "HS256";
         public static readonly JwtAlg HmacSha384 = "HS384";
@@ -94,12 +98,18 @@ namespace Keyczar.Unofficial
             var pubKey = (key as IRsaPrivateKey)?.PublicKey as Key;
             
             switch(pubKey ?? key){
-                 case Unofficial.RsaPublicSignKey k when k.Digest == DigestAlg.Sha256:
+                case Unofficial.RsaPublicSignPssKey k when k.Digest == DigestAlg.Sha256:
                      return JwtAlg.RsaPssSha256;
-                case Unofficial.RsaPublicSignKey k when k.Digest == DigestAlg.Sha384:
+                case Unofficial.RsaPublicSignPssKey k when k.Digest == DigestAlg.Sha384:
                     return JwtAlg.RsaPssSha384;
-                case Unofficial.RsaPublicSignKey k when k.Digest == DigestAlg.Sha512:
+                case Unofficial.RsaPublicSignPssKey k when k.Digest == DigestAlg.Sha512:
                     return JwtAlg.RsaPssSha512;
+                case Unofficial.RsaPrivateSignPkcs15Key k when k.Digest == DigestAlg.Sha256:
+                    return JwtAlg.RsaPkcs15Sha256;
+                case Unofficial.RsaPrivateSignPkcs15Key k when k.Digest == DigestAlg.Sha384:
+                    return JwtAlg.RsaPkcs15Sha384;
+                case Unofficial.RsaPrivateSignPkcs15Key k when k.Digest == DigestAlg.Sha512:
+                    return JwtAlg.RsaPkcs15Sha512;
                 case Unofficial.HmacSha2Key k when k.Digest == DigestAlg.Sha256:
                     return JwtAlg.HmacSha256;
                 case Unofficial.HmacSha2Key k when k.Digest == DigestAlg.Sha384:

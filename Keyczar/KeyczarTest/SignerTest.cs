@@ -65,6 +65,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("rsa-sign-pkcs15", "unofficial")]
         public void TestPublicVerify(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -86,6 +87,7 @@ namespace KeyczarTest
         [TestCase("dsa-sizes", "")]
         [TestCase("rsa-sign-sizes", "")]
         [TestCase("rsa-sign-sizes", "unofficial")]
+        [TestCase("rsa-sign-pkcs15-sizes", "unofficial")]
         public void TestPublicVerifySizes(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -129,6 +131,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("rsa-sign-pkcs15", "unofficial")]
         [TestCase("hmac_sha2", "unofficial")]
         public void TestBadVerify(String subDir, string nestDir)
         {
@@ -163,6 +166,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("rsa-sign-pkcs15", "unofficial")]
         [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndVerify(String subDir, string nestDir)
         {
@@ -181,6 +185,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("rsa-sign-pkcs15", "unofficial")]
         [TestCase("hmac_sha2", "unofficial")]
         public void TestBadSigs(String subDir, string nestDir)
         {

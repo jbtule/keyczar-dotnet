@@ -54,6 +54,22 @@ namespace Keyczar.Unofficial
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
             "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType RSAPubSign =
                 "C#_RSA_SIGN_PUB";
+        
+        
+        /// <summary>
+        /// The Unofficial RSA priv sign
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType RSAPrivPkcs15Sign =
+            "C#_RSA_SIGN_PKCS15_PRIV";
+
+        /// <summary>
+        /// The Unofficial RSA pub sign
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security",
+            "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")] public static readonly KeyType RSAPubPkcs15Sign =
+            "C#_RSA_SIGN_PCKS15_PUB";
+
 
         static UnofficialKeyType()
         {
@@ -61,8 +77,11 @@ namespace Keyczar.Unofficial
             AesAead.KeySizes<AesAeadKey>(256, 192, 128).IsUnofficial().DefineSpec();
             HmacSha2.KeySizes<HmacSha2Key>(128, 192, 256).IsUnofficial().DefineSpec();
             AesHmacSha2.KeySizes<AesHmacSha2Key>(128, 192, 256).IsUnofficial().DefineSpec();
-            RSAPrivSign.KeySizes<RsaPrivateSignKey>(3072, 4096, 2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
-            RSAPubSign.KeySizes<RsaPublicSignKey>(3072, 4096, 2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
+            RSAPrivSign.KeySizes<RsaPrivateSignPssKey>(3072, 4096, 7680, 2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
+            RSAPubSign.KeySizes<RsaPublicSignPssKey>(3072, 4096, 7680, 2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
+            
+            RSAPrivPkcs15Sign.KeySizes<RsaPrivateSignPkcs15Key>(3072, 4096, 7680).WeakSizes(2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
+            RSAPubPkcs15Sign.KeySizes<RsaPublicSignPkcs15Key>(3072, 4096, 7680).WeakSizes(2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
         }
     }
 }

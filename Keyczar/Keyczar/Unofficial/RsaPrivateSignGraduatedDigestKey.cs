@@ -1,4 +1,4 @@
-﻿/*  Copyright 2013 James Tuley (jay+code@tuley.name)
+﻿/*  Copyright 2107 James Tuley (jay+code@tuley.name)
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -16,16 +16,14 @@
 using System.Numerics;
 using Keyczar.Crypto;
 using Newtonsoft.Json;
-using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Engines;
-using Org.BouncyCastle.Crypto.Signers;
 
 namespace Keyczar.Unofficial
 {
     /// <summary>
     /// Rsa Private Key For Signing with Update Hash Algorithms
     /// </summary>
-    public class RsaPrivateSignKey : RsaPrivateSignKeyBase<RsaPublicSignKey>
+    public abstract class RsaPrivateSignGraduatedDigestKey<TPublicKey> : RsaPrivateSignKeyBase<TPublicKey>
+        where TPublicKey : RsaPublicSignGraduatedDigestKey, IVerifierKey, IRsaPublicKey, new()
     {
         /// <summary>
         /// Gets or sets the digest.
@@ -47,15 +45,15 @@ namespace Keyczar.Unofficial
         /// <param name="publicExponent">The public exponent.</param>
         /// <param name="modulus">The modulus.</param>
         /// <returns></returns>
-        protected override RsaPublicSignKey GeneratePubKey(int size, BigInteger publicExponent, BigInteger modulus)
+        protected override TPublicKey GeneratePubKey(int size, BigInteger publicExponent, BigInteger modulus)
         {
-            return new RsaPublicSignKey
-                       {
-                           Size = size,
-                           PublicExponent = publicExponent,
-                           Modulus = modulus,
-                           Digest = DigestForSize(size)
-                       };
+            return new TPublicKey
+            {
+                Size = size,
+                PublicExponent = publicExponent,
+                Modulus = modulus,
+                Digest = DigestForSize(size)
+            };
         }
 
 

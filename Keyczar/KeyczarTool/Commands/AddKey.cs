@@ -58,6 +58,7 @@ namespace KeyczarTool
             Tuple.Create(KeyType.HmacSha1, "HMAC_SHA1"),
             Tuple.Create(UnofficialKeyType.AesAead, "AES_GCM"),
             Tuple.Create(UnofficialKeyType.RSAPrivSign, "RSA_PSS"),
+            Tuple.Create(UnofficialKeyType.RSAPrivPkcs15Sign, "RSA_PKCS15"),
             Tuple.Create(UnofficialKeyType.HmacSha2, "HMAC_SHA2"),
             Tuple.Create(UnofficialKeyType.AesHmacSha2, "AES_HMAC_SHA2"),
 

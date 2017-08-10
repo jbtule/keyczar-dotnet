@@ -1,4 +1,4 @@
-﻿/*  Copyright 2013 James Tuley (jay+code@tuley.name)
+/*  Copyright 2107 James Tuley (jay+code@tuley.name)
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -13,41 +13,25 @@
  *  limitations under the License.
  */
 
-using System.Text;
+using System.Collections.Generic;
+using System.Numerics;
 using Keyczar.Crypto;
 using Keyczar.Util;
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Digests;
 using Org.BouncyCastle.Crypto.Engines;
 using Org.BouncyCastle.Crypto.Signers;
-using System;
-using System.Collections.Generic;
-using System.Numerics;
 
 namespace Keyczar.Unofficial
 {
     /// <summary>
     /// Rsa Public Key For Signing with Update Hash Algorithms
     /// </summary>
-    public class RsaPublicSignKey : RsaPublicSignKeyBase
+    public abstract class RsaPublicSignGraduatedDigestKey : RsaPublicSignKeyBase
     {
 
 
-
-        /// <summary>
-        /// Pss Padding identifer
-        /// </summary>
-        [Obsolete("Use PaddingAlg.Pss instead")]
-        public static readonly string PssPadding = "PSS";
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RsaPublicSignKey" /> class.
-        /// </summary>
-        public RsaPublicSignKey()
-        {
-            Padding = PaddingAlg.Pss;
-        }
-
+      
         /// <summary>
         /// Gets or sets the Padding (Only PSS is supported).
         /// </summary>
@@ -94,6 +78,11 @@ namespace Keyczar.Unofficial
             {
                 return new PssSigner(new RsaBlindedEngine(), digest);
             }
+            if (Padding == PaddingAlg.Pkcs15)
+            {
+                return new RsaDigestSigner(digest);
+            }
+
             throw new InvalidKeyTypeException($"Unknown padding type :{Padding}");
         }
 

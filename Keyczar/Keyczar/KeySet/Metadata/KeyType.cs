@@ -101,10 +101,10 @@ namespace Keyczar
         {
             Aes.KeySizes<AesKey>(128, 192, 256).DefineSpec();
             HmacSha1.KeySizes<HmacSha1Key>(256).DefineSpec();
-            DsaPriv.KeySizes<DsaPrivateKey>(1024).IsAsymmetric().DefineSpec();
-            DsaPub.KeySizes<DsaPublicKey>(1024).IsAsymmetric().IsPublic().DefineSpec();
-            RsaPriv.KeySizes<RsaPrivateKey>(2048, 1024, 4096).IsAsymmetric().DefineSpec();
-            RsaPub.KeySizes<RsaPublicKey>(2048, 1024, 4096).IsAsymmetric().IsPublic().DefineSpec();
+            DsaPriv.KeySizes<DsaPrivateKey>().WeakSizes(1024).IsAsymmetric().DefineSpec();
+            DsaPub.KeySizes<DsaPublicKey>().WeakSizes(1024).IsAsymmetric().IsPublic().DefineSpec();
+            RsaPriv.KeySizes<RsaPrivateKey>(2048, 4096).WeakSizes(1024).IsAsymmetric().DefineSpec();
+            RsaPub.KeySizes<RsaPublicKey>(2048, 4096).WeakSizes(1024).IsAsymmetric().IsPublic().DefineSpec();
 
 #pragma warning disable 219
             KeyType see;
@@ -131,7 +131,8 @@ namespace Keyczar
                        {
                            Name = Identifier,
                            RepresentedType = typeof (T),
-                           KeySizes = keySizes,
+                           GoodKeySizes = keySizes,
+                           WeakKeySizes = Enumerable.Empty<int>(),
                        };
         }
 
@@ -163,8 +164,13 @@ namespace Keyczar
             /// <value>The key sizes.</value>
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
                 "CA1819:PropertiesShouldNotReturnArrays")]
-            public int[] KeySizes { get; internal set; }
+            public IEnumerable<int> KeySizes => GoodKeySizes.Concat(WeakKeySizes);
+            
+            public IEnumerable<int> GoodKeySizes { get; internal set; }
 
+            public IEnumerable<int> WeakKeySizes { get; internal set; }
+
+            
             /// <summary>
             /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is unofficial.
             /// </summary>
@@ -219,7 +225,12 @@ namespace Keyczar
                 Public = true;
                 return this;
             }
-            
+
+            public KeyTypeSpec WeakSizes(params int[] keySizes)
+            {
+                WeakKeySizes = WeakKeySizes.Concat(keySizes);
+                return this;
+            }
             
             /// <summary>
             /// Specifies this instance is temp key type.
@@ -295,7 +306,7 @@ namespace Keyczar
             {
                 if (_keySizeOptions == null)
                 {
-                    _keySizeOptions = _specs[Identifier].KeySizes;
+                    _keySizeOptions = _specs[Identifier].KeySizes.ToArray();
                 }
                 return _keySizeOptions;
             }
