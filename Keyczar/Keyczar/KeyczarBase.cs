@@ -30,7 +30,7 @@ namespace Keyczar
         /// <summary>
         /// Config Options
         /// </summary>
-        public KeyczarConfig Config
+        public virtual KeyczarConfig Config
         {
             get => _config ?? KeyczarDefaults.DefaultConfig;
             set => _config = value;

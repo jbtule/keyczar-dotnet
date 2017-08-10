@@ -133,7 +133,8 @@ namespace Keyczar
         /// </summary>
         protected class TimeoutVerifierHelper:Verifier
         {
-           
+            private KeyczarBase _parent;
+
 
             /// <summary>
             /// Initializes a new instance of the <see cref="TimeoutVerifierHelper"/> class.
@@ -141,7 +142,13 @@ namespace Keyczar
             /// <param name="keySet">The key set.</param>
             public TimeoutVerifierHelper(IKeySet keySet, KeyczarBase parent) : base(keySet)
             {
-                Config = parent.Config;
+                _parent = parent;
+            }
+            
+            public override KeyczarConfig Config
+            {
+                get => _parent.Config;
+                set {}
             }
 
             /// <summary>

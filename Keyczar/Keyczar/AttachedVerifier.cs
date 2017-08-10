@@ -188,6 +188,8 @@ namespace Keyczar
         /// </summary>
         protected class HelperAttachedVerify:Verifier
         {
+            private KeyczarBase _parent;
+            private KeyczarConfig _config1;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="HelperAttachedVerify"/> class.
@@ -195,7 +197,13 @@ namespace Keyczar
             /// <param name="keySet">The key set.</param>
             public HelperAttachedVerify(IKeySet keySet, KeyczarBase parent) : base(keySet)
             {
-                Config = parent.Config;
+                _parent = parent;
+            }
+
+            public override KeyczarConfig Config
+            {
+                get => _config1 ?? _parent.Config;
+                set => _config1 = value;
             }
 
             /// <summary>

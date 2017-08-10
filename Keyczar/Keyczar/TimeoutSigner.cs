@@ -95,6 +95,8 @@ namespace Keyczar
         /// </summary>
         protected class TimeoutSignerHelper:Signer
         {
+            private KeyczarBase _parent;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="TimeoutSignerHelper"/> class.
             /// </summary>
@@ -102,7 +104,13 @@ namespace Keyczar
             public TimeoutSignerHelper(IKeySet keySet, KeyczarBase parent)
                 : base(keySet)
             {
-                Config = parent.Config;
+                _parent = parent;
+            }
+            
+            public override KeyczarConfig Config
+            {
+                get => _parent.Config;
+                set {}
             }
 
             /// <summary>
