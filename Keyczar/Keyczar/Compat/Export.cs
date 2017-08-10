@@ -189,7 +189,11 @@ namespace Keyczar.Compat
                 {
                     var pemWriter = new Org.BouncyCastle.Utilities.IO.Pem.PemWriter(writer);
 
-                    var password = (passwordPrompt?.Invoke() ?? String.Empty);
+                    string password = null;
+                    if (key is IPrivateKey)
+                    {
+                        password = (passwordPrompt?.Invoke() ?? String.Empty);
+                    }
                     AsymmetricKeyParameter writeKey;
                     if (!(key is IPrivateKey) || String.IsNullOrWhiteSpace(password))
                     {
@@ -234,7 +238,7 @@ namespace Keyczar.Compat
 
                         pemWriter.WriteObject(new Pkcs8Generator(writeKey, Pkcs8Generator.PbeSha1_RC2_128)
                         {
-                            Password = (password).ToCharArray(),
+                            Password = (password)?.ToCharArray(),
                             SecureRandom = Secure.Random,
                             IterationCount = 4096
                         });
