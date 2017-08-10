@@ -24,7 +24,7 @@ namespace KeyczarTool.Commands
 
        
 
-            var keyTypeSpecs = KeyType.Specs.Where(it=>!it.Public).ToList();
+            var keyTypeSpecs = KeyType.Specs.Where(it=>!it.Public && !it.Temp).ToList();
 
             void writeTypes(bool symmetric, bool encrypt)
             {

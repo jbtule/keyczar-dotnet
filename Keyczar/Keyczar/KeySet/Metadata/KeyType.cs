@@ -182,6 +182,12 @@ namespace Keyczar
             /// </summary>
             /// <value><c>true</c> if asymmetric; otherwise, <c>false</c>.</value>
             public bool Public { get; internal set; }
+            
+            /// <summary>
+            /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is not for actual use.
+            /// </summary>
+            /// <value><c>true</c> if temp; otherwise, <c>false</c>.</value>
+            public bool Temp { get; internal set; }
 
             /// <summary>
             /// Specifies this  instance is unofficial.
@@ -211,6 +217,17 @@ namespace Keyczar
             public KeyTypeSpec IsPublic()
             {
                 Public = true;
+                return this;
+            }
+            
+            
+            /// <summary>
+            /// Specifies this instance is temp key type.
+            /// </summary>
+            /// <returns></returns>
+            public KeyTypeSpec IsTemp()
+            {
+                Temp = true;
                 return this;
             }
 

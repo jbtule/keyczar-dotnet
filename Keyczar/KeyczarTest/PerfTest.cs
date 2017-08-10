@@ -43,7 +43,7 @@ namespace KeyczarTest
         {
             if (STDNET40_AES == null)
             {
-                STDNET40_AES = KeyType.Name("STDNET40_AES").KeySizes<StdNET40AESKey>(128, 192, 256).DefineSpec();
+                STDNET40_AES = KeyType.Name("STDNET40_AES").KeySizes<StdNET40AESKey>(128, 192, 256).IsTemp().DefineSpec();
             }
         }
 
