@@ -7,6 +7,8 @@ configuration: Debug
 
 build: off
 
+skip_branch_with_pr: true
+
 environment:
   vsuffix: alpha$(APPVEYOR_BUILD_NUMBER)
 
