@@ -50,14 +50,21 @@ namespace Keyczar.Unofficial
                 set { }
             }
             
-            protected override void PrefixDataVerify(VerifyingStream verifyingStream, object extra)
+
+            protected override void PrefixDataSign(HashingStream signingStream, object extra)
             {
-
             }
-
+            
             protected override void PostfixDataSign(HashingStream signingStream, object extra)
             {
-                
+            }
+
+            protected override void PrefixDataVerify(VerifyingStream verifyingStream, object extra)
+            {
+            }
+            
+            protected override void PostfixDataVerify(VerifyingStream verifyingStream, object extra)
+            {
             }
 
             public string SignCompact(byte[] payload)
