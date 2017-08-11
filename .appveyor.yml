@@ -54,7 +54,6 @@ for:
     build_script:
     - cmd: msbuild /p:Configuration=%configuration%
 
-for:
   - branches:
       only:
         - /v[\d,.]*-beta/
