@@ -28,6 +28,11 @@ namespace KeyczarTest
     public static class Util
     {
 
+        public static bool IsSizeTooSlow(int size)
+        {
+           return ((Environment.GetEnvironmentVariable("CI")?.Equals("true", StringComparison.InvariantCultureIgnoreCase)
+              ?? false) && size > 5000);
+        }
    
 
         public static string ReplaceDirPrefix(string prefixedDir)

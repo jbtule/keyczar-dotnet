@@ -351,6 +351,11 @@ namespace KeyczarTest
             int i = 0;
             foreach (int size in type.KeySizeOptions)
             {
+                if (Util.IsSizeTooSlow(size))
+                {
+                    break;
+                }
+                
                 i++;
                 using (var ks = new MutableKeySet(kspath))
                 {

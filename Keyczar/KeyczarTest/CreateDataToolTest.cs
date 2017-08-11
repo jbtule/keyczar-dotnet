@@ -231,6 +231,12 @@ namespace KeyczarTest
 
             foreach (var size in keyType.KeySizeOptions)
             {
+
+                if (Util.IsSizeTooSlow(size))
+                {
+                    break;
+                }
+                
                 result = Util.KeyczarTool(addkey: null, location: path, status: "primary", size: size, type:algId);
 
                 Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));

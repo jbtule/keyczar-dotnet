@@ -101,8 +101,15 @@ namespace KeyczarTest
             {
                 foreach (var size in ks.Metadata.GetKeyType(1).KeySizeOptions)
                 {
+                    var dataPath = Path.Combine(subPath, $@"{size}.out");
+                    
+                    if (Util.IsSizeTooSlow(size) && !File.Exists(dataPath))
+                    {
+                        break;
+                    }
+                    
                     var activeSignature =
-                        (WebBase64) File.ReadAllLines(Path.Combine(subPath, $@"{size}.out")).First();
+                        (WebBase64) File.ReadAllLines(dataPath).First();
 
                     Expect(verifier.Verify(input, activeSignature), Is.True);
                     Expect(publicVerifier.Verify(input, activeSignature), Is.True);
@@ -131,8 +138,15 @@ namespace KeyczarTest
             {
                 foreach (var size in ks.Metadata.GetKeyType(1).KeySizeOptions)
                 {
+                    var dataPath = Path.Combine(subPath, $@"{size}.out");
+                   
+                    if (Util.IsSizeTooSlow(size) && !File.Exists(dataPath))
+                    {
+                        break;
+                    }
+                    
                     var activeSignature =
-                        (WebBase64)File.ReadAllLines(Path.Combine(subPath, $"{size}.out")).First();
+                        (WebBase64)File.ReadAllLines(dataPath).First();
 
                     Expect(verifier.Verify(input, activeSignature), Is.True);
                     
