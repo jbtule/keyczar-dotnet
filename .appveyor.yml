@@ -43,22 +43,3 @@ deploy:
     prerelease: true
     on:
       appveyor_repo_tag: true       # deploy on tag push only
-
-for:
-  - branches:
-      only:
-        - /v[\d,.]*/
-
-    configuration: Release
-    
-    build_script:
-      - cmd: msbuild /p:Configuration=%configuration%
-
-  - branches:
-      only:
-        - /v[\d,.]*-beta/
-    
-    build_script:
-      - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="beta%APPVEYOR_BUILD_NUMBER%"
-
-
