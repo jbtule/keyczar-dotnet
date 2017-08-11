@@ -3,17 +3,19 @@ image: Visual Studio 2017
 install:
   - cmd: git submodule update --init --recursive
 
+configuration: Debug
+
 build: off
 
-build_script:
+before_build:
   - cmd: cd Keyczar
-  - cmd: set VBRANCHSUFFIX="beta"
-  - cmd: if "%APPVEYOR_REPO_BRANCH %" == "master" ( set VBRANCHSUFFIX="" )
-  - cmd: set VSUFFIX="alpha%APPVEYOR_BUILD_NUMBER%"
-  - cmd: if "%APPVEYOR_REPO_TAG%" == "true" (set VSUFFIX="%VBRANCHSUFFIX%%APPVEYOR_BUILD_NUMBER%" )
-  - cmd: msbuild /t:restore /p:Configuration=Release
-  - cmd: msbuild /p:VersionSuffix="%VSUFFIX%" /p:Configuration=Release
-  - cmd: .\packages\nunit.runners\2.6.1\tools\nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest\bin\Release\net40\KeyczarTest.dll -include=Create
+  - cmd: msbuild /t:restore
+
+build_script:
+  - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="alpha%APPVEYOR_BUILD_NUMBER%"
+
+before_test:
+  - cmd: .\packages\nunit.runners\2.6.1\tools\nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest\bin\%configuration%\net40\KeyczarTest.dll -include=Create
 
 test:
   categories:
@@ -21,12 +23,10 @@ test:
       - Performance
       - Create
 
-skip_branch_with_pr: true
-
 artifacts:
-  - path: Keyczar\Keyczar\bin\Release\*.nupkg
+  - path: Keyczar\Keyczar\bin\$(configuration)\*.nupkg
     name: Keyczar
-  - path: Keyczar\KeyczarTool.Minified\bin\Release\*.nupkg
+  - path: Keyczar\KeyczarTool.Minified\bin\$(configuration)\*.nupkg
     name: KeyczarTool
 
 deploy:
@@ -43,3 +43,23 @@ deploy:
     prerelease: false
     on:
       appveyor_repo_tag: true       # deploy on tag push only
+
+for:
+  - branches:
+      only:
+        - /v[\d,.]*/
+
+    configuration: Release
+    
+    build_script:
+    - cmd: msbuild /p:Configuration=%configuration%
+
+for:
+  - branches:
+      only:
+        - /v[\d,.]*-beta/
+    
+    build_script:
+    - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="beta%APPVEYOR_BUILD_NUMBER%"
+
+
