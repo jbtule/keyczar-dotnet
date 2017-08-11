@@ -26,10 +26,10 @@ artifacts:
     name: KeyczarTool
 
 deploy:
-  - provider: NuGet
-    server: https://www.myget.org/F/keyczar-dotnet-ci/api/v2/package
-    api_key:
-      secure: qeW4Vpu7ZxccbJAZz215XBKpSTlIXEyZTfi/r+gmEGRxC/zsxHkBexycRjKbfptZ
-    skip_symbols: false
-    symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
-    artifact: Keyczar
+  provider: NuGet
+  server: https://www.myget.org/F/keyczar-dotnet-ci/api/v2/package
+  api_key:
+    secure: qeW4Vpu7ZxccbJAZz215XBKpSTlIXEyZTfi/r+gmEGRxC/zsxHkBexycRjKbfptZ
+  skip_symbols: false
+  symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
+  artifact: Keyczar
