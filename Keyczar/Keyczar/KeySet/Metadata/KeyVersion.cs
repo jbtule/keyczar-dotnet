@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.ComponentModel;
 using System.Linq;
 using Keyczar.Util;
 using Newtonsoft.Json;
@@ -86,8 +87,10 @@ namespace Keyczar
         /// </summary>
         /// <value>The version number.</value>
         public int VersionNumber { get; set; }
+         
         
-        
+        [DefaultValue("")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
         public string Comment { get; set; }
 
         /// <summary>

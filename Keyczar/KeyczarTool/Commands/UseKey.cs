@@ -192,7 +192,9 @@ namespace KeyczarTool
         {
             var memstream = (MemoryStream) outstream;
             outstream.Flush();
-            var encodedOutput = WebSafeBase64.Encode(memstream.ToArray());
+            var encodedOutput = _format != WireFormat.SignJwt
+                ? WebBase64.FromBytes(memstream.ToArray()).ToString()
+                : Encoding.UTF8.GetString(memstream.ToArray());
 
             if (String.IsNullOrWhiteSpace(destination))
             {
@@ -203,7 +205,7 @@ namespace KeyczarTool
                 if (File.Exists(destination))
                     throw new Exception("File already Exists!!");
            
-                File.WriteAllText(destination, new string(encodedOutput));
+                File.WriteAllText(destination, encodedOutput);
             }
         }
 

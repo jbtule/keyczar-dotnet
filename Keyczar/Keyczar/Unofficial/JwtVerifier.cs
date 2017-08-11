@@ -19,10 +19,15 @@ namespace Keyczar.Unofficial
 
         public bool VerifyCompact(string input)
         {
-            return _verifier.VerifyCompact(input, out JObject payload);
+            return _verifier.VerifyCompact(input, out byte[] payload);
         }
         
         public bool VerifyCompact(string input, out JObject payload)
+        {
+            return _verifier.VerifyCompact(input, out payload);
+        }
+        
+        public bool VerifyCompact(string input, out byte[] payload)
         {
             return _verifier.VerifyCompact(input, out payload);
         }
@@ -65,6 +70,17 @@ namespace Keyczar.Unofficial
 
             public bool VerifyCompact(string input, out JObject payload)
             {
+                if(VerifyCompact(input, out byte[] bytePayload))
+                {
+                    payload = JObject.Parse(Encoding.UTF8.GetString(bytePayload));
+                    return true;
+                }
+                payload = null;
+                return false;
+            }
+
+            public bool VerifyCompact(string input, out byte[] payload)
+            {
 
                 var pieces = input.Split('.');
 
@@ -79,7 +95,7 @@ namespace Keyczar.Unofficial
                 var verify = Verify(message, Encoding.UTF8.GetBytes(input));
 
                 payload = verify
-                    ? JObject.Parse(Jwt.DecodeToJsonString(pieces[1]))
+                    ? ((WebBase64)(pieces[1])).ToBytes()
                     : null;
                 return verify;
 

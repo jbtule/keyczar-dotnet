@@ -26,6 +26,7 @@ using System.Text;
 using Keyczar.Compat;
 using NUnit.Framework;
 using Keyczar;
+using Keyczar.Unofficial;
 
 namespace KeyczarTest
 {
@@ -91,17 +92,30 @@ namespace KeyczarTest
         public void TestPublicVerifySizes(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
-            var ks = new FileSystemKeySet(subPath);
-            using (var verifier = new Verifier(subPath))
-            using (var publicVerifier = new Verifier(subPath + ".public"))
+            using( var ks = new FileSystemKeySet(subPath))
+            using(var pks = new FileSystemKeySet(subPath + ".public"))
+            using (var verifier = new Verifier(ks))
+            using (var publicVerifier = new Verifier(pks))
+            using (var jwtVerifier = new JwtVerifier(ks))
+            using (var publicJwtVerifier = new JwtVerifier(pks))
             {
                 foreach (var size in ks.Metadata.GetKeyType(1).KeySizeOptions)
                 {
                     var activeSignature =
-                        (WebBase64) File.ReadAllLines(Path.Combine(subPath, String.Format("{0}.out", size))).First();
+                        (WebBase64) File.ReadAllLines(Path.Combine(subPath, $@"{size}.out")).First();
 
                     Expect(verifier.Verify(input, activeSignature), Is.True);
                     Expect(publicVerifier.Verify(input, activeSignature), Is.True);
+
+                    var jwtPath = Path.Combine(subPath, $@"{size}.jwt");
+
+                    if (File.Exists(jwtPath))
+                    {
+                        var activeToken = File.ReadAllLines(jwtPath).First();
+                        
+                        Expect(jwtVerifier.VerifyCompact(activeToken), Is.True);
+                        Expect(publicJwtVerifier.VerifyCompact(activeToken), Is.True); 
+                    }
                 }
             }
         }
@@ -111,17 +125,25 @@ namespace KeyczarTest
         public void TestVerifySizes(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
-            var ks = new FileSystemKeySet(subPath);
-            using (var verifier = new Verifier(subPath))
-            using (var publicVerifier = new Verifier(subPath))
+            using (var ks = new FileSystemKeySet(subPath))
+            using (var verifier = new Verifier(ks))
+            using (var jwtVerifier = new JwtVerifier(ks))
             {
                 foreach (var size in ks.Metadata.GetKeyType(1).KeySizeOptions)
                 {
                     var activeSignature =
-                        (WebBase64)File.ReadAllLines(Path.Combine(subPath, String.Format("{0}.out", size))).First();
+                        (WebBase64)File.ReadAllLines(Path.Combine(subPath, $"{size}.out")).First();
 
                     Expect(verifier.Verify(input, activeSignature), Is.True);
-                    Expect(publicVerifier.Verify(input, activeSignature), Is.True);
+                    
+                    var jwtPath = Path.Combine(subPath, $@"{size}.jwt");
+
+                    if (File.Exists(jwtPath))
+                    {
+                        var activeToken = File.ReadAllLines(jwtPath).First();
+                        
+                        Expect(jwtVerifier.VerifyCompact(activeToken), Is.True);
+                    }
                 }
             }
         }

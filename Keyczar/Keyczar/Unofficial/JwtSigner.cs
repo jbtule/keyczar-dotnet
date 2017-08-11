@@ -22,6 +22,11 @@ namespace Keyczar.Unofficial
         {
             return _signer.SignCompact(payload);
         }
+        
+        public string SignCompact(byte[] payload)
+        {
+            return _signer.SignCompact(payload);
+        }
 
         protected override void Dispose(bool disposing)
         {
@@ -54,8 +59,8 @@ namespace Keyczar.Unofficial
             {
                 
             }
-          
-            public string SignCompact(JObject payload)
+
+            public string SignCompact(byte[] payload)
             {
                 var key = this.GetPrimaryKey();
 
@@ -72,15 +77,15 @@ namespace Keyczar.Unofficial
                     kid = WebBase64.FromBytes(key.GetKeyHash())
 
                 };
-                
+
+                   
                 var stringHeader = JsonConvert.SerializeObject(header);
 
                 var encodedHeader = Jwt.EncodeToBase64(stringHeader);
                 
-                var stringPayload = JsonConvert.SerializeObject(payload);
+                var encodedPayload = WebBase64.FromBytes(payload);
 
-                var encodedPayload = Jwt.EncodeToBase64(stringPayload);
-
+                
                 var input =Encoding.UTF8.GetBytes($"{encodedHeader}.{encodedPayload}");
                 using (var outStream = new MemoryStream())
                 using (var memStream = new MemoryStream(input))
@@ -88,7 +93,19 @@ namespace Keyczar.Unofficial
                     Sign(memStream, outStream, null, null, input, -1);
                     return Encoding.UTF8.GetString(outStream.ToArray());
                 }
+
             }
+
+            public string SignCompact(JObject payload)
+            {
+             
+                var stringPayload = JsonConvert.SerializeObject(payload);
+
+                return SignCompact(Encoding.UTF8.GetBytes(stringPayload));
+
+            }
+            
+            
             
             protected override void PadSignature(byte[] signature, Stream outputStream, object extra)
             {                
