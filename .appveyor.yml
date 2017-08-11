@@ -7,12 +7,15 @@ configuration: Debug
 
 build: off
 
+environment:
+  vsuffix: alpha$(APPVEYOR_BUILD_NUMBER)
+
 before_build:
   - cmd: cd Keyczar
   - cmd: msbuild /t:restore
 
 build_script:
-  - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="alpha%APPVEYOR_BUILD_NUMBER%"
+  - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%"
 
 before_test:
   - cmd: .\packages\nunit.runners\2.6.1\tools\nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest\bin\%configuration%\net40\KeyczarTest.dll -include=Create
@@ -44,24 +47,21 @@ deploy:
     on:
       appveyor_repo_tag: true       # deploy on tag push only
 
-
 for:
--
-  branches:
-    only:
-      - /v[\d,.]*/
+  - branches:
+      only:
+        - /v[\d,.]*/
 
-  configuration: Release
-  
-  build_script:
-    - cmd: msbuild /p:Configuration=%configuration%
+    configuration: Release
+    
+    environment:
+      vsuffix: $(APPVEYOR_BUILD_NUMBER)
 
-- 
-  branches:
-    only:
-      - /v[\d,.]*-beta/
-  
-  build_script:
-    - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="beta%APPVEYOR_BUILD_NUMBER%"
+  - branches:
+      only:
+        - /v[\d,.]*-beta/
+    
+    environment:
+      vsuffix: beta$(APPVEYOR_BUILD_NUMBER)
 
 
