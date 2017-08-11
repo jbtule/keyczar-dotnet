@@ -20,8 +20,10 @@ test:
 skip_branch_with_pr: true
 
 artifacts:
-  - path: '**\bin\*\*.nupkg'
-  
+  - path: '**\Kecyzar\bin\Release\*.nupkg'
+    name: Keyczar
+  - path: '**\KecyzarTool.Minified\bin\Release\*.nupkg'
+    name: KeyczarTool
 deploy:
   - provider: NuGet
     server: https://www.myget.org/F/keyczar-dotnet-ci/api/v2/package
@@ -29,6 +31,6 @@ deploy:
       secure: qeW4Vpu7ZxccbJAZz215XBKpSTlIXEyZTfi/r+gmEGRxC/zsxHkBexycRjKbfptZ
     skip_symbols: false
     symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
-    artifact: Keyczar.nupkg
+    artifact: Keyczar
     on:
       APPVEYOR_REPO_COMMIT_AUTHOR: jbtule
