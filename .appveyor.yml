@@ -8,7 +8,7 @@ build: off
 build_script:
   - cmd: cd Keyczar
   - cmd: msbuild /t:restore /p:Configuration=Release
-  - cmd: msbuild /p:VersionSuffix="alpha{version}" /p:Configuration=Release
+  - cmd: msbuild /p:VersionSuffix="alpha{build}" /p:Configuration=Release
   - cmd: .\packages\nunit.runners\2.6.1\tools\nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest\bin\Debug\net40\KeyczarTest.dll -include=Create
 
 test:
