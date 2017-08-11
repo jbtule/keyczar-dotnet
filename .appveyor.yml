@@ -20,9 +20,9 @@ test:
 skip_branch_with_pr: true
 
 artifacts:
-  - path: '**\Kecyzar\bin\Release\*.nupkg'
+  - path: Keyczar\Keyczar\bin\Release\*.nupkg
     name: Keyczar
-  - path: '**\KecyzarTool.Minified\bin\Release\*.nupkg'
+  - path: Keyczar\KeyczarTool.Minified\bin\Release\*.nupkg
     name: KeyczarTool
 deploy:
   - provider: NuGet
