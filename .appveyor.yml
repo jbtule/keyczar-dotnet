@@ -48,12 +48,10 @@ deploy:
       appveyor_repo_tag: true       # deploy on tag push only
 
 for:
-
-  - branches:
+  branches:
       only:
         - /v.*-beta/
-    
-    environment:
-      vsuffix: beta$(APPVEYOR_BUILD_NUMBER)
+  environment:
+    vsuffix: beta$(APPVEYOR_BUILD_NUMBER)
 
 
