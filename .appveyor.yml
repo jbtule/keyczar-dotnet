@@ -12,13 +12,13 @@ environment:
 
 before_build:
   - cmd: cd Keyczar
-  - cmd: msbuild /t:restore
+  - cmd: msbuild /t:restore /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 build_script:
-  - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%"
+  - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 before_test:
-  - cmd: .\packages\nunit.runners\2.6.1\tools\nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest\bin\%configuration%\net40\KeyczarTest.dll -include=Create
+  - cmd: nunit-console -noxml -nodots -labels -stoponerror KeyczarTest\bin\%configuration%\net40\KeyczarTest.dll -include=Create
 
 test:
   categories:
@@ -46,5 +46,22 @@ deploy:
     prerelease: true
     on:
       appveyor_repo_tag: true       # deploy on tag push only
+
+for:
+  - branches:
+      only:
+        - /v[\d,.]*/
+
+    configuration: Release
+    
+    environment:
+      vsuffix: $(APPVEYOR_BUILD_NUMBER)
+
+  - branches:
+      only:
+        - /v[\d,.]*-beta/
+    
+    environment:
+      vsuffix: beta$(APPVEYOR_BUILD_NUMBER)
 
 
