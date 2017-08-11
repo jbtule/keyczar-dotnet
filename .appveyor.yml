@@ -52,13 +52,13 @@ for:
     configuration: Release
     
     build_script:
-    - cmd: msbuild /p:Configuration=%configuration%
+      - cmd: msbuild /p:Configuration=%configuration%
 
   - branches:
       only:
         - /v[\d,.]*-beta/
     
     build_script:
-    - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="beta%APPVEYOR_BUILD_NUMBER%"
+      - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="beta%APPVEYOR_BUILD_NUMBER%"
 
 
