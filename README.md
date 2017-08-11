@@ -39,8 +39,8 @@ Windows | Mac | Linux
 ------ | ------ | --------
 [![Build Status][WinImgMaster]][WinLinkMaster] | [![Build Status][MacImgMaster]][MacLinkMaster] | [![Build Status][TuxImgMaster]][TuxLinkMaster]
 
-[WinImgMaster]:https://ci.appveyor.com/api/projects/status/5p0wfhgroa8a9f4t/branch/master?svg=true
-[WinLinkMaster]:https://ci.appveyor.com/project/jbtule/keyczar-dotnet-l0us4/branch/master
+[WinImgMaster]:https://ci.appveyor.com/api/projects/status/vygqea9djxa8jopi/branch/master?svg=true
+[WinLinkMaster]:https://ci.appveyor.com/project/jbtule/keyczar-dotnet/branch/master
 [MacImgMaster]:https://travis-matrix-badges.herokuapp.com/repos/jbtule/keyczar-dotnet/branches/master/2
 
 [MacLinkMaster]:https://travis-ci.org/jbtule/keyczar-dotnet
