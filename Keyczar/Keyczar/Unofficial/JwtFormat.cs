@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using Keyczar.Crypto;
 using Keyczar.Util;
@@ -78,16 +79,24 @@ namespace Keyczar.Unofficial
                 return Enumerable.Empty<IVerifierKey>();
             }
 
-            if (string.IsNullOrEmpty(header.kid))
+            byte[] kid = null;
+
+            try //try to interpret kid has key hash.
+            {
+                var kidB64 = (WebBase64) header.kid;
+                kid = kidB64.ToBytes();
+            }
+            catch{}
+            
+            
+            if (kid == null || kid.Length != KeyczarConst.KeyHashLength)
             {
                 return keyczar.GetAllKeys()
                     .Where(it => Jwt.IsValidAlg(header.alg, it))
                     .OfType<IVerifierKey>();
             }
-
-            var kid = (WebBase64) header.kid;
-
-            return keyczar.GetKey(kid.ToBytes())
+            
+            return keyczar.GetKey(kid)
                 .Where(it => Jwt.IsValidAlg(header.alg, it))
                 .OfType<IVerifierKey>();
         }
