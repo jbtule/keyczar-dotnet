@@ -60,7 +60,7 @@ namespace Keyczar.Unofficial
         
         public static bool IsValidAlg(JwtAlg alg, Key key)
         {
-            return alg == AlgForKey(key);
+            return alg != null && alg == AlgForKey(key);
         }
         
         internal static IEnumerable<IVerifierKey> VerifierKeys(KeyczarBase keyczar, byte[] token, out byte[] trimmedSignature)
