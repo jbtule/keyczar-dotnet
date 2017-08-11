@@ -7,8 +7,12 @@ build: off
 
 build_script:
   - cmd: cd Keyczar
+  - cmd: set VBRANCHSUFFIX="beta"
+  - cmd: if "%APPVEYOR_REPO_BRANCH %" == "master" ( set VBRANCHSUFFIX="" )
+  - cmd: set VSUFFIX="alpha%APPVEYOR_BUILD_NUMBER%"
+  - cmd: if "%APPVEYOR_REPO_TAG%" == "true" (set VSUFFIX="%VBRANCHSUFFIX%%APPVEYOR_BUILD_NUMBER%" )
   - cmd: msbuild /t:restore /p:Configuration=Release
-  - cmd: msbuild /p:VersionSuffix="alpha%APPVEYOR_BUILD_NUMBER%" /p:Configuration=Release
+  - cmd: msbuild /p:VersionSuffix="%VSUFFIX%" /p:Configuration=Release
   - cmd: .\packages\nunit.runners\2.6.1\tools\nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest\bin\Release\net40\KeyczarTest.dll -include=Create
 
 test:
@@ -32,12 +36,10 @@ deploy:
       secure: qeW4Vpu7ZxccbJAZz215XBKpSTlIXEyZTfi/r+gmEGRxC/zsxHkBexycRjKbfptZ
     skip_symbols: false
     symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
-    artifact: Keyczar
 
   - provider: GitHub
     artifact: /.*\.nupkg/           # upload all NuGet packages to release assets
     draft: true
     prerelease: false
     on:
-      branch: master                # release from master branch only
       appveyor_repo_tag: true       # deploy on tag push only
