@@ -49,6 +49,9 @@ deploy:
 
 for:
   - branches:
+        except:
+          - /v.*/
+  - branches:
         only:
           - /v.*-beta/
     environment:
