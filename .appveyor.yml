@@ -24,6 +24,7 @@ artifacts:
     name: Keyczar
   - path: Keyczar\KeyczarTool.Minified\bin\Release\*.nupkg
     name: KeyczarTool
+
 deploy:
   - provider: NuGet
     server: https://www.myget.org/F/keyczar-dotnet-ci/api/v2/package
@@ -32,5 +33,3 @@ deploy:
     skip_symbols: false
     symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
     artifact: Keyczar
-    on:
-      APPVEYOR_REPO_COMMIT_AUTHOR: jbtule
