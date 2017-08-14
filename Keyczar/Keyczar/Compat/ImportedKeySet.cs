@@ -385,6 +385,16 @@ namespace Keyczar.Compat
 
                             key = KeyFromBouncyCastle(dsa);
                             break;
+                        case RsaKeyParameters rsa:
+                            key = KeyFromBouncyCastle(rsa, purpose, official);
+                            break;
+                        case DsaPublicKeyParameters dsa:
+                            if (KeyPurpose.Encrypt == purpose)
+                            {
+                                throw new InvalidKeySetException("DSA key cannot be used for encryption!");
+                            }
+                            key = KeyFromBouncyCastle(dsa);
+                            break;
                         default:
                             throw new InvalidKeySetException("Unsupported key type!");
 
