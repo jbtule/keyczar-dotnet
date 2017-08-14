@@ -78,10 +78,10 @@ namespace Keyczar.Unofficial
             HmacSha2.KeySizes<HmacSha2Key>(128, 192, 256).IsUnofficial().DefineSpec();
             AesHmacSha2.KeySizes<AesHmacSha2Key>(128, 192, 256).IsUnofficial().DefineSpec();
             RSAPrivSign.KeySizes<RsaPrivateSignPssKey>(3072, 4096, 8192).WeakSizes(2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
-            RSAPubSign.KeySizes<RsaPublicSignPssKey>(3072, 4096, 8192).WeakSizes(2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
+            RSAPubSign.KeySizes<RsaPublicSignPssKey>(3072, 4096, 8192).WeakSizes(2048, 1024).IsAsymmetric().IsUnofficial().IsPublic().DefineSpec();
             
             RSAPrivPkcs15Sign.KeySizes<RsaPrivateSignPkcs15Key>(3072, 4096, 8192).WeakSizes(2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
-            RSAPubPkcs15Sign.KeySizes<RsaPublicSignPkcs15Key>(3072, 4096, 8192).WeakSizes(2048, 1024).IsAsymmetric().IsUnofficial().DefineSpec();
+            RSAPubPkcs15Sign.KeySizes<RsaPublicSignPkcs15Key>(3072, 4096, 8192).WeakSizes(2048, 1024).IsAsymmetric().IsUnofficial().IsPublic().DefineSpec();
         }
     }
 }
