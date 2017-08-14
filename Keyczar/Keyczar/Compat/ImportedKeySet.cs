@@ -19,6 +19,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar.Crypto;
+using Keyczar.Unofficial;
 using Keyczar.Util;
 using Newtonsoft.Json;
 using Org.BouncyCastle.Crypto;
@@ -158,7 +159,8 @@ namespace Keyczar.Compat
                 }
             }
 
-            private Key KeyFromBouncyCastle(RsaPrivateCrtKeyParameters keyParam, KeyPurpose purpose, bool official = false)
+            private Key KeyFromBouncyCastle(RsaPrivateCrtKeyParameters keyParam, KeyPurpose purpose,
+                                            bool official = false, KeyType hint = null)
             {
                 if(official || purpose == KeyPurpose.DecryptAndEncrypt){
                     return new RsaPrivateKey()
@@ -177,7 +179,29 @@ namespace Keyczar.Compat
                         PrivateExponent = keyParam.Exponent.ToSystemBigInteger(),
                         Size = keyParam.Modulus.BitLength,
                     };
-                }else{
+                }else if (hint == UnofficialKeyType.RSAPrivPkcs15Sign)
+                {
+                    return new Unofficial.RsaPrivateSignPkcs15Key()
+                    {
+                        PublicKey = new Unofficial.RsaPublicSignPkcs15Key()
+                        {
+                            Modulus = keyParam.Modulus.ToSystemBigInteger(),
+                            PublicExponent = keyParam.PublicExponent.ToSystemBigInteger(),
+                            Size = keyParam.Modulus.BitLength,
+                            Digest =  Unofficial.RsaPrivateSignPssKey.DigestForSize(keyParam.Modulus.BitLength)
+
+                        },
+                        PrimeP = keyParam.P.ToSystemBigInteger(),
+                        PrimeExponentP = keyParam.DP.ToSystemBigInteger(),
+                        PrimeExponentQ = keyParam.DQ.ToSystemBigInteger(),
+                        PrimeQ = keyParam.Q.ToSystemBigInteger(),
+                        CrtCoefficient = keyParam.QInv.ToSystemBigInteger(),
+                        PrivateExponent = keyParam.Exponent.ToSystemBigInteger(),
+                        Size = keyParam.Modulus.BitLength,
+                    };
+                }
+                else
+                {
                     return new Unofficial.RsaPrivateSignPssKey()
                     {
                         PublicKey = new Unofficial.RsaPublicSignPssKey()
@@ -217,7 +241,7 @@ namespace Keyczar.Compat
 
             }
 
-            private Key KeyFromBouncyCastle(RsaKeyParameters keyParam, KeyPurpose purpose, bool official = false)
+            private Key KeyFromBouncyCastle(RsaKeyParameters keyParam, KeyPurpose purpose, bool official = false, KeyType hint = null)
             {                
                 if(official || purpose == KeyPurpose.Encrypt){
 
@@ -228,7 +252,17 @@ namespace Keyczar.Compat
                             Size = keyParam.Modulus.BitLength,
                             
                         };
-                }else{
+                }else if (hint == UnofficialKeyType.RSAPubPkcs15Sign)
+                {
+                    return new Unofficial.RsaPublicSignPkcs15Key()
+                    {
+                        Modulus = keyParam.Modulus.ToSystemBigInteger(),
+                        PublicExponent = keyParam.Exponent.ToSystemBigInteger(),
+                        Size = keyParam.Modulus.BitLength,
+                        Digest =  Unofficial.RsaPrivateSignPssKey.DigestForSize(keyParam.Modulus.BitLength)
+                    };
+
+                } else {
                     return new Unofficial.RsaPublicSignPssKey
                         {
                             Modulus = keyParam.Modulus.ToSystemBigInteger(),
@@ -259,19 +293,36 @@ namespace Keyczar.Compat
             /// <param name="path">The path.</param>
             /// <param name="passwordPrompt">The pass phrase prompt.</param>
             /// <returns></returns>
-            public ImportedKeySet PkcsKey(KeyPurpose purpose, string path, Func<string> passwordPrompt = null, bool official =false)
+            public ImportedKeySet PkcsKey(KeyPurpose purpose, string path, Func<string> passwordPrompt = null, bool official =false, KeyType hint = null)
             {
                 using (var stream = File.OpenRead(path))
-                    return PkcsKey(purpose, stream, passwordPrompt, official);
+                    return PkcsKey(purpose, stream, passwordPrompt, official, hint);
             }
 
-			public ImportedKeySet Pkcs12Keys(KeyPurpose purpose, string path, Func<string> passwordPrompt = null, bool official =false)
+			public ImportedKeySet Pkcs12Keys(KeyPurpose purpose, string path, Func<string> passwordPrompt = null, bool official =false, KeyType hint = null)
 			{
 				using (var stream = File.OpenRead(path))
-					return Pkcs12Keys(purpose, stream, passwordPrompt, official);
+					return Pkcs12Keys(purpose, stream, passwordPrompt, official, hint);
 			}
 
-            public virtual ImportedKeySet Pkcs12Keys(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null, bool official =false)
+
+            /// <summary>
+            /// Imports the X509 the certificate.
+            /// </summary>
+            /// <param name="purpose">The purpose.</param>
+            /// <param name="path">The path.</param>
+            /// <param name="official"></param>
+            /// <param name="hint"></param>
+            /// <returns></returns>
+            /// <exception cref="InvalidKeySetException">DSA key cannot be used for encryption and decryption!</exception>
+            /// <exception cref="InvalidKeySetException">Unsupported key type!</exception>
+            public ImportedKeySet X509Certificate(KeyPurpose purpose, string path, bool official =false, KeyType hint = null)
+            {
+                using (var stream = File.OpenRead(path))
+                    return X509Certificate(purpose, stream, official, hint);
+            }
+
+            public virtual ImportedKeySet Pkcs12Keys(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null, bool official =false, KeyType hint = null)
             {
 
                 using (var password = CachedPrompt.Password(passwordPrompt))
@@ -290,7 +341,7 @@ namespace Keyczar.Compat
                                 switch (key.Key)
                                 {
                                     case RsaPrivateCrtKeyParameters rsa:
-                                        keys.Add(KeyFromBouncyCastle(rsa,purpose,official));
+                                        keys.Add(KeyFromBouncyCastle(rsa,purpose,official, hint));
                                         break;
 
                                     case DsaPrivateKeyParameters dsa:
@@ -315,7 +366,7 @@ namespace Keyczar.Compat
                                 switch (pubKey)
                                 {
                                     case RsaKeyParameters rsa:
-                                        keys.Add(KeyFromBouncyCastle(rsa, purpose, official));
+                                        keys.Add(KeyFromBouncyCastle(rsa, purpose, official, hint));
                                         break;
                                     case DsaPublicKeyParameters dsa:
                                         if(purpose == KeyPurpose.SignAndVerify){
@@ -337,17 +388,18 @@ namespace Keyczar.Compat
             }
 
 
-
             /// <summary>
             /// Import the PKCS key.
             /// </summary>
             /// <param name="purpose">The purpose.</param>
             /// <param name="input">The input.</param>
             /// <param name="passwordPrompt">The pass phrase prompt.</param>
+            /// <param name="official"></param>
+            /// <param name="hint"></param>
             /// <returns></returns>
             /// <exception cref="InvalidKeySetException">DSA key cannot be used for encryption and decryption!</exception>
             /// <exception cref="InvalidKeySetException">Unsupported key type!</exception>
-            public virtual ImportedKeySet PkcsKey(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null, bool official =false)
+            public virtual ImportedKeySet PkcsKey(KeyPurpose purpose, Stream input, Func<string> passwordPrompt = null, bool official =false, KeyType hint = null)
             {
                 using (var password = CachedPrompt.Password(passwordPrompt))
                 {
@@ -374,7 +426,7 @@ namespace Keyczar.Compat
                     switch (bouncyKey)
                     {
                         case RsaPrivateCrtKeyParameters rsa:
-                            key = KeyFromBouncyCastle(rsa, purpose, official);
+                            key = KeyFromBouncyCastle(rsa, purpose, official, hint);
                             break;
                         case DsaPrivateKeyParameters dsa:
 
@@ -386,7 +438,7 @@ namespace Keyczar.Compat
                             key = KeyFromBouncyCastle(dsa);
                             break;
                         case RsaKeyParameters rsa:
-                            key = KeyFromBouncyCastle(rsa, purpose, official);
+                            key = KeyFromBouncyCastle(rsa, purpose, official, hint);
                             break;
                         case DsaPublicKeyParameters dsa:
                             if (KeyPurpose.Encrypt == purpose)
@@ -404,19 +456,6 @@ namespace Keyczar.Compat
                 }
             }
 
-            /// <summary>
-            /// Imports the X509 the certificate.
-            /// </summary>
-            /// <param name="purpose">The purpose.</param>
-            /// <param name="path">The path.</param>
-            /// <returns></returns>
-            /// <exception cref="InvalidKeySetException">DSA key cannot be used for encryption and decryption!</exception>
-            /// <exception cref="InvalidKeySetException">Unsupported key type!</exception>
-            public ImportedKeySet X509Certificate(KeyPurpose purpose, string path, bool official =false)
-            {
-                using (var stream = File.OpenRead(path))
-                    return X509Certificate(purpose, stream, official);
-            }
 
             /// <summary>
             /// Imports the X509 certificate.
@@ -424,7 +463,7 @@ namespace Keyczar.Compat
             /// <param name="purpose">The purpose.</param>
             /// <param name="input">The input.</param>
             /// <returns></returns>
-            public virtual ImportedKeySet X509Certificate(KeyPurpose purpose, Stream input, bool official =false)
+            public virtual ImportedKeySet X509Certificate(KeyPurpose purpose, Stream input, bool official =false, KeyType hint = null)
             {
                 var parser = new X509CertificateParser();
                 var cert = parser.ReadCertificate(input);
@@ -433,7 +472,7 @@ namespace Keyczar.Compat
                 switch (bouncyKey)
                 {
                     case RsaKeyParameters rsa:
-                        key = KeyFromBouncyCastle(rsa, purpose, official);
+                        key = KeyFromBouncyCastle(rsa, purpose, official,hint);
                         break;
                     case DsaPublicKeyParameters dsa:
                         if (KeyPurpose.Encrypt == purpose)

@@ -67,7 +67,7 @@ namespace KeyczarTool
 
 
 
-        private KeyType KeyTypeForString(string type)
+        public static  KeyType KeyTypeForString(string type)
         {
             if (String.IsNullOrWhiteSpace(type))
                 return null;

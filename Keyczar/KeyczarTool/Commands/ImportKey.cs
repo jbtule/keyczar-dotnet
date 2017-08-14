@@ -17,6 +17,7 @@ namespace KeyczarTool
         private string _crypterLocation;
         private bool _password;
         private bool _force;
+        private string _type;
 
         public ImportKey()
         {
@@ -27,6 +28,7 @@ namespace KeyczarTool
             this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
             this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
             this.HasOption("p|password", Localized.Password, v => { _password = true; });
+            this.HasOption("t|type:", Localized.KeyType, v => { _type = v; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -80,6 +82,14 @@ namespace KeyczarTool
             {
                 var official = keySet.Metadata.OriginallyOfficial && keySet.Metadata.ValidOfficial() && !_force;
 
+
+                KeyType hint = null;
+
+                if (!String.IsNullOrWhiteSpace(_type))
+                {
+                    hint = AddKey.KeyTypeForString(_type);
+                }
+
                 if (_status != KeyStatus.Primary && _status != KeyStatus.Active)
                 {
                     Console.WriteLine("{0} {1}.", Localized.Status, _status.Identifier);
@@ -88,7 +98,7 @@ namespace KeyczarTool
                 ImportedKeySet importedKeySet = null;
                 try
                 {
-                    importedKeySet = ImportedKeySet.Import.X509Certificate(keySet.Metadata.Purpose, _importLocation, official);
+                    importedKeySet = ImportedKeySet.Import.X509Certificate(keySet.Metadata.Purpose, _importLocation, official, hint);
                 }
                 catch
                 {
@@ -102,7 +112,7 @@ namespace KeyczarTool
                               {
                                   Console.WriteLine(Localized.MsgForImport);
                                   return Util.PromptForPassword();
-                              }).Prompt, official);
+                              }).Prompt, official, hint);
                     }
                     else
                     {
@@ -113,7 +123,7 @@ namespace KeyczarTool
                                                       {
                                                           Console.WriteLine(Localized.MsgForImport);
                                                           return Util.PromptForPassword();
-                                                      }).Prompt, official);
+                                                      }).Prompt, official, hint);
                     }
                 }
                 if (importedKeySet == null)
