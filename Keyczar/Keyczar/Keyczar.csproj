@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFrameworks>net40;netstandard2.0;</TargetFrameworks>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
     <Description>Google Keyczar Library compatible implementation in .NET </Description>
@@ -23,12 +23,27 @@
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <Import Project="..\Version.props" />
-  <ItemGroup>
+  
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net40'">
+    <PackageReference Include="SharpCompress" Version="0.22.*" />
     <PackageReference Include="BouncyCastle" Version="1.8.*" />
-    <PackageReference Include="DotNetZip" Version="1.10.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="4.5.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="6.0.*" />
+
   </ItemGroup>
-  <ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+    <PackageReference Include="SharpCompress" Version="0.22.*" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.3.*"/>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.4.0-preview2-*"/>
+    <PackageReference Include="System.Runtime.Numerics" Version="4.3.*"/>
+    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.*" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.*" />
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.*" />
+  </ItemGroup>
+
+
+  <ItemGroup Condition="'$(TargetFramework)'=='net40'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />

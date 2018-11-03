@@ -14,7 +14,6 @@
  */
 
 using System;
-using System.Security.Policy;
 using Keyczar.Util;
 using Org.BouncyCastle.Crypto.Macs;
 

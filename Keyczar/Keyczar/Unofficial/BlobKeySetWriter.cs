@@ -16,10 +16,12 @@
 using System;
 using System.Globalization;
 using System.IO;
-using Ionic.Zip;
 using Keyczar;
 using Keyczar.Util;
 using Newtonsoft.Json;
+using SharpCompress.Writers.Zip;
+using SharpCompress.Writers;
+using SharpCompress.Common;
 
 namespace Keyczar.Unofficial
 {
@@ -33,7 +35,7 @@ namespace Keyczar.Unofficial
             => () => new BlobKeySetWriter(writeStream);
 
         private Stream _writeStream;
-        private ZipFile _zipFile = new NondestructiveZipFile();
+        private ZipWriter _zipFile;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlobKeySetWriter"/> class.
@@ -42,6 +44,7 @@ namespace Keyczar.Unofficial
         public BlobKeySetWriter(Stream writeStream)
         {
             _writeStream = writeStream;
+            _zipFile = new NondestructiveZipFile(_writeStream, new ZipWriterOptions(SharpCompress.Common.CompressionType.Deflate));
         }
 
         /// <summary>
@@ -51,7 +54,7 @@ namespace Keyczar.Unofficial
         /// <param name="version">The version.</param>
         public void Write(byte[] keyData, int version)
         {
-            _zipFile.AddEntry(version.ToString(CultureInfo.InvariantCulture), keyData);
+            _zipFile.Write(version.ToString(CultureInfo.InvariantCulture), new MemoryStream(keyData));
         }
 
         /// <summary>
@@ -67,7 +70,8 @@ namespace Keyczar.Unofficial
         /// <param name="metadata">The metadata.</param>
         public void Write(KeyMetadata metadata)
         {
-            _zipFile.AddEntry("meta", metadata.ToJson());
+            var bytes = this.GetConfig().RawStringEncoding.GetBytes(metadata.ToJson());
+            _zipFile.Write("meta",new MemoryStream(bytes));
         }
 
         /// <summary>
@@ -76,7 +80,6 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public bool Finish()
         {
-            _zipFile.Save(_writeStream);
             return true;
         }
 

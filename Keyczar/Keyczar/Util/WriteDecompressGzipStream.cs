@@ -13,10 +13,10 @@
  *  limitations under the License.
  */
 
-
 using System;
 using System.IO;
-using Ionic.Zlib;
+using SharpCompress.Compressors;
+using SharpCompress.Compressors.Deflate;
 
 namespace Keyczar.Util
 {
@@ -36,7 +36,7 @@ namespace Keyczar.Util
         public WriteDecompressGzipStream(Stream stream) : base()
         {
             _tempStream = new MemoryStream();
-            _gzipread = new GZipStream(_tempStream, CompressionMode.Decompress, true);
+            _gzipread = new GZipStream(_tempStream, CompressionMode.Decompress, CompressionLevel.Default);
             _stream = stream;
         }
 

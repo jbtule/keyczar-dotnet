@@ -13,19 +13,24 @@
  *  limitations under the License.
  */
 
+
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using Ionic.Zip;
-
+using SharpCompress.Writers.Zip;
 namespace Keyczar.Util
 {
     /// <summary>
     /// Zip file that doesn't close the underlying stream when disposed
     /// </summary>
-    public class NondestructiveZipFile : ZipFile
+    public class NondestructiveZipFile : ZipWriter
     {
+        public NondestructiveZipFile(Stream destination, ZipWriterOptions zipWriterOptions) : base(destination, zipWriterOptions)
+        {
+        }
+
         /// <summary>
         /// Disposes any managed resources, if the flag is set, then marks the
         /// instance disposed.  This method is typically not called explicitly from
