@@ -50,11 +50,11 @@ namespace KeyczarTest
                 Directory.Delete(subPath, true);
 
             result = Util.KeyczarTool(create: null, location: subPath, purpose: "crypt");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
 
             result = Util.KeyczarTool(addkey: null, location: subPath, status: "primary");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
 
             var ptext = Path.Combine(subPath, "ptext");
@@ -100,7 +100,7 @@ namespace KeyczarTest
                 Directory.Delete(path, true);
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "sign", asymmetric:"rsa");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool("pass",
                                       importkey: null,
@@ -108,7 +108,7 @@ namespace KeyczarTest
                                       status: "primary",
                                       importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"));
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgImportedNewKey));
 
 
             Directory.Delete(path, true);
@@ -121,12 +121,12 @@ namespace KeyczarTest
             string result;
 
             result = Util.KeyczarTool(keytypes: null);
-            Expect(result, Is.StringContaining("AES_HMAC_SHA1*"));
+            Expect(result, Does.Contain("AES_HMAC_SHA1*"));
 
             result = Util.KeyczarTool(keytypes: null, unofficial:null);
 
 
-            Expect(result, Is.StringContaining("AES_GCM*"));
+            Expect(result, Does.Contain("AES_GCM*"));
         }
 
         [Test]
@@ -139,7 +139,7 @@ namespace KeyczarTest
                 Directory.Delete(path, true);
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt", asymmetric: "rsa");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool("pass",
                                       importkey: null,
@@ -147,7 +147,7 @@ namespace KeyczarTest
                                       status: "primary",
                                       importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"));
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgImportedNewKey));
 
 
             Directory.Delete(path, true);
@@ -169,17 +169,17 @@ namespace KeyczarTest
                 Directory.Delete(pathc, true);
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             result = Util.KeyczarTool(create: null, location: pathc, purpose: "crypt", asymmetric: null);
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: pathc, crypter: path, status: "primary");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             var pathi = Path.Combine(pathc, "out.pem");
 
@@ -191,7 +191,7 @@ namespace KeyczarTest
                 crypter: path,
                 destination: pathi);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgExportedPem));
 
             result = Util.KeyczarTool("pass",
                                       importkey: null,
@@ -200,7 +200,7 @@ namespace KeyczarTest
                                       crypter: path,
                                       importlocation: pathi);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgImportedNewKey));
 
 
             var pathp = Path.Combine(pathc, "export");
@@ -211,7 +211,7 @@ namespace KeyczarTest
                 crypter: path,
                 destination: pathp
                 );
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgNewPublicKeySet));
 
             var patho = Path.Combine(pathc, "1.out");
 
@@ -256,19 +256,19 @@ namespace KeyczarTest
 
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt", unofficial:null);
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool("cartman", "cartman", addkey: null, location: path, password: null,
                                       status: "primary");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             result = Util.KeyczarTool(create: null, location: pathc, purpose: "crypt", asymmetric: null);
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool("cartman", addkey: null, location: pathc, crypter: path, password: null,
                                       status: "primary");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             var pathi = Path.Combine(pathc, "out.pem");
 
@@ -282,7 +282,7 @@ namespace KeyczarTest
                 crypter: path,
                 destination: pathi);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgExportedPem));
 
             result = Util.KeyczarTool("cartman", "pass",
                                       importkey: null,
@@ -292,7 +292,7 @@ namespace KeyczarTest
                                       password: null,
                                       importlocation: pathi);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgImportedNewKey));
 
 
             var pathp = Path.Combine(pathc, "export");
@@ -305,7 +305,7 @@ namespace KeyczarTest
                 password: null,
                 destination: pathp
                 );
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgNewPublicKeySet));
 
             var patho = Path.Combine(pathc, "1.out");
 
@@ -348,11 +348,11 @@ namespace KeyczarTest
                 Directory.Delete(pathc, true);
 
             result = Util.KeyczarTool(create: null, location: pathc, purpose: "crypt", asymmetric: null);
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool("cartman", "cartman", addkey: null, location: pathc, password: null,
                                       status: "primary");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             var pathi = Path.Combine(pathc, "out.pem");
 
@@ -365,7 +365,7 @@ namespace KeyczarTest
                 password: null,
                 destination: pathi);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExportedPem));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgExportedPem));
 
             result = Util.KeyczarTool("cartman", "pass",
                                       importkey: null,
@@ -374,7 +374,7 @@ namespace KeyczarTest
                                       password: null,
                                       importlocation: pathi);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgImportedNewKey));
 
 
             var pathp = Path.Combine(pathc, "export");
@@ -386,7 +386,7 @@ namespace KeyczarTest
                 password: null,
                 destination: pathp
                 );
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgNewPublicKeySet));
 
             var patho = Path.Combine(pathc, "1.out");
 
@@ -423,15 +423,15 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "active");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
 
             result = Util.KeyczarTool(promote: null, location: path, version: 1);
-            Expect(result, Is.StringContaining("PRIMARY"));
+            Expect(result, Does.Contain("PRIMARY"));
 
             Directory.Delete(path, true);
         }
@@ -451,15 +451,15 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "sign", asymmetric: null);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary" , type:"RSA_PSS");
 
-            Expect(result, Is.StringContaining(String.Format(KeyczarTool.Localized.MsgMismatchedType,  UnofficialKeyType.RSAPrivSign, KeyType.DsaPriv)));
+            Expect(result, Does.Contain(String.Format(KeyczarTool.Localized.MsgMismatchedType,  UnofficialKeyType.RSAPrivSign, KeyType.DsaPriv)));
 
             result = Util.KeyczarTool("pass",
                 importkey: null,
@@ -467,7 +467,7 @@ namespace KeyczarTest
                 status: "primary",
                 importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"));
 
-            Expect(result, Is.StringContaining(String.Format(KeyczarTool.Localized.MsgMismatchedType, KeyType.RsaPriv, KeyType.DsaPriv)));
+            Expect(result, Does.Contain(String.Format(KeyczarTool.Localized.MsgMismatchedType, KeyType.RsaPriv, KeyType.DsaPriv)));
 
         }
 
@@ -484,15 +484,15 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "sign", asymmetric: null);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type: "RSA_PSS", force:null);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             result = Util.KeyczarTool("pass",
                 importkey: null,
@@ -500,7 +500,7 @@ namespace KeyczarTest
                 status: "primary",
                 importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"));
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgImportedNewKey));
 
         }
 
@@ -517,11 +517,11 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "sign", asymmetric: null);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
 
             result = Util.KeyczarTool("pass",
@@ -531,11 +531,11 @@ namespace KeyczarTest
                 importlocation: Util.TestDataPath(CERTIFICATE_DATA, "rsa-crypt-pkcs8.pem"),
                 force:null);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgImportedNewKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgImportedNewKey));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary", type: "RSA_PSS");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
         }
 
@@ -552,56 +552,56 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "blah");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgInvalidStatus));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgInvalidStatus));
 
             result = Util.KeyczarTool(demote: null, location: path, version: "1");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgUnknownVersion));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgUnknownVersion));
 
             result = Util.KeyczarTool(promote: null, location: path, version: "1");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgUnknownVersion));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgUnknownVersion));
 
             result = Util.KeyczarTool(revoke: null, location: path, version: "1");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCouldNotRevoke));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCouldNotRevoke));
 
             //Don't overwrite
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgExistingKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgExistingKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
             result = Util.KeyczarTool(demote: null, location: path, version: "1");
-            Expect(result, Is.StringContaining("ACTIVE"));
+            Expect(result, Does.Contain("ACTIVE"));
 
             result = Util.KeyczarTool(demote: null, location: path, version: "1");
-            Expect(result, Is.StringContaining("INACTIVE"));
+            Expect(result, Does.Contain("INACTIVE"));
 
             Directory.CreateDirectory(Path.Combine(path, "2.temp"));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCouldNotWrite));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCouldNotWrite));
 
             Directory.CreateDirectory(Path.Combine(path, "meta.temp"));
 
             result = Util.KeyczarTool(demote: null, location: path, version: "1");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCouldNotWrite));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCouldNotWrite));
 
             result = Util.KeyczarTool(promote: null, location: path, version: "1");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCouldNotWrite));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCouldNotWrite));
 
             result = Util.KeyczarTool(revoke: null, location: path, version: "1");
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCouldNotWrite));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCouldNotWrite));
 
 
             Directory.Delete(path, true);
@@ -622,11 +622,11 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt", asymmetric: null);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary", padding: "PKCS", size: "1024");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
 
             var ks = new FileSystemKeySet(path);
@@ -637,7 +637,7 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(pubkey: null, location: path, destination: path2);
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgNewPublicKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgNewPublicKeySet));
 
             var ks2 = new FileSystemKeySet(path);
             dynamic key2 = ks2.GetKey(1);
@@ -660,21 +660,21 @@ namespace KeyczarTest
 
             result = Util.KeyczarTool(create: null, location: path, purpose: "crypt");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKeySet));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKeySet));
 
             result = Util.KeyczarTool(addkey: null, location: path, status: "primary");
 
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgCreatedKey));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgCreatedKey));
 
 
             result = Util.KeyczarTool(demote: null, location: path, version: 1);
-            Expect(result, Is.StringContaining("ACTIVE"));
+            Expect(result, Does.Contain("ACTIVE"));
 
             result = Util.KeyczarTool(demote: null, location: path, version: 1);
-            Expect(result, Is.StringContaining("INACTIVE"));
+            Expect(result, Does.Contain("INACTIVE"));
 
             result = Util.KeyczarTool(revoke: null, location: path, version: 1);
-            Expect(result, Is.StringContaining(KeyczarTool.Localized.MsgRevokedVersion));
+            Expect(result, Does.Contain(KeyczarTool.Localized.MsgRevokedVersion));
 
             var ks = new FileSystemKeySet(path);
             Expect(ks.Metadata.Versions.Any(), Is.False);

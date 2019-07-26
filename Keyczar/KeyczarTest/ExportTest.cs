@@ -31,7 +31,7 @@ namespace KeyczarTest
             Console.WriteLine(path);
             ks.ExportPrimaryAsPkcs(path, () => "dummy");
             var contents = File.ReadAllText(path);
-            Expect(contents, Is.StringContaining("END PUBLIC KEY"));
+            Expect(contents, Does.Contain("END PUBLIC KEY"));
         }
         
         [Test]
@@ -42,7 +42,7 @@ namespace KeyczarTest
             Console.WriteLine(path);
             ks.ExportPrimaryAsPkcs(path, () => "dummy");
             var contents = File.ReadAllText(path);
-            Expect(contents, Is.StringContaining("END ENCRYPTED PRIVATE KEY"));
+            Expect(contents, Does.Contain("END ENCRYPTED PRIVATE KEY"));
         }
         
         [Test]
@@ -53,8 +53,8 @@ namespace KeyczarTest
             Console.WriteLine(path);
             ks.ExportPrimaryAsPkcs(path, null);
             var contents = File.ReadAllText(path);
-            Expect(contents, Is.StringContaining("END PUBLIC KEY"));
-            Expect(contents, Is.StringContaining("END RSA PRIVATE KEY"));
+            Expect(contents, Does.Contain("END PUBLIC KEY"));
+            Expect(contents, Does.Contain("END RSA PRIVATE KEY"));
         }
     }
 }
