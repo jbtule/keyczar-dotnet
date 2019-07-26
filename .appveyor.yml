@@ -21,7 +21,7 @@ build_script:
   - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 before_test:
-  - cmd: nunit-console -noxml -nodots -labels -stoponerror KeyczarTest\bin\%configuration%\net451\KeyczarTest.dll -include=Create
+  - cmd: nunit3-console -noxml -nodots -labels -stoponerror KeyczarTest\bin\%configuration%\net451\KeyczarTest.dll -include=Create
 
 test:
   categories:
