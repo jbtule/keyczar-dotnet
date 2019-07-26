@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using Keyczar;
 using Keyczar.Util;
-using ManyConsole;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool
 {

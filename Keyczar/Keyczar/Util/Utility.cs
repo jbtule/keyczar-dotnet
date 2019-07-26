@@ -110,7 +110,7 @@ namespace Keyczar.Util
             using (var output = new MemoryStream())
             {
                 var serializer = new JsonSerializer {ContractResolver = new CamelCasePropertyNamesContractResolver(),};
-                var writer = new BsonWriter(output);
+                var writer = new BsonDataWriter(output);
                 serializer.Serialize(writer, value);
                 output.Flush();
                 return output.ToArray();

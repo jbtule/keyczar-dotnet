@@ -372,7 +372,7 @@ namespace Keyczar.Util
         /// <param name="serializer">The calling serializer.</param>
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
         {
-            if (writer is BsonWriter)
+            if (writer is BsonDataWriter)
             {
                 serializer.Serialize(writer, value);
             }
@@ -396,7 +396,7 @@ namespace Keyczar.Util
                                         JsonSerializer serializer)
         {
             byte[] final;
-            if (reader is BsonReader || reader is RawJsonReader)
+            if (reader is BsonDataReader || reader is RawJsonReader)
             {
                 final = serializer.Deserialize<byte[]>(reader);
             }

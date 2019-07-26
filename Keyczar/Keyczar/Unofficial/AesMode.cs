@@ -19,8 +19,8 @@ namespace Keyczar.Unofficial
         
         public static readonly AesMode Cbc = "CBC";
         
-#pragma warning disable 612
+#pragma warning disable 618
         public static readonly AesMode Gcm = AesAeadKey.GcmMode;
-#pragma warning restore 612
+#pragma warning restore 618
     }
 }

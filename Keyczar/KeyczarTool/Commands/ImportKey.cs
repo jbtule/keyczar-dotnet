@@ -5,7 +5,7 @@ using System.Text;
 using Keyczar;
 using Keyczar.Compat;
 using Keyczar.Util;
-using ManyConsole;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool
 {

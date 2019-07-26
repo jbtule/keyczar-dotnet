@@ -18,9 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Keyczar.Unofficial;
-using ManyConsole;
-using NDesk.Options;
 using Keyczar;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool
 {

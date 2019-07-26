@@ -153,7 +153,7 @@ namespace Keyczar.Unofficial
         }
 
 
-        private readonly GcmBlockCipher _cipher = new GcmBlockCipher(new AesFastEngine(), new Tables8kGcmMultiplier());
+        private readonly GcmBlockCipher _cipher = new GcmBlockCipher(new AesEngine(), new Tables8kGcmMultiplier());
 
         /// <summary>
         /// Gets the encrypting stream.

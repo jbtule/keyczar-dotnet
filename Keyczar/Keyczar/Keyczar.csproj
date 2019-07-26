@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFrameworks>net451;netstandard2.0</TargetFrameworks>
     <SignAssembly>True</SignAssembly>
     <AssemblyOriginatorKeyFile>sn.snk</AssemblyOriginatorKeyFile>
     <Description>Google Keyczar Library compatible implementation in .NET </Description>
@@ -14,7 +14,7 @@
     <Authors> jbtule </Authors>
     <Copyright>Copyright © Contributors 2012-2017</Copyright>
     <PackageProjectUrl>http://jbtule.github.io/keyczar-dotnet/</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/jbtule/keyczar-dotnet/blob/master/LICENSE.txt</PackageLicenseUrl>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageIconUrl>https://raw.githubusercontent.com/google/keyczar/Java_release_0.71j/site/site/webpage/keyczar_logo.jpg</PackageIconUrl>
     <PackageTags>cryptography crypto security encryption symmetric asymmetric mac aes rsa dsa hmac</PackageTags>
     <IncludeSymbols>True</IncludeSymbols>
@@ -24,11 +24,12 @@
   </PropertyGroup>
   <Import Project="..\Version.props" />
   <ItemGroup>
-    <PackageReference Include="BouncyCastle" Version="1.8.*" />
-    <PackageReference Include="DotNetZip" Version="1.10.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="4.5.*" />
+    <PackageReference Include="DotNetZip" Version="1.13.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
+    <PackageReference Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -38,5 +39,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Unofficial\Readme.txt" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="System.Configuration.ConfigurationManager">
+      <Version>4.5.0</Version>
+    </PackageReference>
   </ItemGroup>
 </Project>

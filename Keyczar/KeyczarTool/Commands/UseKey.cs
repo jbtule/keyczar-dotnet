@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using Keyczar;
 using Keyczar.Unofficial;
-using ManyConsole;
+using ManyConsole.CommandLineUtils;
 using Keyczar.Util;
 using Newtonsoft.Json.Linq;
 

@@ -80,7 +80,7 @@ namespace Keyczar.Unofficial
         {
             using (var input = new MemoryStream(data))
             {
-                var reader = new BsonReader(input);
+                var reader = new BsonDataReader(input);
                 var val = JToken.ReadFrom(reader);
                 var keyType = (KeyType) (string) val["type"];
                 var keyString = val["key"].ToString();
