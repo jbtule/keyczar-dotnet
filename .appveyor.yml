@@ -22,7 +22,7 @@ build_script:
   - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 before_test:
-  - cmd: dotnet test -f netcoreapp2.1  --filter "TestCategory=Create" --logger "Appveyor" KeyczarTest\KeyczarTest.csproj
+  - cmd: dotnet test -f netcoreapp2.1  --filter "TestCategory=Create" KeyczarTest\KeyczarTest.csproj
 
 after_test:
   - cmd: dotnet-warp --verbose -p "targetframework=netcoreapp2.1" -o keyczar-win-x64.exe
