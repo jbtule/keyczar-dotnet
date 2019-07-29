@@ -22,16 +22,17 @@ build_script:
   - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 before_test:
-  - cmd: dotnet test -f netcoreapp2.1  --filter "TestCategory=Create" -v detailed --logger Appveyor KeyczarTest\KeyczarTest.csproj
+  - cmd: dotnet test -f netcoreapp2.1  --filter "TestCategory=Create" --logger Appveyor KeyczarTest\KeyczarTest.csproj
+
+test_script:
+  - cmd: dotnet test -f netcoreapp2.1  --filter "(TestCategory!=Create)&(TestCategory!=Performance)" --logger Appveyor KeyczarTest\KeyczarTest.csproj
+  - cmd: nunit3-console --result="myresults.xml;format=AppVeyor" --labels=On  --where="cat != Create  && cat != Performance"  KeyczarTest\bin\%configuration%\net451\KeyczarTest.dll
 
 after_test:
-  - cmd: dotnet-warp --verbose -p "targetframework=netcoreapp2.1" -o keyczar-win-x64.exe
+  - cmd: dotnet-warp --verbose -p "targetframework=netcoreapp2.1"  -o keyczar-win-x64.exe
 
-test:
-  categories:
-    except:
-      - Performance
-      - Create
+test: off
+
 
 artifacts:
   - path: Keyczar\Keyczar\bin\$(configuration)\*.nupkg
