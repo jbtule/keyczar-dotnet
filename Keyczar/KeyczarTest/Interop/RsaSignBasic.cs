@@ -18,7 +18,11 @@ using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
+    [TestFixture("py3")]
+    [TestFixture("cs")]
+    [TestFixture("py")]
+    [TestFixture("j")]
+    [TestFixture("go")]
     public class RsaSignBasic : PublicVerifierBasicInterop
     {
         public RsaSignBasic(string imp) : base(imp)

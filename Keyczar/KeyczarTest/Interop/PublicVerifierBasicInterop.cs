@@ -21,7 +21,6 @@ using System.Linq;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
     public abstract class PublicVerifierBasicInterop : VerifierBasicInterop
     {
         public PublicVerifierBasicInterop(string imp)

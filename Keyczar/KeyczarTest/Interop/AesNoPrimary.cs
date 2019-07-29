@@ -21,7 +21,11 @@ using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
+    [TestFixture("py3")]
+    [TestFixture("cs")]
+    [TestFixture("py")]
+    [TestFixture("j")]
+    [TestFixture("go")]
     public class AesNoPrimary : Interop
     {
         public AesNoPrimary(string implementation) : base(implementation)

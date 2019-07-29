@@ -18,7 +18,11 @@ using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
+    [TestFixture("py3")]
+    [TestFixture("cs")]
+    [TestFixture("py")]
+    [TestFixture("j")]
+    [TestFixture("go")]
     public class DsaBasic : PublicVerifierBasicInterop
     {
         public DsaBasic(string imp) : base(imp)
