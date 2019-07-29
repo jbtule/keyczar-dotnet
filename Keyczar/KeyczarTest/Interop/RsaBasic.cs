@@ -39,15 +39,4 @@ namespace KeyczarTest.Interop
             HelperDecryptVariousSizes(size);
         }
     }
-
-    [TestFixture]
-    public class RsaFull : CrypterFullInterop
-    {
-        public RsaFull(string imp)
-            : base(imp)
-        {
-            Location = "rsa";
-            SignLocation = "dsa.public";
-        }
-    }
 }
