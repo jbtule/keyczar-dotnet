@@ -31,8 +31,6 @@ test_script:
 after_test:
   - cmd: dotnet-warp --verbose -p "targetframework=netcoreapp2.1"  -o keyczar-win-x64.exe
 
-test: off
-
 
 artifacts:
   - path: Keyczar\Keyczar\bin\$(configuration)\*.nupkg
