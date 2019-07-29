@@ -2,6 +2,7 @@ image: Visual Studio 2017
 
 install:
   - cmd: git submodule update --init --recursive
+  - cmd: dotnet tool install --global dotnet-warp
 
 configuration: Debug
 
@@ -21,7 +22,10 @@ build_script:
   - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 before_test:
-  - cmd: nunit3-console --noresult --labels=On --workers=1 --stoponerror --where "cat == Create" KeyczarTest\bin\%configuration%\net451\KeyczarTest.dll
+  - cmd: dotnet test -f netcoreapp2.1  --filter "TestCategory=Create" --logger "Appveyor" KeyczarTest\KeyczarTest.csproj
+
+after_test:
+  - cmd: dotnet-warp --verbose -p "targetframework=netcoreapp2.1" -o keyczar-win-x64.exe
 
 test:
   categories:
@@ -32,9 +36,10 @@ test:
 artifacts:
   - path: Keyczar\Keyczar\bin\$(configuration)\*.nupkg
     name: Keyczar
-  - path: Keyczar\KeyczarTool.Minified\bin\$(configuration)\*.nupkg
-    name: KeyczarTool
-
+  - path: Keyczar\KeyczarTool\bin\$(configuration)\*.nupkg
+    name: dotnet-keyczar
+  - path: Keyczar\KeyczarTool\keyczar-win-x64.exe
+    name: dotnet-keyczar-win-x64
 deploy:
   - provider: NuGet
     server: https://www.myget.org/F/keyczar-dotnet-ci/api/v2/package
