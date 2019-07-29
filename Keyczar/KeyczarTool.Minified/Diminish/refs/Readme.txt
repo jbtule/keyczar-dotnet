@@ -1,1 +1,0 @@
-﻿This is where your compressed embeddedresources should be included.
