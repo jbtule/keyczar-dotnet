@@ -44,9 +44,11 @@ namespace KeyczarTest
             return prefixedDir;
         }
 
-        private static string TestDataBaseDir(string baseDir)
+        private static string TestDataBaseDir(string baseDir, [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
-            return Path.Combine("..", "..", "..", "..", "TestData", baseDir);
+            var dirPath = Path.GetDirectoryName(sourceFilePath);
+            var testDir=  Path.Combine(dirPath, "..", "..", "TestData", baseDir);
+            return Path.GetFullPath(testDir);
         }
 
         public static string TestDataPath(string baseDir, string topDir, string subDir = null)
