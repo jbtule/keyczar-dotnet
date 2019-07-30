@@ -24,32 +24,26 @@ namespace KeyczarTool
 {
     public class Program
     {
-        internal static bool DoNotUsePager { get; set; }
-        public static int Main(string[] args)
+
+        internal readonly static ConsoleCommand[] Commands =
         {
+            new Create(),
+            new AddKey(),
+            new PubKey(),
+            new Promote(),
+            new Demote(),
+            new Revoke(),
+            new ImportKey(),
+            new Export(),
+            new UseKey(),
+            new Password(),
+            new KeyTypes(),
+        };
 
-            var commands = new ConsoleCommand[]
-                               {
-                                   new Create(),
-                                   new AddKey(),
-                                   new PubKey(),
-                                   new Promote(),
-                                   new Demote(),
-                                   new Revoke(),
-                                   new ImportKey(),
-                                   new Export(),
-                                   new UseKey(),
-                                   new Password(),
-                                   new KeyTypes(),
-                               };
-
+    public static int Main(string[] args)
+        {
             // run the command for the console input
-            return ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out, app => {
-                if (DoNotUsePager)
-                {
-                    app.UsePagerForHelpText = false;
-                }
-            });
+            return ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
         }
     }
 }

@@ -22,6 +22,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTest
 {
@@ -126,8 +127,9 @@ namespace KeyczarTest
                 using (var output = new StreamWriter(stream))
                 {
                     Console.SetOut(output);
-                    KeyczarTool.Program.DoNotUsePager = true;
-                    KeyczarTool.Program.Main(separateArgs.Select(it => it.Replace("\"", "")).ToArray());
+                    var commands = KeyczarTool.Program.Commands;
+                    var args = separateArgs.Select(it => it.Replace("\"", "")).ToArray();
+                    ConsoleCommandDispatcher.DispatchCommand(commands, args, output, app => { app.UsePagerForHelpText = false; });
 
                     output.Flush();
                     result = Encoding.UTF8.GetString(stream.ToArray());
