@@ -133,10 +133,11 @@ namespace KeyczarTest
 
                     output.Flush();
                     result = Encoding.UTF8.GetString(stream.ToArray());
-                }
 
+                    Console.SetOut(origOut);
+                }
                 Console.SetIn(origIn);
-                Console.SetOut(origOut);
+
             }
 
             Console.WriteLine(result);
