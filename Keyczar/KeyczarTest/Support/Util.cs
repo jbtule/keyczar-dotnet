@@ -126,6 +126,7 @@ namespace KeyczarTest
                 using (var output = new StreamWriter(stream))
                 {
                     Console.SetOut(output);
+                    KeyczarTool.Program.DoNotUsePager = true;
                     KeyczarTool.Program.Main(separateArgs.Select(it => it.Replace("\"", "")).ToArray());
 
                     output.Flush();

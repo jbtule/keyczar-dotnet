@@ -24,6 +24,7 @@ namespace KeyczarTool
 {
     public class Program
     {
+        internal static bool DoNotUsePager { get; set; }
         public static int Main(string[] args)
         {
 
@@ -43,7 +44,12 @@ namespace KeyczarTool
                                };
 
             // run the command for the console input
-            return ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
+            return ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out, app => {
+                if (DoNotUsePager)
+                {
+                    app.UsePagerForHelpText = false;
+                }
+            });
         }
     }
 }
