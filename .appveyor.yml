@@ -30,7 +30,7 @@ test_script:
   - cmd: nunit3-console --result="myresults.xml;format=AppVeyor" --labels=On  --where="cat != Create  && cat != Performance"  KeyczarTest\bin\%configuration%\net451\KeyczarTestNetFrwk.dll
 
 artifacts:
-  - path: Keyczar\Keyczar\bin\$(configuration)\*.nupkg
+  - path: Keyczar\Keyczar\bin\$(configuration)\*.*nupkg
     name: Keyczar
   - path: Keyczar\KeyczarTool\bin\$(configuration)\*.nupkg
     name: dotnet-keyczar
@@ -46,7 +46,7 @@ deploy:
 
   - provider: GitHub
     
-    artifact: /.*\.nupkg/           # upload all NuGet packages to release assets
+    artifact: /.*\.[s]*nupkg/           # upload all NuGet packages to release assets
     description: 'Release description'
     auth_token:
       secure: JyJYSgeJYFmkaFy7Gro2dQyv/fqZwz1EzJmp2Nf99H6HUpxNR7ilA/OGPcQk0pA8
