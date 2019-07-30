@@ -122,22 +122,33 @@ namespace KeyczarTest
             using (var inbyteStream = new MemoryStream(stdinbytes))
             using (var input = new StreamReader(inbyteStream))
             {
-                Console.SetIn(input);
-                using (var stream = new MemoryStream())
-                using (var output = new StreamWriter(stream))
+                try
                 {
-                    Console.SetOut(output);
-                    var commands = KeyczarTool.Program.Commands;
-                    var args = separateArgs.Select(it => it.Replace("\"", "")).ToArray();
-                    ConsoleCommandDispatcher.DispatchCommand(commands, args, output, app => { app.UsePagerForHelpText = false; });
+                    Console.SetIn(input);
+                    using (var stream = new MemoryStream())
+                    using (var output = new StreamWriter(stream))
+                    {
+                        try
+                        {
+                            Console.SetOut(output);
+                            var commands = KeyczarTool.Program.Commands;
+                            var args = separateArgs.Select(it => it.Replace("\"", "")).ToArray();
+                            ConsoleCommandDispatcher.DispatchCommand(commands, args, output,
+                                app => { app.UsePagerForHelpText = false; });
 
-                    output.Flush();
-                    result = Encoding.UTF8.GetString(stream.ToArray());
-
-                    Console.SetOut(origOut);
+                            output.Flush();
+                            result = Encoding.UTF8.GetString(stream.ToArray());
+                        }
+                        finally
+                        {
+                            Console.SetOut(origOut);
+                        }
+                    }
                 }
-                Console.SetIn(origIn);
-
+                finally
+                {
+                    Console.SetIn(origIn);
+                }
             }
 
             Console.WriteLine(result);
