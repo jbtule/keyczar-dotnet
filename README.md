@@ -14,18 +14,20 @@ See [Wiki](http://github.com/jbtule/keyczar-dotnet/wiki) for more info.
 
 ## Dependencies
 
- - .net 4.0 or mono v2.10
+ - .NET Core 2.1 or later
+ - .NET Framework 4.5.1 or later
 
 #### Keyczar.dll 
 
- - [BouncyCastle 1.8.0 or later](http://www.bouncycastle.org/csharp/)
- - [DotNetZip 1.10 later](https://github.com/haf/DotNetZip.Semverd)
- - [Newtonsoft.Json 4.5.8 or later](http://json.codeplex.com/)
+ - [BouncyCastle 1.8.5 or later](http://www.bouncycastle.org/csharp/)
+ - [DotNetZip 1.13.3 later](https://github.com/haf/DotNetZip.Semverd)
+ - [Newtonsoft.Json 12.0.2 or later](https://www.newtonsoft.com/json)
+ - [Newtonsoft.Json.Bson 12.0.2 or later](https://github.com/JamesNK/Newtonsoft.Json.Bson)
 
 #### KeyczarTool.exe
 
- - [ManyConsole 0.4.2.8 or later](https://github.com/fschwiet/ManyConsole)
- - [NDesk.Options 0.2.1 or later](http://www.ndesk.org/Options)
+ - [ManyConsole.CommandLineUtils 1.1.6-alpha or later](https://github.com/jbtule/ManyConsole.CommandLineUtils)
+ - [McMaster.Extensions.CommandLineUtils 2.3.4 or later](https://github.com/natemcmaster/CommandLineUtils)
  
 ## Source & Build
 
