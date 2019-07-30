@@ -133,7 +133,7 @@ namespace KeyczarTest
                             Console.SetOut(output);
                             var commands = KeyczarTool.Program.Commands;
                             var args = separateArgs.Select(it => it.Replace("\"", "")).ToArray();
-                            ConsoleCommandDispatcher.DispatchCommand(commands, args, output,
+                            ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out,
                                 app => { app.UsePagerForHelpText = false; });
 
                             output.Flush();
