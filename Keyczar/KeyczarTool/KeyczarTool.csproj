@@ -15,9 +15,8 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageProjectUrl>http://jbtule.github.io/keyczar-dotnet/</PackageProjectUrl>
   </PropertyGroup>
-  <Import Project="..\Version.props" />
   <ItemGroup>
-    <PackageReference Include="ManyConsole.CommandLineUtils" Version="1.1.6-alpha" />
+    <PackageReference Include="ManyConsole.CommandLineUtils" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
     <Reference Include="Microsoft.CSharp" />
