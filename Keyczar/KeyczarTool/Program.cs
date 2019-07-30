@@ -25,20 +25,20 @@ namespace KeyczarTool
     public class Program
     {
 
-        internal readonly static ConsoleCommand[] Commands =
-        {
-            new Create(),
-            new AddKey(),
-            new PubKey(),
-            new Promote(),
-            new Demote(),
-            new Revoke(),
-            new ImportKey(),
-            new Export(),
-            new UseKey(),
-            new Password(),
-            new KeyTypes(),
-        };
+        internal static ConsoleCommand[] Commands =>
+            new ConsoleCommand[] {
+                new Create(),
+                new AddKey(),
+                new PubKey(),
+                new Promote(),
+                new Demote(),
+                new Revoke(),
+                new ImportKey(),
+                new Export(),
+                new UseKey(),
+                new Password(),
+                new KeyTypes(),
+            };
 
     public static int Main(string[] args)
         {
