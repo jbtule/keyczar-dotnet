@@ -21,8 +21,8 @@ install:
 
 script:
  - msbuild
- - dotnet test -f netcoreapp2.1  --filter "TestCategory=Create" KeyczarTest/KeyczarTest.csproj
- - dotnet test -f netcoreapp2.1  --filter "(TestCategory!=Create)&(TestCategory!=Performance)" KeyczarTest/KeyczarTest.csproj
+ - dotnet test --no-build --verbosity="normal" -f netcoreapp2.1  --filter "TestCategory=Create" KeyczarTest/KeyczarTest.csproj
+ - dotnet test --no-build --verbosity="normal" -f netcoreapp2.1  --filter "(TestCategory!=Create)&(TestCategory!=Performance)" KeyczarTest/KeyczarTest.csproj
 branches:
   only:
     - master
