@@ -18,7 +18,7 @@ environment:
   github_deploy: false 
 
 before_build:
-  - ps: [xml]$XmlDocument = Get-Content -Path Keyczar\Directory.Build.Props
+  - ps: \[xml\]$XmlDocument = Get-Content -Path Keyczar\Directory.Build.Props
   - ps: $env:vprefix = $XmlDocument.Project.PropertyGroup.VersionPrefix.InnerText
   - cmd: cd Keyczar
   - cmd: msbuild /t:restore /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
