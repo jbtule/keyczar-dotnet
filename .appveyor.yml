@@ -27,6 +27,7 @@ before_build:
 
 build_script:
   - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: msbuild /t:pack /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /p:SymbolPackageFormat=symbols.nupkg /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cmd: cd KeyczarTool
   - cmd: dotnet-warp --verbose -o "keyczar-win-x64.exe" -p "targetframework=netcoreapp2.1;VersionSuffix="%vsuffix%"
   - cmd: cd ..
@@ -50,7 +51,7 @@ deploy:
       secure: qeW4Vpu7ZxccbJAZz215XBKpSTlIXEyZTfi/r+gmEGRxC/zsxHkBexycRjKbfptZ
     skip_symbols: false
     symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
-    artifact: /.*\.[s]*nupkg/ 
+    artifact: /.*\.nupkg/ 
   - provider: GitHub
     tag: v$(vprefix)$(vmid)$(vsuffix)
     description: 'Release description'
