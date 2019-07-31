@@ -22,14 +22,16 @@ before_build:
         [xml]$XmlDocument = Get-Content -Path Keyczar\Directory.Build.Props
 
         $env:vprefix = $XmlDocument.Project.PropertyGroup.VersionPrefix.InnerText
+
+        Update-AppveyorBuild -Version $env:vprefix$env:vmid$env:vsuffix
   - cmd: cd Keyczar
   - cmd: msbuild /t:restore /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
 build_script:
-  - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
-  - cmd: msbuild /t:pack /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /p:SymbolPackageFormat=symbols.nupkg /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: msbuild /p:Configuration=%configuration% /p:Version="%appveyor_build_version%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: msbuild /t:pack /p:Configuration=%configuration% /p:Version="%appveyor_build_version%" /p:SymbolPackageFormat=symbols.nupkg /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
   - cmd: cd KeyczarTool
-  - cmd: dotnet-warp --verbose -o "keyczar-win-x64.exe" -p "targetframework=netcoreapp2.1;VersionSuffix="%vsuffix%"
+  - cmd: dotnet-warp --verbose -o "keyczar-win-x64.exe" -p "targetframework=netcoreapp2.1;Version="%appveyor_build_version%"
   - cmd: cd ..
 
 test_script:
@@ -53,14 +55,14 @@ deploy:
     symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
     artifact: /.*\.nupkg/ 
   - provider: GitHub
-    tag: v$(vprefix)$(vmid)$(vsuffix)
+    tag: v$(appveyor_build_version)
     description: 'Release description'
     auth_token:
       secure: JyJYSgeJYFmkaFy7Gro2dQyv/fqZwz1EzJmp2Nf99H6HUpxNR7ilA/OGPcQk0pA8
     draft: true
     prerelease: $(is_prerelease)
     on:
-      github_deploy: true     
+      github_deploy: true
 
 for:
   - branches:
