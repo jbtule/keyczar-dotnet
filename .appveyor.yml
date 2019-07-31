@@ -35,7 +35,7 @@ build_script:
 test_script:
   - cmd: dotnet test --no-build --verbosity="normal" -c %configuration% -f netcoreapp2.1 --filter "TestCategory=Create" --logger Appveyor KeyczarTest\KeyczarTest.csproj
   - cmd: dotnet test --no-build --verbosity="normal" -c %configuration% -f netcoreapp2.1 --filter "(TestCategory!=Create)&(TestCategory!=Performance)" --logger Appveyor KeyczarTest\KeyczarTest.csproj
-  - cmd: nunit3-console --result="myresults.xml;format=AppVeyor" --labels=On  --where="cat != Create  && cat != Performance"  KeyczarTest\bin\%configuration%\net451\KeyczarTestNetFrwk.dll
+  - cmd: nunit3-console --result="myresults.xml;format=AppVeyor" --labels=On  --where="cat != Create  && cat != Performance"  KeyczarTest\bin\%configuration%\net452\KeyczarTestNetFrwk.dll
 
 artifacts:
   - path: Keyczar\Keyczar\bin\$(configuration)\*.*nupkg
