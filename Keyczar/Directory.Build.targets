@@ -9,6 +9,6 @@
            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
         <PackageReference Update="System.Configuration.ConfigurationManager" Version="4.5.0"/>
-        <PackageReference Update="ManyConsole.CommandLineUtils" Version="1.1.7-alpha" />
+        <PackageReference Update="ManyConsole.CommandLineUtils" Version="1.1.8-alpha" />
     </ItemGroup>
 </Project>
