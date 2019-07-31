@@ -21,7 +21,7 @@ before_build:
   - ps: >-
         [xml]$XmlDocument = Get-Content -Path Keyczar\Directory.Build.Props
 
-        $env:vprefix = $XmlDocument.Project.PropertyGroup.VersionPrefix.InnerText
+        $env:vprefix = $XmlDocument.Project.PropertyGroup.VersionPrefix
 
         Update-AppveyorBuild -Version $env:vprefix$env:vmid$env:vsuffix
   - cmd: cd Keyczar
