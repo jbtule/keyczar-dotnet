@@ -7,14 +7,19 @@ install:
 configuration: Debug
 
 build: off
+test: off
 
 skip_branch_with_pr: true
 
 environment:
   vsuffix: alpha$(APPVEYOR_BUILD_NUMBER)
+  vmid: "-"
   is_prerelease: true
+  github_deploy: false 
 
 before_build:
+  - ps: [xml]$XmlDocument = Get-Content -Path Keyczar\Directory.Build.Props
+  - ps: $env:vprefix = $XmlDocument.Project.PropertyGroup.VersionPrefix.InnerText
   - cmd: cd Keyczar
   - cmd: msbuild /t:restore /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
 
@@ -43,34 +48,31 @@ deploy:
       secure: qeW4Vpu7ZxccbJAZz215XBKpSTlIXEyZTfi/r+gmEGRxC/zsxHkBexycRjKbfptZ
     skip_symbols: false
     symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
-
+    artifact: /.*\.[s]*nupkg/ 
   - provider: GitHub
-    
-    artifact: /.*\.[s]*nupkg/           # upload all NuGet packages to release assets
+    tag: v$(vprefix)$(vmid)$(vsuffix)
     description: 'Release description'
     auth_token:
       secure: JyJYSgeJYFmkaFy7Gro2dQyv/fqZwz1EzJmp2Nf99H6HUpxNR7ilA/OGPcQk0pA8
     draft: true
     prerelease: $(is_prerelease)
     on:
-      appveyor_repo_tag: true       # deploy on tag push only
+      github_deploy: true     
 
 for:
   - branches:
-        except:
-          - /v.*/
-  - branches:
-        only:
-          - /v.*-beta/
+      only:
+        - /deploy-v.*-beta.*/
     environment:
       vsuffix: beta$(APPVEYOR_BUILD_NUMBER)
       is_prerelease: true
   - branches:
-        only:
-          - /v[\d,.]*/
+      only:
+        - /deploy-v[\d,.]*/
     configuration: Release
     environment:
       vsuffix: $(APPVEYOR_BUILD_NUMBER)
+      vmid: "."
       is_prerelease: false
-
+      github_deploy: true
 
