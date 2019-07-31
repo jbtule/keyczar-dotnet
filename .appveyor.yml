@@ -10,6 +10,7 @@ build: off
 test: off
 
 skip_branch_with_pr: true
+skip_tags: true
 
 environment:
   vsuffix: alpha$(APPVEYOR_BUILD_NUMBER)
