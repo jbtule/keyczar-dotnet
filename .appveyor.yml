@@ -20,6 +20,7 @@ environment:
 before_build:
   - ps: >-
         [xml]$XmlDocument = Get-Content -Path Keyczar\Directory.Build.Props
+
         $env:vprefix = $XmlDocument.Project.PropertyGroup.VersionPrefix.InnerText
   - cmd: cd Keyczar
   - cmd: msbuild /t:restore /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
