@@ -28,7 +28,7 @@ using NUnit.Framework;
 namespace KeyczarTest
 {
     [TestFixture, Category("Create")]
-    public class CreateDataManageTest : AssertionHelper
+    public class CreateDataManageTest : BaseHelper
     {
         private static string WRITE_DATA = Path.Combine("gen-testdata", "cstestdata");
         private static String input = "This is some test data";

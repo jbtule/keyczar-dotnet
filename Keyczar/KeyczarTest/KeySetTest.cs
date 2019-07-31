@@ -31,7 +31,7 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class KeySetTest:AssertionHelper
+    public class KeySetTest: BaseHelper
     {
 
           private readonly String TEST_DATA;

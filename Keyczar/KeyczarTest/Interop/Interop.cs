@@ -29,7 +29,7 @@ namespace KeyczarTest.Interop
     }
    
 
-    public abstract class Interop : AssertionHelper
+    public abstract class Interop : BaseHelper
     {
         private string _implementation;
 

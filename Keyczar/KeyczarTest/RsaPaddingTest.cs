@@ -31,7 +31,7 @@ namespace KeyczarTest
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design",
         "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable"), TestFixture]
-    public class RsaPaddingTest : AssertionHelper
+    public class RsaPaddingTest : BaseHelper
     {
         private static readonly String input = "testdata";
         private IKeySet oaepReader;

@@ -12,7 +12,7 @@ namespace KeyczarTest.Unofficial
 {
     [Category("Unofficial")]
     [TestFixture("gen|cstestdata")]
-    public class BsonSessionDecryptTest : AssertionHelper
+    public class BsonSessionDecryptTest : BaseHelper
     {
         private readonly String TEST_DATA;
 

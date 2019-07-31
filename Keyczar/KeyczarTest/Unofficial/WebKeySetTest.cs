@@ -13,7 +13,7 @@ using NUnit.Framework;
 namespace KeyczarTest.Unofficial
 {
     [Category("Unofficial")]
-    public class WebKeySetTest : AssertionHelper
+    public class WebKeySetTest : BaseHelper
     {
         private static string input = "Some test text";
 

@@ -26,7 +26,7 @@ using NUnit.Framework;
 namespace KeyczarTest
 {
     [TestFixture]
-    public class FallbackTest : AssertionHelper
+    public class FallbackTest : BaseHelper
     {
         private static String input = "This is some test data";
         private readonly String TEST_DATA = Path.Combine("remote-testdata", "special-case", "badhash");

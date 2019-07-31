@@ -10,7 +10,7 @@ using Keyczar;
 namespace KeyczarTest.Unofficial
 {
     [Category("Unofficial")]
-    public class BlobKeySetTest : AssertionHelper
+    public class BlobKeySetTest : BaseHelper
     {
         private static string input = "Some test text";
 

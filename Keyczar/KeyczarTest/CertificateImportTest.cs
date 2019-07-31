@@ -35,7 +35,7 @@ using NUnit.Framework;
 namespace KeyczarTest
 {
     [TestFixture]
-    public class CertificateImportTest : AssertionHelper
+    public class CertificateImportTest : BaseHelper
     {
         private static readonly String TEST_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet",
                                                                 "certificates");

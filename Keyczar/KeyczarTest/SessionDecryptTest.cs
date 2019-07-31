@@ -8,7 +8,7 @@ namespace KeyczarTest
 {
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
-    public class SessionDecryptTest : AssertionHelper
+    public class SessionDecryptTest : BaseHelper
     {
         private readonly String TEST_DATA;
 

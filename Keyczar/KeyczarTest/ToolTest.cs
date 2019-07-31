@@ -30,7 +30,7 @@ using Keyczar.Unofficial;
 namespace KeyczarTest
 {
     [TestFixture]
-    public class ToolTest : AssertionHelper
+    public class ToolTest : BaseHelper
     {
         private String TEST_DATA = Path.GetTempPath();
         private string CERTIFICATE_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet", "certificates");

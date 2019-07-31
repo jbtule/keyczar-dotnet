@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net451;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp2.1</TargetFrameworks>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net451'">
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net452'">
     <AssemblyName>KeyczarTestNetCore</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net452'">
     <AssemblyName>KeyczarTestNetFrwk</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
@@ -19,6 +19,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit.StaticExpect" Version="1.0.7" />
     <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
     <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />

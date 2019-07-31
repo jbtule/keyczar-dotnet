@@ -7,7 +7,7 @@ using Keyczar;
 namespace KeyczarTest
 {
     [TestFixture()]
-    public class DsaJavaJunkTest:AssertionHelper
+    public class DsaJavaJunkTest: BaseHelper
     {
 
 		public String Input

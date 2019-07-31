@@ -14,7 +14,7 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class SignerAttachedTest : AssertionHelper
+    public class SignerAttachedTest : BaseHelper
     {
         private readonly String TEST_DATA;
         private static String input = "This is some test data";

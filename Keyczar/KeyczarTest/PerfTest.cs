@@ -31,7 +31,7 @@ namespace KeyczarTest
 {
     [TestFixture]
     [Category("Performance")]
-    public class PerfTest : AssertionHelper
+    public class PerfTest : BaseHelper
     {
         /// <summary>
         /// Custom KeyType AES decryption using bouncy castle.

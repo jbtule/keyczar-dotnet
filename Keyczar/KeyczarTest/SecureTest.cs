@@ -23,7 +23,7 @@ using NUnit.Framework;
 namespace KeyczarTest
 {
     [TestFixture]
-    public class SecureTest:AssertionHelper
+    public class SecureTest: BaseHelper
     {
         private byte[] random1;
         private byte[] random2;

@@ -12,7 +12,7 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class SignerVanillaTest : AssertionHelper
+    public class SignerVanillaTest : BaseHelper
     {
         private static String input = "This is some test data";
         private readonly String TEST_DATA;

@@ -33,7 +33,7 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class SignerTest : AssertionHelper
+    public class SignerTest : BaseHelper
     {
         private readonly String TEST_DATA;
 

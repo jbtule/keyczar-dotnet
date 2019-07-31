@@ -36,7 +36,7 @@ using NUnit.Framework;
 namespace KeyczarTest
 {
     [TestFixture]
-    public class CrossCompatibilityTest : AssertionHelper
+    public class CrossCompatibilityTest : BaseHelper
     {
         private static readonly String TEST_DATA = Path.Combine("remote-testdata", "existing-data", "dotnet",
                                                                 "crosscomp");

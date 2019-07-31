@@ -15,7 +15,7 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class StreamBehaviorTest : AssertionHelper
+    public class StreamBehaviorTest : BaseHelper
     {
         private readonly String TEST_DATA;
 

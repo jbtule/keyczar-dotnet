@@ -27,7 +27,7 @@ namespace KeyczarTest
     [TestFixture("rem|dotnet")]
     [TestFixture("gen|cstestdata")]
     [TestFixture("gen|tool_cstestdata")]
-    public class SessionTest : AssertionHelper
+    public class SessionTest : BaseHelper
     {
         private readonly String TEST_DATA;
 
