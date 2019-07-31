@@ -14,6 +14,7 @@
  */
 
 using System;
+using System.Security.Policy;
 using Keyczar.Util;
 using Org.BouncyCastle.Crypto.Macs;
 
@@ -31,19 +32,31 @@ namespace Keyczar.Crypto.Streams
         /// <returns></returns>
         public override int GetTagLength(byte[] header)
         {
-            return _hmacAlg.GetMacSize();
+            return _hashLength;
         }
 
         private HMac _hmacAlg;
+        private readonly int _hashLength;
 
+        public static readonly int MinHashLength = 16;
         /// <summary>
         /// Initializes a new instance of the <see cref="HmacStream"/> class.
         /// </summary>
         /// <param name="algorithm">The algorithm.</param>
-        public HmacStream(HMac algorithm)
+        /// <param name="hashLength">The hash bit length.</param>
+        public HmacStream(HMac algorithm, int hashLength)
         {
             _hmacAlg = algorithm;
-            _hashValue = new byte[(_hmacAlg.GetMacSize())];
+            var algHashLength = _hmacAlg.GetMacSize();
+            _hashLength = Math.Min(hashLength, algHashLength);
+
+            if (_hashLength < MinHashLength)
+            {
+                throw new InvalidKeyTypeException($"Doesn't support Hmac hashes shorter than {MinHashLength}");
+            }
+            
+            _hashValue = new byte[_hashLength];
+            _fullHashValue = new byte[algHashLength];
         }
 
         /// <summary>
@@ -57,6 +70,8 @@ namespace Keyczar.Crypto.Streams
             if (disposing)
             {
                 _hmacAlg.Reset();
+                _hashValue.Clear();
+                _fullHashValue.Clear();
             }
             _hmacAlg = null;
 
@@ -91,16 +106,14 @@ namespace Keyczar.Crypto.Streams
         }
 
         private byte[] _hashValue;
+        private byte[] _fullHashValue;
         private bool _final;
 
         /// <summary>
         /// Gets the hash value.
         /// </summary>
         /// <value>The hash value.</value>
-        public override byte[] HashValue
-        {
-            get { return (byte[]) _hashValue.Clone(); }
-        }
+        public override byte[] HashValue => (byte[]) _hashValue.Clone();
 
 
         /// <summary>
@@ -110,8 +123,8 @@ namespace Keyczar.Crypto.Streams
         {
             if (!_final)
             {
-                _hmacAlg.DoFinal(_hashValue, 0);
-
+                _hmacAlg.DoFinal(_fullHashValue, 0);  
+                Array.Copy(_fullHashValue, _hashValue, _hashLength);
                 _final = true;
             }
         }
@@ -124,7 +137,7 @@ namespace Keyczar.Crypto.Streams
         public override bool VerifySignature(byte[] signature)
         {
             Finish();
-            return Secure.Equals(signature, HashValue, maxCount: _hmacAlg.GetMacSize());
+            return Secure.Equals(signature, HashValue, maxCount: _hashLength);
         }
     }
 }

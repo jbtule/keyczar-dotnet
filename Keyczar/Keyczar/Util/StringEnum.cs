@@ -91,10 +91,7 @@ namespace Keyczar.Util
         /// Gets or sets the identifier.
         /// </summary>
         /// <value>The identifier.</value>
-        public string Identifier
-        {
-            get { return _identifier; }
-        }
+        public string Identifier => _identifier;
 
         /// <summary>
         /// Gets a value indicating whether this instance is empty.
@@ -102,10 +99,7 @@ namespace Keyczar.Util
         /// <value>
         ///   <c>true</c> if this instance is empty; otherwise, <c>false</c>.
         /// </value>
-        public bool IsEmpty
-        {
-            get { return String.IsNullOrWhiteSpace(_identifier); }
-        }
+        public bool IsEmpty => String.IsNullOrWhiteSpace(_identifier);
 
         /// <summary>
         /// Determines whether [is null or empty] [the specified type].
@@ -128,6 +122,11 @@ namespace Keyczar.Util
         public override string ToString()
         {
             return Identifier;
+        }
+
+        public byte[] ToBytes()
+        {
+            return Encoding.UTF8.GetBytes(Identifier);
         }
 
         /// <summary>
@@ -188,7 +187,7 @@ namespace Keyczar.Util
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (StringType)) return false;
+            if (!(obj is StringType)) return false;
             return Equals((StringType) obj);
         }
 

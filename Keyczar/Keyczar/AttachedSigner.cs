@@ -31,7 +31,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="AttachedSigner"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        public AttachedSigner(string keySetLocation) : this(new KeySet(keySetLocation))
+        public AttachedSigner(string keySetLocation) : this(new FileSystemKeySet(keySetLocation))
         {
         }
 
@@ -42,7 +42,6 @@ namespace Keyczar
         public AttachedSigner(IKeySet keySet) : base(keySet)
         {
             _signer = new AttachedSignerHelper(keySet, this);
-
         }
 
         /// <summary>
@@ -53,8 +52,7 @@ namespace Keyczar
         /// <returns></returns>
         public WebBase64 Sign(String rawData,Byte[] hidden =null)
         {
-            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), hidden));
-
+            return WebBase64.FromBytes(Sign(Config.RawStringEncoding.GetBytes(rawData), hidden));
         }
 
 
@@ -83,23 +81,30 @@ namespace Keyczar
         /// <param name="hidden">The hidden data that can be used to generate the signature.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
         public void Sign(Stream input, Stream signedData, Byte[] hidden =null, long inputLength =-1)
-        {
-            _signer.Sign(input, signedData, hidden, inputLength);
-        }
+            => _signer.Sign(input, signedData, hidden, inputLength);
 
         /// <summary>
         /// Helper subclass to sign correctly
         /// </summary>
         protected class AttachedSignerHelper:Signer
         {
+            private KeyczarBase _parent;
+
             /// <summary>
             /// Initializes a new instance of the <see cref="AttachedSignerHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public AttachedSignerHelper(IKeySet keySet,Keyczar parent)
+            /// <param name="parent"></param>
+            public AttachedSignerHelper(IKeySet keySet,KeyczarBase parent)
                 : base(keySet)
             {
-                Config = parent.Config;
+                _parent = parent;
+            }
+            
+            public override KeyczarConfig Config
+            {
+                get => _parent.Config;
+                set {}
             }
 
             /// <summary>
@@ -161,8 +166,8 @@ namespace Keyczar
                 var input = padData.Item3;
 
                 var key = GetPrimaryKey() as ISignerKey;
-                outputStream.Write(FormatBytes, 0, FormatBytes.Length);
-                outputStream.Write(key.GetKeyHash(), 0, KeyHashLength);
+                outputStream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
+                outputStream.Write(key.GetKeyHash(), 0, KeyczarConst.KeyHashLength);
 
                 var lengthBytes = Utility.GetBytes((int)(stopLength - position));
                 outputStream.Write(lengthBytes, 0, lengthBytes.Length);

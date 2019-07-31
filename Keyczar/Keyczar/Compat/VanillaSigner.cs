@@ -34,7 +34,7 @@ namespace Keyczar.Compat
         /// Initializes a new instance of the <see cref="VanillaSigner"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        public VanillaSigner(string keySetLocation) : this(new KeySet(keySetLocation))
+        public VanillaSigner(string keySetLocation) : this(new FileSystemKeySet(keySetLocation))
         {
         }
 

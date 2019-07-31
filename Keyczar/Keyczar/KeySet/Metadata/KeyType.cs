@@ -74,16 +74,25 @@ namespace Keyczar
         {
             return _specs.Where(it => it.Value.RepresentedType == type).Select(it => it.Key).FirstOrDefault();
         }
+        
+        
 
         /// <summary>
         /// Defines the spec.
         /// </summary>
         /// <param name="spec">The spec.</param>
         /// <returns></returns>
+
         protected static bool DefineSpec(KeyTypeSpec spec)
         {
             if (_specs.ContainsKey(spec.Name.Identifier))
+            {
                 return false;
+            }
+            if (_specs.Select(it => it.Value.RepresentedType).Any(it => it == spec.RepresentedType))
+            {
+                throw new InvalidKeyTypeException($"KeyType's spec already exists for {spec.RepresentedType}");
+            }
             _specs.Add(spec.Name.Identifier, spec);
             return true;
         }
@@ -92,10 +101,10 @@ namespace Keyczar
         {
             Aes.KeySizes<AesKey>(128, 192, 256).DefineSpec();
             HmacSha1.KeySizes<HmacSha1Key>(256).DefineSpec();
-            DsaPriv.KeySizes<DsaPrivateKey>(1024).IsAsymmetric().DefineSpec();
-            DsaPub.KeySizes<DsaPublicKey>(1024).IsAsymmetric().DefineSpec();
-            RsaPriv.KeySizes<RsaPrivateKey>(2048, 1024, 4096).IsAsymmetric().DefineSpec();
-            RsaPub.KeySizes<RsaPublicKey>(2048, 1024, 4096).IsAsymmetric().DefineSpec();
+            DsaPriv.KeySizes<DsaPrivateKey>().WeakSizes(1024).IsAsymmetric().DefineSpec();
+            DsaPub.KeySizes<DsaPublicKey>().WeakSizes(1024).IsAsymmetric().IsPublic().DefineSpec();
+            RsaPriv.KeySizes<RsaPrivateKey>(2048, 4096).WeakSizes(1024).IsAsymmetric().DefineSpec();
+            RsaPub.KeySizes<RsaPublicKey>(2048, 4096).WeakSizes(1024).IsAsymmetric().IsPublic().DefineSpec();
 
 #pragma warning disable 219
             KeyType see;
@@ -106,6 +115,9 @@ namespace Keyczar
         }
 
         private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();
+
+
+        public static IEnumerable<KeyTypeSpec> Specs => _specs.Values;
 
         /// <summary>
         /// Describes the sizes and algorithms.
@@ -119,7 +131,8 @@ namespace Keyczar
                        {
                            Name = Identifier,
                            RepresentedType = typeof (T),
-                           KeySizes = keySizes,
+                           GoodKeySizes = keySizes,
+                           WeakKeySizes = Enumerable.Empty<int>(),
                        };
         }
 
@@ -151,8 +164,13 @@ namespace Keyczar
             /// <value>The key sizes.</value>
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
                 "CA1819:PropertiesShouldNotReturnArrays")]
-            public int[] KeySizes { get; internal set; }
+            public IEnumerable<int> KeySizes => GoodKeySizes.Concat(WeakKeySizes);
+            
+            public IEnumerable<int> GoodKeySizes { get; internal set; }
 
+            public IEnumerable<int> WeakKeySizes { get; internal set; }
+
+            
             /// <summary>
             /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is unofficial.
             /// </summary>
@@ -165,6 +183,17 @@ namespace Keyczar
             /// <value><c>true</c> if asymmetric; otherwise, <c>false</c>.</value>
             public bool Asymmetric { get; internal set; }
 
+            /// <summary>
+            /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is asymmetric.
+            /// </summary>
+            /// <value><c>true</c> if asymmetric; otherwise, <c>false</c>.</value>
+            public bool Public { get; internal set; }
+            
+            /// <summary>
+            /// Gets or sets a value indicating whether this <see cref="KeyTypeSpec"/> is not for actual use.
+            /// </summary>
+            /// <value><c>true</c> if temp; otherwise, <c>false</c>.</value>
+            public bool Temp { get; internal set; }
 
             /// <summary>
             /// Specifies this  instance is unofficial.
@@ -183,6 +212,33 @@ namespace Keyczar
             public KeyTypeSpec IsAsymmetric()
             {
                 Asymmetric = true;
+                return this;
+            }
+
+
+            /// <summary>
+            /// Specifies this instance is public.
+            /// </summary>
+            /// <returns></returns>
+            public KeyTypeSpec IsPublic()
+            {
+                Public = true;
+                return this;
+            }
+
+            public KeyTypeSpec WeakSizes(params int[] keySizes)
+            {
+                WeakKeySizes = WeakKeySizes.Concat(keySizes);
+                return this;
+            }
+            
+            /// <summary>
+            /// Specifies this instance is temp key type.
+            /// </summary>
+            /// <returns></returns>
+            public KeyTypeSpec IsTemp()
+            {
+                Temp = true;
                 return this;
             }
 
@@ -235,6 +291,8 @@ namespace Keyczar
         private int[] _keySizeOptions;
         private bool? _unofficial;
         private bool? _asymmetric;
+        private bool? _public;
+
 
         /// <summary>
         /// Gets the key size options.
@@ -248,7 +306,7 @@ namespace Keyczar
             {
                 if (_keySizeOptions == null)
                 {
-                    _keySizeOptions = _specs[Identifier].KeySizes;
+                    _keySizeOptions = _specs[Identifier].KeySizes.ToArray();
                 }
                 return _keySizeOptions;
             }
@@ -272,9 +330,9 @@ namespace Keyczar
         }
 
         /// <summary>
-        /// Gets a value indicating whether this <see cref="KeyType"/> is a public key.
+        /// Gets a value indicating whether this <see cref="KeyType"/> is an Asymmetric key.
         /// </summary>
-        /// <value><c>true</c> if public; otherwise, <c>false</c>.</value>
+        /// <value><c>true</c> if Asymmetric; otherwise, <c>false</c>.</value>
         public bool Asymmetric
         {
             get
@@ -284,6 +342,44 @@ namespace Keyczar
                     _asymmetric = _specs[Identifier].Asymmetric;
                 }
                 return _asymmetric.Value;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this <see cref="KeyType"/> is a public key.
+        /// </summary>
+        /// <value><c>true</c> if public; otherwise, <c>false</c>.</value>
+        public bool Public
+        {
+            get
+            {
+                if (!_public.HasValue)
+                {
+                    _public = _specs[Identifier].Public;
+                }
+                return _public.Value;
+            }
+        }
+
+        /// <summary>
+        /// Gets the kind of the key.
+        /// </summary>
+        /// <value>
+        /// The kind of the key.
+        /// </value>
+        public virtual KeyKind Kind
+        {
+            get
+            {
+                if (Asymmetric)
+                {
+                    if (Public)
+                    {
+                        return KeyKind.Public;
+                    }
+                    return KeyKind.Private;
+                }
+                return KeyKind.Symmetric;
             }
         }
 
@@ -307,9 +403,6 @@ namespace Keyczar
         /// Gets the default size.
         /// </summary>
         /// <value>The default size.</value>
-        public int DefaultSize
-        {
-            get { return KeySizeOptions.FirstOrDefault(); }
-        }
+        public int DefaultSize => KeySizeOptions.FirstOrDefault();
     }
 }

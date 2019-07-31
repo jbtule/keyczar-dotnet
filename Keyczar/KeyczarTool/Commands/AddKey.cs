@@ -19,7 +19,8 @@ using System.Linq;
 using System.Text;
 using Keyczar;
 using Keyczar.Util;
-using ManyConsole;
+using Keyczar.Unofficial;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool
 {
@@ -31,25 +32,67 @@ namespace KeyczarTool
         private string _crypterLocation;
         private string _padding;
         private bool _password;
+        private string _type;
+        private bool _force;
 
         public AddKey()
         {
             this.IsCommand("addkey", Localized.AddKey);
             this.HasRequiredOption("l|location=", Localized.Location, v => { _location = v; });
+
             this.HasRequiredOption("s|status=", Localized.Status, v => { _status = v; });
-            this.HasOption<int>("b|size=", Localized.Size, v => { _size = v; });
+            this.HasOption<int>("b|size=", Localized.Size, v => { _size = v; }); 
+            this.HasOption("t|type:", Localized.KeyType, v => { _type = v; });
+            this.HasOption("f|force", Localized.KeyType, v => { _force = true; });
             this.HasOption("c|crypter=", Localized.Crypter, v => { _crypterLocation = v; });
             this.HasOption("p|password", Localized.Password, v => { _password = true; });
             this.HasOption("g|padding=", Localized.Padding, v => { _padding = v; });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
+        public static readonly IEnumerable<Tuple<KeyType, string>> KeyTypeMaps = new[]
+        {
+            Tuple.Create(KeyType.Aes, "AES_HMAC_SHA1"),
+            Tuple.Create(KeyType.RsaPriv, "RSA_SHA1"),
+            Tuple.Create(KeyType.DsaPriv, "DSA_SHA1"),
+            Tuple.Create(KeyType.HmacSha1, "HMAC_SHA1"),
+            Tuple.Create(UnofficialKeyType.AesAead, "AES_GCM"),
+            Tuple.Create(UnofficialKeyType.RSAPrivSign, "RSA_PSS"),
+            Tuple.Create(UnofficialKeyType.RSAPrivPkcs15Sign, "RSA_PKCS15"),
+            Tuple.Create(UnofficialKeyType.HmacSha2, "HMAC_SHA2"),
+            Tuple.Create(UnofficialKeyType.AesHmacSha2, "AES_HMAC_SHA2"),
 
+
+        };
+
+
+
+        public static  KeyType KeyTypeForString(string type)
+        {
+            if (String.IsNullOrWhiteSpace(type))
+                return null;
+
+            var found = KeyTypeMaps.FirstOrDefault(it =>
+                String.Equals(it.Item2, type, StringComparison.InvariantCultureIgnoreCase));
+
+            if (found != null) return found.Item1;
+            
+            switch (type.ToUpper())
+            {
+                case "RSA":
+                    return KeyType.RsaPriv;
+                case "DSA":
+                    return KeyType.DsaPriv;
+                default:
+                    throw new ConsoleHelpAsException(string.Format(Localized.MsgInvalidType, type));
+            }
+        }
+        
         public override int Run(string[] remainingArguments)
         {
             var ret = 0;
             Crypter crypter = null;
-            IKeySet ks = new KeySet(_location);
+            IKeySet ks = new FileSystemKeySet(_location);
 
             Func<string> crypterPrompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
 
@@ -57,12 +100,18 @@ namespace KeyczarTool
                              ? new Func<string>(CachedPrompt.Password(Util.PromptForPassword).Prompt)
                              : new Func<string>(CachedPrompt.Password(Util.DoublePromptForPassword).Prompt);
 
+            var encOrNone = new List<Func<IKeySet, ILayeredKeySet>>();
+
             IDisposable dks = null;
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
             {
                 if (_password)
                 {
-                    var cks = new PbeKeySet(_crypterLocation, crypterPrompt);
+                    var cks = KeySet.LayerSecurity(
+                                FileSystemKeySet.Creator(_crypterLocation),
+                                PbeKeySet.Creator(crypterPrompt)
+                    );
+
                     crypter = new Crypter(cks);
                     dks = cks;
                 }
@@ -84,6 +133,7 @@ namespace KeyczarTool
             using (d2ks)
             using (var keySet = new MutableKeySet(ks))
             {
+
                 if (_status != KeyStatus.Primary && _status != KeyStatus.Active)
                 {
                     Console.WriteLine("{0} {1}.", Localized.MsgInvalidStatus, _status.Identifier);
@@ -96,10 +146,36 @@ namespace KeyczarTool
                     options = new {Padding = _padding};
                 }
 
-                var ver = keySet.AddKey(_status, _size, options);
+                int ver;
+                var type = KeyTypeForString(_type);
+
+                if (ks.Metadata.OriginallyOfficial && ks.Metadata.ValidOfficial())
+                {
+                    var keytype = ks.Metadata.OfficialKeyType();
+                    if (type == null)
+                    {
+                        type = keytype;
+                    } else if (type != keytype && !_force)
+                    {
+                        throw new ConsoleHelpAsException(String.Format(Localized.MsgMismatchedType, type, keytype));
+                    }
+                }
 
 
-                IKeySetWriter writer = new KeySetWriter(_location, overwrite: true);
+                try
+                {
+                    
+                    ver = keySet.AddKey(_status, _size, type, options);
+                }
+#pragma warning disable 168
+                catch (InvalidKeyTypeException ex)
+#pragma warning restore 168
+                {
+                    throw new ConsoleHelpAsException(String.Format(Localized.MsgMismatchedKind, type.Kind, keySet.Metadata.Kind));
+                }
+
+
+                IKeySetWriter writer = new FileSystemKeySetWriter(_location, overwrite: true);
 
                 if (crypter != null)
                 {

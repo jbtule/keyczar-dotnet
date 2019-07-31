@@ -35,18 +35,49 @@ namespace Keyczar
         public static Key GetKey(this IKeySet keySet, int version)
         {
             var keyData = keySet.GetKeyData(version);
-            var key = Key.Read(keySet.Metadata.KeyType, keyData);
+            var keyType = keySet.Metadata.GetKeyType(version);
+            var key = Key.Read(keyType, keyData, keySet.Config);
             keyData.Clear();
             return key;
         }
+
+        public static Key GetPrimaryKey(this IKeySet keySet)
+        {
+            var version = keySet.Metadata.GetPrimaryKeyVersion();
+            return version == null 
+                ? null 
+                : keySet.GetKey(version.VersionNumber);
+        }
+        
+        public static KeyVersion GetPrimaryKeyVersion(this KeyMetadata metadata)
+        {
+            return metadata.Versions.SingleOrDefault(it => it.Status == KeyStatus.Primary);
+        }
+
+        public static KeyczarConfig GetConfig(this IKeySet keySet)
+        {
+            return keySet.Config ?? KeyczarDefaults.DefaultConfig;
+        }
     }
 
+    public interface IRootProviderKeySet:IKeySet{
+        
+    }
+
+	public interface ILayeredKeySet : IKeySet
+	{
+
+	}
 
     /// <summary>
     /// Defines methods for getting keys out of a key set
     /// </summary>
-    public interface IKeySet
+    public interface IKeySet:IDisposable
     {
+        
+        KeyczarConfig Config { get; set; }
+
+        
         /// <summary>
         /// Gets the metadata.
         /// </summary>

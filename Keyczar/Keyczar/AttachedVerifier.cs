@@ -23,7 +23,7 @@ namespace Keyczar
     /// <summary>
     /// Verifies a message with an attached signature.
     /// </summary>
-    public class AttachedVerifier:Keyczar
+    public class AttachedVerifier:KeyczarBase
     {
         private HelperAttachedVerify _verifier;
 
@@ -32,7 +32,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
         public AttachedVerifier(string keySetLocation)
-            : this(new KeySet(keySetLocation))
+            : this(new FileSystemKeySet(keySetLocation))
         {
         }
 
@@ -58,10 +58,8 @@ namespace Keyczar
         /// <param name="signedMessage">The signed message.</param>
         /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
         /// <returns></returns>
-        public bool Verify(WebBase64 signedMessage, byte[] hidden =null){
-
-            return Verify(signedMessage.ToBytes(), hidden);
-        }
+        public bool Verify(WebBase64 signedMessage, byte[] hidden =null) =>
+            Verify(signedMessage.ToBytes(), hidden);
 
         /// <summary>
         /// Verifies the specified message.
@@ -84,9 +82,7 @@ namespace Keyczar
         /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
         public bool Verify(Stream input, byte[] hidden =null, long inputLength=-1)
-        {
-            return _verifier.VerifyHidden(input, null, hidden, inputLength);
-        }
+            => _verifier.VerifyHidden(input, null, hidden, inputLength);
 
 
         /// <summary>
@@ -96,13 +92,11 @@ namespace Keyczar
         /// <param name="hidden">Optional hidden data used to generate the digest signature.</param>
         /// <returns></returns>
         /// <exception cref="InvalidCryptoDataException">Data Doesn't Match Signature!</exception>
-         public string VerifiedMessage(WebBase64 rawData, byte[] hidden = null)
-         {
-             return RawStringEncoding.GetString(VerifiedMessage(rawData.ToBytes(), hidden));
-         }
+         public string VerifiedMessage(WebBase64 rawData, byte[] hidden = null) 
+            => Config.RawStringEncoding.GetString(VerifiedMessage(rawData.ToBytes(), hidden));
 
 
-         /// <summary>
+        /// <summary>
          /// Gets Verified message from signed message
          /// </summary>
          /// <param name="data">The data.</param>
@@ -146,7 +140,7 @@ namespace Keyczar
         {
             byte[] output;
             var verified = TryGetVerifiedMessage(signedMessage.ToBytes(), out output, hidden);
-            verifiedMessage = RawStringEncoding.GetString(output);
+            verifiedMessage = Config.RawStringEncoding.GetString(output);
             return verified;
         }
 
@@ -186,24 +180,30 @@ namespace Keyczar
         /// <returns>
         /// false if signature is not correct
         /// </returns>
-        public bool TryGetVerifiedMessage(Stream input, Stream verifiedMessage, byte[] hiddden = null, long inputLength=-1)
-        {
-            return _verifier.VerifyHidden(input, verifiedMessage, hiddden, inputLength);
-        }
+        public bool TryGetVerifiedMessage(Stream input, Stream verifiedMessage, byte[] hiddden = null, long inputLength=-1) 
+            => _verifier.VerifyHidden(input, verifiedMessage, hiddden, inputLength);
 
         /// <summary>
         /// Does the attache verify work.
         /// </summary>
         protected class HelperAttachedVerify:Verifier
         {
+            private KeyczarBase _parent;
+            private KeyczarConfig _config1;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="HelperAttachedVerify"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public HelperAttachedVerify(IKeySet keySet, Keyczar parent) : base(keySet)
+            public HelperAttachedVerify(IKeySet keySet, KeyczarBase parent) : base(keySet)
             {
-                Config = parent.Config;
+                _parent = parent;
+            }
+
+            public override KeyczarConfig Config
+            {
+                get => _config1 ?? _parent.Config;
+                set => _config1 = value;
             }
 
             /// <summary>
@@ -221,7 +221,7 @@ namespace Keyczar
                 var fullLength = inputLength < 0 ? input.Length : inputLength + input.Position;
                 using (var reader = new NondestructiveBinaryReader(input))
                 {
-                    var header = reader.ReadBytes(HeaderLength);
+                    var header = reader.ReadBytes(KeyczarConst.HeaderLength);
                     var length = Utility.ToInt32(reader.ReadBytes(4));
 
                     if (fullLength < input.Position + length)

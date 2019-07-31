@@ -21,13 +21,17 @@ using System.Linq;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
+    [TestFixture("py3")]
+    [TestFixture("cs")]
+    [TestFixture("py")]
+    [TestFixture("j")]
+    [TestFixture("go")]
     public class Aes : CrypterBasicInterop
     {
         public Aes(string imp) : base(imp)
         {
             Location = "aes";
-        }
+        }  
 
         [TestCase("128")]
         [TestCase("192")]

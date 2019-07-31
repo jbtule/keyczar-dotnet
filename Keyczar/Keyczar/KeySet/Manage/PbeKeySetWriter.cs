@@ -24,12 +24,17 @@ namespace Keyczar
     /// <summary>
     /// Password Based Encrypted Key Set
     /// </summary>
-    public class PbeKeySetWriter : IKeySetWriter, IDisposable
+    public class PbeKeySetWriter : ILayeredKeySetWriter, IDisposable
     {
         private IKeySetWriter _writer;
         private readonly int _iterationCount;
         private CachedPrompt _password;
 
+
+		public static Func<IKeySetWriter, PbeKeySetWriter> Creator(Func<string> passwordPrompt, int iterationCount = 4096)
+		{
+            return writer => new PbeKeySetWriter(writer, passwordPrompt, iterationCount);
+		}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PbeKeySetWriter"/> class.
@@ -53,9 +58,13 @@ namespace Keyczar
         public void Write(byte[] keyData, int version)
         {
             var keyStore = PbeKeyStore.EncryptKeyData(keyData, _password.Prompt, _iterationCount);
-            _writer.Write(Keyczar.RawStringEncoding.GetBytes(keyStore.ToJson()), version);
+            _writer.Write(this.GetConfig().RawStringEncoding.GetBytes(keyStore.ToJson()), version);
         }
 
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
 
         /// <summary>
         /// Writes the specified metadata.
@@ -71,10 +80,7 @@ namespace Keyczar
         /// Finishes this writing of the key.
         /// </summary>
         /// <returns></returns>
-        public bool Finish()
-        {
-            return _writer.Finish();
-        }
+        public bool Finish() => _writer.Finish();
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -82,16 +88,8 @@ namespace Keyczar
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="PbeKeySetWriter" /> class.
-        /// </summary>
-        ~PbeKeySetWriter()
-        {
-            Dispose(false);
-        }
 
         /// <summary>
         /// Releases unmanaged and - optionally - managed resources.

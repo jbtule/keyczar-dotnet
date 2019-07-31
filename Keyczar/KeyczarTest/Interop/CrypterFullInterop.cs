@@ -5,7 +5,7 @@ using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
+
     public abstract class CrypterFullInterop : Interop
     {
         protected string Location;

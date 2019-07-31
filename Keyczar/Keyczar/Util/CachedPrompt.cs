@@ -71,15 +71,6 @@ namespace Keyczar.Util
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="CachedPrompt" /> class.
-        /// </summary>
-        ~CachedPrompt()
-        {
-            Dispose(false);
         }
 
         /// <summary>

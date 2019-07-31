@@ -58,9 +58,6 @@ namespace Keyczar.Util
         /// <value>
         /// The length.
         /// </value>
-        public int Length
-        {
-            get { return Count; }
-        }
+        public int Length => Count;
     }
 }

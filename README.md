@@ -1,6 +1,6 @@
 # Keyczar dotnet [![Nugut Install](https://img.shields.io/nuget/v/Keyczar.svg)](https://www.nuget.org/packages/Keyczar)
-Implmemented in C# 4 to match up with the Java/Python/C++ Keyczar standard features
-and will interoperate with them by default. Uses BouncyCastle as backend for most encryption.
+Implmemented in C# to match up with the Java/Python/C++ Keyczar standard features
+and will interoperate with them by default, however also has stronger crypto and more flexable features when compatiblity is not necessary. Uses BouncyCastle as backend for most encryption.
 
  - Keyczar-dotnet: http://jbtule.github.io/keyczar-dotnet
  - Official keyczar site: http://keyczar.org
@@ -14,18 +14,20 @@ See [Wiki](http://github.com/jbtule/keyczar-dotnet/wiki) for more info.
 
 ## Dependencies
 
- - .net 4.0 or mono v2.10
+ - .NET Core 2.1 or later
+ - .NET Framework 4.5.1 or later
 
 #### Keyczar.dll 
 
- - [BouncyCastle 1.8.0 or later](http://www.bouncycastle.org/csharp/)
- - [DotNetZip 1.10 later](https://github.com/haf/DotNetZip.Semverd)
- - [Newtonsoft.Json 4.5.8 or later](http://json.codeplex.com/)
+ - [BouncyCastle 1.8.5 or later](http://www.bouncycastle.org/csharp/)
+ - [DotNetZip 1.13.3 later](https://github.com/haf/DotNetZip.Semverd)
+ - [Newtonsoft.Json 12.0.2 or later](https://www.newtonsoft.com/json)
+ - [Newtonsoft.Json.Bson 12.0.2 or later](https://github.com/JamesNK/Newtonsoft.Json.Bson)
 
 #### KeyczarTool.exe
 
- - [ManyConsole 0.4.2.8 or later](https://github.com/fschwiet/ManyConsole)
- - [NDesk.Options 0.2.1 or later](http://www.ndesk.org/Options)
+ - [ManyConsole.CommandLineUtils 1.1.6-alpha or later](https://github.com/jbtule/ManyConsole.CommandLineUtils)
+ - [McMaster.Extensions.CommandLineUtils 2.3.4 or later](https://github.com/natemcmaster/CommandLineUtils)
  
 ## Source & Build
 
@@ -50,9 +52,11 @@ Windows | Mac | Linux
 
 ## Compatibility
 
- - Should interoperate with java/python/c++ with standard api
- - All unofficial/incompatible api changes are under the unofficial names space to be clear what is provided that won't interoperate with java/python/c++.
- - Unofficial algorithms included are *AES-GCM* (`KeyType=C#_AES_AEAD`) and RSA-PSS (`KeyType=C#_RSA_SIGN_PRIV`) use the unofficial flag on the KeyczarTool.
+ - Should interoperate with java/python/c++ with offical api how ever the offical versions of keyczar are very behind in crypto algorithms. If you don't need compatiblity I recommend using the unofficial key types.
+ - Unofficial/incompatible api changes are under the unofficial names space to be clear what is provided that won't interoperate with java/python/c++.
+ - MutableKeySet is only backward compatible with official keysets stores when reading keys. While it will store the keys differently than official keyczar, it still can produce and decrypt ciphertext compatible with official keyczar.
+ - Unofficial algorithms included are *AES-GCM* (`KeyType=C#_AES_AEAD`), RSA-PSS (`KeyType=C#_RSA_SIGN_PRIV`),HMAC-SHA2 (`KeyType=C#_HMAC_SHA2`), and AES-HMAC-SHA2 (`KeyType=C#_HMAC_SHA2`). To use them use unofficial flag on the KeyczarTool.
+ - If you have an existing keyset and you didn't create with the --unofficial flag, `--force` will be required to add an unofficial key type.
  - `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionVerifer`
  - The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
  - You can use the AppSetting `keyczar.strict_dsa_verification` if you don't need java Keyczar compatiblity and need stricter verification of dsa sigs.

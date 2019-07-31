@@ -61,30 +61,26 @@ namespace Keyczar.Unofficial
         }
 
         private static KeyPack PackIt(Key key)
-        {
-            return new KeyPack(key);
-        }
+            => new KeyPack(key);
 
         /// <summary>
         /// Packs the specified key into bytes
         /// </summary>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        public byte[] Pack(Key key)
-        {
-            return Utility.ToBson(PackIt(key));
-        }
+        public byte[] Pack(Key key, KeyczarConfig config) 
+            => Utility.ToBson(PackIt(key));
 
         /// <summary>
         /// Unpacks the specified bytes into a key.
         /// </summary>
         /// <param name="data">The bytes.</param>
         /// <returns></returns>
-        public Key Unpack(byte[] data)
+        public Key Unpack(byte[] data, KeyczarConfig config)
         {
             using (var input = new MemoryStream(data))
             {
-                var reader = new BsonReader(input);
+                var reader = new BsonDataReader(input);
                 var val = JToken.ReadFrom(reader);
                 var keyType = (KeyType) (string) val["type"];
                 var keyString = val["key"].ToString();

@@ -18,31 +18,32 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using KeyczarTool.Commands;
-using ManyConsole;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool
 {
     public class Program
     {
-        public static int Main(string[] args)
+
+        internal static ConsoleCommand[] Commands =>
+            new ConsoleCommand[] {
+                new Create(),
+                new AddKey(),
+                new PubKey(),
+                new Promote(),
+                new Demote(),
+                new Revoke(),
+                new ImportKey(),
+                new Export(),
+                new UseKey(),
+                new Password(),
+                new KeyTypes(),
+            };
+
+    public static int Main(string[] args)
         {
-
-            var commands = new ConsoleCommand[]
-                               {
-                                   new Create(),
-                                   new AddKey(),
-                                   new PubKey(),
-                                   new Promote(),
-                                   new Demote(),
-                                   new Revoke(),
-                                   new ImportKey(),
-                                   new Export(),
-                                   new UseKey(),
-                                   new Password(),
-                               };
-
             // run the command for the console input
-            return ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out);
+            return ConsoleCommandDispatcher.DispatchCommand(Commands, args, Console.Out);
         }
     }
 }

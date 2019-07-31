@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+using System.Collections.Generic;
 using System.Numerics;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
@@ -21,6 +22,7 @@ using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Crypto.Signers;
+using Org.BouncyCastle.Utilities.Encoders;
 
 namespace Keyczar.Crypto
 {
@@ -85,34 +87,28 @@ namespace Keyczar.Crypto
         /// Gets the public key.
         /// </summary>
         /// <value>The public key.</value>
-        Key IPrivateKey.PublicKey
-        {
-            get { return PublicKey; }
-        }
+        Key IPrivateKey.PublicKey => PublicKey;
 
         /// <summary>
         /// Gets the public key.
         /// </summary>
         /// <value>The public key.</value>
-        IRsaPublicKey IRsaPrivateKey.PublicKey
-        {
-            get { return PublicKey; }
-        }
+        IRsaPublicKey IRsaPrivateKey.PublicKey => PublicKey;
 
         /// <summary>
         /// Gets the key hash.
         /// </summary>
         /// <returns></returns>
-        public override byte[] GetKeyHash()
-        {
-            return PublicKey.GetKeyHash();
-        }
+        public override byte[] GetKeyHash() => PublicKey.GetKeyHash();
 
+
+        public override IEnumerable<byte[]> GetFallbackKeyHash() => PublicKey.GetFallbackKeyHash();
+        
         /// <summary>
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
-        protected override void GenerateKey(int size)
+        protected override void GenerateKey(int size, KeyczarConfig config)
         {
             var rsaparam = new RsaKeyPairGenerator();
             rsaparam.Init(new KeyGenerationParameters(Secure.Random, size));
@@ -158,17 +154,15 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
-        {
-            return PublicKey.GetVerifyingStream(keyczar);
-        }
+        public VerifyingStream GetVerifyingStream(KeyczarBase keyczar) 
+            => PublicKey.GetVerifyingStream(keyczar);
 
 
         /// <summary>
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetSigningStream(Keyczar keyczar)
+        public HashingStream GetSigningStream(KeyczarBase keyczar)
         {
             var signer = PublicKey.GetSigner();
 

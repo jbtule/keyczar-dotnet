@@ -19,7 +19,7 @@ using System.Linq;
 using System.Text;
 using Keyczar;
 using Keyczar.Util;
-using ManyConsole;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool
 {
@@ -44,7 +44,7 @@ namespace KeyczarTool
         {
             var ret = 0;
             Crypter crypter = null;
-            IKeySet ks = new KeySet(_location);
+            IKeySet ks = new FileSystemKeySet(_location);
 
             Func<string> prompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
 
@@ -53,7 +53,9 @@ namespace KeyczarTool
             {
                 if (_password)
                 {
-                    var cks = new PbeKeySet(_crypterLocation, prompt);
+                    var cks = KeySet.LayerSecurity(FileSystemKeySet.Creator(_crypterLocation),
+                                                   PbeKeySet.Creator(prompt)
+                                                  );
                     crypter = new Crypter(cks);
                     dks = cks;
                 }
@@ -80,7 +82,7 @@ namespace KeyczarTool
                 {
                     using (pubKeySet)
                     {
-                        IKeySetWriter writer = new KeySetWriter(_destination, overwrite: false);
+                        IKeySetWriter writer = new FileSystemKeySetWriter(_destination, overwrite: false);
 
                         if (pubKeySet.Save(writer))
                         {

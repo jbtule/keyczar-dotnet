@@ -4,7 +4,9 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar;
+using Keyczar.Unofficial;
 using Keyczar.Util;
+using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace KeyczarTest
@@ -16,6 +18,7 @@ namespace KeyczarTest
     {
         private readonly String TEST_DATA;
         private static String input = "This is some test data";
+        private static string jsonInput = "{\"sub\": \"1234567890\",\"name\": \"John Doe\",\"admin\": true}";
 
         public SignerAttachedTest(string testPath)
         {
@@ -38,6 +41,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndVerify(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -50,12 +54,33 @@ namespace KeyczarTest
                 Expect(verifier.Verify(signedoutput), Is.True);
             }
         }
+        
+        [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
+        public void TestSignAndVerifyJwt(String subDir, string nestDir)
+        {
+            var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
+            using (var ks = new FileSystemKeySet(subPath))
+            using (var signer = new JwtSigner(ks))
+            using (var verifier = new JwtVerifier(ks))
+            {
+                var signedoutput = signer.SignCompact(JObject.Parse(jsonInput));
+
+                Console.WriteLine(signedoutput);
+                Expect(verifier.VerifyCompact(signedoutput), Is.True);
+                
+                Expect(signer.VerifyCompact(signedoutput), Is.True);
+
+            }
+        }
+
 
 
         [TestCase("hmac", "")]
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndVerifyBad(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -75,6 +100,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndVerifyShort(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -96,6 +122,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndVerifyMessage(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -114,6 +141,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndTryVerifyMessage(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -139,6 +167,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndVerifyMessageBad(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -158,6 +187,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndTryVerifyMessageBad(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -181,6 +211,7 @@ namespace KeyczarTest
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestSignAndTryVerifyMessageShort(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);

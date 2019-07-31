@@ -13,52 +13,27 @@
  *  limitations under the License.
  */
 
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
+using System;
 using System.Linq;
-using System.Text;
 
 namespace Keyczar
 {
-    /// <summary>
-    /// standard key set
-    /// </summary>
-    public class KeySet : IKeySet
+    public class KeySet : FileSystemKeySet
     {
-        private readonly string _location;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="KeySet"/> class.
-        /// </summary>
-        /// <param name="keySetLocation">The key set location.</param>
-        public KeySet(string keySetLocation)
+        public static IKeySet LayerSecurity(Func<IRootProviderKeySet> rootKeyetCreator,
+                                      params Func<IKeySet, ILayeredKeySet>[] layeredKeysetCreators)
         {
-            _location = keySetLocation;
+            IKeySet keyset = rootKeyetCreator();
+            return layeredKeysetCreators.Aggregate(keyset, (current, layered) => layered(current));
         }
 
-        /// <summary>
-        /// Gets the binary data that the key is stored in.
-        /// </summary>
-        /// <param name="version">The version.</param>
-        /// <returns></returns>
-        public byte[] GetKeyData(int version)
-        {
-            var path = Path.Combine(_location, version.ToString(CultureInfo.InvariantCulture));
-            return File.ReadAllBytes(path);
-        }
+		[Obsolete("KeySet.Creator doesn't exist", error: true)]
+		public new static Func<FileSystemKeySet> Creator(string location)
+		    => throw new NotSupportedException();
 
-        /// <summary>
-        /// Gets the metadata.
-        /// </summary>
-        /// <value>The metadata.</value>
-        public KeyMetadata Metadata
+        [Obsolete("Use `FileSystemKeyset` instead")]
+        public KeySet(string keySetLocation) : base(keySetLocation)
         {
-            get
-            {
-                var path = Path.Combine(_location, "meta");
-                return KeyMetadata.Read(File.ReadAllText(path, Keyczar.RawStringEncoding));
-            }
         }
     }
 }

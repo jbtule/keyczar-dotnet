@@ -1,13 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Keyczar", "Keyczar\Keyczar.csproj", "{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29020.237
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Keyczar", "Keyczar\Keyczar.csproj", "{20FCD1CA-6F4D-424F-AD9C-A20A622BCA14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyczarTest", "KeyczarTest\KeyczarTest.csproj", "{04AF71F6-BC6C-438F-9DB2-29E15FDDB77C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyczarTest", "KeyczarTest\KeyczarTest.csproj", "{04AF71F6-BC6C-438F-9DB2-29E15FDDB77C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyczarTool.Minified", "KeyczarTool.Minified\KeyczarTool.Minified.csproj", "{CD70F4E2-DA86-48D9-9BBC-5C782437474D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyczarTool", "KeyczarTool\KeyczarTool.csproj", "{05D8AB68-51EC-4EE1-898B-FFE7D7B7F474}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KeyczarTool", "KeyczarTool\KeyczarTool.csproj", "{05D8AB68-51EC-4EE1-898B-FFE7D7B7F474}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,6 @@ Global
 		{04AF71F6-BC6C-438F-9DB2-29E15FDDB77C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04AF71F6-BC6C-438F-9DB2-29E15FDDB77C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04AF71F6-BC6C-438F-9DB2-29E15FDDB77C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD70F4E2-DA86-48D9-9BBC-5C782437474D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD70F4E2-DA86-48D9-9BBC-5C782437474D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD70F4E2-DA86-48D9-9BBC-5C782437474D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD70F4E2-DA86-48D9-9BBC-5C782437474D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{05D8AB68-51EC-4EE1-898B-FFE7D7B7F474}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{05D8AB68-51EC-4EE1-898B-FFE7D7B7F474}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{05D8AB68-51EC-4EE1-898B-FFE7D7B7F474}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,7 +31,35 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2213B8B9-CD4E-4CDD-BCFF-F65D2B22649D}
+	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Keyczar\Keyczar.csproj
+		Policies = $0
+		$0.TextStylePolicy = $8
+		$1.inheritsSet = null
+		$1.scope = text/x-csharp
+		$0.CSharpFormattingPolicy = $2
+		$2.scope = text/x-csharp
+		$3.FileWidth = 100
+		$3.TabsToSpaces = True
+		$3.NoTabsAfterNonTabs = True
+		$3.scope = text/plain
+		$4.inheritsSet = null
+		$4.scope = application/config+xml
+		$0.XmlFormattingPolicy = $9
+		$5.inheritsSet = null
+		$5.scope = application/config+xml
+		$6.inheritsSet = null
+		$6.scope = application/xml
+		$7.scope = application/xml
+		$8.inheritsSet = null
+		$8.scope = text/microsoft-resx
+		$9.inheritsSet = null
+		$9.scope = text/microsoft-resx
+		$0.StandardHeader = $10
+		$0.DotNetNamingPolicy = $11
+		$11.DirectoryNamespaceAssociation = PrefixedHierarchical
 	EndGlobalSection
 EndGlobal

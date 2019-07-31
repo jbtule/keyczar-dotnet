@@ -18,7 +18,11 @@ using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
+    [TestFixture("py3")]
+    [TestFixture("cs")]
+    [TestFixture("py")]
+    [TestFixture("j")]
+    [TestFixture("go")]
     public class RsaBasic : CrypterBasicInterop
     {
         public RsaBasic(string imp)
@@ -33,17 +37,6 @@ namespace KeyczarTest.Interop
         public void DecryptVariousSizes(string size)
         {
             HelperDecryptVariousSizes(size);
-        }
-    }
-
-    [TestFixture]
-    public class RsaFull : CrypterFullInterop
-    {
-        public RsaFull(string imp)
-            : base(imp)
-        {
-            Location = "rsa";
-            SignLocation = "dsa.public";
         }
     }
 }

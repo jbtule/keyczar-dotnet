@@ -110,7 +110,7 @@ namespace Keyczar.Util
             using (var output = new MemoryStream())
             {
                 var serializer = new JsonSerializer {ContractResolver = new CamelCasePropertyNamesContractResolver(),};
-                var writer = new BsonWriter(output);
+                var writer = new BsonDataWriter(output);
                 serializer.Serialize(writer, value);
                 output.Flush();
                 return output.ToArray();
@@ -243,13 +243,13 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static byte[] ReadHeader(byte[] data, out byte[] keyHash)
         {
-            var output = new byte[Keyczar.HeaderLength];
+            var output = new byte[KeyczarConst.HeaderLength];
 
             Array.Copy(data, 0, output, 0, output.Length);
-            keyHash = new byte[Keyczar.KeyHashLength];
-            Array.Copy(data, Keyczar.FormatBytes.Length, keyHash, 0, keyHash.Length);
+            keyHash = new byte[KeyczarConst.KeyHashLength];
+            Array.Copy(data, KeyczarConst.FormatBytes.Length, keyHash, 0, keyHash.Length);
 
-            if (output[0] != Keyczar.FormatVersion)
+            if (output[0] != KeyczarConst.FormatVersion)
                 throw new InvalidCryptoVersionException("The version identifier doesn't match the current framework.");
 
             return output;
@@ -263,12 +263,12 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static byte[] ReadHeader(Stream data, out byte[] keyHash)
         {
-            var output = new byte[Keyczar.HeaderLength];
+            var output = new byte[KeyczarConst.HeaderLength];
             data.Read(output, 0, output.Length);
-            keyHash = new byte[Keyczar.KeyHashLength];
-            Array.Copy(output, Keyczar.FormatBytes.Length, keyHash, 0, keyHash.Length);
+            keyHash = new byte[KeyczarConst.KeyHashLength];
+            Array.Copy(output, KeyczarConst.FormatBytes.Length, keyHash, 0, keyHash.Length);
 
-            if (output[0] != Keyczar.FormatVersion)
+            if (output[0] != KeyczarConst.FormatVersion)
                 throw new InvalidCryptoVersionException("The version identifier doesn't match the current framework.");
 
             return output;
@@ -283,6 +283,29 @@ namespace Keyczar.Util
         public static byte[] HashKey(int size, params byte[][] components)
         {
             var sha1 = new Sha1Digest();
+
+            foreach (var data in components)
+            {
+                sha1.BlockUpdate(data, 0, data.Length);
+            }
+
+            var hash = new byte[sha1.GetDigestSize()];
+            sha1.DoFinal(hash, 0);
+            sha1.Reset();
+            var outBytes = new byte[size];
+            Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
+            return outBytes;
+        }
+        
+        /// <summary>
+        /// Hashes the key for keyczar version look ups.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="components">The components.</param>
+        /// <returns></returns>
+        public static byte[] UnofficalHashKey(int size, params byte[][] components)
+        {
+            var sha1 = new Sha256Digest();
 
             foreach (var data in components)
             {
@@ -320,6 +343,31 @@ namespace Keyczar.Util
             Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
             return outBytes;
         }
+        
+        /// <summary>
+        /// Hashes each component of the key hash with it's length first.
+        /// </summary>
+        /// <param name="size">The size.</param>
+        /// <param name="components">The components.</param>
+        /// <returns></returns>
+        public static byte[] UnofficialHashKeyLengthPrefix(int size, params byte[][] components)
+        {
+            var sha1 = new Sha256Digest();
+
+            foreach (var data in components)
+            {
+                byte[] length = GetBytes(data.Length);
+                sha1.BlockUpdate(length, 0, length.Length);
+                sha1.BlockUpdate(data, 0, data.Length);
+            }
+            var hash = new byte[sha1.GetDigestSize()];
+            sha1.DoFinal(hash, 0);
+            sha1.Reset();
+            var outBytes = new byte[size];
+            Array.Copy(hash, 0, outBytes, 0, outBytes.Length);
+            return outBytes;
+        }
+
 
 
         /// <summary>

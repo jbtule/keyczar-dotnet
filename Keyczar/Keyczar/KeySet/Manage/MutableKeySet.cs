@@ -36,7 +36,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="MutableKeySet" /> class.
         /// </summary>
         /// <param name="location">The location.</param>
-        public MutableKeySet(string location) : this(new KeySet(location))
+        public MutableKeySet(string location) : this(new FileSystemKeySet(location))
         {
         }
 
@@ -47,7 +47,7 @@ namespace Keyczar
         /// <exception cref="InvalidKeySetException">Only empty key sets can be created using just the KeyMetadata.</exception>
         public MutableKeySet(KeyMetadata emptyKeySet)
         {
-            _metadata = emptyKeySet;
+            _metadata = new KeyMetadata(emptyKeySet);
             if (_metadata.Versions.Any())
             {
                 throw new InvalidKeySetException("Only empty key sets can be created using just the KeyMetadata.");
@@ -55,18 +55,24 @@ namespace Keyczar
         }
 
         /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
+        
+        /// <summary>
         /// Initializes a new instance of the <see cref="MutableKeySet"/> class.
         /// </summary>
         /// <param name="keySet">The key set.</param>
         public MutableKeySet(IKeySet keySet)
         {
-            _metadata = keySet.Metadata;
+            _metadata = new KeyMetadata(keySet.Metadata);
 
             foreach (var version in keySet.Metadata.Versions)
             {
                 //Easy way to deep copy keys
                 var keyData = keySet.GetKeyData(version.VersionNumber);
-                var key = Key.Read(_metadata.KeyType, keyData);
+                var keyType = _metadata.GetKeyType(version.VersionNumber);
+                var key = Key.Read(keyType, keyData, Config);
                 keyData.Clear();
                 _keys.Add(version.VersionNumber, key);
             }
@@ -109,21 +115,28 @@ namespace Keyczar
         /// </summary>
         /// <param name="status">The status.</param>
         /// <param name="keySize">Size of the key.</param>
+        /// <param name="type">The Key type.</param>
         /// <param name="options">The options. dictionary or annoymous type of properties to set</param>
+        /// <param name="comment"></param>
         /// <returns></returns>
-        public int AddKey(KeyStatus status, int keySize = 0, object options = null)
+        public int AddKey(KeyStatus status, int keySize =0, KeyType type =null,object options=null, string comment = null)
         {
-            Key key;
-            bool loop;
-            do
+            if (type != null && Metadata.Kind != null && type.Kind != Metadata.Kind)
             {
-                loop = false;
-                key = Key.Generate(_metadata.KeyType, keySize);
-                if (options != null)
-                {
-                    var dict = options as IDictionary<string, object>;
-                    if (dict == null)
-                        Utility.CopyProperties(options, key);
+                throw new InvalidKeyTypeException($"Keyset only supports {Metadata.Kind} keys");
+            }
+
+		      	Key key;
+		      	bool loop;
+		      	do{
+			        	loop = false;
+                key = Key.Generate(type??_metadata.DefaultKeyType, keySize);
+	            if (options != null)
+	            {
+	                var dict = options as IDictionary<string, object>;
+                    if(dict ==null)
+	                    Utility.CopyProperties(options, key);
+
                     else
                         Utility.CopyProperties(dict, key);
                 }
@@ -138,7 +151,7 @@ namespace Keyczar
                     }
                 }
             } while (loop);
-            return AddKey(status, key);
+            return AddKey(status, key, comment);
         }
 
         /// <summary>
@@ -147,8 +160,21 @@ namespace Keyczar
         /// <param name="status">The status.</param>
         /// <param name="key">The key.</param>
         /// <returns></returns>
-        public int AddKey(KeyStatus status, Key key)
+        public int AddKey(KeyStatus status, Key key, string comment = null)
         {
+            if (key.KeyType.Kind != Metadata.Kind && Metadata.Kind != null)
+            {
+                throw new InvalidKeyTypeException($"Keyset only supports {Metadata.Kind} keys");
+            }
+
+#pragma warning disable 618
+            if (Metadata.KeyType != null)
+            {
+                //Once We add a key our new format shouldn't track the old one anymore
+                Metadata.KeyType = null;
+            }
+#pragma warning restore 618
+
             int lastVersion = 0;
             foreach (var version in _metadata.Versions)
             {
@@ -156,8 +182,8 @@ namespace Keyczar
                     version.Status = KeyStatus.Active;
                 lastVersion = Math.Max(lastVersion, version.VersionNumber);
             }
-            _metadata.Versions.Add(new KeyVersion() {Status = status, VersionNumber = ++lastVersion});
 
+            _metadata.Versions.Add(new KeyVersion(status, ++lastVersion, key, comment));
             _keys.Add(lastVersion, key);
             onlyMetaChanged = false;
             return lastVersion;
@@ -243,7 +269,8 @@ namespace Keyczar
         /// <returns></returns>
         public MutableKeySet PublicKey()
         {
-            if (!typeof (IPrivateKey).IsAssignableFrom(Metadata.KeyType.RepresentedType))
+
+            if(Metadata.Kind != KeyKind.Private)
             {
                 return null;
             }
@@ -253,18 +280,23 @@ namespace Keyczar
                                   ? KeyPurpose.Verify
                                   : KeyPurpose.Encrypt;
 
-            var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
-                                  .Select(
-                                      p =>
-                                      new
-                                          {
-                                              p.Key,
-                                              Type = p.PublicKey.KeyType,
-                                              Value = Keyczar.RawStringEncoding.GetBytes(p.PublicKey.ToJson())
-                                          })
-                                  .Select(p => new {p.Key, Value = Key.Read(p.Type, p.Value)});
+#pragma warning disable 618
+            newMeta.KeyType = null; //Keytype only matters to old style empty keysets 
+#pragma warning restore 618
 
-            newMeta.KeyType = copiedKeys.Select(it => it.Value.KeyType).First();
+            newMeta.Kind = KeyKind.Public;
+
+            var copiedKeys = _keys.Select(p => new {p.Key, ((IPrivateKey) p.Value).PublicKey})
+                .Select(p => new {p.Key, Type = p.PublicKey.KeyType, Value = this.GetConfig().RawStringEncoding.GetBytes(p.PublicKey.ToJson())})
+                .Select(p => new {p.Key, Value = Key.Read(p.Type,p.Value, Config)}).ToList();
+
+
+            //Update versions to public key type
+            foreach (var key in copiedKeys)
+            {
+               var newVersion = newMeta.Versions.Single(it => it.VersionNumber == key.Key);
+                newVersion.KeyType = key.Value.KeyType;
+            }
 
             return new MutableKeySet(newMeta, copiedKeys.ToDictionary(k => k.Key, v => v.Value));
         }
@@ -276,17 +308,14 @@ namespace Keyczar
         /// <returns></returns>
         public byte[] GetKeyData(int version)
         {
-            return Keyczar.RawStringEncoding.GetBytes(_keys[version].ToJson());
+            return this.GetConfig().RawStringEncoding.GetBytes(_keys[version].ToJson());
         }
 
         /// <summary>
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
-        public KeyMetadata Metadata
-        {
-            get { return _metadata; }
-        }
+        public KeyMetadata Metadata => _metadata;
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -294,15 +323,6 @@ namespace Keyczar
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Finalizes an instance of the <see cref="MutableKeySet" /> class.
-        /// </summary>
-        ~MutableKeySet()
-        {
-            Dispose(false);
         }
 
         /// <summary>

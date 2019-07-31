@@ -14,6 +14,10 @@
  */
 
 using System;
+using System.ComponentModel;
+using System.Linq;
+using Keyczar.Util;
+using Newtonsoft.Json;
 
 namespace Keyczar
 {
@@ -29,6 +33,19 @@ namespace Keyczar
         {
             Status = KeyStatus.Active;
         }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KeyVersion"/> class.
+        /// </summary>
+        public KeyVersion(KeyStatus status, int versionNumber, Key key, string comment = null)
+        {
+            Status = status;
+            VersionNumber = versionNumber;
+            KeyType = key.KeyType;
+            KeyId = key.GetKeyHash();
+            Exportable = false;
+            Comment = comment;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyVersion"/> class.
@@ -39,13 +56,42 @@ namespace Keyczar
             VersionNumber = keyVersion.VersionNumber;
             Exportable = keyVersion.Exportable;
             Status = keyVersion.Status;
+            KeyType = keyVersion.KeyType;
+            KeyId = keyVersion.KeyId;
+            Comment = keyVersion.Comment;
         }
+
+        /// <summary>
+        /// Gets or sets the type of the key.
+        /// </summary>
+        /// <value>
+        /// The type of the key.
+        /// </value>
+        [JsonProperty(PropertyName = "Type", NullValueHandling = NullValueHandling.Ignore)]
+        public KeyType KeyType { get; set; }
+        
+        
+        /// <summary>
+        /// Gets or sets the type of the key.
+        /// </summary>
+        /// <value>
+        /// The type of the key.
+        /// </value>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1819:PropertiesShouldNotReturnArrays")]
+        [JsonConverter(typeof (WebSafeBase64ByteConverter))]
+        public byte[] KeyId { get; set; }
 
         /// <summary>
         /// Gets or sets the version number.
         /// </summary>
         /// <value>The version number.</value>
         public int VersionNumber { get; set; }
+         
+        
+        [DefaultValue("")]
+        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Populate)]
+        public string Comment { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="KeyVersion"/> is exportable.
@@ -181,7 +227,14 @@ namespace Keyczar
         /// </returns>
         public override int GetHashCode()
         {
-            return VersionNumber;
+          
+            unchecked
+            {
+                // ReSharper disable once NonReadonlyMemberInGetHashCode
+                var result = VersionNumber;
+                result = (result * 397) ^ GetType().ToString().GetHashCode();
+                return result;
+            }
         }
     }
 }

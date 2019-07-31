@@ -62,12 +62,13 @@ namespace Keyczar.Unofficial
         /// Gets or sets the mode (Only GCM is supported).
         /// </summary>
         /// <value>The mode.</value>
-        public string Mode { get; set; }
+        public AesMode Mode { get; set; }
 
 
         /// <summary>
         /// The GCM mode
         /// </summary>
+        [Obsolete("Use AesMode.Gcm instead.")]
         public static readonly string GcmMode = "GCM";
 
         /// <summary>
@@ -75,7 +76,7 @@ namespace Keyczar.Unofficial
         /// </summary>
         public AesAeadKey()
         {
-            Mode = GcmMode; //Default Mode
+            Mode = AesMode.Gcm; //Default Mode
             IVLength = 12;
         }
 
@@ -93,7 +94,7 @@ namespace Keyczar.Unofficial
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
-        protected override void GenerateKey(int size)
+        protected override void GenerateKey(int size, KeyczarConfig config)
         {
             AesKeyBytes = new byte[size/8];
             Secure.Random.NextBytes(AesKeyBytes);
@@ -105,8 +106,14 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
-                                   Encoding.UTF8.GetBytes(Mode), Utility.GetBytes(IVLength), AesKeyBytes);
+            return GenerateKeyHash(AesKeyBytes, IVLength, Mode);
+    
+        }
+
+        public static byte[] GenerateKeyHash(byte[] keyBytes, int ivLength, AesMode mode)
+        {
+            return Utility.UnofficalHashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(keyBytes.Length),
+                mode.ToBytes(), Utility.GetBytes(ivLength), keyBytes);
         }
 
         /// <summary>
@@ -116,18 +123,22 @@ namespace Keyczar.Unofficial
         public override IEnumerable<byte[]> GetFallbackKeyHash()
         {
             var list = new List<byte[]>();
-            if (IVLength == 16 && Mode == GcmMode)
+            if (IVLength == 16 && Mode == AesMode.Gcm)
             {
                 //Pre IVLength property existing key hash
-                list.Add(Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
-                                         Encoding.UTF8.GetBytes(Mode), AesKeyBytes));
+                list.Add(Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
+                                         Mode.ToBytes(), AesKeyBytes));
             }
+            
+            list.Add(Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length),
+                Mode.ToBytes(), Utility.GetBytes(IVLength), AesKeyBytes));
+            
             return list;
         }
 
         private Func<IAeadBlockCipher> GetMode()
         {
-            if (Mode == GcmMode)
+            if (Mode == AesMode.Gcm)
             {
                 return () => _cipher;
             }
@@ -138,23 +149,18 @@ namespace Keyczar.Unofficial
 
         private KeyParameter GetKeyParameters()
         {
-            if (_keyParm == null)
-            {
-                _keyParm = new KeyParameter(AesKeyBytes);
-            }
-
-            return _keyParm;
+            return _keyParm ?? (_keyParm = new KeyParameter(AesKeyBytes));
         }
 
 
-        private readonly GcmBlockCipher _cipher = new GcmBlockCipher(new AesFastEngine(), new Tables8kGcmMultiplier());
+        private readonly GcmBlockCipher _cipher = new GcmBlockCipher(new AesEngine(), new Tables8kGcmMultiplier());
 
         /// <summary>
         /// Gets the encrypting stream.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar)
+        public FinishingStream GetEncryptingStream(Stream output,KeyczarBase keyczar)
         {
             var randomNonce = new byte[IVLength];
             Secure.Random.NextBytes(randomNonce);
@@ -173,37 +179,29 @@ namespace Keyczar.Unofficial
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns>null as authentication is built in to the encryption</returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar)
-        {
-            return null; //One stop encrypting and signing;
-        }
+        public HashingStream GetAuthSigningStream(KeyczarBase keyczar) => null;
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns>null as authentication is built in to the decryption</returns>
-        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
-        {
-            return null; //One stop verifying and decrypting
-        }
+        public VerifyingStream GetAuthVerifyingStream(KeyczarBase keyczar) => null;
 
         /// <summary>
         /// Gets the decrypting stream.
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar)
-        {
-            return new SymmetricAeadStream(
-                GetMode(),
-                output,
-                new byte[IVLength],
-                TagLength,
-                (nonce, cipher, additionalData, encrypt) =>
-                cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength*8, nonce, additionalData)),
-                encrypt: false
+        public FinishingStream GetDecryptingStream(Stream output,KeyczarBase keyczar) 
+            => new SymmetricAeadStream(
+                    GetMode(),
+                    output,
+                    new byte[IVLength],
+                    TagLength,
+                    (nonce, cipher, additionalData, encrypt) =>
+                        cipher.Init(encrypt, new AeadParameters(GetKeyParameters(), TagLength*8, nonce, additionalData)),
+                    encrypt: false
                 );
-        }
 
 
         /// <summary>

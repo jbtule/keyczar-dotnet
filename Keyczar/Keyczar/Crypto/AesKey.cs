@@ -64,7 +64,7 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public override byte[] GetKeyHash()
         {
-            return Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
+            return Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(AesKeyBytes.Length), AesKeyBytes,
                                    HmacKey.HmacKeyBytes);
         }
 
@@ -78,10 +78,10 @@ namespace Keyczar.Crypto
             return new byte[][]
                        {
                            //Java keyczar uses block length instead of keylength for hash
-                           Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
+                           Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(BlockLength), AesKeyBytes,
                                            HmacKey.HmacKeyBytes),
                            //c++ keyczar used to strip leading zeros from key bytes
-                           Utility.HashKey(Keyczar.KeyHashLength, Utility.GetBytes(trimmedKeyBytes.Length),
+                           Utility.HashKey(KeyczarConst.KeyHashLength, Utility.GetBytes(trimmedKeyBytes.Length),
                                            trimmedKeyBytes,
                                            HmacKey.HmacKeyBytes),
                        };
@@ -99,7 +99,7 @@ namespace Keyczar.Crypto
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
-        protected override void GenerateKey(int size)
+        protected override void GenerateKey(int size, KeyczarConfig config)
         {
             AesKeyBytes = new byte[size/8];
             Secure.Random.NextBytes(AesKeyBytes);
@@ -121,19 +121,15 @@ namespace Keyczar.Crypto
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetAuthSigningStream(Keyczar keyczar)
-        {
-            return HmacKey.Maybe(h => h.GetSigningStream(keyczar), () => null);
-        }
+        public HashingStream GetAuthSigningStream(KeyczarBase keyczar) 
+            => HmacKey.Maybe(h => h.GetSigningStream(keyczar), () => null);
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetAuthVerifyingStream(Keyczar keyczar)
-        {
-            return HmacKey.Maybe(h => h.GetVerifyingStream(keyczar), () => null);
-        }
+        public VerifyingStream GetAuthVerifyingStream(KeyczarBase keyczar)
+            => HmacKey.Maybe(h => h.GetVerifyingStream(keyczar), () => null);
 
 
         /// <summary>
@@ -141,7 +137,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public virtual FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar)
+        public virtual FinishingStream GetEncryptingStream(Stream output,KeyczarBase keyczar)
         {
             var ivarr = new byte[BlockLength];
             Secure.Random.NextBytes(ivarr);
@@ -160,7 +156,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public virtual FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar)
+        public virtual FinishingStream GetDecryptingStream(Stream output,KeyczarBase keyczar)
         {
             return new SymmetricStream(
                 new PaddedBufferedBlockCipher(new CbcBlockCipher(new AesEngine()), new Pkcs7Padding()),
@@ -168,7 +164,8 @@ namespace Keyczar.Crypto
                 new byte[BlockLength],
                 HmacKey.Maybe(it => it.HashLength, () => 0),
                 (iv, cipher, encrypt) =>
-                cipher.Init(forEncryption: encrypt, parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
+                    cipher.Init(forEncryption: encrypt,
+                        parameters: new ParametersWithIV(new KeyParameter(AesKeyBytes), iv)),
                 encrypt: false);
         }
     }

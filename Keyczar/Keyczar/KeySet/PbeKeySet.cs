@@ -23,19 +23,24 @@ namespace Keyczar
     /// <summary>
     /// Password based encrypted Key Set
     /// </summary>
-    public class PbeKeySet : IKeySet, IDisposable
+    public class PbeKeySet : ILayeredKeySet, IDisposable
     {
         private IKeySet _keySet;
         private CachedPrompt _password;
 
+        public static Func<IKeySet, PbeKeySet> Creator(Func<string> passwordPrompt)
+        {
+            return keySet => new PbeKeySet(keySet, passwordPrompt);
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PbeKeySet"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
         /// <param name="passwordPrompt">The password prompt.</param>
+        [Obsolete("Use `KeySet.LayerSecurity` with `FileSystemKeyset.Creator` and `PbeKeySet.Creator`")]
         public PbeKeySet(string keySetLocation, Func<string> passwordPrompt)
-            : this(new KeySet(keySetLocation), passwordPrompt)
+            : this(new FileSystemKeySet(keySetLocation), passwordPrompt)
         {
         }
 
@@ -64,46 +69,48 @@ namespace Keyczar
                 return cipherData;
             }
 
-            var cipherString = Keyczar.RawStringEncoding.GetString(cipherData);
+            var cipherString = this.GetConfig().RawStringEncoding.GetString(cipherData);
             var store = JsonConvert.DeserializeObject<PbeKeyStore>(cipherString);
 
             return store.DecryptKeyData(_password.Prompt);
         }
+        
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
+
+
 
         /// <summary>
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
-        public KeyMetadata Metadata
-        {
-            get { return _keySet.Metadata; }
-        }
+        public KeyMetadata Metadata => _keySet.Metadata;
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="PbeKeySet" /> class.
-        /// </summary>
-        ~PbeKeySet()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources.
-        /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
         protected virtual void Dispose(bool disposing)
         {
-            _keySet = null;
-            _password = _password.SafeDispose();
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _keySet = _keySet.SafeDispose();
+                    _password = _password.SafeDispose();
+                }
+
+                disposedValue = true;
+            }
         }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+        }
+        #endregion
     }
 }

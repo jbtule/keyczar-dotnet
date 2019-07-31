@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using Keyczar;
 using Keyczar.Util;
-using ManyConsole;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool.Commands
 {
@@ -23,7 +23,7 @@ namespace KeyczarTool.Commands
 
         public override int Run(string[] remainingArguments)
         {
-            IKeySet ks = new KeySet(_location);
+            IKeySet ks = new FileSystemKeySet(_location);
 
 
             bool add = !ks.Metadata.Encrypted;
@@ -42,7 +42,7 @@ namespace KeyczarTool.Commands
             {
                 keySet.ForceKeyDataChange();
 
-                IKeySetWriter writer = new KeySetWriter(_location, overwrite: true);
+                IKeySetWriter writer = new FileSystemKeySetWriter(_location, overwrite: true);
                 if (!_remove)
                 {
                     Console.WriteLine(Localized.PasswordPromptNewPassword);

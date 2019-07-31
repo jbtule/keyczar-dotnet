@@ -36,7 +36,7 @@ namespace Keyczar
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
         public Crypter(string keySetLocation)
-             : this(new KeySet(keySetLocation))
+             : this(new FileSystemKeySet(keySetLocation))
         {
         }
 
@@ -60,7 +60,7 @@ namespace Keyczar
         /// <returns></returns>
         public string Decrypt(WebBase64 data)
         {
-            return RawStringEncoding.GetString(Decrypt(data.ToBytes()));
+            return Config.RawStringEncoding.GetString(Decrypt(data.ToBytes()));
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Keyczar
                         FinishingStream crypterStream; 
                         resetStream.Reset();
                        
-                        input.Seek(HeaderLength, SeekOrigin.Current);
+                        input.Seek(KeyczarConst.HeaderLength, SeekOrigin.Current);
                         crypterStream = cryptKey.Maybe(m => m.GetDecryptingStream(wrapper, this), () => new DummyStream());
                         
                         try

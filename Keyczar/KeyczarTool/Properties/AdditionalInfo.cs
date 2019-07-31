@@ -4,5 +4,5 @@ using System.Runtime.InteropServices;
 
 
 
-[assembly: InternalsVisibleTo("KeyczarTest")]
-
+[assembly: InternalsVisibleTo("KeyczarTestNetCore")]
+[assembly: InternalsVisibleTo("KeyczarTestNetFrwk")]

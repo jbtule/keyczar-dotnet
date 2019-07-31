@@ -25,6 +25,7 @@ namespace Keyczar.Crypto
     /// </summary>
     public interface IKey
     {
+
         /// <summary>
         /// Gets the key hash.
         /// </summary>
@@ -54,7 +55,7 @@ namespace Keyczar.Crypto
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        HashingStream GetSigningStream(Keyczar keyczar);
+        HashingStream GetSigningStream(KeyczarBase keyczar);
     }
 
     /// <summary>
@@ -66,7 +67,7 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        VerifyingStream GetVerifyingStream(Keyczar keyczar);
+        VerifyingStream GetVerifyingStream(KeyczarBase keyczar);
     }
 
     /// <summary>
@@ -79,13 +80,13 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        FinishingStream GetEncryptingStream(Stream output,Keyczar keyczar);
+        FinishingStream GetEncryptingStream(Stream output,KeyczarBase keyczar);
 
         /// <summary>
         /// Gets the authentication signing stream.
         /// </summary>
         /// <returns></returns>
-        HashingStream GetAuthSigningStream(Keyczar keyczar);
+        HashingStream GetAuthSigningStream(KeyczarBase keyczar);
     }
 
     /// <summary>
@@ -98,13 +99,13 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        FinishingStream GetDecryptingStream(Stream output,Keyczar keyczar);
+        FinishingStream GetDecryptingStream(Stream output,KeyczarBase keyczar);
 
         /// <summary>
         /// Gets the authentication verifying stream.
         /// </summary>
         /// <returns></returns>
-        VerifyingStream GetAuthVerifyingStream(Keyczar keyczar);
+        VerifyingStream GetAuthVerifyingStream(KeyczarBase keyczar);
     }
 
     /// <summary>

@@ -23,7 +23,11 @@ using NUnit.Framework;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
+    [TestFixture("py3")]
+    [TestFixture("cs")]
+    [TestFixture("py")]
+    [TestFixture("j")]
+    [TestFixture("go")]
     public class AesCrypted : Interop
     {
         public AesCrypted(string implementation) : base(implementation)
@@ -39,7 +43,9 @@ namespace KeyczarTest.Interop
             var activeCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(dataPath, "1.out")).First();
             var primaryCiphertext = (WebBase64) File.ReadAllLines(Path.Combine(dataPath, "2.out")).First();
             using (var keyDecrypter = new Crypter(keyPath))
-            using (var crypter = new Crypter(new EncryptedKeySet(dataPath, keyDecrypter)))
+            using (var ks = KeySet.LayerSecurity(FileSystemKeySet.Creator(dataPath),
+                                                 EncryptedKeySet.Creator(keyDecrypter)))
+            using (var crypter = new Crypter(ks))
             {
                 var activeDecrypted = crypter.Decrypt(activeCiphertext);
                 Expect(activeDecrypted, Is.EqualTo(Input));

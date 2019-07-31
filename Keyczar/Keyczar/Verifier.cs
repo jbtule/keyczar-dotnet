@@ -28,14 +28,14 @@ namespace Keyczar
     /// <summary>
     /// Verifies signed data using a given key set.
     /// </summary>
-    public class Verifier:Keyczar
+    public class Verifier:KeyczarBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Verifier"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
         public Verifier(string keySetLocation)
-            : this(new KeySet(keySetLocation))
+            : this(new FileSystemKeySet(keySetLocation))
         {
         }
 
@@ -60,10 +60,8 @@ namespace Keyczar
 		/// <param name="rawData">The raw data.</param>
 		/// <param name="signature">The signature.</param>
 		/// <returns></returns>
-		public bool Verify(string rawData, WebBase64 signature)
-        {
-			return Verify(RawStringEncoding.GetBytes(rawData), signature.ToBytes());
-        }
+		public bool Verify(string rawData, WebBase64 signature) 
+		    => Verify(Config.RawStringEncoding.GetBytes(rawData), signature.ToBytes());
 
         /// <summary>
         /// Verifies the specified raw data.
@@ -88,13 +86,13 @@ namespace Keyczar
         /// <exception cref="InvalidCryptoDataException">Signature missing header information.</exception>
         protected virtual IEnumerable<IVerifierKey> GetKeys( byte[] signature, out byte[] trimmedSignature)
         {
-            if(signature.Length < HeaderLength)
+            if(signature.Length < KeyczarConst.HeaderLength)
                 throw new InvalidCryptoDataException("Signature missing header information.");
 
             byte[] keyHash;
             Utility.ReadHeader(signature, out keyHash);
-            trimmedSignature = new byte[signature.Length - HeaderLength];
-            Array.Copy(signature, HeaderLength, trimmedSignature, 0, trimmedSignature.Length);
+            trimmedSignature = new byte[signature.Length - KeyczarConst.HeaderLength];
+            Array.Copy(signature, KeyczarConst.HeaderLength, trimmedSignature, 0, trimmedSignature.Length);
             var keys = GetKey(keyHash);
             return keys.Select(it=>it as IVerifierKey);
         }
@@ -106,10 +104,8 @@ namespace Keyczar
         /// <param name="signature">The signature.</param>
         /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
-        public bool Verify(Stream input, byte[] signature, long inputLength = -1)
-        {
-            return Verify(input, signature, inputLength:inputLength, prefixData: null, postfixData: null);
-        }
+        public bool Verify(Stream input, byte[] signature, long inputLength = -1) 
+            => Verify(input, signature, inputLength:inputLength, prefixData: null, postfixData: null);
 
         /// <summary>
         /// Prefixes the data before verifying.
@@ -127,7 +123,7 @@ namespace Keyczar
         /// <param name="extra">The extra data passed by postfixData</param>
         protected virtual void PostfixDataVerify(VerifyingStream verifyingStream, object extra)
         {
-            verifyingStream.Write(FormatBytes, 0, FormatBytes.Length);
+            verifyingStream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
         }
 
         /// <summary>
@@ -159,12 +155,10 @@ namespace Keyczar
                             byte[] buffer = reader.ReadBytes(adjustedBufferSize);
                             verifyStream.Write(buffer, 0, buffer.Length);
                         }
-                            PostfixDataVerify(verifyStream,postfixData);
+                        PostfixDataVerify(verifyStream,postfixData);
 
                         try
                         {
-
-
                             if (verifyStream.VerifySignature(trimmedSig))
                             {
                                 return true;

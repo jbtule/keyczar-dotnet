@@ -18,9 +18,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Keyczar.Unofficial;
-using ManyConsole;
-using NDesk.Options;
 using Keyczar;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool
 {
@@ -31,9 +30,8 @@ namespace KeyczarTool
         private string _pupose;
         private string _name;
         private bool _asymm;
-        private string _asymmAlg;
         private bool _unofficial;
-
+        private string _asymmAlg;
         public Create()
         {
             this.IsCommand("create", Localized.Create);
@@ -41,14 +39,14 @@ namespace KeyczarTool
             this.HasRequiredOption("o|purpose=", Localized.Purpose, v => { _pupose = v; });
             this.HasOption("n|name=", Localized.Name, v => { _name = v; });
             this.HasOption("a|asymmetric:", Localized.Asymmetric, v =>
-                                                                      {
-                                                                          _asymm = true;
-                                                                          _asymmAlg = v;
-                                                                      });
+                                                                  {
+                                                                      _asymm = true;
+                                                                      _asymmAlg = v;
+                                                                  });
             this.HasOption("u|unofficial:", Localized.UnofficialCreate, v =>
-                                                                            {
-                                                                                _unofficial = true;
-                                                                            });
+                                                                        {
+                                                                            _unofficial = true;
+                                                                        });
             this.SkipsCommandSummaryBeforeRunning();
         }
 
@@ -56,18 +54,23 @@ namespace KeyczarTool
         {
             KeyPurpose purpose = _pupose == "sign" ? KeyPurpose.SignAndVerify : KeyPurpose.DecryptAndEncrypt;
 
-            KeyType type = PickKeyType(purpose);
+            KeyType officalKeyType = null;
+            if(!_unofficial)
+            {
+                officalKeyType = PickKeyTypeOfficialKeyczar(purpose);
+            }
 
 
-            var meta = new KeyMetadata()
-                           {
-                               Name = _name,
-                               Purpose = purpose,
-                               KeyType = type,
-                           };
+            var meta =new KeyMetadata(officialMetaDataKeyType: officalKeyType)
+                {
+                    Name = _name,
+                    Purpose = purpose,
+                    Kind = _asymm ? KeyKind.Private : KeyKind.Symmetric,
+                };
+
             using (var keySet = new MutableKeySet(meta))
             {
-                if (keySet.Save(new KeySetWriter(_location)))
+                if (keySet.Save(new FileSystemKeySetWriter(_location)))
                 {
                     Console.WriteLine(Localized.MsgCreatedKeySet);
                     return 0;
@@ -78,7 +81,7 @@ namespace KeyczarTool
             return -1;
         }
 
-        private KeyType PickKeyType(KeyPurpose purpose)
+        private KeyType PickKeyTypeOfficialKeyczar(KeyPurpose purpose)
         {
             KeyType type;
             if (_asymm)
@@ -89,11 +92,7 @@ namespace KeyczarTool
                 }
                 else
                 {
-                    if (_unofficial)
-                    {
-                        type = UnofficialKeyType.RSAPrivSign;
-                    }
-                    else if (_asymmAlg == "rsa")
+                    if (_asymmAlg == "rsa")
                     {
                         type = KeyType.RsaPriv;
                     }
@@ -105,14 +104,7 @@ namespace KeyczarTool
             }
             else if (purpose == KeyPurpose.DecryptAndEncrypt)
             {
-                if (_unofficial)
-                {
-                    type = UnofficialKeyType.AesAead;
-                }
-                else
-                {
-                    type = KeyType.Aes;
-                }
+                type = KeyType.Aes;
             }
             else
             {
@@ -120,5 +112,6 @@ namespace KeyczarTool
             }
             return type;
         }
+
     }
 }

@@ -32,7 +32,7 @@ namespace KeyczarTest.Interop
             using (var verifier = new AttachedVerifier(path + ".public"))
             {
                 var primarySignature = (WebBase64) File.ReadAllLines(Path.Combine(path, "2.secret.attached")).First();
-                Expect(verifier.Verify(primarySignature, Keyczar.Keyczar.RawStringEncoding.GetBytes("secret")), Is.True);
+                Expect(verifier.Verify(primarySignature, verifier.Config.RawStringEncoding.GetBytes("secret")), Is.True);
             }
         }
 

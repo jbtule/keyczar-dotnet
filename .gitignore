@@ -39,3 +39,7 @@ tmp/
 *~
 .metadata
 .DS_Store
+
+.idea/
+.vs/
+.ionide/

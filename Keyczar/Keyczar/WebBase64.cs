@@ -34,20 +34,15 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawValue">The bytes.</param>
         /// <returns></returns>
-        public static implicit operator string(WebBase64 rawValue)
-        {
-            return rawValue.ToString();
-        }
+        public static implicit operator string(WebBase64 rawValue) => rawValue.ToString();
 
         /// <summary>
         /// Webs the base64.
         /// </summary>
         /// <param name="encodedValue">The web base64.</param>
         /// <returns></returns>
-        public static explicit operator WebBase64(string encodedValue)
-        {
-            return new WebBase64(encodedValue);
-        }
+        public static explicit operator WebBase64(string encodedValue) 
+            => new WebBase64(encodedValue);
 
         /// <summary>
         /// Froms the bytes.
@@ -55,9 +50,7 @@ namespace Keyczar
         /// <param name="rawValue">The bytes.</param>
         /// <returns></returns>
         public static WebBase64 FromBytes(byte[] rawValue)
-        {
-            return new WebBase64(rawValue);
-        }
+            => new WebBase64(rawValue);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="WebBase64" /> class.
@@ -81,10 +74,8 @@ namespace Keyczar
         /// To the bytes.
         /// </summary>
         /// <returns></returns>
-        public byte[] ToBytes()
-        {
-            return (byte[]) _rawValue.Clone();
-        }
+        public byte[] ToBytes() 
+            => (byte[]) _rawValue.Clone();
 
         /// <summary>
         /// Returns a <see cref="System.String" /> that represents this instance.
@@ -93,9 +84,7 @@ namespace Keyczar
         /// A <see cref="System.String" /> that represents this instance.
         /// </returns>
         public override string ToString()
-        {
-            return new String(Util.WebSafeBase64.Encode(_rawValue));
-        }
+            => new String(Util.WebSafeBase64.Encode(_rawValue));
 
         private byte[] _rawValue;
 

@@ -18,8 +18,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Keyczar;
-using ManyConsole;
+using Keyczar.Unofficial;
+using ManyConsole.CommandLineUtils;
 using Keyczar.Util;
+using Newtonsoft.Json.Linq;
 
 namespace KeyczarTool
 {
@@ -99,6 +101,8 @@ namespace KeyczarTool
             IDisposable d5 = null;
             IDisposable d6 = null;
 
+            var config = KeyczarDefaults.DefaultConfig;
+
             IKeySet ks = ProduceKeySet(_location, _crypterLocation, _password, out d1, out d2, out d3);
             IKeySet ks2 = ProduceKeySet(_location2, _crypterLocation2, _password2, out d4, out d5, out d6);
 
@@ -131,7 +135,7 @@ namespace KeyczarTool
                         inStream = File.OpenRead(_message);
                     }else
                     {
-                        inStream = new MemoryStream(Keyczar.Keyczar.RawStringEncoding.GetBytes(_message));
+                        inStream = new MemoryStream(config.RawStringEncoding.GetBytes(_message));
                     }
           
                 Stream outstream;
@@ -188,7 +192,9 @@ namespace KeyczarTool
         {
             var memstream = (MemoryStream) outstream;
             outstream.Flush();
-            var encodedOutput = WebSafeBase64.Encode(memstream.ToArray());
+            var encodedOutput = _format != WireFormat.SignJwt
+                ? WebBase64.FromBytes(memstream.ToArray()).ToString()
+                : Encoding.UTF8.GetString(memstream.ToArray());
 
             if (String.IsNullOrWhiteSpace(destination))
             {
@@ -199,7 +205,7 @@ namespace KeyczarTool
                 if (File.Exists(destination))
                     throw new Exception("File already Exists!!");
            
-                File.WriteAllText(destination, new string(encodedOutput));
+                File.WriteAllText(destination, encodedOutput);
             }
         }
 
@@ -214,7 +220,7 @@ namespace KeyczarTool
             }
            
             Crypter crypter = null;
-            IKeySet ks = new KeySet(location);
+            IKeySet ks = new FileSystemKeySet(location);
             Func<string> prompt = CachedPrompt.Password(Util.PromptForPassword).Prompt;
 
             IDisposable dks =null;
@@ -222,7 +228,9 @@ namespace KeyczarTool
             {
                 if (password)
                 {
-                    var cks = new PbeKeySet(crypterLocation, prompt);
+                    var cks = KeySet.LayerSecurity(FileSystemKeySet.Creator(crypterLocation),
+                                                   PbeKeySet.Creator(prompt)
+                                                  );
                     crypter = new Crypter(cks);
                     dks = cks;
                 }
@@ -239,7 +247,7 @@ namespace KeyczarTool
        
             d1 = crypter;
             d2 = dks;
-            d3 = ks as IDisposable;
+            d3 = ks;
             return ks;
         }
         
@@ -290,6 +298,27 @@ namespace KeyczarTool
                         var sig = signer.Sign(inStream);
                         outStream.Write(sig, 0, sig.Length);
                     }
+            }  
+            else if (_format == WireFormat.SignJwt)
+            {
+                try
+                {
+                    using (var signer = new JwtSigner(keyset))
+                    using (var reader =new StreamReader(inStream))
+                    {
+                        
+                            var sig = signer.SignCompact(JObject.Parse(reader.ReadToEnd()));
+                            outStream.Write(Encoding.UTF8.GetBytes(sig), 0, sig.Length);
+                      
+                    }
+                    
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    Console.WriteLine(ex.StackTrace);
+                    return -1;
+                }
             }
             else if (_format == WireFormat.SignTimeout)
             {
@@ -305,7 +334,7 @@ namespace KeyczarTool
                 {
                     byte[] hidden = null;
                     if (!String.IsNullOrWhiteSpace(_attachedHidden))
-                        hidden = Keyczar.Keyczar.RawStringEncoding.GetBytes(_attachedHidden);
+                        hidden = signer.Config.RawStringEncoding.GetBytes(_attachedHidden);
                     signer.Sign(inStream, outStream, hidden);
                 }
             }
@@ -372,6 +401,7 @@ namespace KeyczarTool
             public static readonly WireFormat SignVanilla = "SIGN-VANILLA";
             public static readonly WireFormat SignUnversioned = "SIGN-UNVERSIONED"; 
             public static readonly WireFormat SignAttached = "SIGN-ATTACHED";
+            public static readonly WireFormat SignJwt = "SIGN-JWT";
             public static readonly WireFormat CryptSession = "CRYPT-SESSION";
             public static readonly WireFormat CryptSignedSession = "CRYPT-SIGNEDSESSION";
 

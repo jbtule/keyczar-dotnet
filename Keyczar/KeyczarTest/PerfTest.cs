@@ -43,7 +43,7 @@ namespace KeyczarTest
         {
             if (STDNET40_AES == null)
             {
-                STDNET40_AES = KeyType.Name("STDNET40_AES").KeySizes<StdNET40AESKey>(128, 192, 256).DefineSpec();
+                STDNET40_AES = KeyType.Name("STDNET40_AES").KeySizes<StdNET40AESKey>(128, 192, 256).IsTemp().DefineSpec();
             }
         }
 
@@ -119,7 +119,7 @@ namespace KeyczarTest
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public override FinishingStream GetEncryptingStream(Stream output,Keyczar.Keyczar keyczar)
+        public override FinishingStream GetEncryptingStream(Stream output,Keyczar.KeyczarBase keyczar)
         {
             var alg = new AesManaged
                           {
@@ -140,7 +140,7 @@ namespace KeyczarTest
         /// </summary>
         /// <param name="output">The output.</param>
         /// <returns></returns>
-        public override FinishingStream GetDecryptingStream(Stream output, Keyczar.Keyczar keyczar)
+        public override FinishingStream GetDecryptingStream(Stream output, Keyczar.KeyczarBase keyczar)
         {
             var alg = new AesManaged
                           {

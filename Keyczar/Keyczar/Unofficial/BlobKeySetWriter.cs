@@ -26,8 +26,12 @@ namespace Keyczar.Unofficial
     /// <summary>
     /// Writes keyset to a single zipped up blob
     /// </summary>
-    public class BlobKeySetWriter : IKeySetWriter, IDisposable, INonSeparatedMetadataAndKey
+    public class BlobKeySetWriter : IRootProviderKeySetWriter, IDisposable, INonSeparatedMetadataAndKey
     {
+
+        public static Func<BlobKeySetWriter> Creator(Stream writeStream) 
+            => () => new BlobKeySetWriter(writeStream);
+
         private Stream _writeStream;
         private ZipFile _zipFile = new NondestructiveZipFile();
 
@@ -50,6 +54,12 @@ namespace Keyczar.Unofficial
             _zipFile.AddEntry(version.ToString(CultureInfo.InvariantCulture), keyData);
         }
 
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
+
+
 
         /// <summary>
         /// Writes the specified metadata.
@@ -70,38 +80,34 @@ namespace Keyczar.Unofficial
             return true;
         }
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(false);
-            GC.SuppressFinalize(this);
-        }
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
 
-        /// <summary>
-        /// Finalizes an instance of the <see cref="BlobKeySetWriter" /> class.
-        /// </summary>
-        ~BlobKeySetWriter()
-        {
-            Dispose(false);
-        }
-
-        /// <summary>
-        /// Releases unmanaged and - optionally - managed resources
-        /// </summary>
-        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed",
-            MessageId = "_zipFile")]
         protected virtual void Dispose(bool disposing)
         {
-            if (disposing)
+            if (!disposedValue)
             {
-                _writeStream.SafeDispose();
-            }
-            _writeStream = null;
+                if (disposing)
+                {
+                    _writeStream = _writeStream.SafeDispose();
+                    _zipFile = _zipFile.SafeDispose();
+                }
 
-            _zipFile = _zipFile.SafeDispose();
+                disposedValue = true;
+            }
         }
+
+   
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+        {
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            Dispose(true);
+     
+        }
+        #endregion
+
+
     }
 }

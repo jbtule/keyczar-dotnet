@@ -1,20 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net40</TargetFramework>
+    <TargetFrameworks>net451;netcoreapp2.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <PackageId>Keyczar.Tool</PackageId>
-    <Description>Keyczar dotnet management Tool </Description>
+    <Description>Keyczar management Tool (for .net)</Description>
     <Authors> jbtule </Authors>
-    <Copyright>Copyright © Contributors 2012-2017"</Copyright>
-    <AssemblyVersion>0.7.7.1</AssemblyVersion>
-    <FileVersion>0.7.7.1</FileVersion>
+    <Copyright>Copyright © Contributors 2012-2019"</Copyright>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(RuntimeIdentifier)' == '' and '$(TargetFramework)' != 'net451' ">
+    <PackageId>dotnet-keyczar</PackageId>
+    <ToolCommandName>keyczar</ToolCommandName>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>crypto security encryption symmetric asymmetric key-rotation</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageProjectUrl>http://jbtule.github.io/keyczar-dotnet/</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="ManyConsole" Version="0.4.2.*" PrivateAssets="All" />
-    <PackageReference Include="NDesk.Options" Version="0.2.*" PrivateAssets="All" />
-    <PackageReference Include="DiminishDependencies.Tool" Version="1.1.3" ExcludeAssets="contentfiles" PrivateAssets="All" />
- </ItemGroup>
- <ItemGroup>
+    <PackageReference Include="ManyConsole.CommandLineUtils" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net451'">
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -34,11 +38,9 @@
   <ItemGroup>
     <Compile Update="Localized.Designer.cs">
       <DependentUpon>Localized.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
-
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent"> 
-    <Exec Command="&quot;$(ProjectDir)\..\packages\diminishdependencies.tool\1.1.3\tools\DiminishDependencies.exe&quot; -o &quot;$(ProjectDir)\..\KeyczarTool.Minified\Diminish\refs&quot; &quot;$(TargetDir)KeyczarTool.exe&quot; &quot;$(TargetDir)*.dll&quot;" /> 
-  </Target>
 
 </Project>

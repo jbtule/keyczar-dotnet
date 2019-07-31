@@ -28,7 +28,7 @@ namespace Keyczar.Crypto.Streams
         /// <summary>
         /// Initializes a new instance of the <see cref="DummyStream" /> class.
         /// </summary>
-        public DummyStream() : base(new HMac(new Sha1Digest()))
+        public DummyStream() : base(new HMac(new Sha1Digest()), 20)
         {
         }
 
@@ -36,9 +36,6 @@ namespace Keyczar.Crypto.Streams
         /// Returns Blank Hash Value because this is a dummy operation
         /// </summary>
         /// <value>The blank shash value.</value>
-        public override byte[] HashValue
-        {
-            get { return new byte[] {}; }
-        }
+        public override byte[] HashValue => new byte[] {};
     }
 }

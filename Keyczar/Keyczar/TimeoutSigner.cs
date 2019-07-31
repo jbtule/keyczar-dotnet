@@ -34,7 +34,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="TimeoutSigner"/> class.
         /// </summary>
         /// <param name="keySetLocation">The keyset location.</param>
-        public TimeoutSigner(string keySetLocation) : this(new KeySet(keySetLocation))
+        public TimeoutSigner(string keySetLocation) : this(new FileSystemKeySet(keySetLocation))
         {
         }
 
@@ -63,11 +63,8 @@ namespace Keyczar
         /// <param name="rawData">The raw data.</param>
         /// <param name="expiration">The expiration.</param>
         /// <returns></returns>
-        public WebBase64 Sign(String rawData, DateTime expiration)
-        {
-            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData), expiration));
-
-        }
+        public WebBase64 Sign(String rawData, DateTime expiration) 
+            => WebBase64.FromBytes(Sign(Config.RawStringEncoding.GetBytes(rawData), expiration));
 
         /// <summary>
         /// Signs the specified raw data.
@@ -91,26 +88,29 @@ namespace Keyczar
         /// <param name="inputLength">(optional) Length of the input.</param>
         /// <returns></returns>
         public byte[] Sign(Stream input, DateTime expiration, long inputLength =-1)
-        {
-            return _signer.Sign(input, expiration,inputLength);
-        }
+            => _signer.Sign(input, expiration,inputLength);
 
         /// <summary>
         /// Helper subclass of signer that prefixes the data with the expiration time and then pads it into the signature
         /// </summary>
         protected class TimeoutSignerHelper:Signer
         {
+            private KeyczarBase _parent;
 
-
-          
             /// <summary>
             /// Initializes a new instance of the <see cref="TimeoutSignerHelper"/> class.
             /// </summary>
             /// <param name="keySet">The key set.</param>
-            public TimeoutSignerHelper(IKeySet keySet, Keyczar parent)
+            public TimeoutSignerHelper(IKeySet keySet, KeyczarBase parent)
                 : base(keySet)
             {
-                Config = parent.Config;
+                _parent = parent;
+            }
+            
+            public override KeyczarConfig Config
+            {
+                get => _parent.Config;
+                set {}
             }
 
             /// <summary>

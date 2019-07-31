@@ -2,22 +2,75 @@ image: Visual Studio 2017
 
 install:
   - cmd: git submodule update --init --recursive
+  - cmd: dotnet tool install --global dotnet-warp
+
+configuration: Debug
 
 build: off
 
-build_script:
-  - cmd: cd Keyczar
-  - cmd: msbuild /t:restore
-  - cmd: msbuild
-  - cmd: .\packages\nunit.runners\2.6.1\tools\nunit-console.exe -noxml -nodots -labels -stoponerror KeyczarTest\bin\Debug\net40\KeyczarTest.dll -include=Create
+skip_branch_with_pr: true
 
-test:
-  categories:
-    except:
-      - Performance
-      - Create
+environment:
+  vsuffix: alpha$(APPVEYOR_BUILD_NUMBER)
+  is_prerelease: true
+
+before_build:
+  - cmd: cd Keyczar
+  - cmd: msbuild /t:restore /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+
+build_script:
+  - cmd: msbuild /p:Configuration=%configuration% /p:VersionSuffix="%vsuffix%" /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+  - cmd: cd KeyczarTool
+  - cmd: dotnet-warp --verbose -o "keyczar-win-x64.exe" -p "targetframework=netcoreapp2.1;VersionSuffix="%vsuffix%"
+  - cmd: cd ..
+
+test_script:
+  - cmd: dotnet test --no-build --verbosity="normal" -c %configuration% -f netcoreapp2.1 --filter "TestCategory=Create" --logger Appveyor KeyczarTest\KeyczarTest.csproj
+  - cmd: dotnet test --no-build --verbosity="normal" -c %configuration% -f netcoreapp2.1 --filter "(TestCategory!=Create)&(TestCategory!=Performance)" --logger Appveyor KeyczarTest\KeyczarTest.csproj
+  - cmd: nunit3-console --result="myresults.xml;format=AppVeyor" --labels=On  --where="cat != Create  && cat != Performance"  KeyczarTest\bin\%configuration%\net451\KeyczarTestNetFrwk.dll
 
 artifacts:
-  - path: '**\bin\*\*.nupkg'
+  - path: Keyczar\Keyczar\bin\$(configuration)\*.*nupkg
+    name: Keyczar
+  - path: Keyczar\KeyczarTool\bin\$(configuration)\*.nupkg
+    name: dotnet-keyczar
+  - path: Keyczar\KeyczarTool\keyczar-win-x64.exe
+    name: dotnet-keyczar-win-x64
+deploy:
+  - provider: NuGet
+    server: https://www.myget.org/F/keyczar-dotnet-ci/api/v2/package
+    api_key:
+      secure: qeW4Vpu7ZxccbJAZz215XBKpSTlIXEyZTfi/r+gmEGRxC/zsxHkBexycRjKbfptZ
+    skip_symbols: false
+    symbol_server: https://www.myget.org/F/keyczar-dotnet-ci/symbols/api/v2/package
 
-skip_branch_with_pr: true
+  - provider: GitHub
+    
+    artifact: /.*\.[s]*nupkg/           # upload all NuGet packages to release assets
+    description: 'Release description'
+    auth_token:
+      secure: JyJYSgeJYFmkaFy7Gro2dQyv/fqZwz1EzJmp2Nf99H6HUpxNR7ilA/OGPcQk0pA8
+    draft: true
+    prerelease: $(is_prerelease)
+    on:
+      appveyor_repo_tag: true       # deploy on tag push only
+
+for:
+  - branches:
+        except:
+          - /v.*/
+  - branches:
+        only:
+          - /v.*-beta/
+    environment:
+      vsuffix: beta$(APPVEYOR_BUILD_NUMBER)
+      is_prerelease: true
+  - branches:
+        only:
+          - /v[\d,.]*/
+    configuration: Release
+    environment:
+      vsuffix: $(APPVEYOR_BUILD_NUMBER)
+      is_prerelease: false
+
+

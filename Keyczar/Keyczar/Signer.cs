@@ -34,7 +34,7 @@ namespace Keyczar
         /// Initializes a new instance of the <see cref="Signer"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
-        public Signer(string keySetLocation) : this(new KeySet(keySetLocation))
+        public Signer(string keySetLocation) : this(new FileSystemKeySet(keySetLocation))
         {
         }
 
@@ -57,10 +57,7 @@ namespace Keyczar
         /// <param name="rawData">The raw data.</param>
         /// <returns></returns>
         public WebBase64 Sign(String rawData)
-        {
-            return WebBase64.FromBytes(Sign(RawStringEncoding.GetBytes(rawData)));
-           
-        }
+            => WebBase64.FromBytes(Sign(Config.RawStringEncoding.GetBytes(rawData)));
 
         /// <summary>
         /// Signs the specified raw data.
@@ -140,7 +137,7 @@ namespace Keyczar
         /// <param name="extra">The extra data passed by postfixData.</param>
         protected virtual void PostfixDataSign(HashingStream signingStream, object extra)
         {
-            signingStream.Write(FormatBytes, 0, FormatBytes.Length);
+            signingStream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
         }
 
         /// <summary>
@@ -153,8 +150,8 @@ namespace Keyczar
         protected virtual void PadSignature(byte[] signature, Stream outputStream, object extra)
         {
             var key = GetPrimaryKey() as ISignerKey;
-            outputStream.Write(FormatBytes,0,FormatBytes.Length);
-            outputStream.Write(key.GetKeyHash(),0,KeyHashLength);
+            outputStream.Write(KeyczarConst.FormatBytes,0,KeyczarConst.FormatBytes.Length);
+            outputStream.Write(key.GetKeyHash(),0,KeyczarConst.KeyHashLength);
             outputStream.Write(signature,0,signature.Length);
         }
 

@@ -58,6 +58,7 @@ namespace KeyczarTest
         [TestCase("aes", "")]
         [TestCase("rsa", "")]
         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        [TestCase("aes_hmac_sha2", "unofficial", Category = "Unofficial")]
         public void TestDecrypt(String subDir, string nestedDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
@@ -71,6 +72,7 @@ namespace KeyczarTest
         [TestCase("aes", "")]
         [TestCase("rsa", "")]
         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        [TestCase("aes_hmac_sha2", "unofficial", Category = "Unofficial")]
         public void TestEncryptDecrypt(String subDir, string nestedDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
@@ -83,11 +85,13 @@ namespace KeyczarTest
             }
         }
 
+        [TestCase("hmac", "")]
         [TestCase("dsa", "")]
         [TestCase("rsa-sign", "")]
         [TestCase("rsa-sign.public", "")]
         [TestCase("rsa-sign", "unofficial")]
         [TestCase("rsa-sign.public", "unofficial")]
+        [TestCase("hmac_sha2", "unofficial")]
         public void TestWrongPurpose(String subDir, string nestDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestDir);
@@ -124,6 +128,7 @@ namespace KeyczarTest
         [TestCase("aes", "")]
         [TestCase("rsa", "")]
         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        [TestCase("aes_hmac_sha2", "unofficial", Category = "Unofficial")]
         public void TestBadCipherText(string subDir, string nestedDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
@@ -162,6 +167,7 @@ namespace KeyczarTest
 
         [TestCase("aes", "")]
         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        [TestCase("aes_hmac_sha2", "unofficial", Category = "Unofficial")]
         public void TestAesEncryptedKeyDecrypt(string subDir, string nestedDir)
         {
             // Test reading and using encrypted keys
@@ -171,7 +177,9 @@ namespace KeyczarTest
             var keyPath = Path.Combine(basePath, subDir);
             var dataPath = Path.Combine(basePath, subDir + "-crypted");
             using (var keyDecrypter = new Crypter(keyPath))
-            using (var dataDecrypter = new Crypter(new EncryptedKeySet(dataPath, keyDecrypter)))
+            using (var ks = KeySet.LayerSecurity(FileSystemKeySet.Creator(dataPath),
+                                                 EncryptedKeySet.Creator(keyDecrypter)))    
+            using (var dataDecrypter = new Crypter(ks))
             {
                 HelperDecrypt(dataDecrypter, dataPath);
             }
@@ -179,6 +187,7 @@ namespace KeyczarTest
 
         [TestCase("aes", "")]
         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        [TestCase("aes_hmac_sha2", "unofficial", Category = "Unofficial")]
         public void TestAesNonRepeating(string subDir, string nestedDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);
@@ -195,6 +204,7 @@ namespace KeyczarTest
         [TestCase("aes", "")]
         [TestCase("rsa", "")]
         [TestCase("aes_aead", "unofficial", Category = "Unofficial")]
+        [TestCase("aes_hmac_sha2", "unofficial", Category = "Unofficial")]
         public void TestShortEncryptAndDecrypt(string subDir, string nestedDir)
         {
             var subPath = Util.TestDataPath(TEST_DATA, subDir, nestedDir);

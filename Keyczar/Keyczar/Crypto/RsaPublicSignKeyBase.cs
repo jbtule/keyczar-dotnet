@@ -50,10 +50,7 @@ namespace Keyczar.Crypto
         /// </summary>
         /// <param name="size">The size.</param>
         /// <exception cref="System.NotSupportedException"></exception>
-        protected override void GenerateKey(int size)
-        {
-            throw new NotSupportedException();
-        }
+        protected override void GenerateKey(int size, KeyczarConfig config) => throw new NotSupportedException();
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
@@ -72,7 +69,7 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
+        public VerifyingStream GetVerifyingStream(KeyczarBase keyczar)
         {
             var signer = GetSigner();
             signer.Init(forSigning: false, parameters: new RsaKeyParameters(false,

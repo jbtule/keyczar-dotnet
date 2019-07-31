@@ -47,14 +47,14 @@ namespace Keyczar
     /// <summary>
     ///  Encrypts data using a given key set.
     /// </summary>
-    public class Encrypter:Keyczar
+    public class Encrypter:KeyczarBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Encrypter"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
         public Encrypter(string keySetLocation)
-            : this(new KeySet(keySetLocation))
+            : this(new FileSystemKeySet(keySetLocation))
         {
         }
 
@@ -87,10 +87,8 @@ namespace Keyczar
         /// </summary>
         /// <param name="rawData">The raw string data.</param>
         /// <returns></returns>
-        public WebBase64 Encrypt(string rawData)
-        {
-            return WebBase64.FromBytes(Encrypt(RawStringEncoding.GetBytes(rawData)));
-        }
+        public WebBase64 Encrypt(string rawData) 
+            => WebBase64.FromBytes(Encrypt(Config.RawStringEncoding.GetBytes(rawData)));
 
         /// <summary>
         /// Encrypts the specified data.
@@ -118,11 +116,16 @@ namespace Keyczar
         {
             var stopLength = inputLength < 0 ? long.MaxValue : input.Position + inputLength;
             var key = GetPrimaryKey();
-            var header = new byte[HeaderLength];
-            Array.Copy(FormatBytes,0,header,0,FormatBytes.Length);
-            Array.Copy(key.GetKeyHash(), 0, header, FormatBytes.Length, KeyHashLength);
+            var header = new byte[KeyczarConst.HeaderLength];
+            Array.Copy(KeyczarConst.FormatBytes,0,header,0,KeyczarConst.FormatBytes.Length);
+            Array.Copy(key.GetKeyHash(), 0, header, KeyczarConst.FormatBytes.Length, KeyczarConst.KeyHashLength);
            
             var cryptKey = key as IEncrypterKey;
+
+            if (cryptKey == null)
+            {
+                throw new InvalidKeyTypeException($"Encryption requires and Encrypting key, this key is {key.KeyType}");
+            }
 
             var resetStream = Utility.ResetStreamWhenFinished(output);
             using (var reader = new NondestructiveBinaryReader(input))

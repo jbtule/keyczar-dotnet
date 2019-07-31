@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace KeyczarTest.Interop
 {
-    [TestFixture]
+ 
     public abstract class CrypterBasicInterop : BasicInterop
     {
         protected string Location;

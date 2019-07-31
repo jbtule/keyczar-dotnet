@@ -22,12 +22,18 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTest
 {
     public static class Util
     {
 
+        public static bool IsSizeTooSlow(int size)
+        {
+           return ((Environment.GetEnvironmentVariable("CI")?.Equals("true", StringComparison.InvariantCultureIgnoreCase)
+              ?? false) && size > 5000);
+        }
    
 
         public static string ReplaceDirPrefix(string prefixedDir)
@@ -39,9 +45,11 @@ namespace KeyczarTest
             return prefixedDir;
         }
 
-        private static string TestDataBaseDir(string baseDir)
+        private static string TestDataBaseDir(string baseDir, [System.Runtime.CompilerServices.CallerFilePath] string sourceFilePath = "")
         {
-            return Path.Combine("..", "..", "..", "..", "TestData", baseDir);
+            var dirPath = Path.GetDirectoryName(sourceFilePath);
+            var testDir=  Path.Combine(dirPath, "..", "..", "TestData", baseDir);
+            return Path.GetFullPath(testDir);
         }
 
         public static string TestDataPath(string baseDir, string topDir, string subDir = null)
@@ -65,6 +73,20 @@ namespace KeyczarTest
         }
     }
 
+    internal class NoArgFlag
+    {
+        public bool Show { get; }
+
+        public NoArgFlag()
+        {
+            Show = true;
+        }
+
+        public NoArgFlag(bool show)
+        {
+            Show = show;
+        }
+    }
 
     internal class InProcessKeyczarToolRunner : KeyczarToolRunner
     {
@@ -100,19 +122,33 @@ namespace KeyczarTest
             using (var inbyteStream = new MemoryStream(stdinbytes))
             using (var input = new StreamReader(inbyteStream))
             {
-                Console.SetIn(input);
-                using (var stream = new MemoryStream())
-                using (var output = new StreamWriter(stream))
+                try
                 {
-                    Console.SetOut(output);
-                    KeyczarTool.Program.Main(separateArgs.Select(it => it.Replace("\"", "")).ToArray());
+                    Console.SetIn(input);
+                    using (var stream = new MemoryStream())
+                    using (var output = new StreamWriter(stream))
+                    {
+                        try
+                        {
+                            Console.SetOut(output);
+                            var commands = KeyczarTool.Program.Commands;
+                            var args = separateArgs.Select(it => it.Replace("\"", "")).ToArray();
+                            ConsoleCommandDispatcher.DispatchCommand(commands, args, Console.Out,
+                                app => { app.UsePagerForHelpText = false; });
 
-                    output.Flush();
-                    result = Encoding.UTF8.GetString(stream.ToArray());
+                            output.Flush();
+                            result = Encoding.UTF8.GetString(stream.ToArray());
+                        }
+                        finally
+                        {
+                            Console.SetOut(origOut);
+                        }
+                    }
                 }
-
-                Console.SetIn(origIn);
-                Console.SetOut(origOut);
+                finally
+                {
+                    Console.SetIn(origIn);
+                }
             }
 
             Console.WriteLine(result);
@@ -132,19 +168,35 @@ namespace KeyczarTest
             var processArgs = args.Skip(stdInArgCount);
 
             var count = 0;
+
+            string resultSelector(string n, object p)
+            {
+                switch (count++)
+                {
+                    case 0:
+                        return n;
+                    default:
+                        switch (p)
+                        {
+                            case null:
+                                return $"--{n}";
+                            case NoArgFlag x:
+                                if (x.Show)
+                                    return $"--{n}";
+                                else
+                                    return null;
+                                    
+                            default:
+                                if (n.Equals("additionalArgs"))
+                                    return String.Join(" ", ((string[]) p).Select(i => $"\"{i}\""));
+                                else return $"--{n}=\"{p}\"";
+                        }
+                }
+            }
+
             var separateArgs = binder.CallInfo.ArgumentNames.Zip(processArgs,
-                                                                 (n, p) =>
-                                                                 count++ == 0
-                                                                     ? n
-                                                                     : p == null
-                                                                           ? String.Format("--{0}", n)
-                                                                           : n.Equals("additionalArgs")
-                                                                                 ? String.Join(" ",
-                                                                                               ((string[]) p).Select(
-                                                                                                   i =>
-                                                                                                   string.Format(
-                                                                                                       "\"{0}\"", i)))
-                                                                                 : string.Format("--{0}=\"{1}\"", n, p))
+                                                                 resultSelector)
+                                     .Where(it=>!String.IsNullOrEmpty(it))
                                      .ToList();
 
 

@@ -18,7 +18,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Keyczar;
-using ManyConsole;
+using ManyConsole.CommandLineUtils;
 
 namespace KeyczarTool
 {
@@ -47,7 +47,7 @@ namespace KeyczarTool
                 }
                 try
                 {
-                    if (keySet.Save(new KeySetWriter(_location, overwrite: true)))
+                    if (keySet.Save(new FileSystemKeySetWriter(_location, overwrite: true)))
                     {
                         Console.WriteLine(Localized.MsgDemotedVersion, _version, status);
                         return 0;

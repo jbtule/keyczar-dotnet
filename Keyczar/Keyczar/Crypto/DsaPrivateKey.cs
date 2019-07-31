@@ -45,10 +45,7 @@ namespace Keyczar.Crypto
         /// Gets the public key.
         /// </summary>
         /// <value>The public key.</value>
-        Key IPrivateKey.PublicKey
-        {
-            get { return PublicKey; }
-        }
+        Key IPrivateKey.PublicKey => PublicKey;
 
         /// <summary>
         /// Gets or sets the X.
@@ -71,7 +68,7 @@ namespace Keyczar.Crypto
         /// Generates the key.
         /// </summary>
         /// <param name="size">The size.</param>
-        protected override void GenerateKey(int size)
+        protected override void GenerateKey(int size, KeyczarConfig config)
         {
             var paramgen = new DsaParametersGenerator();
             paramgen.Init(size, 100, Secure.Random);
@@ -105,7 +102,7 @@ namespace Keyczar.Crypto
         /// Gets the signing stream.
         /// </summary>
         /// <returns></returns>
-        public HashingStream GetSigningStream(Keyczar keyczar)
+        public HashingStream GetSigningStream(KeyczarBase keyczar)
         {
             var digest = PublicKey.GetDigest();
             var signer = new DsaDigestSigner(new DsaSigner(), digest);
@@ -122,7 +119,7 @@ namespace Keyczar.Crypto
         /// Gets the verifying stream.
         /// </summary>
         /// <returns></returns>
-        public VerifyingStream GetVerifyingStream(Keyczar keyczar)
+        public VerifyingStream GetVerifyingStream(KeyczarBase keyczar)
         {
             return PublicKey.GetVerifyingStream(keyczar);
         }

@@ -66,11 +66,11 @@ namespace KeyczarTest
             using (var signer = new Signer(Util.TestDataPath(TEST_DATA, keyType + "-sign")))
             {
                 var signature = signer.Sign(input);
-                using (
-                    var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.Verify,
-                                                                       Util.TestDataPath(TEST_DATA,
-                                                                                         keyType + "-sign-crt." +
-                                                                                         fileFormat)))
+                var keyset = ImportedKeySet.Import.X509Certificate(KeyPurpose.Verify,
+                    Util.TestDataPath(TEST_DATA,
+                        keyType + "-sign-crt." +
+                        fileFormat), official:true);
+                using (keyset)
                 using (var verifier = new Verifier(keyset))
                 {
                     Expect(verifier.Verify(input, signature), Is.True);

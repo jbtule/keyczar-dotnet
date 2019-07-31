@@ -61,8 +61,8 @@ namespace Keyczar.Pbe
             using (var crypter = new Crypter(ks))
             {
                 var data = crypter.Encrypt(key);
-                byte[] justciphertext = new byte[data.Length - Keyczar.HeaderLength];
-                Array.Copy(data, Keyczar.HeaderLength, justciphertext, 0, justciphertext.Length);
+                byte[] justciphertext = new byte[data.Length - KeyczarConst.HeaderLength];
+                Array.Copy(data, KeyczarConst.HeaderLength, justciphertext, 0, justciphertext.Length);
                 pks.Key = justciphertext;
             }
 
@@ -167,29 +167,32 @@ namespace Keyczar.Pbe
             using (var crypter = new Crypter(ks))
             using (var memstream = new MemoryStream())
             {
-                memstream.Write(Keyczar.FormatBytes, 0, Keyczar.FormatBytes.Length);
-                memstream.Write(new byte[Keyczar.KeyHashLength], 0, Keyczar.KeyHashLength);
+                memstream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
+                memstream.Write(new byte[KeyczarConst.KeyHashLength], 0, KeyczarConst.KeyHashLength);
                 memstream.Write(Key, 0, Key.Length);
                 return crypter.Decrypt(memstream.ToArray());
             }
         }
 
-        [JsonConverter(typeof (JsonConverter))]
-        internal class HardcodedKeyType : KeyType
-        {
-            private Type _representedType;
 
-            internal HardcodedKeyType(String identifier, Type representedType) : base(identifier)
-            {
-                _representedType = representedType;
-            }
+		   [JsonConverter(typeof(JsonConverter))]
+		   internal class HardcodedKeyType:KeyType{
+			     Type _representedType;
+		       private KeyKind _kind;
+			     internal HardcodedKeyType(String identifier,Type representedType, KeyKind kind):base(identifier){
+			      	_representedType =representedType;
+			        _kind = kind;
+			     }
 
-            public override Type RepresentedType
+           public override KeyKind Kind => _kind;
+
+		       public override Type RepresentedType
             {
-                get { return _representedType; }
-                set { _representedType = value; }
+                get => _representedType;
+                set => _representedType = value;
             }
         }
+
 
 
         internal class PbeAesKey : AesKey, IPbeKey
@@ -200,28 +203,22 @@ namespace Keyczar.Pbe
                 Secure.Random.NextBytes(IV);
             }
 
-            private KeyType _keyType = new HardcodedKeyType("PBE_AES", typeof (PbeAesKey));
+            private KeyType _keyType = new HardcodedKeyType("PBE_AES", typeof (PbeAesKey), KeyKind.Symmetric);
 
             [JsonProperty(TypeNameHandling = TypeNameHandling.Objects)]
             public override KeyType KeyType
             {
-                get { return _keyType; }
-                set { _keyType = value; }
+                get => _keyType;
+                set => _keyType = value;
             }
 
-            public override byte[] GetKeyHash()
-            {
-                return Utility.GetBytes(0);
-            }
+            public override byte[] GetKeyHash() => Utility.GetBytes(0);
 
-            public override IEnumerable<byte[]> GetFallbackKeyHash()
-            {
-                return Enumerable.Empty<byte[]>();
-            }
+            public override IEnumerable<byte[]> GetFallbackKeyHash() => Enumerable.Empty<byte[]>();
 
             public byte[] IV { get; set; }
 
-            public override FinishingStream GetEncryptingStream(Stream output, Keyczar keyczar)
+            public override FinishingStream GetEncryptingStream(Stream output, KeyczarBase keyczar)
             {
                 var stream = (CipherTextOnlyFinishingStream) base.GetEncryptingStream(output, keyczar);
                 stream.CipherTextOnly = true;
@@ -229,7 +226,7 @@ namespace Keyczar.Pbe
                 return stream;
             }
 
-            public override FinishingStream GetDecryptingStream(Stream output, Keyczar keyczar)
+            public override FinishingStream GetDecryptingStream(Stream output, KeyczarBase keyczar)
             {
                 var stream = (CipherTextOnlyFinishingStream) base.GetDecryptingStream(output, keyczar);
                 stream.CipherTextOnly = true;

@@ -1,4 +1,4 @@
-/*  Copyright 2012 James Tuley (jay+code@tuley.name)
+﻿/*  Copyright 2012 James Tuley (jay+code@tuley.name)
  * 
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -14,149 +14,27 @@
  */
 
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using Keyczar.Util;
-using Newtonsoft.Json;
 
 namespace Keyczar
 {
-    /// <summary>
-    /// Writes a keyset using the standard storage format
-    /// </summary>
-    public class KeySetWriter : IKeySetWriter
+    public sealed class KeySetWriter : FileSystemKeySetWriter
     {
-        private readonly string _location;
-        private readonly bool _overwrite;
-        private List<string> _filePaths = new List<string>();
-        private List<Exception> _exceptions = new List<Exception>();
-        private bool success = true;
+        public static IKeySetWriter LayerSecurity(Func<IRootProviderKeySetWriter> rootKeySetWriterCreator,
+								   params Func<IKeySetWriter, ILayeredKeySetWriter>[] layeredKeySetWriterCreators)
+		{
+			IKeySetWriter writer = rootKeySetWriterCreator();
+			return layeredKeySetWriterCreators.Aggregate(writer, (current, layered) => layered(current));
+		}
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="KeySetWriter"/> class.
-        /// </summary>
-        /// <param name="location">The location.</param>
-        /// <param name="overwrite">if set to <c>true</c> [overwrite].</param>
-        public KeySetWriter(string location, bool overwrite = false)
+        [Obsolete("KeySetWriter.Creator doesn't exist", error:true)]
+        public new static Func<FileSystemKeySetWriter> Creator(string location, bool overwrite = false) 
+	        => throw new NotSupportedException();
+
+
+        [Obsolete("Use FileSystemKeySetWriter instead")]
+        public KeySetWriter(string location, bool overwrite = false) : base(location, overwrite)
         {
-            _location = location;
-            _overwrite = overwrite;
-        }
-
-        private void CreateDir()
-        {
-            if (!Directory.Exists(_location))
-                Directory.CreateDirectory(_location);
-        }
-
-        /// <summary>
-        /// Writes the specified key data.
-        /// </summary>
-        /// <param name="keyData">The key data.</param>
-        /// <param name="version">The version.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Catching to throw later"),
-         System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
-             "CA2202:Do not dispose objects multiple times")]
-        public void Write(byte[] keyData, int version)
-        {
-            CreateDir();
-            var versionFile = Path.Combine(_location, version.ToString(CultureInfo.InvariantCulture));
-            var file = versionFile + ".temp";
-            if (!_overwrite && File.Exists(versionFile))
-            {
-                success = false;
-                return;
-            }
-            _filePaths.Add(file);
-            try
-            {
-                using (var stream = new FileStream(file, FileMode.Create))
-                using (var writer = new BinaryWriter(stream))
-                {
-                    writer.Write(keyData);
-                }
-            }
-            catch (Exception ex)
-            {
-                _exceptions.Add(ex);
-                success = false;
-            }
-        }
-
-
-        /// <summary>
-        /// Writes the specified metadata.
-        /// </summary>
-        /// <param name="metadata">The metadata.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Catching to throw later"),
-         System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage",
-             "CA2202:Do not dispose objects multiple times")]
-        public void Write(KeyMetadata metadata)
-        {
-            CreateDir();
-            var meta_file = Path.Combine(_location, "meta");
-            var file = meta_file + ".temp";
-            if (!_overwrite && File.Exists(meta_file))
-            {
-                success = false;
-                return;
-            }
-            try
-            {
-                _filePaths.Add(file);
-                using (var stream = new FileStream(file, FileMode.Create))
-                using (var writer = new StreamWriter(stream))
-                {
-                    writer.Write(metadata.ToJson());
-                }
-            }
-            catch (Exception ex)
-            {
-                _exceptions.Add(ex);
-                success = false;
-            }
-        }
-
-        /// <summary>
-        /// Finishes this writing of the key.
-        /// </summary>
-        /// <returns></returns>
-        public bool Finish()
-        {
-            if (success)
-            {
-                foreach (var path in _filePaths)
-                {
-                    var newPath = Path.Combine(Path.GetDirectoryName(path),
-                                               Path.GetFileNameWithoutExtension(path));
-                    File.Delete(newPath);
-                    File.Move(path, newPath);
-                }
-            }
-
-            if (!success)
-            {
-                foreach (var path in _filePaths)
-                {
-                    File.Delete(path);
-                }
-            }
-
-            Exception newEx = null;
-            if (_exceptions.Any())
-                newEx = new AggregateException(_exceptions);
-
-            _filePaths.Clear();
-            _exceptions.Clear();
-
-            if (newEx != null)
-                throw newEx;
-
-            return success;
         }
     }
 }

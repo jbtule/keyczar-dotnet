@@ -13,6 +13,7 @@
  *  limitations under the License.
  */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -24,18 +25,23 @@ namespace Keyczar
     /// <summary>
     /// Wraps a key set to decrypt it
     /// </summary>
-    public class EncryptedKeySet : IKeySet
+    public class EncryptedKeySet : ILayeredKeySet
     {
-        private readonly IKeySet _keySet;
-        private readonly Crypter _crypter;
+
+		public static Func<IKeySet,EncryptedKeySet> Creator(Crypter crypter) 
+		    => keySet => new EncryptedKeySet(keySet, crypter);
+
+        private IKeySet _keySet;
+        private Crypter _crypter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EncryptedKeySet"/> class.
         /// </summary>
         /// <param name="keySetLocation">The key set location.</param>
         /// <param name="crypter">The crypter.</param>
+        [Obsolete("Use `KeySet.LayerSecurity` with `FileSystemKeyset.Creator` and `EncryptedKeySet.Creator`")]
         public EncryptedKeySet(string keySetLocation, Crypter crypter)
-            : this(new KeySet(keySetLocation), crypter)
+            : this(new FileSystemKeySet(keySetLocation), crypter)
         {
         }
 
@@ -47,9 +53,13 @@ namespace Keyczar
         public EncryptedKeySet(IKeySet keySet, Crypter crypter)
         {
             _keySet = keySet;
-
             _crypter = crypter;
         }
+        
+        /// <summary>
+        /// Config Options
+        /// </summary>
+        public KeyczarConfig Config { get; set; }
 
         /// <summary>
         /// Gets the binary data that the key is stored in.
@@ -64,17 +74,40 @@ namespace Keyczar
                 return cipherData;
             }
 
-            var cipherString = Keyczar.RawStringEncoding.GetString(cipherData);
+            var cipherString = this.GetConfig().RawStringEncoding.GetString(cipherData);
             return _crypter.Decrypt(WebSafeBase64.Decode(cipherString.ToCharArray()));
         }
+
+
 
         /// <summary>
         /// Gets the metadata.
         /// </summary>
         /// <value>The metadata.</value>
-        public KeyMetadata Metadata
+        public KeyMetadata Metadata => _keySet.Metadata;
+
+        #region IDisposable Support
+        private bool disposedValue = false; // To detect redundant calls
+
+        protected virtual void Dispose(bool disposing)
         {
-            get { return _keySet.Metadata; }
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    _keySet = _keySet.SafeDispose();
+                    _crypter = _crypter.SafeDispose();
+			    }
+
+                disposedValue = true;
+            }
         }
+
+        // This code added to correctly implement the disposable pattern.
+        public void Dispose()
+            // Do not change this code. Put cleanup code in Dispose(bool disposing) above.
+            => Dispose(true);
+        
+        #endregion
     }
 }
