@@ -217,31 +217,33 @@ namespace KeyczarTest
 
             Console.WriteLine("{0} {1}", program, combinedArg);
 
-            var process = new Process()
-                              {
-                                  StartInfo = new ProcessStartInfo(program, combinedArg)
-                                                  {
-                                                      RedirectStandardInput = true,
-                                                      RedirectStandardOutput = true,
-                                                      RedirectStandardError = true,
-                                                      UseShellExecute = false,
-                                                      CreateNoWindow = true
-                                                  }
-                              };
-            process.Start();
-
-            foreach (var stdArg in stdInArgs)
+            using (var process = new Process()
             {
-                Thread.Sleep(3000);
-                process.StandardInput.WriteLine(stdArg.ToString());
+                StartInfo = new ProcessStartInfo(program, combinedArg)
+                {
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            })
+            {
+                process.Start();
+
+                foreach (var stdArg in stdInArgs)
+                {
+                    Thread.Sleep(3000);
+                    process.StandardInput.WriteLine(stdArg.ToString());
+                }
+
+
+                process.WaitForExit(5000);
+
+                result = process.StandardOutput.ReadToEnd();
+                Console.WriteLine(result);
+                Console.WriteLine(process.StandardError.ReadToEnd());
             }
-
-
-            process.WaitForExit(5000);
-
-            result = process.StandardOutput.ReadToEnd();
-            Console.WriteLine(result);
-            Console.WriteLine(process.StandardError.ReadToEnd());
         }
     }
 }

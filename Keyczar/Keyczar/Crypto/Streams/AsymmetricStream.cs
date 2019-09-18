@@ -65,9 +65,6 @@ namespace Keyczar.Crypto.Streams
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing)
-            {
-            }
             _cipher.Reset();
             _cipher = null;
             _output.Flush();

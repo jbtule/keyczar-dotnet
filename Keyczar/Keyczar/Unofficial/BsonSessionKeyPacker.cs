@@ -79,8 +79,9 @@ namespace Keyczar.Unofficial
         public Key Unpack(byte[] data, KeyczarConfig config)
         {
             using (var input = new MemoryStream(data))
+            using (var reader = new BsonDataReader(input))
             {
-                var reader = new BsonDataReader(input);
+             
                 var val = JToken.ReadFrom(reader);
                 var keyType = (KeyType) (string) val["type"];
                 var keyString = val["key"].ToString();

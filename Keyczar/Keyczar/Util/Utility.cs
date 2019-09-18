@@ -36,15 +36,15 @@ namespace Keyczar.Util
 		public static byte[] RemoveJunkFronAnsiObj(byte[] data)
 		{
 			using (var input = new MemoryStream(data))
-			{
-				var asn1 = new Asn1InputStream(input, data.Length);
+            using(var asn1 = new Asn1InputStream(input, data.Length))
+            {
 				var result = asn1.ReadObject();
 				return result.GetDerEncoded();
 			}
 		}
 
         /// <summary>
-        /// Resets the stream poisition when Closed or Disposed.
+        /// Resets the stream position when Closed or Disposed.
         /// </summary>
         /// <param name="stream">The stream.</param>
         /// <returns></returns>
@@ -55,7 +55,7 @@ namespace Keyczar.Util
 
 
         /// <summary>
-        /// Copies string/object dictionary to the destnation objects properties.
+        /// Copies string/object dictionary to the destination objects properties.
         /// </summary>
         /// <param name="source">The source.</param>
         /// <param name="destination">The dest.</param>
@@ -110,10 +110,12 @@ namespace Keyczar.Util
             using (var output = new MemoryStream())
             {
                 var serializer = new JsonSerializer {ContractResolver = new CamelCasePropertyNamesContractResolver(),};
-                var writer = new BsonDataWriter(output);
-                serializer.Serialize(writer, value);
-                output.Flush();
-                return output.ToArray();
+                using (var writer = new BsonDataWriter(output))
+                {
+                    serializer.Serialize(writer, value);
+                    output.Flush();
+                    return output.ToArray();
+                }
             }
         }
 

@@ -165,7 +165,11 @@ namespace Keyczar
                 var position = padData.Item2;
                 var input = padData.Item3;
 
-                var key = GetPrimaryKey() as ISignerKey;
+                if (!(GetPrimaryKey() is ISignerKey key))
+                {
+                    throw new InvalidOperationException("Signing key required for signing.");
+                }
+
                 outputStream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);
                 outputStream.Write(key.GetKeyHash(), 0, KeyczarConst.KeyHashLength);
 

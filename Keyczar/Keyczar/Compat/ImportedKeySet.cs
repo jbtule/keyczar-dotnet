@@ -329,7 +329,6 @@ namespace Keyczar.Compat
                 {
                     var keyStore = new Pkcs12Store(input, password.Prompt().ToCharArray());
                     var keys = new List<Key>();
-                    var kind = KeyKind.Private;
                     foreach (string n in keyStore.Aliases)
                     {
                         if (keyStore.IsKeyEntry(n))
@@ -355,8 +354,6 @@ namespace Keyczar.Compat
                     }
                     if (!keys.Any())
                     {
-                        kind = KeyKind.Public;
-
                         foreach (string n in keyStore.Aliases)
                         {
                             if (keyStore.IsCertificateEntry(n))

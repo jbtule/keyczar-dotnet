@@ -93,7 +93,7 @@ namespace Keyczar.Crypto.Streams
             if (disposing)
             {
                 var alg = _algorithm as IDisposable;
-                alg.SafeDispose();
+                alg?.Dispose();
             }
             _algorithm = null;
             base.Dispose(disposing);

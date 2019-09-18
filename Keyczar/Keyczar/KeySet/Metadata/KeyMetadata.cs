@@ -107,7 +107,7 @@ namespace Keyczar
             Encrypted = metadata.Encrypted;
             Versions = metadata.Versions.Select(it => new KeyVersion(it)).ToList();
 #pragma warning disable 618
-            KeyType = metadata?.KeyType;
+            KeyType = metadata.KeyType;
 #pragma warning restore 618
             OriginallyOfficial = metadata.OriginallyOfficial;
             Kind = metadata.Kind;

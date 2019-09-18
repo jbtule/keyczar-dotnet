@@ -123,15 +123,15 @@ namespace Keyczar.Crypto
         /// <returns></returns>
         public VerifyingStream GetVerifyingStream(KeyczarBase keyczar)
         {
-            var tSigner = new DsaSigner();
-            tSigner.Init(forSigning: false, parameters: new DsaPublicKeyParameters(Y.ToBouncyBigInteger(),
+            var signer = new DsaSigner();
+            signer.Init(forSigning: false, parameters: new DsaPublicKeyParameters(Y.ToBouncyBigInteger(),
                                                                                    new DsaParameters(
                                                                                        P.ToBouncyBigInteger(),
                                                                                        Q.ToBouncyBigInteger(),
                                                                                        G.ToBouncyBigInteger())));
             var digest = GetDigest();
-            var signer = new DsaDigestSigner(tSigner, digest);
-            return new DigestStream(new DsaDigestSigner(tSigner, digest), sigRepair: sig =>{
+            var digestSigner = new DsaDigestSigner(signer, digest);
+            return new DigestStream(digestSigner, sigRepair: sig =>{
                 if (!keyczar.Config.StrictDsaVerification)
                 {
                     return Utility.RemoveJunkFronAnsiObj(sig);

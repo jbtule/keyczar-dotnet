@@ -148,7 +148,7 @@ namespace Keyczar.Unofficial
         {
             switch (digestAlg)
             {
-               case DigestAlg alg when digestAlg == DigestAlg.Sha256:
+               case DigestAlg alg when alg == DigestAlg.Sha256:
                    return 256 / 8;
                case DigestAlg alg when alg == DigestAlg.Sha384:
                    return 384 / 8;

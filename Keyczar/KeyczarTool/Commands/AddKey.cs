@@ -169,7 +169,7 @@ namespace KeyczarTool
                 catch (InvalidKeyTypeException ex)
 #pragma warning restore 168
                 {
-                    throw new ConsoleHelpAsException(String.Format(Localized.MsgMismatchedKind, type.Kind, keySet.Metadata.Kind));
+                    throw new ConsoleHelpAsException(String.Format(Localized.MsgMismatchedKind, type?.Kind, keySet.Metadata.Kind));
                 }
 
 

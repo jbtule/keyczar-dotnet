@@ -47,8 +47,13 @@ namespace Keyczar
         {
             if (keySet.Metadata.Purpose != KeyPurpose.SignAndVerify)
             {
-                throw new InvalidKeySetException("This key set can not be used for signing and verifying.");
+                throw MakeInvalidKeySetTypeException();
             }
+        }
+
+        private static InvalidKeySetException MakeInvalidKeySetTypeException()
+        {
+            return new InvalidKeySetException("This key set can not be used for signing and verifying.");
         }
 
         /// <summary>
@@ -99,7 +104,10 @@ namespace Keyczar
         protected void Sign(Stream input, Stream outstream, object prefixData, object postfixData, object signatureData, long inputLength)
         {
             var stopLength = inputLength < 0 ? long.MaxValue : input.Position + inputLength;
-            var key = GetPrimaryKey() as ISignerKey;
+            if (!(GetPrimaryKey() is ISignerKey key))
+            {
+                throw MakeInvalidKeySetTypeException();
+            }
             using (var reader = new NondestructiveBinaryReader(input))
             {
                 using (var signingStream = key.GetSigningStream(this))
@@ -149,7 +157,10 @@ namespace Keyczar
         /// <returns></returns>
         protected virtual void PadSignature(byte[] signature, Stream outputStream, object extra)
         {
-            var key = GetPrimaryKey() as ISignerKey;
+            if (!(GetPrimaryKey() is ISignerKey key))
+            {
+                throw new InvalidOperationException("Signing key required for signing.");
+            }
             outputStream.Write(KeyczarConst.FormatBytes,0,KeyczarConst.FormatBytes.Length);
             outputStream.Write(key.GetKeyHash(),0,KeyczarConst.KeyHashLength);
             outputStream.Write(signature,0,signature.Length);

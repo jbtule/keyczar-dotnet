@@ -40,8 +40,7 @@ namespace Keyczar.Util
         /// <returns></returns>
         public static T SafeDispose<T>(this T disposable) where T : class, IDisposable
         {
-            if (disposable != null)
-                disposable.Dispose();
+            disposable?.Dispose();
             return null;
         }
 

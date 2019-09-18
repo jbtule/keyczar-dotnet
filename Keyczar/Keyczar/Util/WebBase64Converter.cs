@@ -174,13 +174,15 @@ namespace Keyczar.Util
                 int buffer = (0xFF & input[inPos++]) << 16;
                 if (remainder == 2)
                 {
-                    buffer |= (0xFF & input[inPos++]) << 8;
+                    // ReSharper disable once RedundantAssignment
+                    buffer |= (0xFF & input[inPos++]) << 8; //might be unnecessary but is more readable - lgtm [cs/useless-assignment-to-local]
                 }
                 outChar[outPos++] = ALPHABET[(buffer >> 18) & 0x3F];
                 outChar[outPos++] = ALPHABET[(buffer >> 12) & 0x3F];
                 if (remainder == 2)
                 {
-                    outChar[outPos++] = ALPHABET[(buffer >> 6) & 0x3F];
+                    // ReSharper disable once RedundantAssignment
+                    outChar[outPos++] = ALPHABET[(buffer >> 6) & 0x3F]; //might be unnecessary but is more readable - lgtm [cs/useless-assignment-to-local]
                 }
             }
             return outChar;
@@ -254,11 +256,13 @@ namespace Keyczar.Util
             switch (buffCount)
             {
                 case 2:
-                    outChar[outPos++] = (byte) (buffer >> 4);
+                    // ReSharper disable once RedundantAssignment
+                    outChar[outPos++] = (byte) (buffer >> 4); //might be unnecessary but is more readable - lgtm [cs/useless-assignment-to-local]
                     break;
                 case 3:
                     outChar[outPos++] = (byte) (buffer >> 10);
-                    outChar[outPos++] = (byte) (buffer >> 2);
+                    // ReSharper disable once RedundantAssignment
+                    outChar[outPos++] = (byte) (buffer >> 2); //might be unnecessary but is more readable - lgtm [cs/useless-assignment-to-local]
                     break;
             }
 

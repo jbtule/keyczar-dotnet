@@ -256,16 +256,19 @@ namespace Keyczar
             {
                 throw new InvalidCryptoDataException("Can't decrypted, when in signer is provided");
             }
-            var finalinput = input;
+            var finalInput = input;
+            MemoryStream extraStep = null;
             if (_working.Value._verifier != null)
             {
-                finalinput = new MemoryStream();
-                _working.Value._verifier.VerifiedMessage(input, finalinput, hidden: _working.Value._nonce, inputLength: inputLength);
+                extraStep = new MemoryStream();
+                finalInput = extraStep;
+                _working.Value._verifier.VerifiedMessage(input, finalInput, hidden: _working.Value._nonce, inputLength: inputLength);
                 inputLength = -1;
-                finalinput.Seek(0, SeekOrigin.Begin);
+                finalInput.Seek(0, SeekOrigin.Begin);
             }
             _working.Value._crypter.Compression = Compression;
-            _working.Value._crypter.Decrypt(finalinput, output, inputLength);
+            _working.Value._crypter.Decrypt(finalInput, output, inputLength);
+            extraStep?.Dispose();
         }
 
         /// <summary>
@@ -317,17 +320,20 @@ namespace Keyczar
             }
             _working.Value._crypter.Compression = Compression;
 
-            Stream finaloutput = output;
+            var finalOutput = output;
+            MemoryStream extraStep = null;
             if (_working.Value._signer != null)
             {
-                output = new MemoryStream();
+                extraStep = new MemoryStream();
+                output = extraStep;
             }
             _working.Value._crypter.Encrypt(input, output, inputLength);
             if (_working.Value._signer != null)
             {
                 output.Seek(0, SeekOrigin.Begin);
-                _working.Value._signer.Sign(output, finaloutput, hidden: _working.Value._nonce);
+                _working.Value._signer.Sign(output, finalOutput, hidden: _working.Value._nonce);
             }
+            extraStep?.Dispose();
         }
 
 
@@ -459,6 +465,10 @@ namespace Keyczar
             public byte[] Pack(Key key, KeyczarConfig config)
             {
                 var aesKey = key as AesKey;
+                if (aesKey is null)
+                {
+                    throw new InvalidKeySetException("Can only pack AesKey keys.");
+                }
                 var inputArrays = new byte[][] {aesKey.AesKeyBytes, aesKey.HmacKey.HmacKeyBytes};
                 // Count an int for each input array
                 int outputSize = (1 + inputArrays.Length)*4;

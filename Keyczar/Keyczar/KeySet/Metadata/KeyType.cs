@@ -106,12 +106,10 @@ namespace Keyczar
             RsaPriv.KeySizes<RsaPrivateKey>(2048, 4096).WeakSizes(1024).IsAsymmetric().DefineSpec();
             RsaPub.KeySizes<RsaPublicKey>(2048, 4096).WeakSizes(1024).IsAsymmetric().IsPublic().DefineSpec();
 
-#pragma warning disable 219
-            KeyType see;
-#pragma warning restore 219
-            see = UnofficialKeyType.AesAead;
-            see = UnofficialKeyType.RSAPrivSign;
-            see = UnofficialKeyType.RSAPubSign;
+            var dummy = UnofficialKeyType.AesAead;// inference first run construction - lgtm [cs/useless-assignment-to-local]
+            dummy = UnofficialKeyType.RSAPrivSign;// inference first run construction - lgtm [cs/useless-assignment-to-local]
+            dummy = UnofficialKeyType.RSAPubSign; // inference first run construction - lgtm [cs/useless-assignment-to-local]
+
         }
 
         private static readonly IDictionary<string, KeyTypeSpec> _specs = new Dictionary<string, KeyTypeSpec>();
