@@ -138,49 +138,49 @@ namespace KeyczarTool
                         inStream = new MemoryStream(config.RawStringEncoding.GetBytes(_message));
                     }
           
-                Stream outstream;
+                Stream outStream;
                 if (_binary)
                     {
                        if (String.IsNullOrWhiteSpace(_destination))
                        {
-                           outstream = Console.OpenStandardOutput();
+                           outStream = Console.OpenStandardOutput();
                        }else
                        {
-                           outstream = File.Open(_destination, FileMode.CreateNew);
+                           outStream = File.Open(_destination, FileMode.CreateNew);
                        }
                     }else
                 {
-                    outstream = new MemoryStream();
+                    outStream = new MemoryStream();
                 }
 
-                Stream outstream2 = null;
+                Stream outStream2 = null;
                 if ((_format == WireFormat.CryptSession || _format == WireFormat.CryptSignedSession) &&
                     String.IsNullOrWhiteSpace(_destination2))
                 {
                     Console.WriteLine(Localized.MsgRequiresDestination2);
                     return -1;
                 }
-                else if (_binary & !String.IsNullOrWhiteSpace(_destination2))
+                else if (_binary && !String.IsNullOrWhiteSpace(_destination2))
                 {
-                    outstream2 = File.Open(_destination2, FileMode.CreateNew);
+                    outStream2 = File.Open(_destination2, FileMode.CreateNew);
                 }
                 else
                 {
-                    outstream2 = new MemoryStream();
+                    outStream2 = new MemoryStream();
                 }
 
 
                 using(inStream)
-                using(outstream)
-                using(outstream2)
+                using(outStream)
+                using(outStream2)
                 {
-                    var err = TakeAction(ks, inStream, outstream, outstream2, ks2 );
+                    var err = TakeAction(ks, inStream, outStream, outStream2, ks2 );
                     if (err != 0)
                         return err;
                     if (!_binary)
                     {
-                        EncodeData(outstream, _destination);
-                        EncodeData(outstream2, _destination2);
+                        EncodeData(outStream, _destination);
+                        EncodeData(outStream2, _destination2);
                     }
                 }
             }

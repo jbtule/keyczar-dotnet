@@ -86,9 +86,12 @@ namespace Keyczar.Unofficial
                 var kidB64 = (WebBase64) header.kid;
                 kid = kidB64.ToBytes();
             }
-            catch{}
-            
-            
+            catch
+            {
+                //Bad kid try all keys - lgtm [cs/empty-catch-block]
+            }
+
+
             if (kid == null || kid.Length != KeyczarConst.KeyHashLength)
             {
                 return keyczar.GetAllKeys()

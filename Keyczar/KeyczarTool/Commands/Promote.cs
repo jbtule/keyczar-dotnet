@@ -55,6 +55,7 @@ namespace KeyczarTool
                 }
                 catch
                 {
+                    //error handling unified with falling through - lgtm [cs/empty-catch-block]
                 }
                 Console.WriteLine("{0} {1}.", Localized.MsgCouldNotWrite, _location);
                 return -1;

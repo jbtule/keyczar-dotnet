@@ -55,6 +55,7 @@ namespace KeyczarTool
                 }
                 catch
                 {
+                    //error handling unified with falling through - lgtm [cs/empty-catch-block]
                 }
             }
 

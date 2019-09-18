@@ -100,8 +100,6 @@ namespace KeyczarTool
                              ? new Func<string>(CachedPrompt.Password(Util.PromptForPassword).Prompt)
                              : new Func<string>(CachedPrompt.Password(Util.DoublePromptForPassword).Prompt);
 
-            var encOrNone = new List<Func<IKeySet, ILayeredKeySet>>();
-
             IDisposable dks = null;
             if (!String.IsNullOrWhiteSpace(_crypterLocation))
             {

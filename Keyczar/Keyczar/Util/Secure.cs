@@ -101,7 +101,7 @@ namespace Keyczar.Util
             //We don't ever want to use this function to compare two nulls
             //so we are throwing an exception to fix usage if this happens
             if (a == null && b == null)
-                throw new ArgumentNullException("Both a and b both cannot be null.");
+                throw new ArgumentNullException("a && b","Both a and b both cannot be null.");
 
             if (a == null)
                 a = new byte[] { };
@@ -120,7 +120,7 @@ namespace Keyczar.Util
             //We don't ever want to use this function to compare zero indexes
             //so we are throwing an exception to fix usage if this happens
             if (maxCount == 0 || startIndex < 0)
-                throw new ArgumentOutOfRangeException("maxCount", "maxCount, startindex cannot be set so that there isn't a comparison.");
+                throw new ArgumentOutOfRangeException(nameof(maxCount), "maxCount, start index cannot be set so that there isn't a comparison.");
 
             //changes readonly collection to byte[] clone
             byte[] dummy = DummyArray;
@@ -134,8 +134,8 @@ namespace Keyczar.Util
                 if (maxCount >= 0 & i >= maxCount + startIndex)
                     continue;
 
-                //This first case is used to try and not leak when a key matching a keyhash couldn't be found.
-                if (a.Length <= i | b.Length <= i)
+                //This first case is used to try and not leak when a key matching a key hash couldn't be found.
+                if (a.Length <= i | b.Length <= i)  //intentional non-short circuit for security - lgtm [cs/non-short-circuit]
                     compare |= dummy[0] ^ dummy[1];
                 else
                     compare |= a[i] ^ b[i];
