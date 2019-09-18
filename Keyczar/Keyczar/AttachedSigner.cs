@@ -167,7 +167,7 @@ namespace Keyczar
 
                 if (!(GetPrimaryKey() is ISignerKey key))
                 {
-                    throw new InvalidOperationException("Signing key required for signing.");
+                    throw Signer.MakeInvalidKeySetTypeException();
                 }
 
                 outputStream.Write(KeyczarConst.FormatBytes, 0, KeyczarConst.FormatBytes.Length);

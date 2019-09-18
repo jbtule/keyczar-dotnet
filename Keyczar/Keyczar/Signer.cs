@@ -51,7 +51,7 @@ namespace Keyczar
             }
         }
 
-        private static InvalidKeySetException MakeInvalidKeySetTypeException()
+        internal static InvalidKeySetException MakeInvalidKeySetTypeException()
         {
             return new InvalidKeySetException("This key set can not be used for signing and verifying.");
         }
@@ -159,7 +159,7 @@ namespace Keyczar
         {
             if (!(GetPrimaryKey() is ISignerKey key))
             {
-                throw new InvalidOperationException("Signing key required for signing.");
+                throw MakeInvalidKeySetTypeException();
             }
             outputStream.Write(KeyczarConst.FormatBytes,0,KeyczarConst.FormatBytes.Length);
             outputStream.Write(key.GetKeyHash(),0,KeyczarConst.KeyHashLength);
