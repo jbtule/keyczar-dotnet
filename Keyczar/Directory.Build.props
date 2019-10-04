@@ -9,5 +9,6 @@
             <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
             <PublishRepositoryUrl>true</PublishRepositoryUrl>
             <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+            <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     </PropertyGroup>
 </Project>
