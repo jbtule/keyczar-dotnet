@@ -9,7 +9,6 @@
     <ToolCommandName>keyczar</ToolCommandName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>crypto security encryption symmetric asymmetric key-rotation</PackageTags>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ManyConsole.CommandLineUtils" />
