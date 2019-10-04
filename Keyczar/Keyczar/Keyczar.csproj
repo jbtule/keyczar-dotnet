@@ -9,19 +9,12 @@
                   Also has more features than official versions (including newer encryption options).
                   Uses BouncyCastle as backend for most encryption. 
                   Official keyczar version: http://keyczar.org</Summary>
-    <Company>
-    </Company>
-    <Authors> jbtule </Authors>
-    <Copyright>Copyright © Contributors 2012-2019</Copyright>
-    <PackageProjectUrl>http://jbtule.github.io/keyczar-dotnet/</PackageProjectUrl>
+
     <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     <PackageIconUrl>https://raw.githubusercontent.com/google/keyczar/Java_release_0.71j/site/site/webpage/keyczar_logo.jpg</PackageIconUrl>
     <PackageTags>cryptography crypto security encryption symmetric asymmetric mac aes rsa dsa hmac</PackageTags>
     <IncludeSymbols>True</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="DotNetZip" />
