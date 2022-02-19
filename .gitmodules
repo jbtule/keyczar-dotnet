@@ -1,3 +1,0 @@
-[submodule "Keyczar/TestData/remote-testdata"]
-	path = Keyczar/TestData/remote-testdata
-	url = https://github.com/jbtule/keyczar-testdata.git
