@@ -3,17 +3,12 @@
     <TargetFrameworks>net451;netcoreapp2.1</TargetFrameworks>
     <OutputType>Exe</OutputType>
     <Description>Keyczar management Tool (for .net)</Description>
-    <Authors> jbtule </Authors>
-    <Copyright>Copyright © Contributors 2012-2019"</Copyright>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(RuntimeIdentifier)' == '' and '$(TargetFramework)' != 'net451' ">
     <PackageId>dotnet-keyczar</PackageId>
     <ToolCommandName>keyczar</ToolCommandName>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>crypto security encryption symmetric asymmetric key-rotation</PackageTags>
-    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
-    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-    <PackageProjectUrl>http://jbtule.github.io/keyczar-dotnet/</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="ManyConsole.CommandLineUtils" />
