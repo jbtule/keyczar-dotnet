@@ -1,10 +1,10 @@
 <Project>
     <ItemGroup>
-        <PackageReference Update="DotNetZip" Version="1.13.3" />
-        <PackageReference Update="Newtonsoft.Json" Version="12.0.2" />
+        <PackageReference Update="DotNetZip" Version="1.16.0" />
+        <PackageReference Update="Newtonsoft.Json" Version="13.0.3"  />
         <PackageReference Update="Newtonsoft.Json.Bson" Version="1.0.2" />
-        <PackageReference Update="Portable.BouncyCastle" Version="1.8.5" />
-        <PackageReference Update="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-19367-01">
+        <PackageReference Update="BouncyCastle.Cryptography" Version="2.4.0" />
+        <PackageReference Update="Microsoft.SourceLink.GitHub" Version="8.0.0">
            <PrivateAssets>all</PrivateAssets>
            <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
