@@ -1,5 +1,12 @@
 <Project>
     <PropertyGroup>
         <VersionPrefix>0.9.2</VersionPrefix>
+        <Authors>jbtule</Authors>
+        <Copyright>Copyright © Contributors 2012-2019</Copyright>
+        <PackageProjectUrl>https://github.com/jbtule/keyczar-dotnet</PackageProjectUrl>
+        <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+        <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
     </PropertyGroup>
 </Project>
