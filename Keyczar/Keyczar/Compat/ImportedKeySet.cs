@@ -327,7 +327,8 @@ namespace Keyczar.Compat
 
                 using (var password = CachedPrompt.Password(passwordPrompt))
                 {
-                    var keyStore = new Pkcs12Store(input, password.Prompt().ToCharArray());
+                    var keyStore = new Pkcs12StoreBuilder().Build();
+                    keyStore.Load(input, password.Prompt().ToCharArray());
                     var keys = new List<Key>();
                     foreach (string n in keyStore.Aliases)
                     {

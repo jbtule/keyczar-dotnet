@@ -153,7 +153,7 @@ namespace Keyczar.Unofficial
         }
 
 
-        private readonly GcmBlockCipher _cipher = new GcmBlockCipher(new AesEngine(), new Tables8kGcmMultiplier());
+        private GcmBlockCipher _cipher = new GcmBlockCipher(new AesEngine());
 
         /// <summary>
         /// Gets the encrypting stream.
@@ -211,7 +211,15 @@ namespace Keyczar.Unofficial
         protected override void Dispose(bool disposing)
         {
             _keyParm = null;
-            _cipher.Reset();
+            try
+            {
+                _cipher.Reset();
+            }
+            catch
+            {
+                _cipher = new GcmBlockCipher(new AesEngine());
+            }
+
             AesKeyBytes = AesKeyBytes.Clear();
         }
     }
