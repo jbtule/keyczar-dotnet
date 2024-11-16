@@ -13,7 +13,7 @@ jobs:
       with:
         dotnet-version: 4.8
     - name: Restore Packages
-      run: nuget restore Dynamitey.sln
+      run: nuget restore Keyczar\Keyczar.sln
     - name: Build solution
       run: msbuild Keyczar\Keyczar.sln -t:rebuild -property:Configuration=Release
     - name: Test Create
