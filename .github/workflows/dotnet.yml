@@ -20,6 +20,6 @@ jobs:
     - name: Build with dotnet core
       run: dotnet build --configuration Release Keyczar/Keyczar.sln
     - name: Tests Create
-      run: dotnet test KeyczarTest/KeyczarTest.csproj --configuration Release --no-build --no-restore --filter="TestCategory=Create"
+      run: dotnet test Keyczar/KeyczarTest/KeyczarTest.csproj --configuration Release --no-build --no-restore --filter="TestCategory=Create"
     - name: Tests
-      run: dotnet test KeyczarTest/KeyczarTest.csproj --configuration Release --no-build --no-restore --filter="(TestCategory!=Create)&(TestCategory!=Performance)"
+      run: dotnet test Keyczar/KeyczarTest/KeyczarTest.csproj --configuration Release --no-build --no-restore --filter="(TestCategory!=Create)&(TestCategory!=Performance)"
