@@ -18,6 +18,8 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet }}
     - name: Build with dotnet core
-      run: dotnet build --configuration Release
+      run: dotnet build --configuration Release Keyczar\Keyczar.sln
+    - name: Tests Create
+      run: dotnet test KeyczarTest/KeyczarTest.csproj --configuration Release --no-build --no-restore --filter="TestCategory=Create"
     - name: Tests
-      run: dotnet test Tests/Tests.csproj --configuration Release --no-build --no-restore --filter=TestCategory!=Performance
+      run: dotnet test KeyczarTest/KeyczarTest.csproj --configuration Release --no-build --no-restore --filter="(TestCategory!=Create)&(TestCategory!=Performance)"

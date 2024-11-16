@@ -15,14 +15,22 @@ jobs:
     - name: Restore Packages
       run: nuget restore Dynamitey.sln
     - name: Build solution
-      run: msbuild Dynamitey.sln -t:rebuild -property:Configuration=Release
+      run: msbuild Keyczar\Keyczar.sln -t:rebuild -property:Configuration=Release
+    - name: Test Create
+      uses: josepho0918/vstest-action@0e887de8dcfab5ce3eecaf4ad6320bb9b3ecf633
+      with:
+        testAssembly: KeyczarTest.dll
+        searchFolder: .\Keyczar\KeyczarTest\bin\Release\*\
+        runInParallel: true
+        otherConsoleOptions: /TestCaseFilter:"TestCategory=Create)"
+        platform: x64
     - name: Test
       uses: josepho0918/vstest-action@0e887de8dcfab5ce3eecaf4ad6320bb9b3ecf633
       with:
-        testAssembly: Tests.dll
-        searchFolder: .\Tests\bin\Release\*\
+        testAssembly: KeyczarTest.dll
+        searchFolder: .\Keyczar\KeyczarTest\bin\Release\*\
         runInParallel: true
-        otherConsoleOptions: /TestCaseFilter:"(TestCategory!=Performance)"
+        otherConsoleOptions: /TestCaseFilter:"(TestCategory!=Create)&(TestCategory!=Performance)"
         platform: x64
     - name: Publish
       run:
