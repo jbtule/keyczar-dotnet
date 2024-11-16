@@ -35,4 +35,11 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Configuration.ConfigurationManager"/>
   </ItemGroup>
+  <Target Name="CopyPackage" AfterTargets="Pack">
+    <Copy
+            SourceFiles="$(OutputPath)$(PackageId).$(PackageVersion).nupkg"
+            DestinationFolder="$(SolutionDir)\publish"
+    />
+  </Target>
+
 </Project>
