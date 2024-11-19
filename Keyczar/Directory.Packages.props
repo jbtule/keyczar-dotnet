@@ -8,7 +8,6 @@
         <PackageVersion Include="Newtonsoft.Json" Version="13.0.3"  />
         <PackageVersion Include="Newtonsoft.Json.Bson" Version="1.0.2" />
         <PackageVersion Include="BouncyCastle.Cryptography" Version="2.4.0" />
-        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0"/>
         <PackageVersion Include="System.Configuration.ConfigurationManager" Version="4.5.0"/>
         <PackageVersion Include="ManyConsole.CommandLineUtils" Version="1.1.8-alpha" />
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />

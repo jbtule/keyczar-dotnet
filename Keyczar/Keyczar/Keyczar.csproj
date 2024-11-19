@@ -10,18 +10,14 @@
                   Uses BouncyCastle as backend for most encryption. 
                   Official keyczar version: http://keyczar.org</Summary>
     <PackageTags>cryptography crypto security encryption symmetric asymmetric mac aes rsa dsa hmac</PackageTags>
-    <IncludeSymbols>True</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SharpZipLib" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Newtonsoft.Json.Bson" />
     <PackageReference Include="BouncyCastle.Cryptography" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-   </PackageReference>
+
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <Reference Include="Microsoft.CSharp" />
