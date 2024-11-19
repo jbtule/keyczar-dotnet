@@ -64,10 +64,11 @@ namespace Keyczar.Unofficial
         public byte[] GetKeyData(int version)
         {
             var name = version.ToString(CultureInfo.InvariantCulture);
-            using (var stream = _zipFile.GetInputStream(_zipFile.GetEntry(name)))
+            var entry =_zipFile.GetEntry(name);
+            using (var stream = _zipFile.GetInputStream(entry))
             using (var reader = new BinaryReader(stream))
             {
-                return reader.ReadBytes((int) stream.Length);
+                return reader.ReadBytes((int)entry.Size);
             }
         }
 
