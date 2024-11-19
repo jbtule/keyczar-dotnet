@@ -5,6 +5,8 @@ on: [push]
 jobs:
   build:
     name: Test Windows .net Framework and Core
+    env:
+      CI: true
     runs-on: windows-2022
     steps:
     - uses: actions/checkout@v4
