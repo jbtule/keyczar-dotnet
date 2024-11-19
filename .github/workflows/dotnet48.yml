@@ -24,7 +24,7 @@ jobs:
         testAssembly: KeyczarTest.dll
         searchFolder: .\Keyczar\KeyczarTest\bin\Release\*\
         runInParallel: true
-        otherConsoleOptions: /TestCaseFilter:"TestCategory=Create)"
+        otherConsoleOptions: /TestCaseFilter:"TestCategory=Create"
         platform: x64
     - name: Test
       uses: josepho0918/vstest-action@0e887de8dcfab5ce3eecaf4ad6320bb9b3ecf633
