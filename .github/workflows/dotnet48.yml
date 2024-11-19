@@ -26,6 +26,7 @@ jobs:
         runInParallel: true
         otherConsoleOptions: /TestCaseFilter:"TestCategory=Create"
         platform: x64
+        resultLogsArtifactName: vs-test-result-logs-part1
     - name: Test
       uses: josepho0918/vstest-action@0e887de8dcfab5ce3eecaf4ad6320bb9b3ecf633
       with:
@@ -34,6 +35,7 @@ jobs:
         runInParallel: true
         otherConsoleOptions: /TestCaseFilter:"(TestCategory!=Create)&(TestCategory!=Performance)"
         platform: x64
+        resultLogsArtifactName: vs-test-result-logs-part2
     - name: Publish
       run:
         dotnet nuget push '${{ github.workspace }}\publish\*.nupkg' --source https://nuget.pkg.github.com/ekonbenefits/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
