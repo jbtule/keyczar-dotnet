@@ -11,6 +11,11 @@
         <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0"/>
         <PackageVersion Include="System.Configuration.ConfigurationManager" Version="4.5.0"/>
         <PackageVersion Include="ManyConsole.CommandLineUtils" Version="1.1.8-alpha" />
+        <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+        <PackageVersion Include="NUnit" Version="3.12.0" />
+        <PackageVersion Include="NUnit.StaticExpect" Version="1.0.7" />
+        <PackageVersion Include="NUnit3TestAdapter" Version="3.13.0" />
+        <PackageVersion Include="Appveyor.TestLogger" Version="2.0.0" />
         
         <!-- Transitive versions -->
         <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
