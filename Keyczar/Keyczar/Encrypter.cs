@@ -20,6 +20,8 @@ using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
 using System.IO.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace Keyczar
 {
@@ -139,7 +141,7 @@ namespace Keyczar
                 if(Compression == CompressionType.Gzip){
                     wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
                 }else if(Compression == CompressionType.Zlib){
-                    wrapper = new DeflateStream(encryptingStream,CompressionMode.Compress,true);
+                    wrapper = new DeflaterOutputStream (encryptingStream,new Deflater());
                 }
 
                 using (encryptingStream)
