@@ -16,7 +16,7 @@
 
 using System;
 using System.IO;
-using Ionic.Zlib;
+using System.IO.Compression;
 
 namespace Keyczar.Util
 {

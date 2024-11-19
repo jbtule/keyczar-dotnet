@@ -16,10 +16,9 @@
 using System;
 using System.Globalization;
 using System.IO;
-using Ionic.Zip;
-using Keyczar;
+using System.Text;
+using ICSharpCode.SharpZipLib.Zip;
 using Keyczar.Util;
-using Newtonsoft.Json;
 
 namespace Keyczar.Unofficial
 {
@@ -33,7 +32,7 @@ namespace Keyczar.Unofficial
             => () => new BlobKeySetWriter(writeStream);
 
         private Stream _writeStream;
-        private ZipFile _zipFile = new NondestructiveZipFile();
+        private NondestructiveZipFile _zipFile = NondestructiveZipFile.Create();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BlobKeySetWriter"/> class.
@@ -51,7 +50,10 @@ namespace Keyczar.Unofficial
         /// <param name="version">The version.</param>
         public void Write(byte[] keyData, int version)
         {
-            _zipFile.AddEntry(version.ToString(CultureInfo.InvariantCulture), keyData);
+            var entry = new ZipEntry(version.ToString(CultureInfo.InvariantCulture));
+            _zipFile.PutNextEntry(entry);
+            _zipFile.Write(keyData,0, keyData.Length);
+         
         }
 
         /// <summary>
@@ -67,7 +69,11 @@ namespace Keyczar.Unofficial
         /// <param name="metadata">The metadata.</param>
         public void Write(KeyMetadata metadata)
         {
-            _zipFile.AddEntry("meta", metadata.ToJson());
+            var entry = new ZipEntry("meta");
+            _zipFile.PutNextEntry(entry);
+            var data = metadata.ToJson();
+            var bData = Encoding.UTF8.GetBytes(data);
+            _zipFile.Write(bData,0, bData.Length);
         }
 
         /// <summary>
@@ -76,16 +82,18 @@ namespace Keyczar.Unofficial
         /// <returns></returns>
         public bool Finish()
         {
+            _zipFile.Finish();
             _zipFile.Save(_writeStream);
+            _zipFile.Close();
             return true;
         }
 
         #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+        private bool _disposedValue = false; // To detect redundant calls
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposedValue)
+            if (!_disposedValue)
             {
                 if (disposing)
                 {
@@ -93,7 +101,7 @@ namespace Keyczar.Unofficial
                     _zipFile = _zipFile.SafeDispose();
                 }
 
-                disposedValue = true;
+                _disposedValue = true;
             }
         }
 

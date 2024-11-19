@@ -15,14 +15,12 @@
 
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using Keyczar.Crypto;
 using Keyczar.Crypto.Streams;
 using Keyczar.Util;
-using Ionic.Zlib;
+using System.IO.Compression;
+
 namespace Keyczar
 {
 
@@ -141,7 +139,7 @@ namespace Keyczar
                 if(Compression == CompressionType.Gzip){
                     wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
                 }else if(Compression == CompressionType.Zlib){
-                    wrapper = new ZlibStream(encryptingStream,CompressionMode.Compress,true);
+                    wrapper = new DeflateStream(encryptingStream,CompressionMode.Compress,true);
                 }
 
                 using (encryptingStream)

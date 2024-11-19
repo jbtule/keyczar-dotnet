@@ -1,0 +1,19 @@
+<Project>
+    <PropertyGroup>
+        <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+        <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageVersion Include="SharpZipLib" Version="1.4.2" />
+        <PackageVersion Include="Newtonsoft.Json" Version="13.0.3"  />
+        <PackageVersion Include="Newtonsoft.Json.Bson" Version="1.0.2" />
+        <PackageVersion Include="BouncyCastle.Cryptography" Version="2.4.0" />
+        <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0"/>
+        <PackageVersion Include="System.Configuration.ConfigurationManager" Version="4.5.0"/>
+        <PackageVersion Include="ManyConsole.CommandLineUtils" Version="1.1.8-alpha" />
+        
+        <!-- Transitive versions -->
+        <PackageVersion Include="System.Text.RegularExpressions" Version="4.3.1" />
+        <PackageVersion Include="System.Private.Uri" Version="4.3.2" />
+    </ItemGroup>
+</Project>
