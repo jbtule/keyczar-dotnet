@@ -21,7 +21,7 @@ jobs:
     - name: Test Create
       uses: josepho0918/vstest-action@0e887de8dcfab5ce3eecaf4ad6320bb9b3ecf633
       with:
-        testAssembly: KeyczarTest.dll
+        testAssembly: KeyczarTest*.dll
         searchFolder: .\Keyczar\KeyczarTest\bin\Release\*\
         runInParallel: true
         otherConsoleOptions: /TestCaseFilter:"TestCategory=Create"
