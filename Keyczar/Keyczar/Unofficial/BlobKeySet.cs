@@ -44,7 +44,7 @@ namespace Keyczar.Unofficial
         /// <param name="readStream">The read stream.</param>
         public BlobKeySet(Stream readStream)
         {
-            _zipFile = ZipFile.Create(readStream);
+            _zipFile = new ZipFile(readStream);
         }
 
         /// <summary>
