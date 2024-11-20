@@ -16,14 +16,31 @@
 
 using System;
 using System.IO;
-using Ionic.Zlib;
+using System.IO.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression;
+using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 
 namespace Keyczar.Util
 {
+
+    public class WriteDecompressGzipStream : WriteDecompressStreamWrapper
+    {
+        public WriteDecompressGzipStream(Stream stream) : base(stream, s => new GZipStream(s, CompressionMode.Decompress, true))
+        {
+        }
+    }
+    
+    public class WriteDecompressZlibStream : WriteDecompressStreamWrapper
+    {
+        public WriteDecompressZlibStream(Stream stream) : base(stream, s => new InflaterInputStream(s, new Inflater()){ IsStreamOwner = false})
+        {
+        }
+    }
+    
     /// <summary>
     /// Decompress a giz
     /// </summary>
-    public class WriteDecompressGzipStream : Stream
+    public class WriteDecompressStreamWrapper : Stream
     {
         private Stream _stream;
         private Stream _tempStream;
@@ -33,10 +50,11 @@ namespace Keyczar.Util
         /// Initializes a new instance of the <see cref="WriteDecompressGzipStream"/> class.
         /// </summary>
         /// <param name="stream">The stream.</param>
-        public WriteDecompressGzipStream(Stream stream) : base()
+        /// <param name="constructor">Function to construct the inflating stream</param>
+        public WriteDecompressStreamWrapper(Stream stream, Func<Stream,Stream> constructor) : base()
         {
             _tempStream = new MemoryStream();
-            _gzipread = new GZipStream(_tempStream, CompressionMode.Decompress, true);
+            _gzipread = constructor(_tempStream); 
             _stream = stream;
         }
 

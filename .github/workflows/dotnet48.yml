@@ -1,0 +1,41 @@
+name: Build CrossComple .net core/.net framework Windows
+
+on: [push]
+
+jobs:
+  build:
+    name: Test Windows .net Framework and Core
+    env:
+      CI: true
+    runs-on: windows-2022
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+    - uses: NuGet/setup-nuget@v2
+    - uses: microsoft/setup-msbuild@v2
+    - name: Restore Packages
+      run: nuget restore Keyczar\Keyczar.sln
+    - name: Build solution
+      run: msbuild Keyczar\Keyczar.sln -t:rebuild -property:Configuration=Release
+    - name: Test Create
+      uses: josepho0918/vstest-action@0e887de8dcfab5ce3eecaf4ad6320bb9b3ecf633
+      with:
+        testAssembly: KeyczarTest*.dll
+        searchFolder: .\Keyczar\KeyczarTest\bin\Release\*\
+        runInParallel: false
+        otherConsoleOptions: /TestCaseFilter:"TestCategory=Create"
+        platform: x64
+        resultLogsArtifactName: vs-test-result-logs-part1
+    - name: Test
+      uses: josepho0918/vstest-action@0e887de8dcfab5ce3eecaf4ad6320bb9b3ecf633
+      with:
+        testAssembly: KeyczarTest*.dll
+        searchFolder: .\Keyczar\KeyczarTest\bin\Release\*\
+        runInParallel: false
+        otherConsoleOptions: /TestCaseFilter:"(TestCategory!=Create)&(TestCategory!=Performance)"
+        platform: x64
+        resultLogsArtifactName: vs-test-result-logs-part2
+    - name: Publish
+      run:
+        dotnet nuget push '${{ github.workspace }}\Keyczar\publish\*.nupkg' --source https://nuget.pkg.github.com/jbtule/index.json --api-key ${{ secrets.GITHUB_TOKEN }}

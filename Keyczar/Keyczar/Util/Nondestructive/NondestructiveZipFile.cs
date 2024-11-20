@@ -15,17 +15,32 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
-using Ionic.Zip;
+using ICSharpCode.SharpZipLib.Zip;
+
 
 namespace Keyczar.Util
 {
     /// <summary>
     /// Zip file that doesn't close the underlying stream when disposed
     /// </summary>
-    public class NondestructiveZipFile : ZipFile
+    public class NondestructiveZipFile : ZipOutputStream 
     {
+        private MemoryStream _stream;
+        public static NondestructiveZipFile Create()
+        {
+            var stream = new MemoryStream();
+            var zip = new NondestructiveZipFile(stream);
+            zip._stream = stream;
+            
+            return zip;
+        }
+        private NondestructiveZipFile(Stream stream) : base(stream)
+        {
+        }
+
         /// <summary>
         /// Disposes any managed resources, if the flag is set, then marks the
         /// instance disposed.  This method is typically not called explicitly from
@@ -38,6 +53,12 @@ namespace Keyczar.Util
         protected override void Dispose(bool disposeManagedResources)
         {
             base.Dispose(false);
+        }
+        
+        public void Save(Stream stream)
+        {
+            _stream.Position = 0;
+            _stream.CopyTo(stream);
         }
     }
 }

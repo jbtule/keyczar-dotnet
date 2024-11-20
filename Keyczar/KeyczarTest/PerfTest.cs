@@ -121,13 +121,11 @@ namespace KeyczarTest
         /// <returns></returns>
         public override FinishingStream GetEncryptingStream(Stream output,Keyczar.KeyczarBase keyczar)
         {
-            var alg = new AesManaged
-                          {
-                              Mode = GetMode(),
-                              Key = AesKeyBytes,
-                              Padding = PaddingMode.PKCS7,
-                              BlockSize = BlockLength*8
-                          };
+            var alg = Aes.Create();
+            alg.Mode = GetMode();
+            alg.Key = AesKeyBytes;
+            alg.Padding = PaddingMode.PKCS7;
+            alg.BlockSize = BlockLength * 8;
             alg.GenerateIV();
 
 
@@ -142,13 +140,11 @@ namespace KeyczarTest
         /// <returns></returns>
         public override FinishingStream GetDecryptingStream(Stream output, Keyczar.KeyczarBase keyczar)
         {
-            var alg = new AesManaged
-                          {
-                              Mode = GetMode(),
-                              Key = AesKeyBytes,
-                              Padding = PaddingMode.PKCS7,
-                              BlockSize = BlockLength*8
-                          };
+            var alg = Aes.Create();
+            alg.Mode = GetMode();
+            alg.Key = AesKeyBytes;
+            alg.Padding = PaddingMode.PKCS7;
+            alg.BlockSize = BlockLength*8;
             return new DotNetSymmetricStream(alg, output, HmacKey.Maybe(h => h.HashLength, () => 0), encrypt: false);
         }
     }

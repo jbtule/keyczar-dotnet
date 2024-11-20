@@ -19,7 +19,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Ionic.Zip;
+using ICSharpCode.SharpZipLib.Zip;
 using Keyczar.Util;
 using Newtonsoft.Json;
 
@@ -44,7 +44,7 @@ namespace Keyczar.Unofficial
         /// <param name="readStream">The read stream.</param>
         public BlobKeySet(Stream readStream)
         {
-            _zipFile = ZipFile.Read(readStream);
+            _zipFile = new ZipFile(readStream);
         }
 
         /// <summary>
@@ -63,10 +63,12 @@ namespace Keyczar.Unofficial
             "CA2202:Do not dispose objects multiple times")]
         public byte[] GetKeyData(int version)
         {
-            using (var stream = _zipFile[version.ToString(CultureInfo.InvariantCulture)].OpenReader())
+            var name = version.ToString(CultureInfo.InvariantCulture);
+            var entry =_zipFile.GetEntry(name);
+            using (var stream = _zipFile.GetInputStream(entry))
             using (var reader = new BinaryReader(stream))
             {
-                return reader.ReadBytes((int) stream.Length);
+                return reader.ReadBytes((int)entry.Size);
             }
         }
 
@@ -80,7 +82,8 @@ namespace Keyczar.Unofficial
         {
             get
             {
-                using (var stream = _zipFile["meta"].OpenReader())
+                var name = "meta";
+                using (var stream = _zipFile.GetInputStream(_zipFile.GetEntry(name)))
                 using (var reader = new StreamReader(stream))
                 {
                     return JsonConvert.DeserializeObject<KeyMetadata>(reader.ReadToEnd());

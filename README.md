@@ -12,22 +12,21 @@ Calling `KeyczarTool.exe` from the commandline without flags will display usage.
 
 See [Wiki](http://github.com/jbtule/keyczar-dotnet/wiki) for more info.
 
-## Dependencies
+## Targets
 
- - .NET Core 2.1 or later
- - .NET Framework 4.5.1 or later
+ - .NET 4 and .NET Standard 2.0
 
 #### Keyczar.dll 
 
- - [BouncyCastle 1.8.5 or later](http://www.bouncycastle.org/csharp/)
- - [DotNetZip 1.13.3 later](https://github.com/haf/DotNetZip.Semverd)
- - [Newtonsoft.Json 12.0.2 or later](https://www.newtonsoft.com/json)
- - [Newtonsoft.Json.Bson 12.0.2 or later](https://github.com/JamesNK/Newtonsoft.Json.Bson)
+ - [BouncyCastle(http://www.bouncycastle.org/csharp/)
+ - [SharpZipLib](https://github.com/icsharpcode/SharpZipLib)
+ - [Newtonsoft.Json](https://www.newtonsoft.com/json)
+ - [Newtonsoft.Json.Bson](https://github.com/JamesNK/Newtonsoft.Json.Bson)
 
 #### KeyczarTool.exe
 
- - [ManyConsole.CommandLineUtils 1.1.6-alpha or later](https://github.com/jbtule/ManyConsole.CommandLineUtils)
- - [McMaster.Extensions.CommandLineUtils 2.3.4 or later](https://github.com/natemcmaster/CommandLineUtils)
+ - [ManyConsole.CommandLineUtils](https://github.com/jbtule/ManyConsole.CommandLineUtils)
+ - [McMaster.Extensions.CommandLineUtils](https://github.com/natemcmaster/CommandLineUtils)
  
 ## Source & Build
 
@@ -35,19 +34,17 @@ Source code can be obtained with
 
     git clone --recursive https://github.com/jbtule/keyczar-dotnet.git
 
-Source can be built with msbuild 15, [Rider](https://www.jetbrains.com/rider/), Visual Studio for Mac 7.1, or Visual Studio 2017. More info about building, especially on mono can be found on the [wiki](https://github.com/jbtule/keyczar-dotnet/wiki/Building%20or%20Testing%20Keyczar%20dotnet%20in%20Depth).
+Source can be built with msbuild, [Rider](https://www.jetbrains.com/rider/), or Visual Studio. .
 
-Windows | Mac | Linux
------- | ------ | --------
-[![Build Status][WinImgMaster]][WinLinkMaster] | [![Build Status][MacImgMaster]][MacLinkMaster] | [![Build Status][TuxImgMaster]][TuxLinkMaster]
+| Windows                                        | Linux                                          |
+|------------------------------------------------|------------------------------------------------|
+| [![Build Status][WinImgMaster]][WinLinkMaster] | [![Build Status][TuxImgMaster]][TuxLinkMaster] |
 
-[WinImgMaster]:https://ci.appveyor.com/api/projects/status/vygqea9djxa8jopi/branch/master?svg=true
-[WinLinkMaster]:https://ci.appveyor.com/project/jbtule/keyczar-dotnet/branch/master
-[MacImgMaster]:https://travis-matrix-badges.herokuapp.com/repos/jbtule/keyczar-dotnet/branches/master/2
+[WinImgMaster]:https://github.com/jbtule/keyczar-dotnet/actions/workflows/dotnet48.yml/badge.svg
+[WinLinkMaster]:https://github.com/jbtule/keyczar-dotnet/actions/workflows/dotnet48.yml
 
-[MacLinkMaster]:https://travis-ci.org/jbtule/keyczar-dotnet
-[TuxImgMaster]:https://travis-matrix-badges.herokuapp.com/repos/jbtule/keyczar-dotnet/branches/master/1
-[TuxLinkMaster]:https://travis-ci.org/jbtule/keyczar-dotnet
+[TuxImgMaster]:https://github.com/jbtule/keyczar-dotnet/actions/workflows/dotnet.yml/badge.svg
+[TuxLinkMaster]:https://github.com/jbtule/keyczar-dotnet/actions/workflows/dotnet.yml
 
 
 ## Compatibility
@@ -60,8 +57,3 @@ Windows | Mac | Linux
  - `VanillaSigner` and `VanillaVerifier` are feature identical to java/python/c++ `UnversionedSigner` and `UnversionVerifer`
  - The Functionality of java/python/c++ `SessionEncrypter`, `SessionDecrypter`, `SignedSessionEncrypter`, and `SignedSessionDecrypter` are provided by the C# `SessionCrypter` via constructor arguments.
  - You can use the AppSetting `keyczar.strict_dsa_verification` if you don't need java Keyczar compatiblity and need stricter verification of dsa sigs.
-
-
-## Contribute ##
-
-Code contribution, reported issues or code reviews welcome! Pull requests are automatically built and tested with [Travis CI][MacLinkMaster] and [AppVeyor][WinLinkMaster].

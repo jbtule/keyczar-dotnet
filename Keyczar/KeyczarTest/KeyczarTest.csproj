@@ -1,14 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net452;netcoreapp2.1</TargetFrameworks>
+    <TargetFrameworks Condition="'$(NO_NETFMK)' != 'true'">net462;net8.0</TargetFrameworks>
+    <TargetFramework Condition="'$(NO_NETFMK)' == 'true'">net8.0</TargetFramework>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' != 'net452'">
+  <PropertyGroup Condition="'$(TargetFramework)' != 'net462'">
     <AssemblyName>KeyczarTestNetCore</AssemblyName>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net452'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
     <AssemblyName>KeyczarTestNetFrwk</AssemblyName>
   </PropertyGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net452'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
@@ -17,12 +18,12 @@
     <PackageReference Include="Newtonsoft.Json" />
   </ItemGroup> 
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-    <PackageReference Include="NUnit" Version="3.12.0" />
-    <PackageReference Include="NUnit.StaticExpect" Version="1.0.7" />
-    <PackageReference Include="NUnit3TestAdapter" Version="3.13.0" />
-    <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
-    <PackageReference Include="Appveyor.TestLogger" Version="2.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit.StaticExpect" />
+    <PackageReference Include="NUnit3TestAdapter"  />
+    <PackageReference Include="BouncyCastle.Cryptography" />
+    <PackageReference Include="Appveyor.TestLogger"  />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Keyczar\Keyczar.csproj">
