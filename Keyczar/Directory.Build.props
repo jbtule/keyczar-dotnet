@@ -1,6 +1,7 @@
 <Project>
     <PropertyGroup>
         <VersionPrefix>0.9.6</VersionPrefix>
+        <VersionSuffix Condition=" '$(GITHUB_RUN_NUMBER)' != '' ">preview$(GITHUB_RUN_NUMBER)</VersionSuffix>
         <Authors>jbtule</Authors>
         <Copyright>Copyright © Contributors 2012-2024</Copyright>
         <PackageProjectUrl>https://github.com/jbtule/keyczar-dotnet</PackageProjectUrl>
