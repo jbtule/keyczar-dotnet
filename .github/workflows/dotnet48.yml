@@ -25,7 +25,7 @@ jobs:
       with:
         testAssembly: KeyczarTest*.dll
         searchFolder: .\Keyczar\KeyczarTest\bin\Release\*\
-        runInParallel: true
+        runInParallel: false
         otherConsoleOptions: /TestCaseFilter:"TestCategory=Create"
         platform: x64
         resultLogsArtifactName: vs-test-result-logs-part1
@@ -34,7 +34,7 @@ jobs:
       with:
         testAssembly: KeyczarTest*.dll
         searchFolder: .\Keyczar\KeyczarTest\bin\Release\*\
-        runInParallel: true
+        runInParallel: false
         otherConsoleOptions: /TestCaseFilter:"(TestCategory!=Create)&(TestCategory!=Performance)"
         platform: x64
         resultLogsArtifactName: vs-test-result-logs-part2
