@@ -7,6 +7,7 @@ jobs:
     name: Test ${{ matrix.os }} for dotnet ${{ matrix.dotnet }}
     env:
       CI: true
+      NO_NETFMK: true
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
