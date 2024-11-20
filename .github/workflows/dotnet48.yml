@@ -40,4 +40,4 @@ jobs:
         resultLogsArtifactName: vs-test-result-logs-part2
     - name: Publish
       run:
-        dotnet nuget push '${{ github.workspace }}\Keyczar\publish\*.nupkg' --source https://nuget.pkg.github.com/ekonbenefits/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
+        dotnet nuget push '${{ github.workspace }}\Keyczar\publish\*.nupkg' --source https://nuget.pkg.github.com/jbtule/index.json --api-key ${{ secrets.GITHUB_TOKEN }}
