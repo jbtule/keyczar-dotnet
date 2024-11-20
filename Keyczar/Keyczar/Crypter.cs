@@ -150,7 +150,7 @@ namespace Keyczar
                     if(Compression == CompressionType.Gzip){
                         wrapper = new WriteDecompressGzipStream(baseStream);
                     }else if(Compression == CompressionType.Zlib){
-                        wrapper = new InflaterInputStream (baseStream, new Inflater()){IsStreamOwner = false};
+                        wrapper = new InflaterInputStream (baseStream, new Inflater(false)){IsStreamOwner = false};
                     }
 
                     //Perform Decryption
