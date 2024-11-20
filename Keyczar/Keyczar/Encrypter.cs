@@ -141,7 +141,7 @@ namespace Keyczar
                 if(Compression == CompressionType.Gzip){
                     wrapper = new GZipStream(encryptingStream,CompressionMode.Compress,true);
                 }else if(Compression == CompressionType.Zlib){
-                    wrapper = new DeflaterOutputStream (encryptingStream,new Deflater());
+                    wrapper = new DeflaterOutputStream (encryptingStream,new Deflater(Deflater.DEFAULT_COMPRESSION,true));
                 }
 
                 using (encryptingStream)
