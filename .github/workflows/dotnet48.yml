@@ -14,8 +14,6 @@ jobs:
         submodules: true
     - uses: NuGet/setup-nuget@v2
     - uses: microsoft/setup-msbuild@v2
-      with:
-        dotnet-version: 4.8
     - name: Restore Packages
       run: nuget restore Keyczar\Keyczar.sln
     - name: Build solution
