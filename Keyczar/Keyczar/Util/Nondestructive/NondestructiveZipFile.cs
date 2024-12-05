@@ -39,22 +39,9 @@ namespace Keyczar.Util
         }
         private NondestructiveZipFile(Stream stream) : base(stream)
         {
+            base.IsStreamOwner = false;
         }
 
-        /// <summary>
-        /// Disposes any managed resources, if the flag is set, then marks the
-        /// instance disposed.  This method is typically not called explicitly from
-        /// application code.
-        /// </summary>
-        /// <param name="disposeManagedResources">indicates whether the method should dispose streams or not.</param>
-        /// <remarks>
-        /// Applications should call <see cref="M:Ionic.Zip.ZipFile.Dispose">the no-arg Dispose method</see>.
-        /// </remarks>
-        protected override void Dispose(bool disposeManagedResources)
-        {
-            base.Dispose(false);
-        }
-        
         public void Save(Stream stream)
         {
             _stream.Position = 0;
